@@ -518,7 +518,7 @@ const buildRunSavingPrompt = () => [
  * @returns {string} Prompt for the test-fix agent.
  */
 const buildTestFixPrompt = (category, files, failures) => [
-  `These ${category}-category test file(s) failed: ${files.join(' / ')}. Fix every violation below, then stop — do not run the tests yourself, they are checked again afterward.`,
+  `These ${category}-category test file(s) failed: ${files.join(' / ')} (they were run from inside the backend repository, so every path here and below is relative to it). Fix every violation below, then stop — do not run the tests yourself, they are checked again afterward.`,
   '',
   failures.join('\n'),
 ].join('\n')
