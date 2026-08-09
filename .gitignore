@@ -1,0 +1,33 @@
+#### environment
+.env
+node_modules/
+.scratch/
+!.scratch/directory-keeper
+
+#### implementation repositories cloned by /hora's Stage 0
+/*-backend*/
+/*-frontend*/
+
+#### skills equipped from @openreachtech/ai-agent-skills by equip-skills.sh (regenerated, not authored here)
+.claude/skills/backend-*/
+.claude/skills/frontend-*/
+.claude/skills/core-*/
+
+#### for Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+#### for Mac
+.DS_Store
+
+#### environment to develop
+.vscode/*
+!.vscode/cspell.json
+!.vscode/settings.json
+
+#### Lock files
+yarn.lock
+pnpm-lock.yaml
+bun.lockb

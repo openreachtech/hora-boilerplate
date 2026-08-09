@@ -1,0 +1,85 @@
+name: Create Semantic Version Tag and Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tag-and-release:
+    # Only run when PR is merged
+    if: github.event.pull_request.merged == true
+
+    runs-on: [self-hosted, light]
+
+    steps:
+      - name: 🛎 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ✅️ Extract the version from the PR title, or the release branch name
+        id: extract_version
+        run: |
+          PR_TITLE=$(echo '${{ github.event.pull_request.title }}' | sed 's/`/\\`/g')
+          HEAD_REF='${{ github.event.pull_request.head.ref }}'
+
+          # The PR title is the required, priority source: a bare 1.1.0, optionally
+          # followed by a prerelease suffix (1.1.0-rc-1, 1.1.0-alpha.1+build.5, ...).
+          # The suffix is restricted to characters a git tag name may hold.
+          VERSION=$(echo "$PR_TITLE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z._+-]+)?' | head -n 1)
+
+          if [ -z "$VERSION" ]; then
+            echo "No version in the PR title. Falling back to the branch name."
+            # Fallback: a release/x.x.x branch name.
+            VERSION=$(echo "$HEAD_REF" | grep -oE '^release/[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z._+-]+)?$' | sed 's#^release/##')
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "version=" >> $GITHUB_OUTPUT
+            echo "No version found in the PR title or the branch name. Skipping the tag and release."
+          else
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Version: $VERSION"
+          fi
+
+      - name: ✅️ Check whether the tag already exists
+        id: check_tag
+        if: steps.extract_version.outputs.version != ''
+        run: |
+          VERSION=${{ steps.extract_version.outputs.version }}
+
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag $VERSION already exists. Skipping."
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🏷️ Create and push the version tag
+        if: steps.extract_version.outputs.version != '' && steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+          VERSION=${{ steps.extract_version.outputs.version }}
+          git tag $VERSION
+          git push origin $VERSION
+          echo "Created and pushed tag: $VERSION"
+
+      - name: 📢 Create GitHub Release
+        if: steps.extract_version.outputs.version != '' && steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.extract_version.outputs.version }}
+          name: ${{ steps.extract_version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "ES2023"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

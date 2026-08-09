@@ -1,0 +1,36 @@
+name: Main Guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  main-guard:
+    name: Main Guard
+
+    runs-on: [self-hosted, light]
+
+    steps:
+      - name: Validate source branch name
+        shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          case "$HEAD_REF" in
+            release/*|hotfix/*|dev|env)
+              echo "Source branch '$HEAD_REF' is allowed."
+              ;;
+            *)
+              echo "::error::Only 'release/*', 'hotfix/*', 'dev', and 'env' branches may be merged into 'main'. (❌️ '$HEAD_REF' is not allowed)"
+              exit 1
+              ;;
+          esac
