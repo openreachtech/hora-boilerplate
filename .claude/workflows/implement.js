@@ -365,6 +365,8 @@ const buildLintPrompt = (repository, files) => [
   '',
   files.join('\n'),
   '',
+  `Run it from inside ${repository} (cd into it first, in the same command), with each path above rewritten relative to it. From the outer root, that root's own eslint.config.js ignores every implementation repository: eslint reports "File ignored because of a matching ignore pattern", exits 0, and lint passes without having read a line of the code.`,
+  '',
   'Report every failure as its own rule name, file, line number, and message, so each violation can be told apart from any other.',
 ].join('\n')
 
@@ -394,7 +396,7 @@ const formatViolations = violations => violations
  * @returns {string} Prompt for the lint-fix agent.
  */
 const buildLintFixPrompt = (repository, failures) => [
-  `npx eslint failed in ${repository}. Fix every violation below, then stop — do not run lint yourself, it is checked again afterward.`,
+  `npx eslint failed in ${repository} (it was run from inside that repository, so every path below is relative to it). Fix every violation below, then stop — do not run lint yourself, it is checked again afterward.`,
   '',
   formatViolations(failures),
 ].join('\n')
@@ -422,12 +424,23 @@ const buildResolveLintContradictionPrompt = (repository, violations) => [
   'Within the tier you pick from: prefer the rule with no configurable options, then the one with fewer configurable options, then the alphabetically first rule name.',
   '',
   'Then, on a new branch named adhoc/<rule-name>-in-<filename>:',
-  '  - add a `files`-scoped override to eslint.config.js that disables exactly that one rule for exactly that one file',
+  `  - add a \`files\`-scoped override to ${repository}'s own eslint.config.js — never the outer root's, which does not lint that repository at all — disabling exactly that one rule for exactly that one file`,
   '  - mark the override with a `// TODO: Kick out this block after resolved the issue.` comment',
   '  - commit it, merge it back into the branch you started from, then delete the adhoc/ branch',
   '',
   'Report which rule and file you picked, and the branch name you used.',
 ].join('\n')
+
+/**
+ * Where every command of the Test phase runs: inside the backend repository,
+ * never at the outer root, whose config is not that repository's.
+ */
+const BACKEND_WORKING_DIRECTORY_NOTE = 'Run every command from inside the backend repository (cd into it first, in the same command) — its jest.config.js, test.sh and npm scripts are not the outer root\'s.'
+
+/**
+ * The same, for a prompt that lists the files to run: their paths need rewriting once inside.
+ */
+const BACKEND_WORKING_DIRECTORY_NOTE_FOR_FILES = `${BACKEND_WORKING_DIRECTORY_NOTE} Rewrite each path above relative to that repository.`
 
 /**
  * Build the prompt that runs every pending logic-category test together.
@@ -440,6 +453,8 @@ const buildRunLogicPrompt = files => [
   '',
   files.join('\n'),
   '',
+  BACKEND_WORKING_DIRECTORY_NOTE_FOR_FILES,
+  '',
   'If a failure is not something a code or test change could fix — the middleware is not running, a network call reached nothing, and the like — report it as environmentIssue instead of failures. Do not expect a fix agent to resolve it; nothing about the code is wrong.',
 ].join('\n')
 
@@ -451,6 +466,7 @@ const buildRunLogicPrompt = files => [
 const buildRefreshPrompt = () => [
   'No other agent is touching this repository, so you may use it exclusively.',
   'Refresh the database exactly the way test.sh\'s setupStorage does: teardown, migrate, then reseed both master and development data.',
+  BACKEND_WORKING_DIRECTORY_NOTE,
 ].join('\n')
 
 /**
@@ -464,6 +480,8 @@ const buildRunFindingPrompt = files => [
   '',
   files.join('\n'),
   '',
+  BACKEND_WORKING_DIRECTORY_NOTE_FOR_FILES,
+  '',
   'If a failure is not something a code or test change could fix — the middleware is not running, the shared SQLite file is missing or was altered outside this run, and the like — report it as environmentIssue instead of failures. Do not expect a fix agent to resolve it; nothing about the code is wrong.',
 ].join('\n')
 
@@ -476,6 +494,7 @@ const buildPrepareSavingPrompt = () => [
   'No other agent is touching this repository, so you may use it exclusively.',
   'For every folder under _orders/, scan its files and rewrite its _.test.js to import every sibling in file-name order — the same "scan and rewrite the whole file" rule as any other aggregation file.',
   'Then refresh the database exactly the way test.sh\'s setupStorage does: teardown, migrate, then reseed both master and development data.',
+  BACKEND_WORKING_DIRECTORY_NOTE,
 ].join('\n')
 
 /**
@@ -485,6 +504,7 @@ const buildPrepareSavingPrompt = () => [
  */
 const buildRunSavingPrompt = () => [
   'The database was just refreshed and every _orders/ aggregator was just regenerated. Run the whole _orders/ tree together, bypassing test.sh (call npx jest directly, with the same NODE_OPTIONS/NODE_ENV test.sh\'s own npm script sets, plus --runInBand and --detectOpenHandles — a single process, no worker parallelism, since the shared SQLite file cannot tolerate more than one connection at a time).',
+  BACKEND_WORKING_DIRECTORY_NOTE,
   '',
   'If a failure is not something a code or test change could fix — the middleware is not running, the shared SQLite file is missing or was altered outside this run, and the like — report it as environmentIssue instead of failures. Do not expect a fix agent to resolve it; nothing about the code is wrong.',
 ].join('\n')

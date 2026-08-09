@@ -63,7 +63,7 @@ A `saving`-category test never runs by itself — it runs bundled with every oth
 | the implementation of other tasks | not your assignment. It may be rewritten at the same time as you work |
 | running the backend's tests | its shared SQLite file gets wiped and reseeded on every run, so a dedicated test agent covers it once per repository, right after the batch |
 
-**For the backend, judge by reading the code and the tests side by side, without running them.** For a frontend, you may run them.
+**For the backend, judge by reading the code and the tests side by side, without running them.** For a frontend, you may run them — **from inside that repository** (`cd <repository> && npx jest …`, as one command, with every path relative to it). The outer root holds no application code and its config is not that repository's.
 
 ## An acceptance criterion that reads two ways
 

@@ -30,6 +30,18 @@ The `myproject` part is the project name. **Use the name written in the spec. Do
 
 The nesting is not git's requirement but Claude Code's: a session cannot write outside its cwd.
 
+### Where a per-repository command runs
+
+`/hora` runs at the outer root, but **every command that reads a repository's own config — `npx eslint`, `npx jest`, `npm` — runs with that repository as its working directory**, as one command, with paths relative to it:
+
+```
+cd myproject-backend && npx eslint app/... server/...
+```
+
+**Run lint from the outer root and it passes every time, having read nothing.** The outer root holds no application code, so its own `eslint.config.js` ignores `*-backend*/` and `*-frontend*/` — each repository lints itself, under its own config. Every implementation file therefore matches an ignore pattern: eslint prints `File ignored because of a matching ignore pattern`, exits `0`, and a check that never ran is indistinguishable from one that passed. Nothing fails, so nothing says so. Jest fails loudly in the same position (a repository's `jest.config.js` is not the root's), but one rule avoids both.
+
+**`--config <repository>/eslint.config.js` from the root is not a substitute.** It does load the right rules, but that config's own relative `ignores` then resolve against the root instead of the repository, so files the repository excludes get linted anyway.
+
 ## Invariants
 
 These three must not be broken.
@@ -697,14 +709,17 @@ Every unfinished task goes through the same sequence, one at a time — nothing 
     whole chain, back to where it first left release/<version>, not just this
     one branch. Nothing else runs at the same time in the serial run, so this
     rebase has no conflicting concurrent state to reconcile
-4.  Lint: npx eslint on exactly the files this task touched
+4.  Lint: cd into this task's repository, then npx eslint on exactly the files
+    this task touched (run it from the outer root instead and every one of
+    them is ignored, so lint passes without having read anything — see
+    "Where a per-repository command runs")
       fails  -> fix it, retry (up to a limit; see "A lint rule contradiction"
                 for what it means when the exact same violation resurfaces,
                 or the limit is reached either way — resolved there, not by
                 stopping this task)
-5.  Test: npx jest on exactly the files this task's testRequests named
-    (for a saving-category request, the whole _orders/ tree, matched only on
-    files literally named _.test.js)
+5.  Test: from that same repository, npx jest on exactly the files this task's
+    testRequests named (for a saving-category request, the whole _orders/
+    tree, matched only on files literally named _.test.js)
       fails, from something code could fix  -> fix it, retry (up to the same
                 kind of limit)
       fails, from something no code change could ever fix (the middleware is
@@ -737,15 +752,15 @@ Every unfinished task goes through the same sequence, one at a time — nothing 
 
 ### A lint rule contradiction
 
-Rarely, two lint rules conflict outright — fixing one violation only trips the other, in either direction, with no version of the code that satisfies both at once. This is a defect in `eslint.config.js` itself, never a sign the implementation is wrong, and it has happened for real, not only in theory.
+Rarely, two lint rules conflict outright — fixing one violation only trips the other, in either direction, with no version of the code that satisfies both at once. This is a defect in that repository's own `eslint.config.js` (**never the outer root's, which does not lint that repository at all** — see "Where a per-repository command runs"), never a sign the implementation is wrong, and it has happened for real, not only in theory.
 
-**Never stop and hand this to whoever is running `/hora` for their own project.** `eslint.config.js` (and the shared `@openreachtech/eslint-config` it very likely traces to) is not something an ordinary user of this template can be expected to untangle — the fix belongs with whoever maintains that config, not with them. This holds whether the contradiction is ever actually confirmed or the fix loop just never converges — either way, the resolution below is what keeps the user's own run moving; the `eslint-exception` report is what routes the real defect back to whoever can actually fix the config.
+**Never stop and hand this to whoever is running `/hora` for their own project.** That `eslint.config.js` (and the shared `@openreachtech/eslint-config` it very likely traces to) is not something an ordinary user of this template can be expected to untangle — the fix belongs with whoever maintains that config, not with them. This holds whether the contradiction is ever actually confirmed or the fix loop just never converges — either way, the resolution below is what keeps the user's own run moving; the `eslint-exception` report is what routes the real defect back to whoever can actually fix the config.
 
 **Detecting a genuine loop needs every lint error this fix loop has ever seen, not only the latest one.** Keep every reported violation (rule, file, line) from every attempt so far. The moment a newly-reported violation exactly matches one already kept — same rule, same file, same line — that is definitive proof of a loop: fixing forward eventually led right back to a violation already "fixed" once before. Act on it immediately, without waiting for the retry limit below — comparing the code itself is unnecessary and slower to catch a longer cycle (A trips B trips C trips A again) than comparing the errors directly.
 
 **Reaching the retry limit without ever detecting an exact repeat is handled exactly the same way.** A fix loop that keeps producing different violations, never once repeating, is not proven to be a rule contradiction — it may just be a fix that has not yet been found — but there is no way to tell the two apart from here, and stopping to ask a human over what is likely a trivial style rule is not worth it either way.
 
-**Either trigger resolves identically:** from every distinct violation kept so far (not only the two, if more than two rules were involved across the attempts), pick whichever rule sits lowest on the protection order below, cut an `adhoc/<rule-name>-in-<filename>` branch, add a `files`-scoped override in `eslint.config.js` disabling that one rule for that one file, and merge it in like any other branch. Report it as an `eslint-exception` question (below) — `blocking: no`, but **fail-loud**: name it on its own in the closing report, never folded into an ordinary count of how many questions are open. **Reset the retry count and run lint again** — the disabled rule can no longer fail, so whatever remains is judged on its own.
+**Either trigger resolves identically:** from every distinct violation kept so far (not only the two, if more than two rules were involved across the attempts), pick whichever rule sits lowest on the protection order below, cut an `adhoc/<rule-name>-in-<filename>` branch, add a `files`-scoped override disabling that one rule for that one file **in that repository's own `eslint.config.js`** (the outer root's ignores the whole repository, so an override written there would change nothing), and merge it in like any other branch. Report it as an `eslint-exception` question (below) — `blocking: no`, but **fail-loud**: name it on its own in the closing report, never folded into an ordinary count of how many questions are open. **Reset the retry count and run lint again** — the disabled rule can no longer fail, so whatever remains is judged on its own.
 
 **Which rule gets disabled follows a fixed protection order, most-protected first — disable whichever rule sits lower on this list:**
 
@@ -912,7 +927,7 @@ The workflow runs seven phases, each backed by its own agent under `.claude/agen
 | Implement | `hora-implementer` | writes the code and tests for one task |
 | Verify | `hora-verifier` | adversarially checks that implementation against its acceptance criteria, right after |
 | Install | — | per repository, serially: `npm install` / `npm uninstall` for reported dependencies, and applies reported conflict-proof changes |
-| Lint | — | per repository: `npx eslint` on every file touched so far, fixed and retried (up to a limit) when it fails |
+| Lint | — | per repository, run from inside it: `npx eslint` on every file touched so far, fixed and retried (up to a limit) when it fails |
 | Test | — | a continuous dispatcher shared across the whole run: `logic`-category tests run together immediately; `finding`/`saving` wait for a database refresh; `logic` always cuts in line first |
 | Record | `hora-recorder` | folds every report into `.hora/`, once, at the end |
 
@@ -926,7 +941,7 @@ The workflow runs seven phases, each backed by its own agent under `.claude/agen
 |---|---|---|
 | who writes `.hora/` | `/hora` itself | **`hora-recorder`** (runs once, serially, at the end of the workflow) |
 | the backend's tests | may run per task | **implementer and verifier agents do not run them.** Its shared SQLite file gets wiped and reseeded on every run, so a continuous dispatcher runs them: `logic`-category (no fixture) together, whenever any are pending; `finding`/`saving` after a database refresh, once `logic` is empty |
-| lint | may run per task | **implementer and verifier agents do not run it, on either side.** A dedicated agent runs `npx eslint`, scoped to every file touched in that repository so far this run, once per repository, per resolved batch |
+| lint | may run per task | **implementer and verifier agents do not run it, on either side.** A dedicated agent runs `npx eslint` from inside that repository, scoped to every file touched in it so far this run, once per repository, per resolved batch |
 | tasks touching the same file | implemented in turn, so nothing collides | **serialized through the mark** (set in Stage 1) |
 | commits | `/hora` itself, directly on `release/<version>` | `/hora` itself (outside the workflow), the Install phase's own through its branch |
 
