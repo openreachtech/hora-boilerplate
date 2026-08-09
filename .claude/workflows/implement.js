@@ -424,7 +424,7 @@ const buildResolveLintContradictionPrompt = (repository, violations) => [
   'Within the tier you pick from: prefer the rule with no configurable options, then the one with fewer configurable options, then the alphabetically first rule name.',
   '',
   'Then, on a new branch named adhoc/<rule-name>-in-<filename>:',
-  '  - add a `files`-scoped override to eslint.config.js that disables exactly that one rule for exactly that one file',
+  `  - add a \`files\`-scoped override to ${repository}'s own eslint.config.js — never the outer root's, which does not lint that repository at all — disabling exactly that one rule for exactly that one file`,
   '  - mark the override with a `// TODO: Kick out this block after resolved the issue.` comment',
   '  - commit it, merge it back into the branch you started from, then delete the adhoc/ branch',
   '',
