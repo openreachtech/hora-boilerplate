@@ -435,7 +435,7 @@ const buildResolveLintContradictionPrompt = (repository, violations) => [
  * Where every command of the Test phase runs: inside the backend repository,
  * never at the outer root, whose config is not that repository's.
  */
-const BACKEND_WORKING_DIRECTORY_NOTE = 'Run every command from inside the backend repository (cd into it first, in the same command) — its jest.config.js, test.sh and npm scripts are not the outer root\'s.'
+const BACKEND_WORKING_DIRECTORY_NOTE = 'Run every command from inside the backend repository — the outer root\'s single `*-backend*` directory — by cd\'ing into it first, in the same command. Its jest.config.js, test.sh and npm scripts are not the outer root\'s.'
 
 /**
  * The same, for a prompt that lists the files to run: their paths need rewriting once inside.
