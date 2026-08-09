@@ -365,7 +365,7 @@ const buildLintPrompt = (repository, files) => [
   '',
   files.join('\n'),
   '',
-  `Run it from inside ${repository} (cd into it first, in the same command), with each path above rewritten relative to it. From the outer root, that root's own eslint.config.js ignores every implementation repository: eslint reports "File ignored because of a matching ignore pattern", exits 0, and lint passes without having read a line of the code.`,
+  `Run it from inside the ${repository} repository — the outer root's single \`*-${repository}*\` directory — by cd'ing into it first, in the same command, with each path above rewritten relative to it. From the outer root, that root's own eslint.config.js ignores every implementation repository: eslint reports "File ignored because of a matching ignore pattern", exits 0, and lint passes without having read a line of the code.`,
   '',
   'Report every failure as its own rule name, file, line number, and message, so each violation can be told apart from any other.',
 ].join('\n')
@@ -424,7 +424,7 @@ const buildResolveLintContradictionPrompt = (repository, violations) => [
   'Within the tier you pick from: prefer the rule with no configurable options, then the one with fewer configurable options, then the alphabetically first rule name.',
   '',
   'Then, on a new branch named adhoc/<rule-name>-in-<filename>:',
-  `  - add a \`files\`-scoped override to ${repository}'s own eslint.config.js — never the outer root's, which does not lint that repository at all — disabling exactly that one rule for exactly that one file`,
+  `  - add a \`files\`-scoped override to the eslint.config.js inside the ${repository} repository — the outer root's single \`*-${repository}*\` directory, never the outer root itself, which does not lint that repository at all — disabling exactly that one rule for exactly that one file`,
   '  - mark the override with a `// TODO: Kick out this block after resolved the issue.` comment',
   '  - commit it, merge it back into the branch you started from, then delete the adhoc/ branch',
   '',
