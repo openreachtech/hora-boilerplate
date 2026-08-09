@@ -122,7 +122,7 @@ Inside group 4, order by the folder part first, then by file name, with one blan
 
 **Write a test for each acceptance criterion.** That is the means of telling "implemented" apart from "working". Follow the real tree for where tests live, how they are named, and the helper conventions (use something like `renchan-test-tools` where it exists).
 
-**Do not run lint, or any test, yourself.** A dedicated step runs both, once per repository, right after your whole batch of tasks has finished — the one point where nothing in that repository is being written to. **Report what you wrote instead** (below), and wait for the result before you can call the task done.
+**Do not run lint, or any test, yourself.** Lint is covered by a dedicated step, once per repository, right after your whole batch of tasks has finished — the one point where nothing in that repository is being written to. Tests are covered by whoever owns the repository they belong to: a **backend** test by the shared dispatcher your `testRequests` feed, a **frontend** test by that task's own verifier. **Report what you wrote instead** (below), and wait for the result before you can call the task done.
 
 ### Classify each backend test
 
@@ -167,7 +167,9 @@ Before writing an explicit `id` anywhere — in a seeder, or in a `saving` test 
 
 ### Report it, do not run it
 
-For each test file you wrote, add one entry to `testRequests` (below): just its category and its file. A dedicated agent runs the test; its result decides whether it actually backs the acceptance criterion, not your own belief.
+For each **backend** test file you wrote, add one entry to `testRequests` (below): just its category and its file. A dedicated agent runs the test; its result decides whether it actually backs the acceptance criterion, not your own belief.
+
+**On a frontend task, report no test requests at all — leave `testRequests` empty.** The dispatcher those entries feed exists to serialize access to the backend's shared SQLite file, and every command it issues runs inside the backend repository. A frontend file listed there would be run from the wrong repository against the wrong config. A frontend task's tests are run by its own verifier instead, from inside that repository.
 
 ## What to report in your return value
 

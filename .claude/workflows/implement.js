@@ -435,7 +435,7 @@ const buildResolveLintContradictionPrompt = (repository, violations) => [
  * Where every command of the Test phase runs: inside the backend repository,
  * never at the outer root, whose config is not that repository's.
  */
-const BACKEND_WORKING_DIRECTORY_NOTE = 'Run every command from inside the backend repository (cd into it first, in the same command) — its jest.config.js, test.sh and npm scripts are not the outer root\'s.'
+const BACKEND_WORKING_DIRECTORY_NOTE = 'Run every command from inside the backend repository — the outer root\'s single `*-backend*` directory — by cd\'ing into it first, in the same command. Its jest.config.js, test.sh and npm scripts are not the outer root\'s.'
 
 /**
  * The same, for a prompt that lists the files to run: their paths need rewriting once inside.
@@ -504,6 +504,7 @@ const buildPrepareSavingPrompt = () => [
  */
 const buildRunSavingPrompt = () => [
   'The database was just refreshed and every _orders/ aggregator was just regenerated. Run the whole _orders/ tree together, bypassing test.sh (call npx jest directly, with the same NODE_OPTIONS/NODE_ENV test.sh\'s own npm script sets, plus --runInBand and --detectOpenHandles — a single process, no worker parallelism, since the shared SQLite file cannot tolerate more than one connection at a time).',
+  '',
   BACKEND_WORKING_DIRECTORY_NOTE,
   '',
   'If a failure is not something a code or test change could fix — the middleware is not running, the shared SQLite file is missing or was altered outside this run, and the like — report it as environmentIssue instead of failures. Do not expect a fix agent to resolve it; nothing about the code is wrong.',
@@ -518,7 +519,7 @@ const buildRunSavingPrompt = () => [
  * @returns {string} Prompt for the test-fix agent.
  */
 const buildTestFixPrompt = (category, files, failures) => [
-  `These ${category}-category test file(s) failed: ${files.join(' / ')}. Fix every violation below, then stop — do not run the tests yourself, they are checked again afterward.`,
+  `These ${category}-category test file(s) failed: ${files.join(' / ')} (they were run from inside the backend repository, so every path here and below is relative to it). Fix every violation below, then stop — do not run the tests yourself, they are checked again afterward.`,
   '',
   failures.join('\n'),
 ].join('\n')
@@ -769,7 +770,7 @@ const dispatchTests = async () => {
 }
 
 /**
- * Submit one test request and resolve once it has actually been run (not merely enqueued). Backend-only: frontend tasks report no test requests, since frontend keeps running its own tests directly.
+ * Submit one test request and resolve once it has actually been run (not merely enqueued). Backend-only: a frontend task reports no test requests, because its tests are run by its own verifier, inside that repository.
  *
  * @param {*} request - One entry from a task's reported `testRequests`.
  * @returns {Promise<*>} The run result for this specific request, or null when the agent that ran it died.
@@ -816,8 +817,16 @@ const implementOne = async task => {
     return null
   }
 
+  const dispatchable = task.repository === 'backend'
+    ? result.testRequests
+    : []
+
+  if (dispatchable.length !== result.testRequests.length) {
+    log(`${task.repository}:${task.id} reported ${result.testRequests.length} test request(s), which only a backend task may do. Not dispatched — every command of the Test phase runs inside the backend repository`)
+  }
+
   const testResults = await parallel(
-    result.testRequests.map(
+    dispatchable.map(
       request => () => requestTest(request)
     )
   )
