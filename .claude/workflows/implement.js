@@ -816,8 +816,16 @@ const implementOne = async task => {
     return null
   }
 
+  const dispatchable = task.repository === 'backend'
+    ? result.testRequests
+    : []
+
+  if (dispatchable.length !== result.testRequests.length) {
+    log(`${task.repository}:${task.id} reported ${result.testRequests.length} test request(s), which only a backend task may do. Not dispatched — every command of the Test phase runs inside the backend repository`)
+  }
+
   const testResults = await parallel(
-    result.testRequests.map(
+    dispatchable.map(
       request => () => requestTest(request)
     )
   )

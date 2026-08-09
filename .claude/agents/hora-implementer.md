@@ -167,7 +167,9 @@ Before writing an explicit `id` anywhere — in a seeder, or in a `saving` test 
 
 ### Report it, do not run it
 
-For each test file you wrote, add one entry to `testRequests` (below): just its category and its file. A dedicated agent runs the test; its result decides whether it actually backs the acceptance criterion, not your own belief.
+For each **backend** test file you wrote, add one entry to `testRequests` (below): just its category and its file. A dedicated agent runs the test; its result decides whether it actually backs the acceptance criterion, not your own belief.
+
+**On a frontend task, report no test requests at all — leave `testRequests` empty.** The dispatcher those entries feed exists to serialize access to the backend's shared SQLite file, and every command it issues runs inside the backend repository. A frontend file listed there would be run from the wrong repository against the wrong config. A frontend task's tests are covered where that repository's own config applies, not here.
 
 ## What to report in your return value
 
