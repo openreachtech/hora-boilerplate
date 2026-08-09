@@ -504,6 +504,7 @@ const buildPrepareSavingPrompt = () => [
  */
 const buildRunSavingPrompt = () => [
   'The database was just refreshed and every _orders/ aggregator was just regenerated. Run the whole _orders/ tree together, bypassing test.sh (call npx jest directly, with the same NODE_OPTIONS/NODE_ENV test.sh\'s own npm script sets, plus --runInBand and --detectOpenHandles — a single process, no worker parallelism, since the shared SQLite file cannot tolerate more than one connection at a time).',
+  '',
   BACKEND_WORKING_DIRECTORY_NOTE,
   '',
   'If a failure is not something a code or test change could fix — the middleware is not running, the shared SQLite file is missing or was altered outside this run, and the like — report it as environmentIssue instead of failures. Do not expect a fix agent to resolve it; nothing about the code is wrong.',
