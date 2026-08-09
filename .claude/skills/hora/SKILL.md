@@ -941,6 +941,7 @@ The workflow runs seven phases, each backed by its own agent under `.claude/agen
 |---|---|---|
 | who writes `.hora/` | `/hora` itself | **`hora-recorder`** (runs once, serially, at the end of the workflow) |
 | the backend's tests | may run per task | **implementer and verifier agents do not run them.** Its shared SQLite file gets wiped and reseeded on every run, so a continuous dispatcher runs them, from inside that repository: `logic`-category (no fixture) together, whenever any are pending; `finding`/`saving` after a database refresh, once `logic` is empty |
+| a frontend's tests | may run per task | **the implementer does not run them; that task's own verifier does**, from inside that repository. They never enter the backend's dispatcher, whose every command runs in the backend |
 | lint | may run per task | **implementer and verifier agents do not run it, on either side.** A dedicated agent runs `npx eslint` from inside that repository, scoped to every file touched in it so far this run, once per repository, per resolved batch |
 | tasks touching the same file | implemented in turn, so nothing collides | **serialized through the mark** (set in Stage 1) |
 | commits | `/hora` itself, directly on `release/<version>` | `/hora` itself (outside the workflow), the Install phase's own through its branch |

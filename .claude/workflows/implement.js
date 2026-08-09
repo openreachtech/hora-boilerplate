@@ -769,7 +769,7 @@ const dispatchTests = async () => {
 }
 
 /**
- * Submit one test request and resolve once it has actually been run (not merely enqueued). Backend-only: frontend tasks report no test requests, since frontend keeps running its own tests directly.
+ * Submit one test request and resolve once it has actually been run (not merely enqueued). Backend-only: a frontend task reports no test requests, because its tests are run by its own verifier, inside that repository.
  *
  * @param {*} request - One entry from a task's reported `testRequests`.
  * @returns {Promise<*>} The run result for this specific request, or null when the agent that ran it died.
