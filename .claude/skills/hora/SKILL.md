@@ -32,13 +32,27 @@ The nesting is not git's requirement but Claude Code's: a session cannot write o
 
 ### Where a per-repository command runs
 
-`/hora` runs at the outer root, but **every command that reads a repository's own config — `npx eslint`, `npx jest`, `npm` — runs with that repository as its working directory**, as one command, with paths relative to it:
+`/hora` runs at the outer root, but **every command that acts on a repository runs with that repository as its working directory**, as one command, with paths relative to it:
 
 ```
 cd myproject-backend && npx eslint app/... server/...
 ```
 
-**Run lint from the outer root and it passes every time, having read nothing.** The outer root holds no application code, so its own `eslint.config.js` ignores `*-backend*/` and `*-frontend*/` — each repository lints itself, under its own config. Every implementation file therefore matches an ignore pattern: eslint prints `File ignored because of a matching ignore pattern`, exits `0`, and a check that never ran is indistinguishable from one that passed. Nothing fails, so nothing says so. Jest fails loudly in the same position (a repository's `jest.config.js` is not the root's), but one rule avoids both.
+**This is a rule about commands in general, not a list of three.** `npx eslint`, `npx jest` and `npm` are only the ones met most often. What decides it is whether the command reads or writes anything that belongs to a repository — its config (`eslint.config.js`, `jest.config.js`, `pm2.config.cjs`, `jsconfig.json`), its `package.json` and `node_modules/`, its `.env.development` and `docker-compose.development.yml`, its migrations, seeders and generated output, its own git history, its own source. If it does, it runs from inside that repository, whether or not it is named here. **Stage 0.5 reads the real tree**, and whatever it turns up there — `./docker.sh`, a `test.sh`, a `db:*` npm script, anything else that boilerplate ships at its own current tag — is covered from the moment it is found, with nothing to add to a list first.
+
+**`git -C <repository>` is this same rule spelled with git's own option**, and is the form this skill already uses throughout (Stage 0's clone and init, the closing report's `git status`). An option counts only where it genuinely relocates the working directory the way `cd` does; one that merely points at a single file does not (`--config`, below).
+
+**The reverse direction holds too.** A command that belongs to the hora repository itself — `npm run lint` at the root, covering `.claude/workflows/` — runs at the root, never from inside a declared row. What must not happen is a command reaching across the boundary in either direction (`references/done-criteria.md`, "Stage 3", gives the reason a cross-repository script must not be written into the parent either).
+
+**A wrong working directory does not reliably announce itself. That is what makes this worth a rule of its own.**
+
+| Run from the outer root | What actually happens |
+|---|---|
+| `npx eslint …` | **passes, having read nothing** (below) |
+| `npm install <package>` | **succeeds against the wrong repository.** The dependency lands in `myproject-app`'s own `package.json`, where nothing imports it |
+| `npx jest …` | fails loudly — a repository's `jest.config.js` is not the root's |
+
+Only the last one says so. **Run lint from the outer root and it passes every time, having read nothing.** The outer root holds no application code, so its own `eslint.config.js` ignores `*-backend*/` and `*-frontend*/` — each repository lints itself, under its own config. Every implementation file therefore matches an ignore pattern: eslint prints `File ignored because of a matching ignore pattern`, exits `0`, and a check that never ran is indistinguishable from one that passed. Nothing fails, so nothing says so. One rule avoids all three.
 
 **`--config <repository>/eslint.config.js` from the root is not a substitute.** It does load the right rules, but that config's own relative `ignores` then resolve against the root instead of the repository, so files the repository excludes get linted anyway.
 

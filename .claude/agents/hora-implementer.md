@@ -21,6 +21,14 @@ Implement the **one** task you were handed. Write code and tests.
 
 Report what you did **in your return value.** The main run reads it, updates `.hora/`, and commits.
 
+## Where any command you run runs
+
+You are started at the outer root, which holds no application code. **Every command that acts on a repository runs with that repository as its working directory** — `cd <repository> && <command>`, as one command, with every path relative to it.
+
+This is not a list of particular commands. What decides it is whether the command reads or writes anything belonging to a repository: its config (`eslint.config.js`, `jest.config.js`, `pm2.config.cjs`, `jsconfig.json`), its `package.json` and `node_modules/`, its `.env.development` and `docker-compose.development.yml`, its migrations, seeders and generated output, its own source. A script you find in the real tree (`./docker.sh`, a `db:*` npm script, whatever else it ships) is covered by this the moment you find it.
+
+**Run one from the outer root and it does not reliably tell you so** — the root's own `eslint.config.js` ignores every implementation repository, so lint there passes without reading a line, and `npm install` there writes the dependency into the wrong `package.json`. (Lint and tests are not yours to run at all — see "Tests", below.)
+
 ## Read before implementing
 
 ```
