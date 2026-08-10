@@ -24,7 +24,7 @@ After that, new features go through the full eighteen, one at a time.
 
 | | |
 |---|---|
-| **The repositories are renchan / furo based** | the checkpoints delegate to `backend-renchan-*` and `frontend-*` skills, which describe those conventions. A repository on a different stack will get the order and the gates, but every delegated procedure will describe something it is not |
+| **The repositories are renchan / furo based** | the checkpoints delegate to skills that describe renchan and Furo conventions specifically. A repository on a different stack will get the order and the gates, but every delegated procedure will describe something it is not |
 | **One backend, holding one DB system** | the policy is `one DB system = one repository`. Zero, or two or more, stops and asks |
 | **Node and npm**, for the kit's own `npm install` | |
 | **Claude Code** | |

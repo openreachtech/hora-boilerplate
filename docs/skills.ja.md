@@ -60,40 +60,36 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 
 - **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。ただのコピーなので再実行は安全です
 - **リポジトリの clone を待ちません。** `ai-agent-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
-- **コピーは gitignore 済み**（`.claude/skills/backend-*/`, `frontend-*/`, `core-*/`）。生成物であって、ここで書いたものではありません。履歴に入るべきものは何もありません
+- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身の6つを名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
 ---
 
-## 名前にはハッシュが付く。接頭辞で照合する
+## 読む価値があるのは接頭辞です
 
-パッケージは各スキルを、末尾に内容ハッシュを持つディレクトリ名で配ります。
+各スキルは自分の frontmatter に `name:` を宣言し、パッケージの flatten ビルドがそれをディレクトリ名にします。Hora Kit はその名前をそのまま呼びます — 解決も、ワイルドカードの展開もありません。
 
-```
-backend-renchan-stub-api-1c0186b5eae9
-frontend-acceptance-review-1340e28a90b1
-core-requirement-definition-92eb3e22b2cd
-```
+**すべての名前は、それが仕える面から始まります。**
 
-`equip-skills.sh` はその名前をそのままコピーするので、呼び出せるスキル名にもハッシュが付きます。
-
-**ハッシュはパッケージ更新で変わり、接頭辞は変わりません。** そのため Hora Kit 内の参照はすべて接頭辞で書かれ、`.claude/skills/` を列挙してそれで始まる唯一の項目を取ることで解決されます。
-
-```
-Hora Kit の記述    backend-renchan-stub-api
-解決先             backend-renchan-stub-api-1c0186b5eae9
-```
-
-**ハッシュ付きのフルネームをどこにも書かないでください。** 次のリリースまでは正しく、その後は黙って間違いになります。
-
-### 接頭辞が既に面を教えている
-
-| 接頭辞 | 対象 | だいたいの中身 |
+| 接頭辞 | 対象 | 例 |
 |---|---|---|
-| `backend-renchan-*` | バックエンドリポジトリ | renchan の規約 — モデル、resolver、worker、migration |
-| `frontend-*` | フロントエンドリポジトリ | furo/Nuxt の規約 — コンポーネント、CSS、クライアント、UI/UX、検収 |
-| `core-*` | どちらでも | 言語レベルの規約、git、テスト、ドキュメント、要件定義 |
+| `hb-`（hora-backend） | バックエンドリポジトリ | `hb-stub-api`, `hb-sequelize-migration` |
+| `hf-`（hora-frontend） | フロントエンドリポジトリ | `hf-acceptance-review`, `hf-css-units` |
+| `hc-`（hora-core） | どちらでも | `hc-requirement-definition`, `hc-jest` |
 
-作業中の行にどれが当たるかは、中身を読む前に名前だけで分かります。
+作業中の行にどれが当たるかは、その先を読む前に分かります。
+
+### 接頭辞の後ろはラベルであって、分類ではありません
+
+```
+hf-graphql          Furo アプリの操作クライアント
+hb-graphql-schema   renchan サーバーの SDL
+```
+
+この2つを分けているのは接頭辞だけで、それはパッケージ全体で同じです。`hf-modules` は Furo のユーティリティクラス、`hc-module-imports` は import 順の規約です。**名前の語感でスキルを選ばないでください。** どの関所がどのスキルに委譲するかは [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) が言い、それだけが権威です。
+
+### 「参考までに」と名前を hora skill に書かないでください
+
+手順そのものと同じ規則です。どの関所がどれを使うかを決める唯一の場所以外に書かれた名前は、2つ目の写しです。**そしてパッケージは既に二度、全スキルを改名しています。** 上の除外リストが `hb-*`/`hf-*`/`hc-*` のパターンではなく許可リストなのも同じ理由です — 古びた拒否リストは、何にもマッチしないまま、何も言いません。
 
 ---
 
@@ -102,12 +98,12 @@ Hora Kit の記述    backend-renchan-stub-api
 **これは見取り図であって、目録ではありません。** 権威ある一覧は、配備後の `.claude/skills/` が持っているものです。
 
 ```bash
-ls .claude/skills/ | grep -E '^(backend|frontend|core)-'
+ls .claude/skills/
 ```
 
 そして「関所 → 委譲するスキル」の権威ある対応は [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) です。**意図的にここには再掲しません** — あの表の2つ目の写しは、まさにこのドキュメント全体が扱っている食い違いそのものになります。
 
-### `backend-renchan-*`
+### `hb-` — バックエンド（renchan）
 
 | 領域 | 覆う範囲 |
 |---|---|
@@ -122,7 +118,7 @@ ls .claude/skills/ | grep -E '^(backend|frontend|core)-'
 | **セキュリティ** | リポジトリ全体の read-only 監査。指摘を出すだけで何も直さない |
 | **テスト** | テストの置き場所、実行順の保証、ローカル E2E コンテナ群 |
 
-### `frontend-*`
+### `hf-` — フロントエンド（Furo / Nuxt）
 
 | 領域 | 覆う範囲 |
 |---|---|
@@ -134,7 +130,7 @@ ls .claude/skills/ | grep -E '^(backend|frontend|core)-'
 | **UI/UX** | プロジェクト context ファイル、構造的に正しい UI の生成、既存出力の監査 |
 | **検収** | **受入レビュー**と、恒久的な E2E シナリオ仕様 |
 
-### `core-*`
+### `hc-` — コア（どちらの面でも）
 
 | 領域 | 覆う範囲 |
 |---|---|
@@ -153,24 +149,24 @@ ls .claude/skills/ | grep -E '^(backend|frontend|core)-'
 
 | スキル | 関所 | なぜ設計を形づくっているか |
 |---|---|---|
-| `backend-renchan-stub-api` | **4** | フロントエンドゲートが本物の API を待たない理由。stub は実装 resolver とクラス名・interface を共有するので、関所16 は書き直しではなくエンドポイントの切り替えになる |
-| `backend-renchan-security-audit` | **8** | 設計上 read-only。だからこの関所は**書き込みツールを持たない verifier エージェント**で走る。見つけることと直すことは別の行為 |
-| `backend-renchan-build-e2e-test-environment` | **17** | これ無しに検収は成立しない。だから 18 の中の一手順ではなく、独立した関所になっている |
-| `frontend-acceptance-review` | **18** | 検収の合否基準はすべてここにある。`/hora-accept` が足すのは対象範囲・順序・記録だけ |
+| `hb-stub-api` | **4** | フロントエンドゲートが本物の API を待たない理由。stub は実装 resolver とクラス名・interface を共有するので、関所16 は書き直しではなくエンドポイントの切り替えになる |
+| `hb-security-audit` | **8** | 設計上 read-only。だからこの関所は**書き込みツールを持たない verifier エージェント**で走る。見つけることと直すことは別の行為 |
+| `hb-build-e2e-test-environment` | **17** | これ無しに検収は成立しない。だから 18 の中の一手順ではなく、独立した関所になっている |
+| `hf-acceptance-review` | **18** | 検収の合否基準はすべてここにある。`/hora-accept` が足すのは対象範囲・順序・記録だけ |
 
-`core-requirement-definition`、`frontend-uiux-context`、`core-test-execution` がそれに次ぎます。1つ目は関所1を支え、2つ目は UI 生成器と UI 監査の両方が読む context ファイルを作り、3つ目は「落ちているスイート」がテストを緩めることで直されない理由です。
+`hc-requirement-definition`、`hf-uiux-context`、`hc-test-execution` がそれに次ぎます。1つ目は関所1を支え、2つ目は UI 生成器と UI 監査の両方が読む context ファイルを作り、3つ目は「落ちているスイート」がテストを緩めることで直されない理由です。
 
 ---
 
 ## スキルが見つからないとき
 
-接頭辞が何にも解決しないことがあります — パッケージが改名した、削除した、あるいはまだ配備されていない。
+名指ししたスキルが無いことがあります — パッケージが改名した、削除した、あるいはまだ配備されていない。**パッケージは既に二度、全スキルを改名しています**ので、これは仮定の話ではありません。
 
 **そう言って、それ無しで続けてください。推測で代用しないでください。**
 
 | | 理由 |
 |---|---|
-| 見つからなかったスキル | **名前を挙げて報告する。** 規約無しで走った関所は、何とも突き合わせていない成果物を生んでいます |
+| 無かったスキル | **名前を挙げて報告する。** 規約無しで走った関所は、何とも突き合わせていない成果物を生んでいます |
 | 欠けた手順をその場で作る | **駄目です。** それは写し問題を、元より雑に、新規に作り直す行為です |
 | `/hora-setup` | 配備時点で「後の関所が探して見つけられないもの」を報告します。必要になった瞬間より、その時点で知る方が良いためです |
 | `/hora-accept` | その実行の記録に欠落として残します。**手順が欠けた実行は「注釈付きの合格」ではありません** — 部分的な実行であり、記録がそう言わなければなりません |

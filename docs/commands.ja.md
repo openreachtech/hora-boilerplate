@@ -192,11 +192,11 @@ boilerplate の同梱（vendoring）、upstream remote の保持、submodule 化
 ### 何をするか
 
 ```
-1. 環境の確認        backend-renchan-build-e2e-test-environment
-2. ユニットスイート   core-test-execution ほか（リポジトリごと）
-3. シナリオ一覧      frontend-e2e-test-specification
-4. 受入レビュー本体   frontend-acceptance-review
-5. UX の指摘         frontend-uiux-audit
+1. 環境の確認        build-e2e-test-environment
+2. ユニットスイート   test-execution ほか（リポジトリごと）
+3. シナリオ一覧      e2e-test-specification
+4. 受入レビュー本体   acceptance-review
+5. UX の指摘         uiux-audit
 ```
 
 **このコマンドは判定基準を1つも持っていません。** レビューが何を見て何で落とすかは委譲先のスキルにあり、このコマンドが決めるのは「対象機能」「委譲の順序」「結果の記録先」だけです。[`skills.ja.md`](./skills.ja.md) を参照してください。

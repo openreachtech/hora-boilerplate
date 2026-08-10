@@ -9,8 +9,9 @@
 # the rest of the session.
 #
 # ai-agent-skills already ships its skills flattened under dist/skills/ (one
-# directory per skill, name unique, no frontmatter left to strip), so this
-# script clones them as-is. No renaming, no rewriting.
+# directory per skill, named after the `name:` the skill declares, unique
+# across the package), so this script clones them as-is. No renaming, no
+# rewriting.
 #
 # Run this from the repository root (myproject-app). It does not depend on
 # any declared repository being cloned — like @openreachtech/hora-ecosystem,
@@ -21,10 +22,11 @@
 #
 # Usage: .claude/skills/hora-setup/scripts/equip-skills.sh
 #
-# Note on names: each skill keeps the directory name the package ships, which
-# carries a content hash (backend-renchan-stub-api-1c0186b5eae9). The hash
-# changes when the package is updated, so anything referring to one of these
-# skills must match it by its prefix, never by its full name.
+# Note on names: a skill lands under the name it declares in its own
+# frontmatter — hb- for backend, hf- for frontend, hc- for either. Those
+# prefixes have already changed twice, so .gitignore and eslint.config.js do
+# not match on them: they ignore this whole directory and name this
+# repository's own skills back in, which no renaming can invalidate.
 
 set -euo pipefail
 

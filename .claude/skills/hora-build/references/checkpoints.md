@@ -4,7 +4,7 @@
 
 **This file holds the order and the exit conditions. It does not hold a single procedure.** How to write a migration, a resolver, a component or a test lives in `@openreachtech/ai-agent-skills`, and each checkpoint below names the skill that holds it. **Never write one of those procedures into this file** — the copy would go stale the first time the package is updated, and nothing would announce that it had (`../../hora/references/structure.md`, "The division of labor").
 
-**Skill names are matched by prefix, never in full.** The package ships each skill in a directory whose name carries a content hash; the hash changes on update, the prefix does not.
+**Every skill named below is invoked by exactly that name.** The prefix says the surface — `hb-` backend, `hf-` frontend, `hc-` either — and what follows it is a label, not a classification (`hf-graphql` is a Furo client, `hb-graphql-schema` is renchan SDL). **This file is what decides which applies where**; never pick one because its name sounds relevant.
 
 ---
 
@@ -64,7 +64,7 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 
 | | |
 |---|---|
-| **Delegate to** | `core-requirement-definition` |
+| **Delegate to** | `hc-requirement-definition` |
 | **Runs in** | the main session, in conversation |
 | **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable |
 | **Not applicable when** | never. Every feature passes this |
@@ -77,7 +77,7 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-uiux-context` (for where the use cases and their context are recorded) |
+| **Delegate to** | `hf-uiux-context` (for where the use cases and their context are recorded) |
 | **Runs in** | **the main session, in conversation. This one cannot be delegated to an agent** |
 | **Exit condition** | every use case this feature states is achievable under the spec as written, or has been changed until it is |
 | **Not applicable when** | never |
@@ -96,7 +96,7 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 
 | | |
 |---|---|
-| **Delegate to** | DB: `backend-renchan-database-design` → `backend-renchan-sequelize-migration` → `backend-renchan-sequelize-model`. API surface, by kind (below). Types and constants: `backend-renchan-type-interface`, `backend-renchan-constant-definition`. A new endpoint: `backend-renchan-graphql-server-engine` |
+| **Delegate to** | DB: `hb-database-design` → `hb-sequelize-migration` → `hb-sequelize-model`. API surface, by kind (below). Types and constants: `hb-type-interface`, `hb-constant-definition`. A new endpoint: `hb-graphql-server-engine` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | the migration, the model, the declaration files and the API surface all exist and agree with `.hora/contracts/<version>/` |
 | **Not applicable when** | this feature adds no table and no operation (rare — usually a feature that only composes existing ones) |
@@ -105,10 +105,10 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 
 | Kind | Delegate to |
 |---|---|
-| GraphQL query | `backend-renchan-graphql-schema` |
-| GraphQL mutation | `backend-renchan-graphql-schema` |
-| GraphQL subscription | `backend-renchan-graphql-schema`, plus the schema half of `backend-renchan-subscription-resolver` |
-| REST | `backend-renchan-restfulapi-architecture` (the renderer's route and version) |
+| GraphQL query | `hb-graphql-schema` |
+| GraphQL mutation | `hb-graphql-schema` |
+| GraphQL subscription | `hb-graphql-schema`, plus the schema half of `hb-subscription-resolver` |
+| REST | `hb-restfulapi-architecture` (the renderer's route and version) |
 
 **Type interfaces and constants belong here, not with the modules at checkpoint 5.** A `.d.ts` under `types/resolvers/` and an enum-like constant are the schema expressed as types — the stub at checkpoint 4 already needs both. What checkpoint 5 gathers is the *material the real implementation runs on*, which the stub does not need at all.
 
@@ -118,7 +118,7 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 
 | | |
 |---|---|
-| **Delegate to** | `backend-renchan-stub-api` |
+| **Delegate to** | `hb-stub-api` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | a schema-accurate stub exists for every operation this feature adds, returning hardcoded data, callable from outside |
 | **Not applicable when** | this feature adds no API operation at all |
@@ -131,7 +131,7 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 
 | | |
 |---|---|
-| **Delegate to** | first the catalog (below), then `backend-renchan-external-api-client`, `backend-renchan-strategy-pattern`, `backend-renchan-resolver-share`, `backend-renchan-sequelize-subquery`, `backend-renchan-sequelize-seeder`; for an AI feature, `backend-renchan-ai-agent-structure`, `backend-renchan-agent-loop`, `backend-renchan-multi-llm-provider`, `backend-renchan-light-rag`, `backend-renchan-ai-prompt-document-store` |
+| **Delegate to** | first the catalog (below), then `hb-external-api-client`, `hb-strategy-pattern`, `hb-resolver-share`, `hb-sequelize-subquery`, `hb-sequelize-seeders`; for an AI feature, `hb-ai-agent-structure`, `hb-agent-loop`, `hb-multi-llm-provider`, `hb-light-rag`, `hb-ai-prompt-document-store` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | **every module checkpoint 6 will import already exists and works on its own**, and nothing was written that the catalog already provides |
 | **Not applicable when** | checkpoint 6 needs nothing beyond the model and the schema. State that, do not assume it |
@@ -167,19 +167,19 @@ A seeder written here, or a test fixture written later, that carries an explicit
 
 | | |
 |---|---|
-| **Delegate to** | by kind (below), plus `backend-renchan-resolver-validator` for input validation |
+| **Delegate to** | by kind (below), plus `hb-resolver-validator` for input validation |
 | **Runs in** | an implementer agent |
 | **Exit condition** | the real implementation exists under the same class name and interface as its stub, its input is validated, and the unit tests covering this feature's acceptance criteria pass |
 | **Not applicable when** | this feature adds no API operation |
 
 | Kind | Delegate to |
 |---|---|
-| GraphQL query | `backend-renchan-query-resolver` |
-| GraphQL mutation | `backend-renchan-mutation-resolver` |
-| GraphQL subscription | `backend-renchan-subscription-resolver` |
-| REST | `backend-renchan-restfulapi-architecture` (the renderer itself) |
+| GraphQL query | `hb-query-resolver` |
+| GraphQL mutation | `hb-mutation-resolver` |
+| GraphQL subscription | `hb-subscription-resolver` |
+| REST | `hb-restfulapi-architecture` (the renderer itself) |
 
-**Write a test for each acceptance criterion, and run it.** Where tests live, how they are named and how they are ordered comes from `backend-renchan-backend-testing`; how to write one comes from `core-jest`; driving a failing suite to green without weakening it comes from `core-test-execution`. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint** — the exit condition is the criteria being backed, not the command exiting 0.
+**Write a test for each acceptance criterion, and run it.** Where tests live, how they are named and how they are ordered comes from `hb-backend-testing`; how to write one comes from `hc-jest`; driving a failing suite to green without weakening it comes from `hc-test-execution`. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint** — the exit condition is the criteria being backed, not the command exiting 0.
 
 **Leave the stub in place.** It is what the frontend is still building against until checkpoint 16.
 
@@ -187,10 +187,10 @@ A seeder written here, or a test fixture written later, that carries an explicit
 
 | | |
 |---|---|
-| **Delegate to** | `backend-renchan-execution-placement-pattern` first (it decides *whether* and *where*), then `backend-renchan-post-worker` or `backend-renchan-renchan-job-bullmq` |
+| **Delegate to** | `hb-execution-placement-pattern` first (it decides *whether* and *where*), then `hb-post-worker` or `hb-renchan-job-bullmq` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | every piece of this feature's processing that does not belong in the request path runs where it should, and is implemented there |
-| **Not applicable when** | this feature has no processing outside the request path. **Decide that with `backend-renchan-execution-placement-pattern`, not by eye** |
+| **Not applicable when** | this feature has no processing outside the request path. **Decide that with `hb-execution-placement-pattern`, not by eye** |
 
 **The placement decision comes before the implementation, and it is the part that gets skipped.** A write that looks synchronous, a side effect that looks small, a notification that looks instant — each is a candidate for a post-worker or a job, and the skill that decides it is the one to run first. Marking this checkpoint not-applicable without having run that decision is exactly the shortcut the reason line is meant to block.
 
@@ -198,7 +198,7 @@ A seeder written here, or a test fixture written later, that carries an explicit
 
 | | |
 |---|---|
-| **Delegate to** | `backend-renchan-security-audit` |
+| **Delegate to** | `hb-security-audit` |
 | **Runs in** | **a verifier agent — read-only.** The audit finds; it does not fix |
 | **Exit condition** | the audit produces no finding against this feature's code, or every finding it produced has been fixed or explicitly accepted and recorded |
 | **Not applicable when** | never, for a feature that wrote backend code |
@@ -230,7 +230,7 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-nuxt`, `frontend-furo-env` |
+| **Delegate to** | `hf-nuxt`, `hf-furo-env` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | the pages and routes this feature needs exist and are reachable, and the environment variables pointing at the backend are wired |
 | **Not applicable when** | this feature's `target` names no frontend row |
@@ -239,14 +239,14 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-uiux-context` |
+| **Delegate to** | `hf-uiux-context` |
 | **Runs in** | **the main session, in conversation** |
 | **Exit condition** | `uiux-context.md` covers this feature — its users, its screens, its rules — and every use case has a path through the interface |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
 **This is the third pass over the same use cases, and it is not redundant.** 2 asked whether the spec supports them, 9 whether the API supports them, and this asks whether *a person can actually do them on a screen*. The three fail in different ways.
 
-`frontend-uiux-context` produces the file that `frontend-uiux-forge` (checkpoints 12, 15) and `frontend-uiux-audit` (checkpoint 18) both read. **Filling it in is this checkpoint's real output** — skip it and both of those run without a project context and produce generic results.
+`hf-uiux-context` produces the file that `hf-uiux-forge` (checkpoints 12, 15) and `hf-uiux-audit` (checkpoint 18) both read. **Filling it in is this checkpoint's real output** — skip it and both of those run without a project context and produce generic results.
 
 **A use case with no path through the interface goes back to checkpoint 2**, since it means either the interface or the use case is wrong, and only the person there can say which.
 
@@ -254,18 +254,18 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-uiux-forge`, `frontend-components-app-*` for what already exists, `frontend-components-prohibits` for what must not be built |
+| **Delegate to** | `hf-uiux-forge`, `hf-app-*` for what already exists, `hf-vue-prohibits` for what must not be built |
 | **Runs in** | an implementer agent |
 | **Exit condition** | each screen is broken into components, and every component either already exists in the app's own library or has a stated reason for being new |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
-**Check the existing component skills before designing a new component.** The `frontend-components-app-*` family covers buttons, dialogs, tables, selects, tabs, toasts and much else; a feature that quietly reimplements one of them has produced a second, slightly different version of something the app already has.
+**Check the existing component skills before designing a new component.** The `hf-app-*` family covers buttons, dialogs, tables, selects, tabs, toasts and much else; a feature that quietly reimplements one of them has produced a second, slightly different version of something the app already has.
 
 ## 13. The frontend modules the implementation needs
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-modules`, `frontend-error-handling` |
+| **Delegate to** | `hf-modules`, `hf-error-handling` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | logic used by more than one component or page exists as a class under the app's modules folder, and this feature's backend error codes map to user-facing messages |
 | **Not applicable when** | nothing in this feature is shared between two places, and it introduces no new error code. State which of the two, do not assume both |
@@ -285,9 +285,9 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | Kind | Delegate to |
 |---|---|
-| GraphQL query / mutation | `frontend-graphql` |
-| GraphQL subscription | `frontend-graphql` (its subscription side) |
-| REST | `frontend-restful-restful` |
+| GraphQL query / mutation | `hf-graphql` |
+| GraphQL subscription | `hf-graphql` (its subscription side) |
+| REST | `hf-restful` |
 
 **The contract is authoritative for both sides.** Wanting to change it here means raising a question, not changing it — the backend has already been built against the same file.
 
@@ -297,7 +297,7 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-uiux-forge`, `frontend-css`, `frontend-css-coding-styles`, `frontend-css-layers`, `frontend-css-units`, `frontend-css-prohibits`, `frontend-custom-properties-naming`, `frontend-custom-properties-prohibits`, `frontend-plain-properties-order`, `frontend-plain-properties-line-height`, `frontend-plain-properties-z-index`, `frontend-layout-margin`, `frontend-animation` |
+| **Delegate to** | `hf-uiux-forge`, `hf-css`, `hf-css-coding-styles`, `hf-css-layers`, `hf-css-units`, `hf-css-prohibits`, `hf-css-custom-property-naming`, `hf-css-custom-property-prohibits`, `hf-css-property-order`, `hf-css-line-height`, `hf-css-z-index`, `hf-css-margin`, `hf-animation` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | every screen this feature needs is built, accessible, responsive, and in its loading, empty and error states as well as its filled one |
 | **Not applicable when** | this feature's `target` names no frontend row |
@@ -308,7 +308,7 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `frontend-furo-context-patterns`, `frontend-graphql` |
+| **Delegate to** | `hf-furo-context-patterns`, `hf-graphql` |
 | **Runs in** | an implementer agent |
 | **Exit condition** | the screen shows real data from the **actual** API, not the stub, and its loading and error paths are driven by real responses |
 | **Not applicable when** | this feature's screen calls no API |
@@ -321,7 +321,7 @@ Checkpoint 2 verified the use cases against the *spec*. This verifies them again
 
 | | |
 |---|---|
-| **Delegate to** | `backend-renchan-build-e2e-test-environment` |
+| **Delegate to** | `hb-build-e2e-test-environment` |
 | **Runs in** | the main session |
 | **Exit condition** | the application runs locally **together with every service behind it**, each role can sign in, and there is reviewable data or a command that produces it |
 | **Not applicable when** | one already exists and this feature added no service, no role and no seed data it needs |

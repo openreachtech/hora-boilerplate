@@ -222,7 +222,7 @@ Work through the resolved document and check every one of these. **The first thr
 | a **use case** | who does what, for what purpose, end to end | checkpoints 2 (does the spec support it), 9 (does the built API support it), 11 (does the screen support it), 18 (does the product support it) |
 | an **acceptance criterion** | an observable behavior that is either present or absent | the tests written alongside the code, and checkpoint 18 |
 
-A feature with acceptance criteria but no use cases builds a set of operations that are each correct and together unreachable — every API returns what it should, and no screen strings them into anything a person can do. **That failure surfaces at acceptance, at the far end of eighteen checkpoints, which is the most expensive place to find it.** This is exactly what `frontend-acceptance-review` looks for, and this gate is what stops it from being found only there.
+A feature with acceptance criteria but no use cases builds a set of operations that are each correct and together unreachable — every API returns what it should, and no screen strings them into anything a person can do. **That failure surfaces at acceptance, at the far end of eighteen checkpoints, which is the most expensive place to find it.** This is exactly what `hf-acceptance-review` looks for, and this gate is what stops it from being found only there.
 
 ### Resolving what was found
 

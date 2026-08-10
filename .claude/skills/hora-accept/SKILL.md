@@ -15,22 +15,22 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 
 **The content of an acceptance review, and the criteria it passes or fails on, are not in this file, and must never be written into it.** They live in `@openreachtech/ai-agent-skills`, and this skill delegates to them by name.
 
-| What is needed | The skill that holds it (match by prefix) |
+| What is needed | The skill that holds it |
 |---|---|
-| whether the environment satisfies the prerequisite, and how to bring it up | `backend-renchan-build-e2e-test-environment` |
-| **what the review looks at, phase by phase, and what it fails on** | **`frontend-acceptance-review`** |
-| the durable list of scenarios, and how coverage is derived from the API surface | `frontend-e2e-test-specification` |
-| UX, interaction, accessibility and consent findings, with severity | `frontend-uiux-audit` |
-| the project context those two read (users, scope, tokens, rules) | `frontend-uiux-context` |
-| driving a failing suite to green without weakening it | `core-test-execution` |
-| where a backend test lives, and how its run order is guaranteed | `backend-renchan-backend-testing` |
-| how a unit test for a class is written | `core-jest` |
+| whether the environment satisfies the prerequisite, and how to bring it up | `hb-build-e2e-test-environment` |
+| **what the review looks at, phase by phase, and what it fails on** | **`hf-acceptance-review`** |
+| the durable list of scenarios, and how coverage is derived from the API surface | `hf-e2e-test-specification` |
+| UX, interaction, accessibility and consent findings, with severity | `hf-uiux-audit` |
+| the project context those two read (users, scope, tokens, rules) | `hf-uiux-context` |
+| driving a failing suite to green without weakening it | `hc-test-execution` |
+| where a backend test lives, and how its run order is guaranteed | `hb-backend-testing` |
+| how a unit test for a class is written | `hc-jest` |
 
 **What this skill decides is only three things: which features are in scope, in what order the delegates run, and where the result is recorded.** Everything else is theirs.
 
 **Why the split is absolute.** A criterion copied to here disagrees with the original the first time the package is updated, and nothing announces that it has — the copy still reads as authoritative, and an acceptance run judged against a stale criterion passes things it should not. This is the same rule `/hora-setup` follows about the boilerplates: read the real thing, do not bake in what it currently says.
 
-**If a named prefix matches nothing under `.claude/skills/`**, say so and continue without it. Record it in the run's own record as a gap. Do not substitute a guess, and do not invent the missing criteria yourself.
+**If a named skill is not there under `.claude/skills/`**, say so and continue without it. Record it in the run's own record as a gap. Do not substitute a guess, and do not invent the missing criteria yourself.
 
 ---
 
@@ -63,7 +63,7 @@ Two invocations differ only in scope and in what is written:
 
 ```
 1. Confirm the environment
-     backend-renchan-build-e2e-test-environment
+     build-e2e-test-environment
      The application must run together with every service behind it, each
      role must be able to sign in, and there must be reviewable data or a
      command that produces it.
@@ -72,29 +72,29 @@ Two invocations differ only in scope and in what is written:
                       "work around" a missing service
 
 2. Unit suites, per repository, from inside it
-     backend-renchan-backend-testing (placement and order), core-jest (how
-     one is written), core-test-execution (driving them green)
+     backend-testing (placement and order), jest (how
+     one is written), test-execution (driving them green)
      cd <repository> && <that repository's own test command>
 
 3. The scenario list
-     frontend-e2e-test-specification
+     e2e-test-specification
      Reconcile it against the scope: every feature in scope has its
      scenarios, and coverage is derived from the API surface, not remembered
 
 4. The acceptance review itself
-     frontend-acceptance-review
+     acceptance-review
      Its own phases, its own criteria. Do not restate them, do not
      abbreviate them, and do not stop early because the first phases passed
 
 5. UX findings
-     frontend-uiux-audit, against the context frontend-uiux-context produced
+     uiux-audit, against the context uiux-context produced
 ```
 
 **Step 1 is a gate, not a warm-up.** The review drives the real application against real services — it signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a stub or a frontend with nothing behind it, and a review run that way reports a pass it has not earned.
 
 **Step 2 comes before the review on purpose.** A unit suite is cheap and its failures are precise; finding the same defect through an end-to-end flow costs far more to localize.
 
-**Never weaken a test to make step 2 pass.** No test skipped, deleted, loosened or waited out. `core-test-execution` is the authority on this, and it is the one rule from a delegate worth stating twice — because "make the suite green" is exactly the instruction that produces a suite that no longer checks anything.
+**Never weaken a test to make step 2 pass.** No test skipped, deleted, loosened or waited out. `hc-test-execution` is the authority on this, and it is the one rule from a delegate worth stating twice — because "make the suite green" is exactly the instruction that produces a suite that no longer checks anything.
 
 ---
 
@@ -113,12 +113,12 @@ failed
 
 | Step | Delegate | Result |
 |---|---|---|
-| environment | backend-renchan-build-e2e-test-environment | ready |
-| unit (backend) | core-test-execution | 214 passed |
-| unit (frontend-employee) | core-test-execution | 51 passed |
-| scenarios | frontend-e2e-test-specification | 12 scenarios, 12 covered |
-| review | frontend-acceptance-review | 2 findings |
-| UX | frontend-uiux-audit | 1 finding (minor) |
+| environment | build-e2e-test-environment | ready |
+| unit (backend) | test-execution | 214 passed |
+| unit (frontend-employee) | test-execution | 51 passed |
+| scenarios | e2e-test-specification | 12 scenarios, 12 covered |
+| review | acceptance-review | 2 findings |
+| UX | uiux-audit | 1 finding (minor) |
 
 ## Findings
 
@@ -164,6 +164,6 @@ These are not criteria — they are properties of *this run* rather than of the 
 
 | File | Content |
 |---|---|
-| `../hora/references/structure.md` | the layout, the invariants, the division of labor, matching a skill by prefix |
+| `../hora/references/structure.md` | the layout, the invariants, the division of labor, how a skill is named |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |
 | `../hora-build/references/checkpoints.md` | checkpoint 18, and the checkpoints a finding sends the run back to |

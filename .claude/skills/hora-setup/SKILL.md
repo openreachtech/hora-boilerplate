@@ -99,7 +99,7 @@ It copies every skill that package ships into this repository's own `.claude/ski
 
 **Everything `/hora-build` and `/hora-accept` delegate to comes from here.** Those skills carry the order and the exit conditions; the procedures and the pass/fail criteria live in this package (`../hora/references/structure.md`, "The division of labor"). Without this step, every one of those delegations has nothing to reach.
 
-Report what was equipped, by count, and **name anything a later skill will look for by prefix and not find** — a checkpoint that cannot reach its skill is better known now than at the moment it is needed.
+Report what was equipped, by count, and **name anything a later checkpoint will look for and not find** — a checkpoint that cannot reach its skill is better known now than at the moment it is needed.
 
 ---
 
