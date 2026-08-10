@@ -42,17 +42,25 @@ git init
 
 ### 2. 仕様書を書く
 
+```
+/hora-spec
+```
+
+**`/hora-spec` が対話しながら書きます。** 空の仕様書をコピーし、7つのステージを順に進めます — まず想定ユースケース、次にこの版が載せるものと載せないもの、数値（非機能要件）、DB と API の設計、画面、セキュリティ、そして全体レビューです。**各節は書き込む前に全文を提示し、承認されてから書き込みます。** AI 自身が考えた内容は「提案」として明示されます。
+
+手で書く方法も引き続き使えます。同じ書式の同じ文書になります。
+
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
 
-[`specs/skeleton/spec.md`](./specs/skeleton/spec.md) は見出しと表のヘッダだけの空の仕様書です。これをコピーして埋めてください。`specs/skeleton/` は版ではないので、`/hora` が版として読むことはありません。
+[`specs/skeleton/spec.md`](./specs/skeleton/spec.md) は見出しと表のヘッダだけの空の仕様書です。`specs/skeleton/` は版ではないので、`/hora` が版として読むことはありません。
 
 [`spec-format.md`](./.claude/skills/hora/references/spec-format.md) は書式の説明です。各節が何のためにあるか、どれが必須か、何があると `/hora` が止まって尋ねるかが書かれています。**説明はそちらを読み、埋めるのは前者**という分担です。
 
 ### 3. `/hora` を実行する
 
-`/hora` はボイラープレートを取得し、対話しながら版の計画を立て、機能を1つずつ実装して検収します。答えが要るところで自ら止まります。プランナーはその場で尋ねますが、その場で答えられないものは `.hora/questions/` に書き出されるので、`specs/` を編集して `/hora` を再実行してください。
+`/hora` は、その版の仕様書がまだ無ければ先に `/hora-spec` を動かし、続いてボイラープレートを取得し、対話しながら版の計画を立て、機能を1つずつ実装して検収します。答えが要るところで自ら止まります。プランナーはその場で尋ねますが、その場で答えられないものは `.hora/questions/` に書き出されるので、`specs/` を編集して `/hora` を再実行してください。
 
 **通常の利用で打つコマンドは `/hora` だけです。** 各時点で何をしているのか、他の skill を直接呼びたい場合については [`docs/commands.ja.md`](./docs/commands.ja.md) を参照してください。
 
@@ -64,20 +72,23 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 ## 使い方
 
-`/hora` はオーケストレーターです。実際の作業は4つの SKILL が行います。
+`/hora` はオーケストレーターです。実際の作業は5つの SKILL が行います。
 
 | SKILL | 役割 | 実行単位 |
 |---|---|---|
+| [`/hora-spec`](./.claude/skills/hora-spec/SKILL.md) | 版の仕様書を対話しながら7つのステージで書く。1節ずつ承認を取って書き込む | 版ごとに1回 |
 | [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
 | [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | 版を確定し、対話しながら仕様を検証し、機能一覧を作る | 版ごとに1回 |
 | [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | 1つの機能を18のチェックポイントで通す | 機能ごとに1回 |
 | [`/hora-accept`](./.claude/skills/hora-accept/SKILL.md) | その時点で実装済みの全機能に対して受入テストを実施する | 各機能の最終チェックポイント、および版全体の掃引 |
 
 ```
-/hora-setup ──> /hora-plan ──┬─> /hora-build 機能A ─> /hora-accept ─┐
-                             ├─> /hora-build 機能B ─> /hora-accept ─┤
-                             └─> /hora-build 機能C ─> /hora-accept ─┴─> 全体掃引 ─> merge
+/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build 機能A ─> /hora-accept ─┐
+                                          ├─> /hora-build 機能B ─> /hora-accept ─┤
+                                          └─> /hora-build 機能C ─> /hora-accept ─┴─> 全体掃引 ─> merge
 ```
+
+7つの仕様ステージは [`stages.md`](./.claude/skills/hora-spec/references/stages.md) に、そこで適用される考え方 — ユースケースから始めること、1つの版に機能を詰め込みすぎないこと、ロールで切るかエンドポイントで切るか、同期処理か Worker か、認可を操作ごとに明記すること — は [`principles.md`](./.claude/skills/hora-spec/references/principles.md) にあります。
 
 18のチェックポイントは [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) にあります。仕様、想定ユースケース、DB / API スキーマ、stub API、実装に必要なモジュール、actual API、worker、セキュリティ検証、そしてフロントエンド、最後に検収です。
 
@@ -92,7 +103,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
 | [`docs/adopting.ja.md`](./docs/adopting.ja.md) | **既存プロジェクトへの適用。** 動くコードを持つ renchan バックエンドと furo フロントエンドに被せる |
 
-規則そのものは、それを所有する skill 側にあります：[`hora/SKILL.md`](./.claude/skills/hora/SKILL.md)、[`structure.md`](./.claude/skills/hora/references/structure.md)、[`commits.md`](./.claude/skills/hora/references/commits.md)、[`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md)、[`spec-format.md`](./.claude/skills/hora/references/spec-format.md)、[`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md)。
+規則そのものは、それを所有する skill 側にあります：[`hora/SKILL.md`](./.claude/skills/hora/SKILL.md)、[`structure.md`](./.claude/skills/hora/references/structure.md)、[`commits.md`](./.claude/skills/hora/references/commits.md)、[`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md)、[`spec-format.md`](./.claude/skills/hora/references/spec-format.md)、[`stages.md`](./.claude/skills/hora-spec/references/stages.md)、[`principles.md`](./.claude/skills/hora-spec/references/principles.md)、[`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md)。
 
 ## コントリビューション
 
