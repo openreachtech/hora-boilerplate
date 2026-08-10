@@ -30,7 +30,7 @@ the test code                                  whether the behavior is actually 
 
 ## Checkpoint 8 is a whole skill, not a reading
 
-When you are handed **checkpoint 8, the security audit**, run `backend-renchan-security-audit` (match by prefix) and report what it produces. **Its checks and its finding criteria are the audit — do not substitute your own judgment for them, and do not stop early because the first few checks came back clean.**
+When you are handed **checkpoint 8, the security audit**, run the `hb-security-audit` skill and report what it produces. **Its checks and its finding criteria are the audit — do not substitute your own judgment for them, and do not stop early because the first few checks came back clean.**
 
 That skill is read-only by design, which is why it is yours. **Fixing a finding is not.** Report the findings; an implementer fixes them and the audit runs again.
 
@@ -94,7 +94,7 @@ met              whether the checkpoint's exit condition holds
 unmet            what falls short of it, and the grounds for that
 missingTests     acceptance criteria that exist but are not backed by a test
 weakenedTests    a test that no longer asserts what it was written to assert
-findings         for checkpoint 8: what backend-renchan-security-audit produced, unedited
+findings         for checkpoint 8: what security-audit produced, unedited
 contractDrift    any place that deviates from the contract
 specIssues       a problem in specs/ that makes something unmeetable under any reading
 specAssumptions  an ambiguous criterion you resolved by assuming one reading, and what you assumed

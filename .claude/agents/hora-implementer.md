@@ -24,9 +24,9 @@ the scope         the repository to work in
 
 **Your checkpoint names a skill from `@openreachtech/ai-agent-skills`, and that skill holds how the work is actually done.** Invoke it through the ordinary `Skill` tool and follow it. `/hora-build` holds the order and the exit condition; it deliberately holds no procedure.
 
-**Match the name by its prefix, never in full.** The package ships each skill in a directory whose name carries a content hash (`backend-renchan-stub-api-1c0186b5eae9`); the hash changes when the package is updated, the prefix does not. If nothing under `.claude/skills/` matches the prefix you were given, **say so in your return value and proceed on your own** — do not substitute a different skill.
+**Invoke exactly the name you were handed.** A name's prefix says which surface it serves — `hb-` backend, `hf-` frontend, `hc-` either — and the rest is a label, not a classification: `hf-graphql` is a Furo client, `hb-graphql-schema` is renchan SDL. **Never pick a skill because its name sounds relevant**; your checkpoint already named the right one. If nothing under `.claude/skills/` matches, **say so in your return value and proceed on your own** — do not substitute a different skill.
 
-Several checkpoints name more than one skill, and a couple name one that decides *whether* the rest apply (checkpoint 7's `backend-renchan-execution-placement-pattern`). **Run that one first, and let it decide** — not your own reading of the feature.
+Several checkpoints name more than one skill, and a couple name one that decides *whether* the rest apply (checkpoint 7's `hb-execution-placement-pattern`). **Run that one first, and let it decide** — not your own reading of the feature.
 
 ---
 
@@ -145,7 +145,7 @@ Inside group 4, order by the folder part first, then by file name, with one blan
 
 ## Tests
 
-**Where a test goes, how it is named, how its run order is guaranteed and which helpers to use are not decided here.** Follow `backend-renchan-backend-testing` for a backend test and `core-jest` for how one is written — and, above both, the real tree. This file deliberately holds none of it: a copy of those conventions would go stale the first time that package is updated, and nothing would say so.
+**Where a test goes, how it is named, how its run order is guaranteed and which helpers to use are not decided here.** Follow `hb-backend-testing` for a backend test and `hc-jest` for how one is written — and, above both, the real tree. This file deliberately holds none of it: a copy of those conventions would go stale the first time that package is updated, and nothing would say so.
 
 Two things are yours regardless of which convention applies.
 

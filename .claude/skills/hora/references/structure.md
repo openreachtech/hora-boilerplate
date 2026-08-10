@@ -15,7 +15,7 @@
 | which version is being built, and which features it holds | Hora Kit | `/hora-plan` |
 | **the order of the checkpoints, and each one's exit condition** | Hora Kit | `/hora-build` |
 | **how to write a resolver, a migration, a component, a test** | **`@openreachtech/ai-agent-skills`** | that package's own skills |
-| **what an acceptance review looks at, and what it fails on** | **`@openreachtech/ai-agent-skills`** | `frontend-acceptance-review` and its neighbours |
+| **what an acceptance review looks at, and what it fails on** | **`@openreachtech/ai-agent-skills`** | `hf-acceptance-review` and its neighbours |
 
 **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it.** Delegate to it by name instead. A copy disagrees with the original the first time the package is updated, and nothing announces that it has — the copy still reads as authoritative.
 
@@ -25,17 +25,19 @@ This is the same reasoning `/hora-setup` already applies to the boilerplates: **
 
 `/hora-setup` runs `.claude/skills/hora-setup/scripts/equip-skills.sh`, which copies every skill the package ships into this repository's own `.claude/skills/`. From then on they are invocable through the ordinary `Skill` tool, like any other.
 
-**Match a skill by its name's prefix, never by its full name.** The package ships each skill in a directory whose name carries a content hash (`backend-renchan-stub-api-1c0186b5eae9`), and `equip-skills.sh` copies that name unchanged. **The hash changes when the package is updated; the prefix does not.** Every reference in these skills is written as a prefix for that reason — resolve it by listing `.claude/skills/` and taking the one entry that starts with it.
+**Use the name exactly as it is written here.** Each skill declares a `name:` in its own frontmatter, and the package's flatten build makes that the directory name under `dist/skills/`, which `equip-skills.sh` copies unchanged. There is nothing to resolve and no wildcard to expand: `hb-stub-api`, `hf-acceptance-review`, `hc-requirement-definition`.
 
-If no entry matches a named prefix, **say so and continue without it.** The package may have renamed or dropped that skill; guessing at a replacement is worse than proceeding and reporting the gap.
+If nothing under `.claude/skills/` matches a name a checkpoint gave you, **say so and continue without it.** The package may have renamed or dropped that skill; guessing at a replacement is worse than proceeding and reporting the gap.
 
-The prefix already says which surface a skill belongs to:
+**The prefix says which surface a skill serves.**
 
 | Prefix | Applies to |
 |---|---|
-| `backend-renchan-*` | the backend repository |
-| `frontend-*` | a frontend repository |
-| `core-*` | either |
+| `hb-` (hora-backend) | the backend repository |
+| `hf-` (hora-frontend) | a frontend repository |
+| `hc-` (hora-core) | either |
+
+**The prefix is the only part worth reading.** What follows it is a label, not a classification — `hf-graphql` is a Furo client and `hb-graphql-schema` is renchan SDL, and nothing but the prefix separates them. **What decides which skill applies is the checkpoint that names it**; `checkpoints.md` is the only authority on that, and choosing one because its name sounds relevant is how the wrong one gets invoked.
 
 ---
 
@@ -56,6 +58,7 @@ myproject-app/                     ← cwd. Holds specs/, .hora/ and .claude/. H
 - **One backend holds several servers.** An employee GraphQL server, an admin GraphQL server, a REST-API, a JSON-RPC and a Worker can live side by side in separate folders (this is renchan-core's design). **An API server and a Worker server that share a DB also belong in one repository**
 - **Frontends do not come in pairs, and there may be several.** Some projects only need an API for a phone app. **furo cannot hold more than one Nuxt app per repository**, so repositories split along groups of screens. One backend against several frontends comes from this asymmetry
 - **Names read `<myproject>-<role>-<purpose>`.** It is `myproject-frontend-admin`, not `myproject-admin-frontend`. Putting the role first keeps repositories of the same role adjacent and makes `app` → `backend` → `frontend-*` the order of implementation (verified to be locale-independent)
+- **A repository that already existed before Hora Kit rarely follows that name, and is not renamed to.** The layout declaration's optional `Directory` column says where such a row actually sits, and `/hora-setup` looks there instead. **The name in the `Repository` column is still what `target` is derived from**, so a directory is only ever a place on disk — nothing in `.hora/` depends on it
 - **More arrive in later versions.** A project starts with an API for a phone app and gains an admin screen later
 
 The `myproject` part is the project name. **Use the name written in the spec. Do not derive it mechanically from the directory name.** Glued onto `<role>-<purpose>` like this, call it the **project prefix** — the two terms name the same value, but "project prefix" is the word for this specific, repository-naming role.
@@ -123,7 +126,7 @@ These three must not be broken.
 | | Example | Treatment |
 |---|---|---|
 | Classifying | `target` / `depends` | **May be inferred.** It only attaches a label, it adds no information |
-| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
+| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / **how far a feature was already built (`built`)** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
 | **A permanent identifier** | **`id`** | **Must not be invented.** Derive it only where it can be derived (`/hora-plan`) |
 
 **`id` is not `target`.** Getting `target` wrong only changes which checkpoints apply, but `id` is the reference key from `.hora/tasks/` and is permanent — once given, it never changes. Inferred from heading text, the next run after someone edits the heading produces a different `id`, and recorded references come loose in silence.

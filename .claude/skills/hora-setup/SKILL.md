@@ -44,8 +44,9 @@ Settle the project name first. Use the name written in `specs/<version>/spec.md`
 Read `references/boilerplates.md` for the detailed procedure and the values to fill in. The essentials for each declared row (**numbered for this summary alone — these numbers do not line up with `boilerplates.md`'s own step numbers**):
 
 ```
+0. Settle this row's directory (below), and register it in the exclusion lists
 1. git ls-remote --tags to find the newest tag
-2. git clone --depth 1 --branch <newest tag> ... <project name>-<declared row>
+2. git clone --depth 1 --branch <newest tag> ... <that directory>
 3. rm -rf <dir>/.git && git -C <dir> init && git -C <dir> checkout -b release/<version>
 4. git -C <dir> commit --allow-empty -m "Release <version>" (the branch's opening marker)
 5. Rewrite name / description in package.json with the project's name
@@ -56,11 +57,31 @@ Read `references/boilerplates.md` for the detailed procedure and the values to f
 10. Backend row only: copy `.claude/skills/bank-id/` into `<dir>/.claude/skills/bank-id/`, if it is not already there
 ```
 
-**If `<project name>-<declared row>` already exists as a directory, skip steps 1–4 for that row** (finding the newest tag, cloning, discarding `.git`, the branch checkout that follows it, and its empty opening marker) — treat it as already fetched, however it got there. `../hora/references/commits.md`'s own branch rule still applies to it regardless (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker on it once created) — it is just not the fresh-`git init` case that skips straight to a `checkout -b`. This is not only for the ordinary idempotent re-run: the boilerplates are currently private, so a non-interactive session's own `git clone` fails for lack of credentials until a human either supplies credentials or clones the row manually beforehand. **Still run steps 5 onward for that row** — each is its own idempotent check (`package.json` may still carry the placeholder, `.env.development` may still be empty), not a single all-or-nothing skip.
+### Step 0 — which directory a row lives in, and excluding it
+
+**A row's directory is `<project name>-<declared row>`, unless the layout's optional `Directory` column says otherwise.** That column exists for adopting Hora Kit onto a repository that already exists under a name of its own, and it changes one thing besides where to look:
+
+| The `Directory` column is | Treatment |
+|---|---|
+| **omitted** | `<project name>-<declared row>`. Clone the boilerplate into it if it is missing. **The default, and the only case a new project meets** |
+| **written** | look for exactly that directory, **and never clone.** A stated directory declares that the repository already exists — if it is not there, **stop and ask.** Creating something fresh over that name would bury whatever the author meant to point at |
+
+**Then register the directory in both of this repository's own exclusion lists, unless it already matches them.**
+
+```
+.gitignore          /*-backend*/ and /*-frontend*/ already cover a default name
+eslint.config.js    `ignores` already covers '*-backend*/' and '*-frontend*/'
+```
+
+**A directory named anything else matches neither, and both failures are silent.** An unexcluded implementation repository gets committed wholesale into the hora repository, and nothing says so until somebody reads `git status`; the root's eslint then walks into a repository whose config is not its own. Add one entry per unmatched directory, to both files, and **report that you added it** — these are the hora repository's own files, so this step writes them rather than asking a human to remember.
+
+**If `<that directory>` already exists, skip steps 1–4 for that row** (finding the newest tag, cloning, discarding `.git`, the branch checkout that follows it, and its empty opening marker) — treat it as already fetched, however it got there. **A row with a `Directory` column always takes this path**, since it is never cloned in the first place. `../hora/references/commits.md`'s own branch rule still applies to it regardless (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker on it once created) — it is just not the fresh-`git init` case that skips straight to a `checkout -b`. This is not only for the ordinary idempotent re-run: the boilerplates are currently private, so a non-interactive session's own `git clone` fails for lack of credentials until a human either supplies credentials or clones the row manually beforehand. **Still run steps 5 onward for that row** — each is its own idempotent check (`package.json` may still carry the placeholder, `.env.development` may still be empty), not a single all-or-nothing skip.
 
 **Step 10 never overwrites an existing copy.** A human may have customized `bank-id` inside their own backend repository (adjusted retry timing, added a house convention) — this step only bootstraps it once, the same idempotent, leave-it-alone treatment steps 5 onward give a placeholder that a human already filled in. This step is also why `bank-id` can be invoked without `/hora`: it lands in the backend row's own `.claude/skills/`, reachable by any session working there directly.
 
 `.git` is thrown away and re-initialized so that hundreds of commits from somebody else's repo never land on a product repository's `main`. A clean history wins here.
+
+**This never happens to a repository that already existed.** Step 3 belongs to a fresh clone of a boilerplate, and a row that was skipped past it keeps its own history untouched — Hora Kit is adopted onto a repository, never over it.
 
 When this step finishes, make an initial commit in each repository it created, on the `release/<version>` branch checked out in step 3, after the empty marker from step 4 — never on whatever branch `git init` defaulted to.
 
@@ -78,7 +99,7 @@ It copies every skill that package ships into this repository's own `.claude/ski
 
 **Everything `/hora-build` and `/hora-accept` delegate to comes from here.** Those skills carry the order and the exit conditions; the procedures and the pass/fail criteria live in this package (`../hora/references/structure.md`, "The division of labor"). Without this step, every one of those delegations has nothing to reach.
 
-Report what was equipped, by count, and **name anything a later skill will look for by prefix and not find** — a checkpoint that cannot reach its skill is better known now than at the moment it is needed.
+Report what was equipped, by count, and **name anything a later checkpoint will look for and not find** — a checkpoint that cannot reach its skill is better known now than at the moment it is needed.
 
 ---
 

@@ -49,11 +49,13 @@ What is common to all eighteen:
 
 **A checkpoint may be marked not-applicable only against its own "when it does not apply" line**, never against convenience and never against "this seems small". A bare `n/a` is not a state; it is a skipped checkpoint wearing the mark of a cleared one.
 
+**There is exactly one reason that does not come from a checkpoint's own line: `built before Hora Kit was adopted`.** A spec section may declare `<!-- built: spec | backend | frontend -->`, and `/hora-plan` marks that many checkpoints not-applicable mechanically. **Checkpoint 18 is never one of them**, and a feature carrying the annotation is done on exactly the same terms as any other: acceptance passed. **The mark is also cleared wherever acceptance later sends the run back** — code that has to change was not inherited after all.
+
 Two of them deserve particular suspicion, because both look skippable and are usually not:
 
 | | Why it gets wrongly skipped | What has to be true |
 |---|---|---|
-| **7. Worker** | the processing "looks synchronous" | `backend-renchan-execution-placement-pattern` was actually run, and said so |
+| **7. Worker** | the processing "looks synchronous" | `hb-execution-placement-pattern` was actually run, and said so |
 | **5 / 13. The modules the implementation needs** | "nothing extra is needed" | what the next checkpoint will import was actually listed and checked |
 
 ### Tests, where a checkpoint's exit condition names them
@@ -71,9 +73,9 @@ Acceptance criterion: createRpaFlow returns an error on a duplicate flow_key
 ✅ a test that checks the kind or content of the error on a duplicate
 ```
 
-**Never weaken a test to pass a checkpoint.** No test skipped, deleted, loosened or waited out. `core-test-execution` is the authority; the reason it is repeated here is that "make the suite green" is exactly the instruction that produces a suite which no longer checks anything.
+**Never weaken a test to pass a checkpoint.** No test skipped, deleted, loosened or waited out. `hc-test-execution` is the authority; the reason it is repeated here is that "make the suite green" is exactly the instruction that produces a suite which no longer checks anything.
 
-Where tests live, how they are named, how their order is guaranteed and which helpers to use all come from `backend-renchan-backend-testing` and the real tree `/hora-setup` read — not from here.
+Where tests live, how they are named, how their order is guaranteed and which helpers to use all come from `hb-backend-testing` and the real tree `/hora-setup` read — not from here.
 
 **A checkpoint whose spec has no acceptance criteria must not be marked done.** It should already have been raised as `missing-acceptance` (`blocking: yes`) by `/hora-plan`, so this is never reached.
 
@@ -170,4 +172,4 @@ Forbidden syntax      while / do-while / for / for-of / for-in / let / switch
 | the run history (what happened when) | `git log .hora/` already holds it. No separate state file is kept |
 | the history of identifier changes | git holds it. The glossary only records "why this name" |
 | the result of manual verification | `/hora` never does it. It only points at the steps |
-| how an acceptance review reached its verdict | `frontend-acceptance-review` owns that. `.hora/acceptance/` records the verdict and the findings, not the reasoning behind each criterion |
+| how an acceptance review reached its verdict | `hf-acceptance-review` owns that. `.hora/acceptance/` records the verdict and the findings, not the reasoning behind each criterion |

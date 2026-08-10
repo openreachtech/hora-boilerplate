@@ -220,7 +220,7 @@ A reference from `.hora/tasks/` takes the form `<!-- spec: <id> -->`. **No file 
 
 **`target` decides which checkpoints a feature runs through.** A feature whose `target` is `backend` alone skips the frontend gate entirely; one that names a frontend row runs it. It no longer decides which file a task is written to — one feature is one file, whatever it touches — so getting it wrong changes what gets built, not just where a line is filed.
 
-**Make it match the name written in the repository layout section.** `/hora` stops with a question on a mismatch.
+**Make it match the name written in the repository layout section's `Repository` column** — not its `Directory` column, if one is written. `/hora` stops with a question on a mismatch.
 
 Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
@@ -231,6 +231,36 @@ Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 ### `depends`
 
 The `id` of the sections it depends on. Used to guarantee implementation order. State `<!-- depends: none -->` explicitly when there are none.
+
+### `built`
+
+**Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was already implemented before Hora Kit ever read the spec, so that working code is not rebuilt through checkpoints that describe how it would have been built.
+
+```markdown
+## Attendance
+<!-- id: attendance -->
+<!-- target: backend, frontend-employee -->
+<!-- built: backend -->
+```
+
+The value is the gate the existing code already reaches.
+
+| Value | Means | Effect on the feature's checkpoints |
+|---|---|---|
+| *(omitted)* | nothing exists yet | **the default. Every checkpoint starts `[ ]`** |
+| `spec` | the specification exists; no code does | 1–2 not applicable |
+| `backend` | the backend gate's work is already there | 1–9 not applicable |
+| `frontend` | the frontend gate's work is already there too | 1–17 not applicable |
+
+`/hora-plan` marks each of those `[x]` with the reason `built before Hora Kit was adopted`, mechanically — the same not-applicable state any checkpoint uses, never a claim that the checkpoint ran.
+
+**Checkpoint 18, acceptance, can never be claimed by `built`.** It stays `[ ]` whatever the value is, and that is the entire point of the annotation: **adopting the kit does not rebuild what works, but it does find out what actually works.** A feature declared `built: frontend` goes straight into the acceptance sweep, against the running application, and whatever falls short comes back as findings.
+
+**When acceptance does send one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change, so the checkpoints from the earliest one affected are reopened and run for real.
+
+**`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. A human writes it, or it is absent.
+
+**It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
 ### `kicked`
 
@@ -303,7 +333,7 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | Section | `target` | Role | May a declared Source satisfy it instead of `spec.md`'s own text? |
 |---|---|---|---|
 | **Application prefix** (the project name) | `none` | **the prefix every repository name is built from. `/hora` stops without it** | **No — write it directly in `spec.md`** |
-| **Repository layout** | `none` | **declares which repositories and servers to create. Written in the entry point. `/hora` stops without it** | **No — write it directly in `spec.md`** |
+| **Repository layout** | `none` | **declares which repositories and servers to create, and where an already-existing one sits. Written in the entry point. `/hora` stops without it** | **No — write it directly in `spec.md`** |
 | Implementation scope | `none` | declares what to build this time and what is out of scope | Yes |
 | Existing assets | `none` | port existing code, or build new | Yes |
 | Manual verification | `none` | the middleware needed, and its version | Yes |
@@ -395,6 +425,25 @@ The skeleton's sections 8 onward are **examples of feature sections, not a fixed
 - **Names read `<myproject>-<role>-<purpose>`** — `<myproject>-frontend-admin`, not `<myproject>-admin-frontend`. Role first keeps repositories of the same role adjacent, so `app` → `backend` → `frontend-*` is the order of implementation
 - **`Origin` is either `renchan` (backend) or `furo` (frontend).** `<myproject>-app`, the repository this spec lives in, is not written here — it always exists
 - **`target`'s value is this table's repository name with `<myproject>-` removed**
+
+#### `Directory` — for a repository that already exists under another name
+
+**A fifth column, optional, and only ever needed when adopting Hora Kit onto a project that already exists.** A repository built before Hora Kit was adopted is rarely named `<myproject>-<role>-<purpose>`, and there is no reason to rename it just to be read.
+
+```markdown
+| Repository | Origin | Role | Directory |
+|---|---|---|---|
+| `acme-backend` | renchan | the API and jobs (holds the DB) | `legacy-api` |
+```
+
+| The column is | What `/hora-setup` does |
+|---|---|
+| **omitted** | looks for `<myproject>-<role-purpose>`, and clones the boilerplate into it if it is missing. **The default, and the only case a new project ever meets** |
+| **written** | looks for exactly that directory, **and never clones.** A stated directory is a statement that the repository already exists; if it is not there, `/hora-setup` stops and asks rather than creating something over the top of the name |
+
+**`target`'s value still comes from the `Repository` column, never from `Directory`.** The two are deliberately independent: `target` is a permanent classification recorded in `.hora/tasks/`, and a directory is a place on one person's disk. Rename the folder and nothing in `.hora/` moves.
+
+**Writing `Directory` also changes what gets excluded.** The hora repository's `.gitignore` and its own `eslint.config.js` exclude implementation repositories **by name** (`*-backend*/`, `*-frontend*/`), and a directory named anything else matches neither. `/hora-setup` registers it in both and reports that it did — see its own step 1. This is not something to leave to whoever adopts the kit: an unexcluded repository gets committed wholesale into the hora repository, and nothing says so until someone reads `git status`.
 
 ### 3. Implementation scope
 

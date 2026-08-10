@@ -64,7 +64,9 @@ The existing boilerplates leave `package.json`'s `version` at `0.0.0` and manage
 
 ### 4. Clone it and throw away its history
 
-**Repeat this for each declared row.** Below is an example with two rows.
+**Repeat this for each declared row.** Below is an example with two rows, both using the default directory name.
+
+**A row whose layout entry carries a `Directory` column is never cloned at all** — that column declares the repository already exists, so this whole step is skipped for it and the directory is used as written. Everything below is about a row that does not carry one.
 
 ```bash
 git clone --depth 1 --branch <newest tag> \
@@ -98,6 +100,35 @@ The parent's (`myproject-app`'s) `.gitignore` already ignores the implementation
 ```
 
 **The trailing `*` is required.** `/*-frontend/` alone does not match `<myproject>-frontend-admin`, so a repository that carries a purpose suffix would end up tracked (confirmed by measurement). The leading `/` is also required — without it, a same-named directory anywhere under the tree, like `docs/<myproject>-frontend-admin/`, would be swept in too.
+
+#### A declared `Directory` matches neither pattern
+
+**Both patterns match on the name, so a row that declares its own directory (`legacy-api/`, and the like) is excluded by neither.** Two things then go wrong at once, and **neither of them says so:**
+
+| | What happens | How it surfaces |
+|---|---|---|
+| `.gitignore` | the whole implementation repository is tracked by the hora repository and committed into it | only when somebody reads `git status` — by which point it is committed |
+| `eslint.config.js` | the root's own lint walks into a repository whose config is not its own | a flood of violations against rules that repository never agreed to |
+
+**Step 0 of `/hora-setup` adds one entry per unmatched directory, to both files, and reports that it did.** Both belong to the hora repository itself, so this is its own file to write — not an instruction for whoever adopted the kit to remember.
+
+```gitignore
+#### an implementation repository declared under its own directory name
+/legacy-api/
+```
+
+```js
+ignores: [
+  '**/node_modules/**',
+
+  '*-backend*/',
+  '*-frontend*/',
+  'legacy-api/',            // declared under its own directory name
+  ...
+]
+```
+
+**Write the entry exactly as declared, with no wildcard around it.** The two built-in patterns are wildcards because they cover a family of generated names; a declared directory is one literal name, and widening it into a pattern would start excluding files nobody meant to exclude.
 
 ### 5. Equip the skills `@openreachtech/ai-agent-skills` ships
 
@@ -146,6 +177,8 @@ Follow the keys the real boilerplate ships (the above is a guide — read the ac
 **`/hora` writes these while upstream does not ship them.** None of the three boilerplates — renchan, furo, chiho — ships a docker or compose file. What they ship is startup scripts (`db:setup` / `db:seed:dev` / `db:refresh` / `dev`) — **what is missing is the middleware.**
 
 Place them in **`<myproject>-backend/`**. Not in the parent.
+
+**Never overwrite one that is already there.** A repository adopted into Hora Kit very often brings its own docker setup, tuned to that project; replacing it with a generated one is how a working local environment stops working. If a file of either name exists, leave it, read it for what profiles it already offers, and report the difference against what the spec's manual-verification table asks for.
 
 - a frontend uses no middleware
 - `<myproject>-backend` is an independent repository, so someone will clone it alone and work without the parent's compose file present
@@ -199,7 +232,7 @@ default (no profile)   mariadb / redis
 profiles                elasticsearch / kafka / qdrant / minio
 ```
 
-**Redis is a required dependency of `renchan-job-bullmq`**, so a project with any Job cannot drop it. Even a check against SQLite still brings Redis up.
+**Redis is a required dependency of `hb-renchan-job-bullmq`**, so a project with any Job cannot drop it. Even a check against SQLite still brings Redis up.
 
 **Write values in directly. Do not reference `.env`.** `.env` is gitignored and is guaranteed not to exist right after a clone, so a value referenced from compose would come out empty. Fix the host to localhost and fix the port.
 

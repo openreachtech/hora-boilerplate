@@ -4,14 +4,29 @@ node_modules/
 .scratch/
 !.scratch/directory-keeper
 
-#### implementation repositories cloned by /hora's Stage 0
+#### implementation repositories, fetched or adopted by /hora-setup
 /*-backend*/
 /*-frontend*/
 
+# A repository adopted under its own directory name matches neither pattern
+# above, so /hora-setup appends one literal entry per declared `Directory`
+# here. Left out, the whole repository gets committed into this one, and
+# nothing says so until somebody reads `git status`.
+
 #### skills equipped from @openreachtech/ai-agent-skills by equip-skills.sh (regenerated, not authored here)
-.claude/skills/backend-*/
-.claude/skills/frontend-*/
-.claude/skills/core-*/
+#
+# Ignore everything under .claude/skills/ and name this repository's own back
+# in. The package does prefix its skills (hb-/hf-/hc-), but those prefixes
+# have already changed twice, and each time the old denylist kept matching
+# nothing while saying nothing. An allowlist of the six we author here cannot
+# fail that way, whatever the package renames next.
+/.claude/skills/*
+!/.claude/skills/bank-id/
+!/.claude/skills/hora/
+!/.claude/skills/hora-accept/
+!/.claude/skills/hora-build/
+!/.claude/skills/hora-plan/
+!/.claude/skills/hora-setup/
 
 #### for Windows
 Thumbs.db
