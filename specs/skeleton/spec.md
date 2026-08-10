@@ -15,6 +15,10 @@
   specs/ whose name is a semver version, so this one is never planned, never
   implemented, and never reported as unfinished.
 
+  The repository layout's Directory column is only for adopting Hora Kit onto
+  a repository that already exists under another name. A new project leaves
+  the whole column out.
+
   Sections 8 onward are examples of feature sections, not a fixed list.
   Delete the ones this project has no use for, add the ones it needs, and
   renumber freely — /hora reads `id`, never a section number.
@@ -37,9 +41,9 @@
 
 ## 2. Repository layout
 
-| Repository | Origin | Role |
-|---|---|---|
-|  |  |  |
+| Repository | Origin | Role | Directory |
+|---|---|---|---|
+|  |  |  |  |
 
 ### 2.1 Servers
 
