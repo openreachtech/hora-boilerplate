@@ -232,6 +232,36 @@ Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
 The `id` of the sections it depends on. Used to guarantee implementation order. State `<!-- depends: none -->` explicitly when there are none.
 
+### `built`
+
+**Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was already implemented before Hora Kit ever read the spec, so that working code is not rebuilt through checkpoints that describe how it would have been built.
+
+```markdown
+## Attendance
+<!-- id: attendance -->
+<!-- target: backend, frontend-employee -->
+<!-- built: backend -->
+```
+
+The value is the gate the existing code already reaches.
+
+| Value | Means | Effect on the feature's checkpoints |
+|---|---|---|
+| *(omitted)* | nothing exists yet | **the default. Every checkpoint starts `[ ]`** |
+| `spec` | the specification exists; no code does | 1–2 not applicable |
+| `backend` | the backend gate's work is already there | 1–9 not applicable |
+| `frontend` | the frontend gate's work is already there too | 1–17 not applicable |
+
+`/hora-plan` marks each of those `[x]` with the reason `built before Hora Kit was adopted`, mechanically — the same not-applicable state any checkpoint uses, never a claim that the checkpoint ran.
+
+**Checkpoint 18, acceptance, can never be claimed by `built`.** It stays `[ ]` whatever the value is, and that is the entire point of the annotation: **adopting the kit does not rebuild what works, but it does find out what actually works.** A feature declared `built: frontend` goes straight into the acceptance sweep, against the running application, and whatever falls short comes back as findings.
+
+**When acceptance does send one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change, so the checkpoints from the earliest one affected are reopened and run for real.
+
+**`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. A human writes it, or it is absent.
+
+**It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
+
 ### `kicked`
 
 **To withdraw a feature, add this instead of deleting the section.**

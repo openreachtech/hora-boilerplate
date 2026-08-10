@@ -184,6 +184,7 @@ Reserving `--` for separation alone makes the reverse lookup from `id` to path u
 | `target` | **which repositories this feature touches.** The repository name with the project prefix removed (`myproject-frontend-admin` → `frontend-admin`; the backend is a single repository, so always `backend`). Also `app` and `none`. Several are comma-separated |
 | `depends` | the `id` of the sections it depends on. State `none` explicitly when there are none |
 | `kicked` | `yes` means withdrawn. **Shown in an annotation rather than by deleting the section** |
+| `built` | how far this feature was implemented **before Hora Kit was adopted** — `spec` / `backend` / `frontend`. Absent for anything built under the kit. **Never inferred** |
 
 Subsections inherit from their parent. State it to override.
 
@@ -428,6 +429,18 @@ Conflict: appends to scalars/index.js. Two other features carry the same mark
 ## Acceptance gate
 - [ ] 18. Acceptance (E2E and unit both)
 ```
+
+**A feature carrying `built:` starts with that much already marked not applicable.**
+
+| `built` | Checkpoints written `[x] <!-- n/a: built before Hora Kit was adopted -->` |
+|---|---|
+| `spec` | 1–2 |
+| `backend` | 1–9 |
+| `frontend` | 1–17 |
+
+**Checkpoint 18 always stays `[ ]`.** No value of `built` reaches it, and no reading of an existing repository can stand in for an acceptance review — that is the whole reason the annotation stops one short of the end.
+
+**Do not infer `built` from the repository.** A feature nobody declared is planned from checkpoint 1, however finished its code looks; a half-built screen and a finished one are indistinguishable from a file listing, and guessing wrong here silently skips the gates that would have caught it.
 
 **Write every checkpoint, including the ones that will obviously not apply.** `/hora-build` marks one not applicable with a written reason; a checkpoint this skill leaves out instead is indistinguishable from one that was forgotten. `../hora-build/references/checkpoints.md` is the authority on the list and its wording — copy it from there, do not paraphrase it.
 

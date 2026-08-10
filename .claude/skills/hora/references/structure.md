@@ -124,7 +124,7 @@ These three must not be broken.
 | | Example | Treatment |
 |---|---|---|
 | Classifying | `target` / `depends` | **May be inferred.** It only attaches a label, it adds no information |
-| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
+| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / **how far a feature was already built (`built`)** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
 | **A permanent identifier** | **`id`** | **Must not be invented.** Derive it only where it can be derived (`/hora-plan`) |
 
 **`id` is not `target`.** Getting `target` wrong only changes which checkpoints apply, but `id` is the reference key from `.hora/tasks/` and is permanent — once given, it never changes. Inferred from heading text, the next run after someone edits the heading produces a different `id`, and recorded references come loose in silence.

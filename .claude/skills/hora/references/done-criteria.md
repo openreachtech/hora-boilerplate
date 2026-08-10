@@ -49,6 +49,8 @@ What is common to all eighteen:
 
 **A checkpoint may be marked not-applicable only against its own "when it does not apply" line**, never against convenience and never against "this seems small". A bare `n/a` is not a state; it is a skipped checkpoint wearing the mark of a cleared one.
 
+**There is exactly one reason that does not come from a checkpoint's own line: `built before Hora Kit was adopted`.** A spec section may declare `<!-- built: spec | backend | frontend -->`, and `/hora-plan` marks that many checkpoints not-applicable mechanically. **Checkpoint 18 is never one of them**, and a feature carrying the annotation is done on exactly the same terms as any other: acceptance passed. **The mark is also cleared wherever acceptance later sends the run back** — code that has to change was not inherited after all.
+
 Two of them deserve particular suspicion, because both look skippable and are usually not:
 
 | | Why it gets wrongly skipped | What has to be true |

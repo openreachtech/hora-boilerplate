@@ -46,6 +46,8 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 3. That set is the scope
 ```
 
+**A feature that was implemented before Hora Kit was adopted is in scope like any other.** Its checkpoints are marked not-applicable up to the acceptance gate, never through it — so the first sweep after adoption is the run that says what the existing product actually does. Expect findings there, and expect them to be the reason adopting the kit was worth doing.
+
 **Cumulative scope is the whole point of running acceptance per feature.** A feature that breaks an earlier one fails here, in the run that broke it, while the change is one commit old — instead of at the end of the version, where it arrives alongside twenty other changes and nobody can say which caused it.
 
 Two invocations differ only in scope and in what is written:
@@ -139,6 +141,7 @@ failed
 | Kind of finding | What happens |
 |---|---|
 | the implementation falls short | the named checkpoints are cleared in the named features, and rebuilt through a `retake/` branch (`../hora/references/commits.md`) — the `feature/` branch has already merged by this point |
+| the implementation falls short, **in a feature marked `built before Hora Kit was adopted`** | the same, and **the not-applicable marks it lands on are cleared too.** Code that has to change was not simply inherited; from the earliest checkpoint affected, it is built for real |
 | the spec cannot be satisfied under any reading | a `contradiction` question (`blocking: yes`), back to `/hora-plan` |
 | an ambiguous criterion was met under one reading | a `spec-assumption` question (`blocking: no`), naming the reading assumed |
 | the environment was not there | a `lacked-environment` question (`blocking: yes`). **No code change is attempted** |

@@ -22,6 +22,10 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **A checkpoint may only be marked not-applicable with a written reason.** The reason is checked against that checkpoint's own "when it does not apply" line below — never against convenience, never against "this seems small". A bare `n/a` is not a state; it is a checkpoint that was skipped and dressed up as one that was cleared.
 
+**One reason does not come from a checkpoint's own line: `built before Hora Kit was adopted`.** A spec section may declare `<!-- built: spec | backend | frontend -->` when the code already existed before the kit was ever run against it, and `/hora-plan` marks that many checkpoints not-applicable, mechanically. **Checkpoint 18 is never among them** — acceptance is exactly what adoption is for.
+
+**A not-applicable mark is cleared the moment its reason stops holding.** When checkpoint 18 sends the run back into a stretch marked `built before Hora Kit was adopted`, that code is now being changed, so it was not simply inherited after all: reopen from the earliest checkpoint affected and run it for real.
+
 ### The order is a rule
 
 **No checkpoint may be entered until every earlier one is `[x]`.** There is no exception, no fast path, and no "do them in parallel because they are independent" — several of them look independent and are not, and the ones that genuinely are still cost nothing by being ordered.

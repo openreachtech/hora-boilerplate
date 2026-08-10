@@ -37,6 +37,8 @@ Read `../hora/references/structure.md` (the layout, the invariants, where a comm
 
 Report the decision in one line before starting work — "building #attendance, from checkpoint 6 of 18".
 
+**A feature whose only open checkpoint is 18 writes no code, and cuts no branch.** That is what a section declaring `<!-- built: frontend -->` looks like on adoption: everything up to the acceptance gate is marked not-applicable, so this skill goes straight to `/hora-accept`. Cutting a `feature/` branch for it would open one with nothing to put on it.
+
 **If no feature is ready and some are unfinished, that is a dependency cycle or a reference to an `id` that does not exist.** Raise it as a `contradiction` question (`blocking: yes`) and stop; it cannot proceed until the spec is fixed.
 
 ---
