@@ -11,10 +11,12 @@
 | | Who owns it | Where it lives |
 |---|---|---|
 | which phase runs next, and when a project is ready for it | Hora Kit | `/hora` |
+| **the order a spec is decided in, and what must be settled before the next thing** | Hora Kit | `/hora-spec` |
 | which repositories exist, and what fills them | Hora Kit | `/hora-setup` |
 | which version is being built, and which features it holds | Hora Kit | `/hora-plan` |
 | **the order of the checkpoints, and each one's exit condition** | Hora Kit | `/hora-build` |
 | **how to write a resolver, a migration, a component, a test** | **`@openreachtech/ai-agent-skills`** | that package's own skills |
+| **how to shape a table, an SDL, a job, a screen** | **`@openreachtech/ai-agent-skills`** | `hb-database-design`, `hb-graphql-schema`, `hb-execution-placement-pattern`, `hf-uiux-forge` and their neighbours |
 | **what an acceptance review looks at, and what it fails on** | **`@openreachtech/ai-agent-skills`** | `hf-acceptance-review` and its neighbours |
 
 **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it.** Delegate to it by name instead. A copy disagrees with the original the first time the package is updated, and nothing announces that it has — the copy still reads as authoritative.
@@ -103,21 +105,30 @@ These three must not be broken.
 
 | Directory | Who writes | What a hora skill may do |
 |---|---|---|
-| `specs/` | humans | **read only, with one exception: `/hora-plan`, and only with the author's approval, one edit at a time** (below) |
+| `specs/` | **`/hora-spec`, `/hora-plan`, and humans** | **write, and only with approval: `/hora-spec` a section at a time, `/hora-plan` an edit at a time. Every other skill is read-only** (below) |
 | `.hora/` | hora skills | write (humans read only) |
 
-**`/hora-plan` is the single exception, and it is narrow.** Planning is a conversation with whoever wrote the spec, and asking that person to hand-edit twenty separate holes one at a time defeats the point of having the conversation. So the planner may write into `specs/` — but only ever like this:
+**Two skills may write there, and both do it the same way.**
 
 ```
-1. state the hole or contradiction found
-2. propose the exact edit, in full
-3. wait for that person to approve THAT edit
+1. state what is missing, or what was decided in the conversation
+2. show the exact text, in full, as it will be written
+3. wait for approval of THAT text
 4. write it
 ```
 
-**Approval is per edit, never blanket.** "Yes, fix them all" is not approval of edits nobody has read yet; go back to step 2 for each one. And what is being protected here is not the act of writing — it is that **no requirement ever enters `specs/` without a human having read the exact words first.** A planner that writes an unapproved edit has invented a requirement, which is invariant 2.
+| | Writes | Granularity of approval |
+|---|---|---|
+| **`/hora-spec`** | a whole version's spec, from a conversation with whoever wants the product | **a section**, at the end of the stage that drafted it |
+| **`/hora-plan`** | the holes and contradictions found while planning | **an edit** |
 
-**`specs/skeleton/spec.md` is human territory too, and is not a version.** It is the blank spec a human copies to `specs/<version>/spec.md`. `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, implemented, or counted as unfinished — and no hora skill ever does the copying.
+**Approval is never blanket.** "Yes, fix them all" is not approval of text nobody has read yet, and one "yes" over a whole document is worse than none, because the record then says it was read. Go back to step 2 for each unit.
+
+**What is protected here is not the act of typing — it is that no requirement ever enters `specs/` without a human having read the exact words.** A person made to type it themselves read it no more carefully; a skill that shows the text and waits protects exactly what this invariant protects. **A skill that writes unapproved text has invented a requirement, which is invariant 2.**
+
+**An improvement a skill thought of is a proposal, and it is labelled one.** Proposing is expected — whoever asks for a product cannot see the gaps from inside their own request. What is forbidden is the proposal that goes in silently.
+
+**`specs/skeleton/spec.md` is written to by nobody, and is not a version.** It is the blank spec that gets copied to `specs/<version>/spec.md` — `/hora-spec` does the copying, and a human may run the `cp` instead. `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, implemented, or counted as unfinished.
 
 **Every other skill — `/hora-setup`, `/hora-build`, `/hora-accept`, and every agent any of them starts — is strictly read-only on `specs/`.** On finding a problem there, they report it; they never fix it. A typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone.
 
@@ -177,6 +188,9 @@ The declaration lives in the spec's document information section.
 
 ```
 .hora/
+  spec/<version>/_stages.md     the seven spec stages, what was decided in conversation
+                                and is not visible in spec.md, and the proposals
+                                that were declined. /hora-spec writes it
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it
