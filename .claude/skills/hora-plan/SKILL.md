@@ -517,5 +517,6 @@ When it stopped with a `blocking: yes` outstanding, **put what the human has to 
 |---|---|
 | `../hora/references/structure.md` | the layout, the invariants, the language rule |
 | `../hora/references/spec-template.md` | the authority on the format of `specs/<version>/spec.md` |
+| `../hora/references/spec-skeleton.md` | the blank spec a human copies. Point at it when a version's `spec.md` is still empty |
 | `../hora-build/references/checkpoints.md` | the checkpoint list to write into each feature file |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |

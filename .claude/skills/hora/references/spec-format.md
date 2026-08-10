@@ -1,8 +1,8 @@
-# The design document template
+# The design document format
 
-The authority on the format of `specs/<version>/spec.md`.
+The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec you fill in.**
 
-**This file must not be copied into `specs/`.** `specs/` is where a human writes, and `/hora` never writes into it. `specs/1.0.0/spec.md` ships empty — a human writes it, referring to this template, the same way every later version's `spec.md` gets written.
+**This file explains the format. It is not the thing you fill in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/<version>/spec.md`. `specs/1.0.0/spec.md` ships empty; a human writes it, reading this and filling in that, the same way every later version's `spec.md` gets written.
 
 ---
 
@@ -328,51 +328,47 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 
 ---
 
-## The template
+## The blank spec is a separate file, and it lives under `specs/`
 
-Copy the following and fill it in. Replace anything in `<>`.
+**`specs/skeleton/spec.md` is the blank spec** — every heading and every table header, with nothing filled in and nothing explaining itself.
 
-````markdown
-# <project name> design document
+```bash
+cp specs/skeleton/spec.md specs/1.0.0/spec.md
+```
 
-## 1. Document information
+**The two are split on purpose.** A template with its explanation woven through it is a template you have to strip before you can use it, and an explanation cramped into HTML comments is one nobody reads twice. **This file explains; that file gets filled in.**
+
+**It sits under `specs/` rather than beside this file because that is where it is used.** Copying it is a plain `cp` inside one directory, and the copy lands in the shape it is meant to have — `specs/<version>/spec.md`, the one structural requirement of the whole format.
+
+**`specs/skeleton/` is not a version, and is never treated as one.** `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, never implemented, and never counted as unfinished. It also raises no `orphan` question: that rule is about files inside a version that nothing links to.
+
+**Copying it is a human's action.** No hora skill writes into `specs/` — `/hora-plan` is the single exception, and only one approved edit at a time, in conversation.
+
+The skeleton's sections 8 onward are **examples of feature sections, not a fixed list.** Delete what a project has no use for, add what it needs, renumber freely: `/hora` reads `id`, never a section number.
+
+---
+
+## What goes in each section
+
+### 1. Document information
 
 | Item | Content |
 |---|---|
-| Product version | <match the directory name. e.g. 1.0.0> |
-| Document revision | <this document's own revision number. Separate from the product version> |
-| Author | <name> |
-| Question language | <Japanese / English. If omitted, defaults to the language of whoever runs /hora> |
-| Annotation source | <omit for the default (write `<!-- id: -->`/`<!-- target: -->` per section). Or: a link to a table already in this spec that maps its own identifier prefixes to a target — see below> |
+| Product version | match the directory name (`1.0.0`) |
+| Document revision | this document's own revision number. Separate from the product version |
+| Author | a name |
+| Question language | `Japanese` / `English`. Defaults to the language of whoever runs `/hora` |
+| Annotation source | omit for the default. Or a link to a table in this spec mapping identifier prefixes to a target |
 
-<!--
-  "Question language" is the language /hora writes into .hora/questions/.
-  Whoever runs it is usually Japanese, so this may be left out, but on a
-  project whose client side includes foreign members, the operator's language
-  leaves someone unable to read it. A question stays in a file and is read by
-  whoever edits specs/ next, so it cannot be settled by the operator's
-  convenience alone.
+**`Question language` is the language `/hora` writes into `.hora/questions/`.** Whoever runs it is usually Japanese, so this may be left out — but **on a project whose client side includes foreign members, the operator's language leaves someone unable to read it.** A question stays in a file and is read by whoever edits `specs/` next, so it cannot be settled by the operator's convenience alone. **Never write two side by side:** a single question written twice leaves no original, and only one half ever gets updated.
 
-  Never write two side by side. A single question written twice leaves no
-  original, and only one half gets updated.
+**`Annotation source` only needs writing when the spec already carries its own permanent, unique identifier per requirement or element** (`FR-010`, `TBL-01`, `SCR-03`) plus a table mapping each identifier's prefix to a target. Point this at that table and `/hora` takes `id` from the element's own identifier and `target` from the table, instead of requiring `<!-- id: -->`/`<!-- target: -->` on every section. Omit the row for the default.
 
-  "Annotation source" only needs writing when the spec already carries its
-  own permanent, unique identifier per requirement or element (FR-010,
-  TBL-01, SCR-03, and the like) plus a table mapping each identifier's
-  prefix to a target. Point this at that table and /hora takes id from the
-  element's own identifier and target from the table, instead of requiring
-  `<!-- id: -->`/`<!-- target: -->` to be written on every section. Omit
-  this row for the default.
--->
+**The project name is written as prose, right under the table.** It becomes the **project prefix** of every repository name, and `/hora-setup` combines it with the repository layout table to create the actual repositories. **It is not derived from a directory name, so it must always be written here.**
 
-**Project name: `<myproject>`**
+### 2. Repository layout
 
-Becomes the **project prefix** of every repository name. `/hora` combines this name with the repository layout table below to create the actual repositories.
-**It is not derived from a directory name, so it must always be written here.**
-
-
-## 2. Repository layout
-
+```markdown
 | Repository | Origin | Role |
 |---|---|---|
 | `<myproject>-backend` | renchan | the API and jobs (holds the DB) |
@@ -387,277 +383,115 @@ Becomes the **project prefix** of every repository name. `/hora` combines this n
 | `admin-graphql` | GraphQL | `frontend-admin` |
 | `public-rest` | REST | the phone app |
 | `worker` | — | an API server in the same repository (no contract needed) |
+```
 
-<!--
-  /hora reads this table to decide which repositories to clone. Without it, it stops.
+**`/hora-setup` reads this table to decide which repositories to clone. Without it, it stops.**
 
-  This section belongs in the entry point (specs/<version>/spec.md).
-  The layout applies to the whole version, so writing it in a feature file
-  does not count as the declaration.
+- **This section belongs in the entry point.** The layout applies to the whole version, so writing it in a feature file does not count as the declaration
+- **The backend is exactly one.** The policy is one DB system = one repository, so `/hora` stops with a question at zero, or at two or more
+- **Frontends are zero or more, freely.** Some projects have none at all (an API-only project for a phone app). `furo` cannot hold more than one Nuxt app per repository, so repositories split along groups of screens
+- **One backend holds several servers side by side** (renchan-core's design). A GraphQL server for employees and one for admins may run separately. **The server table is the unit contracts are derived from, so it must always be written**, and its `consumer` column lets you read in one place which frontend looks at which contract
+- **Adding a row in a later version** makes `/hora-setup` create that repository when the version is planned
+- **Names read `<myproject>-<role>-<purpose>`** — `<myproject>-frontend-admin`, not `<myproject>-admin-frontend`. Role first keeps repositories of the same role adjacent, so `app` → `backend` → `frontend-*` is the order of implementation
+- **`Origin` is either `renchan` (backend) or `furo` (frontend).** `<myproject>-app`, the repository this spec lives in, is not written here — it always exists
+- **`target`'s value is this table's repository name with `<myproject>-` removed**
 
-  For now the backend is exactly one. The policy is one DB system = one
-  repository, so /hora stops with a question whether there are zero or two
-  or more.
-  Frontends are zero or more, freely. Some projects have none at all
-  (an API-only project for a phone app).
+### 3. Implementation scope
 
-  One backend holds several servers side by side (this is renchan-core's
-  design). A GraphQL server for employees and one for admins may run
-  separately. The server table is the unit /hora derives contracts from, so
-  it must always be written. A consumer column lets you read, in one place,
-  which frontend looks at which contract.
+**Always keep the two kinds of "out of scope" apart. Confusing them wrecks the design.**
 
-  Frontends need not come in pairs. Some projects are only an API for a phone
-  app. furo cannot hold more than one Nuxt app per repository, so
-  repositories split along groups of screens. Adding a row to this table in
-  a later version makes /hora-setup create the new repository when that
-  version is planned.
+```
+out of scope for now (to be built later)  → /hora leaves an extension point,
+                                             kept replaceable
+permanently out of scope                  → /hora does not abstract it.
+                                             Excludes it from the design
+```
 
-  Names read <myproject>-<role>-<purpose>. It is <myproject>-frontend-admin, not
-  <myproject>-admin-frontend. Putting the role first keeps repositories of the
-  same role adjacent, so app -> backend -> frontend-* is the order of
-  implementation.
+Read the first as the second and the structure cannot take it later. Read the second as the first and an abstraction layer gets built that nobody uses.
 
-  Origin is either renchan (backend) or furo (frontend).
-  <myproject>-app (the repository this spec lives in) is not written here. It
-  always exists.
+Write "for now" entries with what unblocks them (`<feature C> → planned for 1.1.0`, or `→ once the trigger condition is met`).
 
-  target's value is this table's repository name with <myproject>- removed.
--->
+### 4. Existing assets
 
-
-## 3. Implementation scope
-
-### Built this time (<version>)
-
-- <feature A>
-- <feature B>
-
-### Out of scope for now (to be built later)
-
-- <feature C> → <planned for 1.1.0 / once the trigger condition is met>
-
-### Permanently out of scope
-
-- <what will not be built>
-
-<!--
-  Always keep the two kinds of "out of scope" apart. Confusing them wrecks
-  the design.
-
-    out of scope for now (to be built later)  → /hora leaves an extension
-                                                 point, kept replaceable
-    permanently out of scope                  → /hora does not abstract it.
-                                                 Excludes it from the design
-
-  Read the first as the second and the structure cannot take it later.
-  Read the second as the first and an abstraction layer gets built that
-  nobody uses.
--->
-
-
-## 4. Existing assets
-
+```markdown
 Current implementation: <none (new) / repository name or path>
 Treatment: <port it (read the logic and move it) / reference it (match the behavior only, rewrite the implementation)>
+```
 
-<!--
-  Required, since it changes what /hora does.
-  If "reimplement" is written but whether the code is visible is left
-  unstated, /hora stops with a question.
--->
+**Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
 
+### 5. Terminology and domain concepts
 
-## 5. Terminology and domain concepts
+Becomes the source of `.hora/glossary.md`. **Identifiers (class names, table names) are decided by `/hora-plan` after checking them against the lint rules**, so a term and its description are enough here. Write a name down only if one has already been decided.
 
-| Term | Description |
-|---|---|
-| <Flow> | <description> |
+### 6. Non-functional requirements
 
-<!--
-  /hora turns this into the source of .hora/glossary.md.
-  Identifiers (class names, table names) are decided by /hora after checking
-  them against the lint rules, so a term and its description here are
-  enough. Write down a name here if one has already been decided.
--->
+Produces no feature of its own, **but becomes a design constraint on every one of them**, so `/hora` always reads it. Performance, availability, security, and the like.
 
+### 7. Manual verification
 
-## 6. Non-functional requirements
-
-| Item | Requirement |
-|---|---|
-| <performance> | <> |
-| <availability> | <> |
-| <security> | <> |
-
-<!-- This produces no task of its own, but becomes a design constraint on every task, so /hora always reads it. -->
-
-
-## 7. Manual verification
-
+```markdown
 | Middleware | Version | profile | Purpose |
 |---|---|---|---|
 | MariaDB | 10.5.12 | (default) | the primary data store |
 | Redis | 7.4 | (default) | BullMQ |
 | MinIO | latest | `minio` | S3-compatible object storage |
+```
 
-<!--
-  What /hora uses to decide docker-compose.development.yml's profiles and
-  .env's COMPOSE_PROFILES.
+What `/hora-setup` uses to decide `docker-compose.development.yml`'s profiles and `.env.development`'s `COMPOSE_PROFILES`.
 
-  Write the server's version. An npm dependency (a mariadb driver, say) does
-  not indicate the server's version. Without this, /hora has to guess.
+**Write the server's version.** An npm dependency — a mariadb driver, say — does not indicate the server's version, and without this `/hora` has to guess. **Redis cannot be dropped in a project with any Job (BullMQ).**
 
-  Redis cannot be dropped in a project with any Job (BullMQ).
--->
+### 8 onward — the feature sections
 
+Each one carries its annotations, then its content, then its `<!-- usecases -->` and `<!-- acceptance -->` blocks (above, "The two blocks every feature carries").
 
-## 8. Data model
-<!-- id: data-model -->
-<!-- target: backend -->
-<!-- depends: none -->
+**A data model section is the one that carries acceptance criteria without use cases of its own.** A table has no user-facing use case; the features built on it do.
 
-### 8.1 <table name>
+**An API table must state the kind of every operation**, and the kind is never inferred (`structure.md`, invariant 2) — query, mutation and subscription are three different conventions on both sides of the wire, and `/hora-build` branches on the value at three separate checkpoints. Leave it out and `/hora-plan` stops with `undefined-api-kind` (`blocking: yes`).
 
-| Column | Type | Constraint | Description |
-|---|---|---|---|
-| `id` | bigint | PK | |
-| <> | <> | <> | <> |
-
-### Acceptance criteria
-<!-- acceptance -->
-
-- <rpa_compiled_flows tied to a deleted flow disappear via CASCADE>
-- <a duplicate flow_key is rejected by a unique constraint>
-
-
-## 9. GraphQL
-<!-- id: graphql -->
-<!-- target: backend, frontend-admin -->
-<!-- depends: data-model -->
-
+```markdown
 | schema | input | result | kind |
 |---|---|---|---|
 | `rpaFlows` | `RpaFlowsInput(pagination)` | `RpaFlowsResult` | query |
 | `createRpaFlow` | `CreateRpaFlowInput` | `CreateRpaFlowResult` | mutation |
 | `rpaFlowUpdated` | `RpaFlowUpdatedInput` | `RpaFlowUpdatedResult` | subscription |
+```
 
-<!--
-  `kind` is one of query / mutation / subscription. It is REQUIRED, and it is
-  never inferred: the three are three different conventions on both sides of
-  the wire, and /hora-build branches on this value at three separate
-  checkpoints (the schema, the resolver, the frontend client). Leave it out
-  and /hora-plan stops with undefined-api-kind (blocking: yes).
+**If an input's fields are unknown, `/hora` would have to invent the shape of an API, so it stops.**
 
-  If an input's fields are unknown, /hora would have to invent the shape of
-  an API, so it stops with a blocking question.
+```
+RpaFlowsInput(pagination)  the contents are indicated in parentheses
+                           → derived after an existing schema. Does not stop
+RpaFlowsInput              fields unknown
+                           → stops with blocking: yes
+```
 
-    RpaFlowsInput(pagination)  the contents are indicated in parentheses
-                               → derived after an existing schema. Does not stop
-    RpaFlowsInput              fields unknown
-                               → stops with blocking: yes
+Writing the SDL directly is the most reliable option.
 
-  Writing the SDL directly is the most reliable option.
--->
+**The RESTful API section is written only when the repository layout declares a server whose protocol is REST**, and a project with none leaves it out entirely. The same rules apply — an unknown request or response shape stops with `blocking: yes` — and **the renderer's own name is what gets implemented and what the frontend's client is built against.**
 
-### Use cases
-<!-- usecases -->
-
-- <an administrator opens the flow list and sees the flows their team owns>
-- <an administrator registers a new flow and it appears in the list without a reload>
-
-### Acceptance criteria
-<!-- acceptance -->
-
-- <createRpaFlow returns an error on a duplicate flow_key>
-- <an empty nl_procedure produces a zod validation error>
-
-
-## 10. RESTful API
-<!-- id: rest -->
-<!-- target: backend -->
-<!-- depends: data-model -->
-
+```markdown
 | method | path | renderer | request | response |
 |---|---|---|---|---|
 | `GET` | `/v1/rpa-flows` | `GetRpaFlowsRenderer` | `?page=&limit=` | `RpaFlowsResponse` |
-| `POST` | `/v1/rpa-flows` | `PostRpaFlowRenderer` | `CreateRpaFlowBody` | `RpaFlowResponse` |
+```
 
-<!--
-  Write this section only when the repository layout declares a server whose
-  protocol is REST. It is the REST equivalent of the GraphQL table above, and
-  the same rules apply: an unknown request or response shape stops with
-  blocking: yes, and the renderer's own name is what /hora-build implements
-  and what the frontend's client is generated against.
+### 12. Implementation plan
 
-  A project with no REST server leaves this section out entirely.
--->
+`/hora-plan` extracts the order of `_plan.md` from this. **It does not derive an order of its own.**
 
-### Use cases
-<!-- usecases -->
+**These are the project's own milestones.** They have nothing to do with `/hora-build`'s checkpoints, which are the same eighteen for every feature.
 
-- <the phone app lists the flows a signed-in user owns>
+**Check that "fine to leave for later" matches up with the scope section's "out of scope for now".** `/hora` stops with a question if the two do not clearly correspond.
 
-### Acceptance criteria
-<!-- acceptance -->
+### 13. Key file map
 
-- <a request without a valid access token is rejected with 401>
+Write this where you can. `/hora` decides placement together with the real tree `/hora-setup` reads.
 
+### Sources and Annex
 
-## 11. Screens
-<!-- id: screens -->
-<!-- target: frontend-admin -->
-<!-- depends: graphql -->
-
-### 11.1 <screen name>
-
-<layout, transitions, state>
-
-### Use cases
-<!-- usecases -->
-
-- <an administrator reaches this screen from the global navigation and completes <task>>
-
-### Acceptance criteria
-<!-- acceptance -->
-
-- <>
-
-
-## 12. Implementation plan
-
-### Milestone 1 (MVP)
-
-1. <#data-model>
-2. <basic CRUD for #graphql>
-
-### Milestone 2
-
-3. <>
-
-### Fine to leave for later
-
-- <>
-
-<!--
-  /hora-plan extracts the order of _plan.md from this. It does not derive its
-  own order.
-  These are the project's own milestones. They have nothing to do with
-  /hora-build's checkpoints, which are the same eighteen for every feature.
-  Check that "fine to leave for later" matches up with #scope's "out of
-  scope for now". /hora stops with a question if the two do not clearly
-  correspond.
--->
-
-
-## 13. Key file map
-
-| Path | Role |
-|---|---|
-| `<myproject>-backend/app/models/RpaFlow.js` | <> |
-
-<!-- Write this where you can. /hora decides placement together with the real tree /hora-setup reads. -->
-````
+Both optional, both covered above under "Directory layout". `Sources` promotes files into feature files; `Annex` only gathers relative links in one place and changes nothing about how they are read.
 
 ---
 

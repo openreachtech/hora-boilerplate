@@ -114,6 +114,8 @@ These three must not be broken.
 
 **Approval is per edit, never blanket.** "Yes, fix them all" is not approval of edits nobody has read yet; go back to step 2 for each one. And what is being protected here is not the act of writing — it is that **no requirement ever enters `specs/` without a human having read the exact words first.** A planner that writes an unapproved edit has invented a requirement, which is invariant 2.
 
+**`specs/skeleton/spec.md` is human territory too, and is not a version.** It is the blank spec a human copies to `specs/<version>/spec.md`. `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, implemented, or counted as unfinished — and no hora skill ever does the copying.
+
 **Every other skill — `/hora-setup`, `/hora-build`, `/hora-accept`, and every agent any of them starts — is strictly read-only on `specs/`.** On finding a problem there, they report it; they never fix it. A typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone.
 
 ### 2. The boundary of inference
