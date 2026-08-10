@@ -15,9 +15,9 @@ The authority on the format of `specs/<version>/spec.md`.
 | Fine to be sloppy about | Must be written |
 |---|---|
 | forgetting an annotation | the implementation scope (what to build this time, what is out of scope) |
-| how sections are numbered | acceptance criteria |
-| the order chapters appear in | how existing assets are handled |
-| typos (raised as a question, but not blocking) | links to supporting material |
+| how sections are numbered | **the use cases** and **the acceptance criteria** of every feature |
+| the order chapters appear in | **which kind each API operation is** (query / mutation / subscription / REST) |
+| typos (raised as a question, but not blocking) | how existing assets are handled, and links to supporting material |
 
 ---
 
@@ -50,7 +50,7 @@ specs/
 | | Declared under `Sources`, or is a `<feature>/spec.md` | Linked, but not declared |
 |---|---|---|
 | Read for | extraction — `id`/`target`/`depends`, tasks, contracts | interpretation only |
-| Ever produces a task | yes | never |
+| Ever produces a feature | yes | never |
 
 List a declared source by relative link, in a **Sources** section in the entry point (or a feature file):
 
@@ -210,21 +210,23 @@ A reference from `.hora/tasks/` takes the form `<!-- spec: <id> -->`. **No file 
 
 ### `target`
 
-Where the task goes. Matches a repository name's suffix.
+**Which repositories this feature touches.** Matches a repository name's suffix.
 
 | Value | Meaning |
 |---|---|
 | a row in the repository layout | that repository. **The name with `<myproject>-` removed** (`<myproject>-frontend-admin` → `frontend-admin`; the backend is a single repository, so always `backend`) |
-| `app` | `<myproject>-app`. A task that spans several repositories |
-| `none` | no task is generated from this section |
+| `app` | `<myproject>-app`. Something that spans several repositories |
+| `none` | no feature is generated from this section |
+
+**`target` decides which checkpoints a feature runs through.** A feature whose `target` is `backend` alone skips the frontend gate entirely; one that names a frontend row runs it. It no longer decides which file a task is written to — one feature is one file, whatever it touches — so getting it wrong changes what gets built, not just where a line is filed.
 
 **Make it match the name written in the repository layout section.** `/hora` stops with a question on a mismatch.
 
 Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
-**It is not cut per server.** What `target` decides is "which task file it is written to", and that is about a write conflict and a git unit — a repository. Which server it is implemented for is shown by the server table and the task's own text.
+**It is not cut per server.** A repository is the unit of a write conflict and of a git branch, and that is what `target` names. Which server a feature is implemented for is shown by the server table and by the feature's own text.
 
-**`none` does not mean "do not read".** Some sections produce no task and `/hora` must still always read them (non-functional requirements, the implementation plan, terminology, future design constraints). All `target` controls is **which file a task is written to.**
+**`none` does not mean "do not read".** Some sections produce no feature and `/hora` must still always read them (non-functional requirements, the implementation plan, terminology, future design constraints). All `target` controls is **which repositories a feature touches, and therefore which checkpoints it runs.**
 
 ### `depends`
 
@@ -253,6 +255,32 @@ Deleting it leaves `/hora` unable to tell "absent" from "deleted", since under t
 ```
 
 `kicked` is a mechanical, per-section flag; the reason and the kind (to be built later / permanently out of scope) belong to the implementation scope.
+
+### The two blocks every feature carries
+
+Besides the annotations, a feature section carries two marked subsections. **Both are required, and they are not the same thing.**
+
+```markdown
+### Use cases
+<!-- usecases -->
+
+- a member of staff clocks in on arrival, and the day's hours appear in the list
+- a member of staff who forgot to clock in files yesterday's hours the next day
+
+### Acceptance criteria
+<!-- acceptance -->
+
+- a second clock-in on the same day is rejected
+```
+
+| | States | What checks it |
+|---|---|---|
+| **use cases** | who does what, for what purpose, end to end | checkpoints 2, 9 and 11 of `/hora-build`, and the acceptance review |
+| **acceptance criteria** | an observable behavior that is either present or absent | the tests written alongside the code |
+
+**A feature with acceptance criteria but no use cases is the failure this exists to prevent.** Every operation returns what it should, no screen strings them into anything a person can do, and nobody finds out until acceptance — at the far end of eighteen checkpoints, which is the most expensive place to find it. `/hora-plan` stops with `missing-usecase` (`blocking: yes`) rather than let that happen.
+
+**Where a feature is split across several `##` sections** (a data model here, an API there, a screen further down), write the use cases **once, on the feature's H1**, and let the sections inherit them. Acceptance criteria stay per section, since each one describes its own behavior.
 
 ### Deferring and reviving
 
@@ -286,7 +314,9 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | Annex (optional) | `none` | gathers relative links to supporting material in one place. Unlike `Sources`, a file listed here never becomes a feature file and produces no task | — |
 | (below this, one section per feature) | a repository name / `app` | what gets implemented | — |
 
-**Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and Stage 0 needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
+**Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states the kind of every operation (below). None of the three may be inferred, and each is `blocking: yes` when missing.
+
+**Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
 
 **Every other required role may be satisfied either by `spec.md`'s own text or by a declared Source — `/hora` looks in both, not only the former.** The same role-recognition that already applies to `spec.md`'s own required sections applies to a declared Source's sections too: a heading in `00-overview.md` that is recognizably "the implementation scope" satisfies that role, whether or not `spec.md` also repeats it. Only when a role is found in neither place is it missing.
 
@@ -380,8 +410,8 @@ Becomes the **project prefix** of every repository name. `/hora` combines this n
   Frontends need not come in pairs. Some projects are only an API for a phone
   app. furo cannot hold more than one Nuxt app per repository, so
   repositories split along groups of screens. Adding a row to this table in
-  a later version makes /hora create the new repository during that
-  version's Stage 0.
+  a later version makes /hora-setup create the new repository when that
+  version is planned.
 
   Names read <myproject>-<role>-<purpose>. It is <myproject>-frontend-admin, not
   <myproject>-admin-frontend. Putting the role first keeps repositories of the
@@ -510,8 +540,15 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 |---|---|---|---|
 | `rpaFlows` | `RpaFlowsInput(pagination)` | `RpaFlowsResult` | query |
 | `createRpaFlow` | `CreateRpaFlowInput` | `CreateRpaFlowResult` | mutation |
+| `rpaFlowUpdated` | `RpaFlowUpdatedInput` | `RpaFlowUpdatedResult` | subscription |
 
 <!--
+  `kind` is one of query / mutation / subscription. It is REQUIRED, and it is
+  never inferred: the three are three different conventions on both sides of
+  the wire, and /hora-build branches on this value at three separate
+  checkpoints (the schema, the resolver, the frontend client). Leave it out
+  and /hora-plan stops with undefined-api-kind (blocking: yes).
+
   If an input's fields are unknown, /hora would have to invent the shape of
   an API, so it stops with a blocking question.
 
@@ -523,6 +560,12 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
   Writing the SDL directly is the most reliable option.
 -->
 
+### Use cases
+<!-- usecases -->
+
+- <an administrator opens the flow list and sees the flows their team owns>
+- <an administrator registers a new flow and it appears in the list without a reload>
+
 ### Acceptance criteria
 <!-- acceptance -->
 
@@ -530,14 +573,50 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 - <an empty nl_procedure produces a zod validation error>
 
 
-## 10. Screens
+## 10. RESTful API
+<!-- id: rest -->
+<!-- target: backend -->
+<!-- depends: data-model -->
+
+| method | path | renderer | request | response |
+|---|---|---|---|---|
+| `GET` | `/v1/rpa-flows` | `GetRpaFlowsRenderer` | `?page=&limit=` | `RpaFlowsResponse` |
+| `POST` | `/v1/rpa-flows` | `PostRpaFlowRenderer` | `CreateRpaFlowBody` | `RpaFlowResponse` |
+
+<!--
+  Write this section only when the repository layout declares a server whose
+  protocol is REST. It is the REST equivalent of the GraphQL table above, and
+  the same rules apply: an unknown request or response shape stops with
+  blocking: yes, and the renderer's own name is what /hora-build implements
+  and what the frontend's client is generated against.
+
+  A project with no REST server leaves this section out entirely.
+-->
+
+### Use cases
+<!-- usecases -->
+
+- <the phone app lists the flows a signed-in user owns>
+
+### Acceptance criteria
+<!-- acceptance -->
+
+- <a request without a valid access token is rejected with 401>
+
+
+## 11. Screens
 <!-- id: screens -->
 <!-- target: frontend-admin -->
 <!-- depends: graphql -->
 
-### 10.1 <screen name>
+### 11.1 <screen name>
 
 <layout, transitions, state>
+
+### Use cases
+<!-- usecases -->
+
+- <an administrator reaches this screen from the global navigation and completes <task>>
 
 ### Acceptance criteria
 <!-- acceptance -->
@@ -545,14 +624,14 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 - <>
 
 
-## 11. Implementation plan
+## 12. Implementation plan
 
-### Stage 1 (MVP)
+### Milestone 1 (MVP)
 
 1. <#data-model>
 2. <basic CRUD for #graphql>
 
-### Stage 2
+### Milestone 2
 
 3. <>
 
@@ -561,28 +640,65 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 - <>
 
 <!--
-  /hora extracts the order in .hora/tasks/ from this. It does not derive its
+  /hora-plan extracts the order of _plan.md from this. It does not derive its
   own order.
+  These are the project's own milestones. They have nothing to do with
+  /hora-build's checkpoints, which are the same eighteen for every feature.
   Check that "fine to leave for later" matches up with #scope's "out of
   scope for now". /hora stops with a question if the two do not clearly
   correspond.
 -->
 
 
-## 12. Key file map
+## 13. Key file map
 
 | Path | Role |
 |---|---|
 | `<myproject>-backend/app/models/RpaFlow.js` | <> |
 
-<!-- Write this where you can. /hora decides placement together with the real tree it reads in Stage 0.5. -->
+<!-- Write this where you can. /hora decides placement together with the real tree /hora-setup reads. -->
 ````
+
+---
+
+## How to write use cases
+
+**One use case is one person completing one thing, from where they start to where they are done.** Not a feature list, not a screen inventory, and not a restatement of the API.
+
+```markdown
+### Use cases
+<!-- usecases -->
+
+- a member of staff clocks in on arrival, and the day's hours appear in their list
+- a member of staff who forgot to clock in files yesterday's hours the next day,
+  and their manager sees it waiting for approval
+- a manager approves a month's attendance in one pass and the totals lock
+```
+
+| Write | Not |
+|---|---|
+| who is doing it | "the system does X" |
+| what they are trying to achieve | "there is a button for X" |
+| where it starts and where it ends | a step in the middle, with no beginning |
+| enough that someone could follow it with no access to the code | selectors, endpoints, table names |
+
+**A use case is what three separate checkpoints verify against**, each asking a different question of the same sentence:
+
+| Checkpoint | Asks |
+|---|---|
+| 2 | can the spec, as written, support this at all? |
+| 9 | can the API that was actually built support it, call by call? |
+| 11 | can a person actually do it, on the screen that was actually designed? |
+
+The three fail in different ways, and each failure is cheaper to fix at its own gate than at the next one.
+
+**Without use cases, `/hora-plan` stops with `missing-usecase`** (`blocking: yes`). Inferring them would mean inventing what the product is for.
 
 ---
 
 ## How to write acceptance criteria
 
-**Do not write a condition common to every task.** That `npm run lint && npm test` passes is common to all of them, so it is not repeated. Write a section's specific **behavior.**
+**Do not write a condition common to every feature.** That `npm run lint && npm test` passes is common to all of them, so it is not repeated. Write a section's specific **behavior.**
 
 ```markdown
 ### Acceptance criteria
@@ -595,9 +711,11 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 
 **Without one, `/hora` stops with a question** (`blocking: yes`). Acceptance criteria are the definition of "what counts as done", and `/hora` must not decide that. Filling it in by inference would leave the implementer grading their own work.
 
+**A use case is not an acceptance criterion, and neither substitutes for the other.** The use case above ("a member of staff clocks in on arrival…") does not say what happens on a second clock-in; the criterion ("a second clock-in on the same day is rejected") does not say why anyone would clock in at all. A section needs both.
+
 ### A behavior that only exists once two sections cooperate
 
-**Write it as its own section, depending on both.** "A user who just signed up can sign in with the same credentials" needs `#sign-up` and `#sign-in` to both already exist — it belongs to neither one alone. `/hora` never splits this out on its own (that would mean inventing a requirement the spec never stated), so a scenario left unwritten simply never becomes a task.
+**Write it as its own section, depending on both.** "A user who just signed up can sign in with the same credentials" needs `#sign-up` and `#sign-in` to both already exist — it belongs to neither one alone. `/hora` never splits this out on its own (that would mean inventing a requirement the spec never stated), so a scenario left unwritten simply never becomes a feature.
 
 ```markdown
 ## Signing in right after signing up
@@ -630,4 +748,4 @@ See the [RPA core spec](./docs/RPA_CORE_SPEC.md) for details.
 
 `/hora` follows links starting from `spec.md`. **A file nothing links to is never read.** If an orphaned file exists, it raises a question (`blocking: no`). Not listing it under `Sources` is what keeps it interpretation-only, whether it is reached through `Annex` or an inline link.
 
-Supporting material needs no annotation. Tasks are extracted from `spec.md` alone; supporting material is read as material for interpretation.
+Supporting material needs no annotation. Features are extracted from `spec.md`, feature files and declared Sources alone; supporting material is read as material for interpretation.
