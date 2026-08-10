@@ -4,9 +4,14 @@ node_modules/
 .scratch/
 !.scratch/directory-keeper
 
-#### implementation repositories cloned by /hora's Stage 0
+#### implementation repositories, fetched or adopted by /hora-setup
 /*-backend*/
 /*-frontend*/
+
+# A repository adopted under its own directory name matches neither pattern
+# above, so /hora-setup appends one literal entry per declared `Directory`
+# here. Left out, the whole repository gets committed into this one, and
+# nothing says so until somebody reads `git status`.
 
 #### skills equipped from @openreachtech/ai-agent-skills by equip-skills.sh (regenerated, not authored here)
 .claude/skills/backend-*/

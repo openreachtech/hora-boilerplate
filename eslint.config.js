@@ -34,8 +34,14 @@ export default [
     ignores: [
       '**/node_modules/**',
 
+      // Implementation repositories. Each one lints itself, under its own
+      // config. A repository adopted under its own directory name matches
+      // neither pattern below, so /hora-setup appends one literal entry per
+      // declared `Directory` right after them.
       '*-backend*/',
       '*-frontend*/',
+
+      // Skills equipped from @openreachtech/ai-agent-skills. Not authored here.
       '.claude/skills/backend-*/',
       '.claude/skills/frontend-*/',
       '.claude/skills/core-*/',
