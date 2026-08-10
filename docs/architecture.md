@@ -49,7 +49,7 @@ This document explains the design. It is not the authority on any rule — each 
 
 One feature goes through its spec, its backend, its frontend and then acceptance. **Only once it has passed acceptance does the next feature start.**
 
-**What this replaces is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and a shortfall in the data model is by then twenty features deep, every one of them built on it.
+**The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and a shortfall in the data model is by then twenty features deep, every one of them built on it.
 
 | | Layer by layer | Feature by feature |
 |---|---|---|
@@ -195,9 +195,9 @@ main
 
 **Nothing runs alongside anything.** Not two features, not two checkpoints, not two agents.
 
-Hora Kit did once carry a full parallel design — a task workflow, a shared test dispatcher, per-repository lint batching. **It was removed, and the reason is worth keeping**, because otherwise someone will build it again.
+**Running features or checkpoints in parallel is not an optimization waiting to be switched on. It is blocked on an unsolved problem**, and the reason is written down here because otherwise somebody will build it.
 
-**The unresolved problem is git, not throughput.** An implementer agent never touches git, so its work lands uncommitted in one shared working tree alongside whatever else is running. Splitting that back into one clean commit per task afterwards runs into this:
+**The problem is git, not throughput.** An implementer agent never touches git, so its work lands uncommitted in one shared working tree alongside whatever else is running. Splitting that back into one clean commit per task afterwards runs into this:
 
 > **An aggregation file is rewritten in full by every task that touches its folder.** By the time an earlier task's commit is built from its own file list, that file already carries every later task's contribution. The commit silently absorbs work that is not its own.
 
@@ -205,7 +205,7 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 **Until that is genuinely resolved, serial is not a cautious default — it is the only one that commits correctly.**
 
-**And the new order makes parallelism worth much less anyway.** The unit is no longer a small task; it is a feature that ends at an acceptance run over the whole product. There is not much left to overlap.
+**The order also makes parallelism worth much less than it sounds.** The unit is not a small task; it is a feature that ends at an acceptance run over the whole product. There is not much left to overlap.
 
 ---
 

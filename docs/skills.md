@@ -89,7 +89,7 @@ Nothing but the prefix separates those two, and the same holds across the packag
 
 ### Do not write a name into a hora skill "for reference"
 
-The same rule as the procedures themselves. A name recorded anywhere other than the one place that decides which checkpoint uses it is a second copy — **and the package has already renamed all of them twice.** That is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a stale denylist matches nothing and says nothing.
+The same rule as the procedures themselves. A name recorded anywhere other than the one place that decides which checkpoint uses it is a second copy — **and a skill's name belongs to the package, which is free to change it.** That is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a denylist that stops matching says nothing when it stops.
 
 ---
 
@@ -160,7 +160,7 @@ Four are worth knowing by name, because a checkpoint is built around each.
 
 ## When a skill is missing
 
-A named skill may not be there — the package renamed it, dropped it, or it has not been equipped yet. **The package has already renamed every one of them twice**, so this is a real case, not a hypothetical.
+A named skill may not be there — the package renamed it, dropped it, or it has not been equipped yet. **Names are the package's to change**, so this is a real case, not a hypothetical.
 
 **Say so, and continue without it. Do not substitute a guess.**
 

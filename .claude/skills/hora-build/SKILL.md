@@ -19,7 +19,7 @@ Read `../hora/references/structure.md` (the layout, the invariants, where a comm
 | a break shows up in the run that caused it | checkpoint 18 covers every feature so far, so a regression fails immediately |
 | one branch per repository is open at a time | no shared, uncommitted state between two features to untangle |
 
-**The old failure mode this replaces is building every backend task, then every frontend task, then testing.** Under that order, the first time anyone finds out whether a feature works is after all of them are written.
+**The failure mode this avoids is building every backend task, then every frontend task, then testing.** Under that order, the first time anyone finds out whether a feature works is after all of them are written.
 
 ## Where to start
 

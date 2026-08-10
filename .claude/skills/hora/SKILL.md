@@ -31,7 +31,7 @@ Read `references/structure.md` before anything else — the repository layout, w
 
 **One feature goes all the way to acceptance before the next one starts.** Backend, then frontend, then acceptance — per feature, not per layer.
 
-**This is the whole point of the design, so it is worth saying what it replaces.** Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written — at which point a shortfall in the data model is twenty features deep, every one of them built on it. Taking one feature to acceptance costs a container stack coming up more often, and buys the failure arriving while its cause is one commit old.
+**This is the whole point of the design, so the alternative is worth naming.** Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written — at which point a shortfall in the data model is twenty features deep, every one of them built on it. Taking one feature to acceptance costs a container stack coming up more often, and buys the failure arriving while its cause is one commit old.
 
 **Re-entrancy is the center.** Specs are assumed to be plentiful, so a single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
 

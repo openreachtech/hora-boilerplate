@@ -43,9 +43,9 @@ export default [
 
       // Skills equipped from @openreachtech/ai-agent-skills. Not authored here,
       // and some of them ship .js/.mjs/.cjs. The package prefixes them
-      // (hb-/hf-/hc-), but those prefixes have already changed twice and a
-      // stale denylist matches nothing while saying nothing. So this ignores
-      // the whole directory and names this repository's own skills back in.
+      // (hb-/hf-/hc-), but those names belong to the package, and a denylist
+      // that stops matching says nothing when it stops. So this ignores the
+      // whole directory and names this repository's own skills back in.
       '.claude/skills/*/',
       '!.claude/skills/bank-id/',
       '!.claude/skills/hora/',
