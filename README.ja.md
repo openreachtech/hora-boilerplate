@@ -8,7 +8,9 @@
 
 `/hora` は再入可能です。実行のたびに前回どこまで進んだかを判定し、続きから進めます。仕様書に決まっていないことがあれば、そこで止まって尋ねます。1回の実行でプロジェクトが完成する前提ではなく、何度でも開始・再開されることを前提にしています。
 
-段ごとの詳細・全ての規則は [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md) にあります。この README は始め方だけを扱います。
+**進め方はレイヤ単位ではなく機能単位です。** 1つの機能を18のチェックポイント（仕様 → バックエンド → フロントエンド → 検収）で通し切ってから、次の機能に進みます。これが避けているのは「バックエンドを全部作り、フロントエンドを全部作り、最後にテストする」という順序です。その順序では、ある機能が動くかどうかが分かるのは全部書き終えた後になります。
+
+各フェーズの詳細・全ての規則は [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md) にあります。この README は始め方だけを扱います。
 
 ## 始め方
 
@@ -33,7 +35,7 @@ git init
 
 ### 3. `/hora` を実行する
 
-`/hora` はボイラープレートを取得し、仕様書からタスクを抽出し、決まっていないことがあれば尋ね、実装し、機械的に検証します。答えが要るところで自ら止まるので、`specs/` を編集して `/hora` を再実行すれば続きが進みます。
+`/hora` はボイラープレートを取得し、対話しながら版の計画を立て、機能を1つずつ実装して検収します。答えが要るところで自ら止まります。プランナーはその場で尋ねますが、その場で答えられないものは `.hora/questions/` に書き出されるので、`specs/` を編集して `/hora` を再実行してください。
 
 ## 継続的インテグレーション
 
@@ -43,16 +45,24 @@ git init
 
 ## 使い方
 
+`/hora` はオーケストレーターです。実際の作業は4つの SKILL が行います。
+
+| SKILL | 役割 | 実行単位 |
+|---|---|---|
+| [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
+| [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | 版を確定し、対話しながら仕様を検証し、機能一覧を作る | 版ごとに1回 |
+| [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | 1つの機能を18のチェックポイントで通す | 機能ごとに1回 |
+| [`/hora-accept`](./.claude/skills/hora-accept/SKILL.md) | その時点で実装済みの全機能に対して受入テストを実施する | 各機能の最終チェックポイント、および版全体の掃引 |
+
 ```
-第0段    ボイラープレートを取得し、案件用の値を埋める
-第0.5段  clone した中身を実地に読む
-第1段    仕様書からタスクを抽出・構造化
-第1.5段  問診。仕様書に決まっていないことがあれば止まる
-第2段    未完了タスクを実装
-第3段    機械による検証（test / lint）
+/hora-setup ──> /hora-plan ──┬─> /hora-build 機能A ─> /hora-accept ─┐
+                             ├─> /hora-build 機能B ─> /hora-accept ─┤
+                             └─> /hora-build 機能C ─> /hora-accept ─┴─> 全体掃引 ─> merge
 ```
 
-各段が実際に何をするかは [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md) を参照してください。
+18のチェックポイントは [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) にあります。仕様、想定ユースケース、DB / API スキーマ、stub API、実装に必要なモジュール、actual API、worker、セキュリティ検証、そしてフロントエンド、最後に検収です。
+
+**Hora Kit が持つのは「順序」と「関所」だけで、「やり方」は持ちません。** resolver / migration / コンポーネント / テストの書き方も、受入レビューが何を見るかも、すべて [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills) にあります。`/hora-setup` がこのリポジトリの `.claude/skills/` に配置します。
 
 ## コントリビューション
 

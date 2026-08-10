@@ -8,7 +8,9 @@ A project built from this template is made of several git repositories, nested i
 
 `/hora` is re-entrant: it decides where a run left off and continues from there, stopping to ask when the spec leaves something undecided. A single run is not expected to finish a whole project — it is started, and restarted, as many times as it takes.
 
-The full procedure — every stage, every rule — lives in [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md). This README only covers getting started.
+**Work goes feature by feature, not layer by layer.** Each feature is taken through eighteen checkpoints — its spec, its backend, its frontend, then acceptance — and only once it has passed acceptance does the next feature start. The failure this avoids is building every backend task, then every frontend task, then testing, where the first time anyone finds out whether a feature *works* is after all of them are written.
+
+The full procedure — every phase, every rule — lives in [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md). This README only covers getting started.
 
 ## Getting started
 
@@ -33,7 +35,7 @@ Write `specs/1.0.0/spec.md`, using [`references/spec-template.md`](./.claude/ski
 
 ### 3. Run `/hora`
 
-`/hora` fetches the boilerplates, extracts tasks from the spec, asks about anything left undecided, implements, and verifies by machine. It stops on its own whenever it needs an answer — edit `specs/` and run `/hora` again to continue.
+`/hora` fetches the boilerplates, plans the version with you, then builds and accepts one feature at a time. It stops on its own whenever it needs an answer — the planner asks in conversation, and anything nobody can answer on the spot is written to `.hora/questions/` for you to settle by editing `specs/`.
 
 ## Continuous integration
 
@@ -43,16 +45,24 @@ If that is not possible, do not change `runs-on` yourself — note it in `specs/
 
 ## Usage
 
+`/hora` is an orchestrator. Four skills do the work:
+
+| Skill | Does | Runs |
+|---|---|---|
+| [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
+| [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
+| [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
+| [`/hora-accept`](./.claude/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
+
 ```
-Stage 0    Fetch the boilerplate and fill in the project's values
-Stage 0.5  Read what was cloned, in place
-Stage 1    Extract and structure tasks from the spec
-Stage 1.5  Questions — stop for anything the spec leaves undecided
-Stage 2    Implement the unfinished tasks
-Stage 3    Verify by machine (test / lint)
+/hora-setup ──> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
+                             ├─> /hora-build #B ─> /hora-accept ─┤
+                             └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
-See [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md) for what each stage actually does.
+The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
+
+**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`.
 
 ## Contribution
 

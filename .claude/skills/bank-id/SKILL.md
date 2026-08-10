@@ -1,6 +1,6 @@
 ---
 name: bank-id
-description: Allocate an exclusive, collision-free row-id prefix for a requester (a /hora task, or a person working by hand) inside one backend repository, so parallel writers never pick the same id. Use this before writing an explicit id into a seeder or a saving-category test.
+description: Allocate an exclusive, collision-free row-id prefix for a requester (a /hora feature, or a person working by hand) inside one backend repository, so two writers never pick the same id. Use this before writing an explicit id into a seeder or a test that creates its own rows.
 ---
 
 # bank-id
@@ -9,7 +9,9 @@ Hand this skill a **requester id** and it returns an **id prefix** you may use, 
 
 ## Why
 
-Several writers touch the same backend repository over time: `/hora`'s parallel workflow dispatches many `hora-implementer` agents, and a human team may split work by hand without `/hora` at all. When two of them pick the same explicit row `id` for two unrelated rows, whichever runs its seeder or migration last silently overwrites or collides with the other's data. `bank-id` removes the need to coordinate directly — each requester gets its own slice of the id space, once, and never has to check anyone else's.
+Several writers touch the same backend repository over time: every feature `/hora-build` takes through its checkpoints writes into the same tables, and a human team may split work by hand without `/hora` at all. When two of them pick the same explicit row `id` for two unrelated rows, whichever runs its seeder or migration last silently overwrites or collides with the other's data. `bank-id` removes the need to coordinate directly — each requester gets its own slice of the id space, once, and never has to check anyone else's.
+
+**Being serial does not remove the need.** `/hora-build` runs one feature at a time, but every one of them outlives its own run: a seeder written for feature A is still in the tree when feature B writes its own, and both are loaded together on the next database refresh. What has to be exclusive is the id space across time, not across concurrent processes.
 
 ## The id shape
 
@@ -26,13 +28,13 @@ Every explicit id is an 8-digit integer, split into two parts.
 - **The last 5 digits (00000-99999)** are yours to use however you like, with no further coordination — pick them in whatever order is convenient.
 - **A prefix is not scoped to one table.** Once you hold `137`, you may use `13700001` in `users`, `13700001` in `reservations`, and so on — different tables have independent primary keys, so reusing the same number across tables never collides.
 
-900 prefixes comfortably exceeds the number of tasks any one version realistically produces. Overflow is not handled.
+900 prefixes comfortably exceeds the number of features any one project realistically produces. Overflow is not handled.
 
 ## The requester id
 
 Whatever uniquely names the caller, chosen by the caller:
 
-- `/hora`'s parallel workflow passes the task's own `id` (the same value as `<!-- spec: <id> -->` in `.hora/tasks/`)
+- an agent under `/hora-build` passes the feature's own `id` (the same value as `<!-- spec: <id> -->` in `.hora/tasks/`)
 - a human working by hand picks their own name (`alice`), or a per-feature name if they want more than one slice
 
 The same requester id always gets back the same prefix. Asking twice, or retrying after a crash, is always safe.
@@ -71,8 +73,7 @@ Both live directly under the backend repository's own root — never under the o
 
 Reaching the retry limit in step 2 means another writer is either still working or died mid-update without releasing the lock — from outside, these look identical, so **never remove the lock yourself to force through**. Report the failure instead and let the caller decide:
 
-- **`/hora`'s parallel workflow stops the whole session** and states plainly: "the lock `bank-id` uses did not clear, so this session is ending. Running `/hora` again will clear it automatically and continue." (see "Clearing a stale lock")
-- **`/hora`'s serial run does the same.** Reaching this point in the serial run should be rare — only one task's `hora-implementer` ever holds the lock at a time, for the few seconds one allocation takes — but if it happens (a subagent call dying between `mkdir` and `rmdir`, say), stop and state the same thing: running `/hora` again clears it automatically and continues.
+- **`/hora` stops the whole session** and states plainly: "the lock `bank-id` uses did not clear, so this session is ending. Running `/hora` again will clear it automatically and continue." (see "Clearing a stale lock"). Reaching this point should be rare — only one agent ever holds the lock at a time, for the few seconds one allocation takes — but a subagent call dying between `mkdir` and `rmdir` will do it
 - **A human running this by hand** sees the same failure and may simply wait and retry, or run the clearing step below themselves.
 
 ## Clearing a stale lock
@@ -83,8 +84,8 @@ A lock still standing at the very start of a fresh run cannot belong to anything
 rm -rf <backend-repo>/.hora/id-bank.lock
 ```
 
-Both `/hora` runs run this, unconditionally, as their very first action against the backend row — the parallel workflow before dispatching any task, the serial run at the start of Stage 2. A human recovering from the failure above runs the same command by hand.
+`/hora-build` runs this, unconditionally, as its very first action against the backend row on any invocation, before starting a feature's first checkpoint. A human recovering from the failure above runs the same command by hand.
 
 ## Using the prefix once you have it
 
-Combine it with your own 5 digits when you write an explicit id — in a seeder, or inside a `saving`-category test that creates its own fixture. Do not derive ids from anything but your own prefix; do not read or reason about another requester's rows.
+Combine it with your own 5 digits when you write an explicit id — in a seeder, or inside a test that creates its own fixture. Do not derive ids from anything but your own prefix; do not read or reason about another requester's rows.

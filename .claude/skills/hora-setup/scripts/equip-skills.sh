@@ -19,7 +19,12 @@
 # re-run: each destination is a straight copy of its source, so re-running
 # just overwrites it with whatever the package currently holds.
 #
-# Usage: .claude/skills/hora/scripts/equip-skills.sh
+# Usage: .claude/skills/hora-setup/scripts/equip-skills.sh
+#
+# Note on names: each skill keeps the directory name the package ships, which
+# carries a content hash (backend-renchan-stub-api-1c0186b5eae9). The hash
+# changes when the package is updated, so anything referring to one of these
+# skills must match it by its prefix, never by its full name.
 
 set -euo pipefail
 
