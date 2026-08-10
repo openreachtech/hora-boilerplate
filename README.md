@@ -10,9 +10,20 @@ A project built from this template is made of several git repositories, nested i
 
 **Work goes feature by feature, not layer by layer.** Each feature is taken through eighteen checkpoints — its spec, its backend, its frontend, then acceptance — and only once it has passed acceptance does the next feature start. The failure this avoids is building every backend task, then every frontend task, then testing, where the first time anyone finds out whether a feature *works* is after all of them are written.
 
-The full procedure — every phase, every rule — lives in [`.claude/skills/hora/SKILL.md`](./.claude/skills/hora/SKILL.md). This README only covers getting started.
+This README only covers getting started. **The documentation is in [`docs/`](./docs/)** — how work gets executed, what each command does, the skills it runs on, and how to adopt the kit onto a project that already exists.
 
 ## Getting started
+
+**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`docs/adopting.md`](./docs/adopting.md) — the steps differ from step 1 onward.
+
+### 0. What you need
+
+| | |
+|---|---|
+| **Claude Code** | the skills run there |
+| **Node and npm** | for this repository's own `npm install` |
+| **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
+| **A self-hosted runner labeled `light`** | only before opening pull requests. See [Continuous integration](#continuous-integration) |
 
 ### 1. Create `<myproject>-app`
 
@@ -43,6 +54,8 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 `/hora` fetches the boilerplates, plans the version with you, then builds and accepts one feature at a time. It stops on its own whenever it needs an answer — the planner asks in conversation, and anything nobody can answer on the spot is written to `.hora/questions/` for you to settle by editing `specs/`.
 
+**In normal use, `/hora` is the only command you type.** For what it is doing at each point, and for running one of the other skills directly, see [`docs/commands.md`](./docs/commands.md).
+
 ## Continuous integration
 
 The workflows under `.github/workflows/` run on a self-hosted runner labeled `light`, not GitHub's own `ubuntu-latest` — `<myproject>-app` is usually a private repository, and a GitHub-hosted runner would bill you for every run. **Register your own self-hosted runner with the `light` label** before opening pull requests, or these workflows stay queued and never run.
@@ -68,7 +81,18 @@ If that is not possible, do not change `runs-on` yourself — note it in `specs/
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
-**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`.
+**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`. See [`docs/skills.md`](./docs/skills.md).
+
+## Documentation
+
+| | |
+|---|---|
+| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed.** The four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial |
+| [`docs/commands.md`](./docs/commands.md) | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
+| [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
+| [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
+
+The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](./.claude/skills/hora/SKILL.md), [`structure.md`](./.claude/skills/hora/references/structure.md), [`commits.md`](./.claude/skills/hora/references/commits.md), [`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md), [`spec-format.md`](./.claude/skills/hora/references/spec-format.md) and [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md).
 
 ## Contribution
 
@@ -82,6 +106,10 @@ cd hora-boilerplate
 npm install
 npm run lint
 ```
+
+**Every file under `docs/` is a pair — `x.md` and `x.ja.md`.** Change one and change the other in the same commit. Two documents saying the same thing will disagree the moment only one of them is updated, and the stale one still reads as authoritative.
+
+**The skills under `.claude/` are English only.** They are read by Claude Code, not by a reader choosing a language.
 
 ## License
 
