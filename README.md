@@ -31,9 +31,13 @@ Do this before writing `specs/` — once the repository holds commits of its own
 
 ### 2. Write the spec
 
-Copy [`spec-skeleton.md`](./.claude/skills/hora/references/spec-skeleton.md) to `specs/1.0.0/spec.md` and fill it in — it is the blank spec, headings and table headers only.
+```sh
+cp specs/skeleton/spec.md specs/1.0.0/spec.md
+```
 
-[`spec-template.md`](./.claude/skills/hora/references/spec-template.md) sits next to it and explains the format: what each section is for, which ones are required, and what makes `/hora` stop and ask. Read that one; fill in the other.
+[`specs/skeleton/spec.md`](./specs/skeleton/spec.md) is the blank spec — headings and table headers only. `specs/skeleton/` is not a version, so `/hora` never reads it as one.
+
+[`spec-format.md`](./.claude/skills/hora/references/spec-format.md) explains the format: what each section is for, which ones are required, and what makes `/hora` stop and ask. **Read that one; fill in the other.**
 
 ### 3. Run `/hora`
 

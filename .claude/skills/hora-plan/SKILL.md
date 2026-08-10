@@ -38,9 +38,13 @@ Planning is a conversation with whoever wrote the spec, and asking that person t
 
 ## 1. Fix the version
 
-**The target version:** among the version directories under `specs/`, the **lowest** one whose `.hora/tasks/<version>/` has not been generated or still holds unfinished features. If all are finished, the lowest version that exists under `specs/` but not under `.hora/tasks/`. If there is no such version either, report that every version is complete.
+**A version directory is one under `specs/` whose name is a semver version, and nothing else.** `specs/skeleton/` holds the blank spec a human copies from (`../hora/references/spec-format.md`) — it is never planned, never implemented, and never counted as unfinished. Any other non-semver directory is treated the same way: skipped, and reported once so nobody assumes it was read.
+
+**The target version:** among those directories, the **lowest** one whose `.hora/tasks/<version>/` has not been generated or still holds unfinished features. If all are finished, the lowest version that exists under `specs/` but not under `.hora/tasks/`. If there is no such version either, report that every version is complete.
 
 **Only the directory name counts.** If the version written inside `spec.md` contradicts it, have a human fix it (a document's revision number is not the product's version).
+
+**If the target version's `spec.md` is empty or missing, stop and say what to do**: copy the blank spec (`cp specs/skeleton/spec.md specs/<version>/spec.md`) and fill it in. Never write it yourself — the first spec of a version is exactly the content invariant 2 forbids inventing.
 
 ### Resolve the diffs first
 
@@ -516,7 +520,7 @@ When it stopped with a `blocking: yes` outstanding, **put what the human has to 
 | File | Content |
 |---|---|
 | `../hora/references/structure.md` | the layout, the invariants, the language rule |
-| `../hora/references/spec-template.md` | the authority on the format of `specs/<version>/spec.md` |
-| `../hora/references/spec-skeleton.md` | the blank spec a human copies. Point at it when a version's `spec.md` is still empty |
+| `../hora/references/spec-format.md` | the authority on the format of `specs/<version>/spec.md` |
+| `specs/skeleton/spec.md` | the blank spec a human copies. Point at it when a version's `spec.md` is still empty |
 | `../hora-build/references/checkpoints.md` | the checkpoint list to write into each feature file |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |
