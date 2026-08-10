@@ -64,14 +64,21 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 
 | | |
 |---|---|
-| **Delegate to** | `hc-requirement-definition` |
+| **Delegate to** | `hc-requirement-definition`. **Anything that has to change goes to `/hora-spec`** (`../../hora-spec/references/stages.md`) |
 | **Runs in** | the main session, in conversation |
 | **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable |
 | **Not applicable when** | never. Every feature passes this |
 
 `/hora-plan` has already verified that these exist. **This checkpoint is where they are read closely enough to build from** — the planner checks that a spec is buildable at all; this checks that *this one feature's* corner of it is.
 
-**Anything found missing here goes back to `/hora-plan`'s procedure**: state it, propose the exact edit, wait for approval, write it. This is the only checkpoint that may touch `specs/`, and only that way.
+**What is found missing here is fixed where the fix belongs**, and this is the only checkpoint that reaches `specs/` at all:
+
+| What is missing | Fixed by |
+|---|---|
+| a use case, an operation's caller, a design that cannot serve a use case | **`/hora-spec`**, at the stage that owns it. It writes one approved section at a time |
+| a one-line hole — an annotation, a `target`, a typo | **`/hora-plan`**'s procedure: state it, propose the exact edit, wait for approval, write it |
+
+**Never write into `specs/` from this checkpoint by any other route**, and never from an agent this checkpoint starts.
 
 ## 2. Verify the use cases can be met
 
@@ -85,6 +92,8 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 Walk each use case end to end, on paper, against the spec. **Look for the case that cannot be completed** — a step with no operation behind it, a screen with no way to reach it, a state the model cannot represent, two requirements that cannot both hold.
 
 **Where a problem is found, propose the fix and settle it with the person there.** Do not record it and move on: an unmet use case found here costs a conversation, and the same one found at checkpoint 18 costs a rebuild.
+
+**A fix to the spec itself runs through `/hora-spec`**, at the stage `../../hora-spec/references/stages.md` names — stage 4 when the design cannot serve the use case, stage 1 when the use case turns out to be wrong. This checkpoint decides that something must change; that skill is what changes it.
 
 **A subagent cannot do this**, because it cannot talk to anyone. Run it in the main session.
 

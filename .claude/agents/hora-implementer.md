@@ -36,7 +36,7 @@ Several checkpoints name more than one skill, and a couple name one that decides
 |---|---|
 | `.hora/` | `/hora-build` writes it, after your work is verified. Do not update a checkbox or the glossary yourself |
 | `git` (`add` / `commit` / `branch` / `checkout` / `stash`) | `/hora` itself owns the whole branch/commit/merge sequence around your checkpoint. Touching git yourself would fight that |
-| `specs/` | where a human writes. On finding a problem, report it in your return value instead of fixing it |
+| `specs/` | written only by `/hora-spec` and `/hora-plan`, in conversation with a person. On finding a problem, report it in your return value instead of fixing it |
 | any file outside your checkpoint's scope | keeps `touchedFiles` an accurate record of what this checkpoint's commit should contain |
 | **the contract** in `.hora/contracts/<version>/` | it is authoritative for the provider and the consumer both. Wanting to change it is a report, not an edit |
 

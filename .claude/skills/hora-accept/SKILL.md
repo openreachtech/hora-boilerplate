@@ -142,7 +142,7 @@ failed
 |---|---|
 | the implementation falls short | the named checkpoints are cleared in the named features, and rebuilt through a `retake/` branch (`../hora/references/commits.md`) — the `feature/` branch has already merged by this point |
 | the implementation falls short, **in a feature marked `built before Hora Kit was adopted`** | the same, and **the not-applicable marks it lands on are cleared too.** Code that has to change was not simply inherited; from the earliest checkpoint affected, it is built for real |
-| the spec cannot be satisfied under any reading | a `contradiction` question (`blocking: yes`), back to `/hora-plan` |
+| the spec cannot be satisfied under any reading | a `contradiction` question (`blocking: yes`), and the spec is changed through **`/hora-spec`**, at the stage `../hora-spec/references/stages.md` names. `/hora-plan` then re-reads it and clears whatever the change invalidated |
 | an ambiguous criterion was met under one reading | a `spec-assumption` question (`blocking: no`), naming the reading assumed |
 | the environment was not there | a `lacked-environment` question (`blocking: yes`). **No code change is attempted** |
 | a real finding the project decides to live with | an `acceptance-finding` question, recording the decision and who made it |
