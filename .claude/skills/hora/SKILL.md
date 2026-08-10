@@ -158,11 +158,12 @@ Remaining: #payroll #bonus #year-end
 | `references/structure.md` | **read first.** The layout, where a command runs, the invariants, the division of labor, the language rule, what lives in `.hora/` |
 | `references/commits.md` | branches, commit granularity, merging, hotfix catch-up, merge order into main |
 | `references/done-criteria.md` | what "done" means for a checkpoint, a feature, a version and a session |
-| `references/spec-template.md` | the template for a design document. The authority on the format of `specs/<version>/spec.md` |
+| `references/spec-format.md` | **the authority on the format** of `specs/<version>/spec.md`. Explains it; is not the thing filled in |
+| `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. A human copies it to `specs/<version>/spec.md`. Not a version, and never read as one |
 | `../hora-setup/SKILL.md` | code setup |
 | `../hora-plan/SKILL.md` | the planner |
 | `../hora-build/SKILL.md` | one feature through the checkpoints |
 | `../hora-build/references/checkpoints.md` | the eighteen checkpoints themselves |
 | `../hora-accept/SKILL.md` | acceptance |
 
-When a human asks about the format of `specs/`, point them at `references/spec-template.md`. **The template must never be copied into `specs/`.** `specs/1.0.0/spec.md` ships empty — writing the first spec, with the template as a guide, is a human's job.
+When a human asks about the format of `specs/`, point them at `references/spec-format.md` to read and `specs/skeleton/spec.md` to copy (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). **No hora skill copies it there itself** — `specs/1.0.0/spec.md` ships empty, and writing the first spec is a human's job.

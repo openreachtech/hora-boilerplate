@@ -31,7 +31,13 @@ git init
 
 ### 2. 仕様書を書く
 
-[`references/spec-template.md`](./.claude/skills/hora/references/spec-template.md) を雛形に `specs/1.0.0/spec.md` を書く
+```sh
+cp specs/skeleton/spec.md specs/1.0.0/spec.md
+```
+
+[`specs/skeleton/spec.md`](./specs/skeleton/spec.md) は見出しと表のヘッダだけの空の仕様書です。これをコピーして埋めてください。`specs/skeleton/` は版ではないので、`/hora` が版として読むことはありません。
+
+[`spec-format.md`](./.claude/skills/hora/references/spec-format.md) は書式の説明です。各節が何のためにあるか、どれが必須か、何があると `/hora` が止まって尋ねるかが書かれています。**説明はそちらを読み、埋めるのは前者**という分担です。
 
 ### 3. `/hora` を実行する
 
