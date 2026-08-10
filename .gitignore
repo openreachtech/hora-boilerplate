@@ -18,8 +18,11 @@ node_modules/
 # Ignore everything under .claude/skills/ and name this repository's own back
 # in. The package does prefix its skills (hb-/hf-/hc-), but those prefixes
 # have already changed twice, and each time the old denylist kept matching
-# nothing while saying nothing. An allowlist of the six we author here cannot
+# nothing while saying nothing. An allowlist of the ones we author here cannot
 # fail that way, whatever the package renames next.
+#
+# Every hora-spec-* stage skill is named literally, for the same reason: a
+# pattern would start matching whatever the package prefixes next.
 /.claude/skills/*
 !/.claude/skills/bank-id/
 !/.claude/skills/hora/
@@ -27,6 +30,14 @@ node_modules/
 !/.claude/skills/hora-build/
 !/.claude/skills/hora-plan/
 !/.claude/skills/hora-setup/
+!/.claude/skills/hora-spec/
+!/.claude/skills/hora-spec-usecases/
+!/.claude/skills/hora-spec-horizon/
+!/.claude/skills/hora-spec-nonfunctional/
+!/.claude/skills/hora-spec-backend/
+!/.claude/skills/hora-spec-frontend/
+!/.claude/skills/hora-spec-security/
+!/.claude/skills/hora-spec-review/
 
 #### for Windows
 Thumbs.db
