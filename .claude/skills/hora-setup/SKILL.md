@@ -1,0 +1,148 @@
+---
+name: hora-setup
+description: Fetch the boilerplates a spec declares, fill in the project's values, and read what was cloned in place. Idempotent — creates only what is missing, and re-evaluates itself on every version. Runs at the root of the hora repository (myproject-app). Invoked by /hora, or directly as /hora-setup.
+---
+
+# hora-setup
+
+**Code setup.** Create the repositories the spec declares, fill in this project's values, and read the real tree that arrived.
+
+Read `../hora/references/structure.md` first — the repository layout, where a per-repository command runs, and the invariants all come from there. **This skill is strictly read-only on `specs/`.**
+
+## What this skill is for
+
+```
+1. Create only the repositories that are missing, from the declaration
+2. Fill in the values that carry this project's name
+3. Equip the skills @openreachtech/ai-agent-skills ships
+4. Read what was cloned, in place, and record what was read
+```
+
+**It is idempotent, and it re-evaluates on every version.** Repositories arrive in later versions (a project starts as an API for a phone app and gains an admin screen), so passing this once is not the end of it. Anything already there is passed over.
+
+---
+
+## 1. Create what is missing
+
+**Which repositories to create is declared by the spec's repository layout section.** Never carry "a backend and a frontend" as an assumption.
+
+If there is no declaration, **stop here and ask.** Adding a repository is an architectural decision, and it is on the side that must not be inferred.
+
+| Detection | Action |
+|---|---|
+| No repository layout section | **stop and ask** |
+| **Zero or two or more** backends (origin `renchan`) | **stop and ask.** For now it is always exactly one |
+| Zero frontends (origin `furo`) | **normal.** Some projects are only an API for a phone app |
+| No table of servers | **stop and ask.** Contracts cannot be derived |
+
+**The repository layout must be written in the entry point (`specs/<version>/spec.md`).** Written in a feature file, it does not count as the declaration. The layout applies to the whole version, so placing it under a feature leaves no single place to read it from.
+
+Settle the project name first. Use the name written in `specs/<version>/spec.md`. **If it is not written, stop here and ask.** It must not be derived from the directory name (the directory may have been renamed after `git clone`), and — unlike most required roles — **it must not be taken from a declared Source either.** The project name and the repository layout are decisions, not facts to locate; a Source may contain evidence for either, but never the decision itself.
+
+**Once it is settled, also fill in this repository's own `package.json`** (`name` / `description`) — it ships with the same placeholder a cloned boilerplate does, and filling it in does not wait for anything to be cloned.
+
+Read `references/boilerplates.md` for the detailed procedure and the values to fill in. The essentials for each declared row (**numbered for this summary alone — these numbers do not line up with `boilerplates.md`'s own step numbers**):
+
+```
+1. git ls-remote --tags to find the newest tag
+2. git clone --depth 1 --branch <newest tag> ... <project name>-<declared row>
+3. rm -rf <dir>/.git && git -C <dir> init && git -C <dir> checkout -b release/<version>
+4. git -C <dir> commit --allow-empty -m "Release <version>" (the branch's opening marker)
+5. Rewrite name / description in package.json with the project's name
+6. Fill in the values in .env.development (renchan-boilerplate ships keys with empty values)
+7. Place docker.sh / docker-compose.development.yml and decide profiles from the spec
+8. Write COMPOSE_PROFILES into .env.development (when there is a profile to enable — never into .env)
+9. npm install
+10. Backend row only: copy `.claude/skills/bank-id/` into `<dir>/.claude/skills/bank-id/`, if it is not already there
+```
+
+**If `<project name>-<declared row>` already exists as a directory, skip steps 1–4 for that row** (finding the newest tag, cloning, discarding `.git`, the branch checkout that follows it, and its empty opening marker) — treat it as already fetched, however it got there. `../hora/references/commits.md`'s own branch rule still applies to it regardless (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker on it once created) — it is just not the fresh-`git init` case that skips straight to a `checkout -b`. This is not only for the ordinary idempotent re-run: the boilerplates are currently private, so a non-interactive session's own `git clone` fails for lack of credentials until a human either supplies credentials or clones the row manually beforehand. **Still run steps 5 onward for that row** — each is its own idempotent check (`package.json` may still carry the placeholder, `.env.development` may still be empty), not a single all-or-nothing skip.
+
+**Step 10 never overwrites an existing copy.** A human may have customized `bank-id` inside their own backend repository (adjusted retry timing, added a house convention) — this step only bootstraps it once, the same idempotent, leave-it-alone treatment steps 5 onward give a placeholder that a human already filled in. This step is also why `bank-id` can be invoked without `/hora`: it lands in the backend row's own `.claude/skills/`, reachable by any session working there directly.
+
+`.git` is thrown away and re-initialized so that hundreds of commits from somebody else's repo never land on a product repository's `main`. A clean history wins here.
+
+When this step finishes, make an initial commit in each repository it created, on the `release/<version>` branch checked out in step 3, after the empty marker from step 4 — never on whatever branch `git init` defaulted to.
+
+---
+
+## 2. Equip the skills `@openreachtech/ai-agent-skills` ships
+
+```bash
+.claude/skills/hora-setup/scripts/equip-skills.sh
+```
+
+It copies every skill that package ships into this repository's own `.claude/skills/`, so they become usable for the rest of the session — **skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`, never under that path.**
+
+**This does not wait on any declared row being cloned.** Like `@openreachtech/hora-ecosystem`, `ai-agent-skills` comes from this repository's own devDependencies, so run it as its own step, independent of the loop above. Run it on every invocation — the package may have been updated since the last one, and the script is a straight copy, safe to re-run.
+
+**Everything `/hora-build` and `/hora-accept` delegate to comes from here.** Those skills carry the order and the exit conditions; the procedures and the pass/fail criteria live in this package (`../hora/references/structure.md`, "The division of labor"). Without this step, every one of those delegations has nothing to reach.
+
+Report what was equipped, by count, and **name anything a later skill will look for by prefix and not find** — a checkpoint that cannot reach its skill is better known now than at the moment it is needed.
+
+---
+
+## 3. Read what was cloned, in place
+
+**This skill does not bake in knowledge of the boilerplates' conventions.** The newest tag is always cloned, so any conventions written down here would eventually disagree with the real thing. Reading the real thing is the only correct move.
+
+The order to read in:
+
+1. If there is a `CLAUDE.md`, read it (the authority, updated by the maintainer along with the code)
+2. Otherwise read the tree in place. At minimum, get hold of:
+
+```
+Directory layout          where things go
+How servers are split     how several servers are separated. Entry points and the pm2 config
+Naming conventions        how classes, files and tables are named
+How tests are written     placement, naming, helpers, the mocking style
+The existing GraphQL schema   how the SDL is written
+How things get registered     automatic via directory scanning, or an aggregation file to append to
+Existing model definitions    how sequelize is used, and how it maps to migrations
+npm scripts               the names of the test / lint / db commands
+A local E2E environment   whether one ships (an `e2e/docker/` stack and its up/seed/clean scripts)
+```
+
+**"How things get registered" deserves particular care.** If registration is automatic through directory scanning — a `BulkClassLoader` and the like — implementation only has to drop its own file in, and the aggregation-file problem disappears entirely. If appending is required, several checkpoints end up touching the same single place. **It is the highest-value thing to check.**
+
+The real tree beats any assumption. This step stays even after a `CLAUDE.md` exists.
+
+### Record what was read, and what tag it was read at
+
+Write it to `.hora/tree/<repository>.md`, with the tag at the top:
+
+```markdown
+# myproject-backend
+<!-- boilerplate: renchan-boilerplate 1.8.1 -->
+
+## Directory layout
+...
+```
+
+**Re-read and rewrite it whenever the recorded tag no longer matches the row's own.** Otherwise, trust what is recorded.
+
+**This is a cache, not a source.** It exists because `/hora-build` crosses many sessions and re-reading a whole tree at the start of each one is waste — not because the record outranks the tree. **On any disagreement, the tree wins**, and the record gets rewritten from it.
+
+---
+
+## What this skill does not do
+
+| Not done | Why |
+|---|---|
+| Baking the boilerplate into the template (vendoring) | upstream is updated piecemeal over time. It would also contradict the parent's `.gitignore` |
+| Keeping `.git` and holding an upstream remote | mixes somebody else's commits into the product repo's history |
+| Turning it into a submodule | the consistency gained is not worth the added complexity |
+| Baking the boilerplate's conventions into this file | there will always come a moment where they disagree with the real thing. Step 3 reads it in place instead |
+| `npm update` / bumping a dependency's version | following upstream is a human's deliberate action |
+| Starting the middleware (`./docker.sh start`) | a human does that when they want it. `/hora-accept` is where an environment becomes a prerequisite, and it says so rather than acting |
+
+---
+
+## References
+
+| File | Content |
+|---|---|
+| `references/boilerplates.md` | the detailed procedure. Which boilerplate to choose, and what to fill in where |
+| `scripts/equip-skills.sh` | copies `@openreachtech/ai-agent-skills`' skills into `.claude/skills/` |
+| `../hora/references/structure.md` | the layout, the per-repository command rule, the invariants |
+| `../hora/references/commits.md` | the branch each created repository starts on |

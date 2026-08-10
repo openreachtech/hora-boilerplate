@@ -1,4 +1,6 @@
-# Stage 0 — Fetch and initialize the boilerplates
+# Fetching and initializing the boilerplates
+
+The detailed procedure behind `/hora-setup`'s step 1.
 
 **This stage is passed over entirely** if every declared repository already exists (idempotent). Only what is missing gets created. **Re-evaluate it for every version** (repositories arrive in later versions).
 
@@ -17,7 +19,7 @@
 
 **Rows with origin `furo` are often more than one** (`frontend-employee` and `frontend-admin`). Clone one per row. There is only ever one row with origin `renchan`; if a second is declared, stop with a question.
 
-### Stack (a rough guide before Stage 0.5 reads the real thing — do not write conventions here)
+### Stack (a rough guide before step 3 reads the real thing — do not write conventions here)
 
 | | Main dependencies |
 |---|---|
@@ -34,7 +36,7 @@ A frontend holds neither a DB client nor a Redis client. **Only the backend uses
 
 Use the name written in `specs/<version>/spec.md`'s document information section.
 
-**If it is not written, stop in Stage 0 and ask a human.** It must not be derived mechanically from a directory name (the directory may have been renamed after `git clone`).
+**If it is not written, stop here and ask a human.** It must not be derived mechanically from a directory name (the directory may have been renamed after `git clone`).
 
 ### 2. Rewrite the root's own `package.json`
 
@@ -99,14 +101,14 @@ The parent's (`myproject-app`'s) `.gitignore` already ignores the implementation
 
 ### 5. Equip the skills `@openreachtech/ai-agent-skills` ships
 
-**This does not wait on any row being cloned.** Run `.claude/skills/hora/scripts/equip-skills.sh` from the repository root — like `@openreachtech/hora-ecosystem`, `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as this repository's own `npm install` has run, regardless of which rows the declaration lists.
+**This does not wait on any row being cloned.** Run `.claude/skills/hora-setup/scripts/equip-skills.sh` from the repository root — like `@openreachtech/hora-ecosystem`, `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as this repository's own `npm install` has run, regardless of which rows the declaration lists.
 
 Skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`, never under that path. Without this step, everything `ai-agent-skills` ships stays invisible for the rest of the session.
 
 The package already ships its skills flattened under `dist/skills/` (one directory per skill, name unique, no frontmatter left to strip), so the script clones them into this repository's `.claude/skills/` as-is — no renaming, no rewriting. **Safe to re-run** — each destination is a straight copy of its source, so a re-run just overwrites each destination with whatever the package currently holds.
 
 ```bash
-.claude/skills/hora/scripts/equip-skills.sh
+.claude/skills/hora-setup/scripts/equip-skills.sh
 ```
 
 ### 6. Rewrite `package.json`'s `name` / `description`
@@ -226,7 +228,7 @@ COMPOSE_PROFILES=minio
 
 Examples of the judgment: using object storage → turn on `minio`. A search platform marked "not introduced this time" → leave `elasticsearch` off.
 
-**Never write this into `.env`.** `.env` is never touched outside production; local work always goes through `.env.development`, and `docker.sh` (step 8) passes `--env-file .env.development` explicitly so Compose reads it from there. Run `docker compose config` during Stage 0 to confirm `COMPOSE_PROFILES` actually takes effect as expected, and report the result. If it does not, change `docker.sh` to take a profile as an argument instead.
+**Never write this into `.env`.** `.env` is never touched outside production; local work always goes through `.env.development`, and `docker.sh` (step 8) passes `--env-file .env.development` explicitly so Compose reads it from there. Run `docker compose config` here to confirm `COMPOSE_PROFILES` actually takes effect as expected, and report the result. If it does not, change `docker.sh` to take a profile as an argument instead.
 
 ### 11. `npm install`
 
@@ -244,7 +246,7 @@ An implementation repository is its own independent git repo, and a standalone c
 cp -r .claude/skills/bank-id <myproject>-backend/.claude/skills/bank-id
 ```
 
-**Unlike step 5, never overwrite an existing copy** — skip this step entirely if the destination already exists. A human may have customized `bank-id` inside their own backend repository (different retry timing, a house convention), and this step only ever bootstraps it once. This is also why `bank-id` lands directly in the backend row's own `.claude/skills/` rather than coming from `ai-agent-skills`: it needs to be reachable, and safely editable, from a session working there directly — human or `hora-implementer` alike — not only through this repository's own equip step.
+**Unlike step 5, never overwrite an existing copy** — skip this step entirely if the destination already exists. A human may have customized `bank-id` inside their own backend repository (different retry timing, a house convention), and this step only ever bootstraps it once. This is also why `bank-id` lands directly in the backend row's own `.claude/skills/` rather than coming from `ai-agent-skills`: it needs to be reachable, and safely editable, from a session working there directly — a human, or the implementer agent `/hora-build` starts, alike — not only through this repository's own equip step.
 
 ### 13. Make an initial commit
 
@@ -257,14 +259,14 @@ Fulfill project values for <myproject>
 
 ---
 
-## What Stage 0 does not do
+## What this procedure does not do
 
 | Not done | Why |
 |---|---|
 | Baking the boilerplate into the template (vendoring) | upstream is updated piecemeal over time. It would also contradict the parent's `.gitignore` |
 | Keeping `.git` and holding an upstream remote | mixes somebody else's commits into the product repo's history |
 | Turning it into a submodule | the consistency gained is not worth the added complexity |
-| Baking the boilerplate's conventions into SKILL.md | there will always come a moment where they disagree with the real thing. Stage 0.5 reads it in place instead |
+| Baking the boilerplate's conventions into SKILL.md | there will always come a moment where they disagree with the real thing. `/hora-setup`'s step 3 reads it in place instead |
 | `npm update` / bumping a dependency's version | following upstream is a human's deliberate action |
 
 ---
@@ -275,8 +277,8 @@ Fulfill project values for <myproject>
 
 | Repository | What is missing | `/hora`'s stopgap |
 |---|---|---|
-| `renchan-boilerplate` | `CLAUDE.md` | read it in place during Stage 0.5 |
+| `renchan-boilerplate` | `CLAUDE.md` | read it in place in step 3 |
 | `renchan-boilerplate` | `docker.sh` / `docker-compose.development.yml` | `/hora` writes them |
-| `furo-boilerplate-nuxt` | `CLAUDE.md` | read it in place during Stage 0.5 |
+| `furo-boilerplate-nuxt` | `CLAUDE.md` | read it in place in step 3 |
 
-The right place for `CLAUDE.md` is each boilerplate's own repository (kept current by its maintainer alongside the code itself). Stage 0.5 is the bridge until that is in place, but **the stage that reads the real thing stays even after `CLAUDE.md` is** (the real thing outranks any assumption, in that order).
+The right place for `CLAUDE.md` is each boilerplate's own repository (kept current by its maintainer alongside the code itself). Step 3 is the bridge until that is in place, but **the step that reads the real thing stays even after `CLAUDE.md` is** (the real thing outranks any assumption, in that order).
