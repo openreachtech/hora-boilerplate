@@ -14,22 +14,25 @@ This document explains the design. It is not the authority on any rule — each 
         you  ──  /hora
                    │  decides where the project stands, owns every git operation
                    ▼
-        /hora-setup   /hora-plan   /hora-build   /hora-accept
-                                        │  runs one feature through 18 checkpoints
-                                        ▼
-                        hora-implementer   hora-verifier
-                                        │  writes / checks one checkpoint
-                                        ▼
+   /hora-spec   /hora-setup   /hora-plan   /hora-build   /hora-accept
+        │                                       │
+        │  seven stage skills,                  │  runs one feature through
+        │  one per stage of the spec            │  18 checkpoints
+        ▼                                       ▼
+  hora-spec-usecases … hora-spec-review   hora-implementer   hora-verifier
+        │  asks, proposes, writes one section   │  writes / checks one checkpoint
+        ▼                                       ▼
                     @openreachtech/ai-agent-skills
                        how to actually write a resolver, a migration,
-                       a component, a test — and what acceptance fails on
+                       a component, a test — how to shape a table, an SDL,
+                       a job or a screen — and what acceptance fails on
 ```
 
 | Layer | What it decides | What it never decides |
 |---|---|---|
 | `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself |
-| the four skills | the order of the work, and each gate's exit condition | how any of it is written |
-| the two agents | one checkpoint's code, or one checkpoint's verdict | where they run in the order; anything about git |
+| the five skills | the order of the work, and each gate's exit condition | how any of it is written |
+| the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git |
 | `ai-agent-skills` | **every procedure and every pass/fail criterion** | when it is invoked |
 
 **The bottom layer is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in a package that is versioned and updated on its own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
@@ -39,9 +42,9 @@ This document explains the design. It is not the authority on any rule — each 
 ## Feature by feature, not layer by layer
 
 ```
-/hora-setup ──> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
-                             ├─> /hora-build #B ─> /hora-accept ─┤
-                             └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
+/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
+                                          ├─> /hora-build #B ─> /hora-accept ─┤
+                                          └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
 One feature goes through its spec, its backend, its frontend and then acceptance. **Only once it has passed acceptance does the next feature start.**
@@ -71,6 +74,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no write tools at all |
 | **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
+| **all seven spec stages** | **the main session, in conversation** | for the same reason as 1, 2, 9 and 11: a stage exists to settle something with a person, and a subagent cannot ask anybody anything. Only stage 7's mechanical checks — a missing section, a duplicate `id` — could run anywhere else, and their findings still come back to be settled |
 
 **`hora-verifier` has no write tools, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It returns the fact that something is failing; it never fixes it.
 
@@ -233,4 +237,6 @@ Everything above rests on two lines. Both are stated in [`structure.md`](../.cla
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | putting this on a project that already exists | [`adopting.md`](./adopting.md) |
 | the eighteen checkpoints themselves | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
+| the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| the thinking a spec is written with | [`principles.md`](../.claude/skills/hora-spec/references/principles.md) |
 | the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |

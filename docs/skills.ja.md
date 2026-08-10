@@ -60,7 +60,7 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 
 - **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。ただのコピーなので再実行は安全です
 - **リポジトリの clone を待ちません。** `ai-agent-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
-- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身の6つを名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
+- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身のスキルを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
 ---
 
@@ -85,7 +85,7 @@ hf-graphql          Furo アプリの操作クライアント
 hb-graphql-schema   renchan サーバーの SDL
 ```
 
-この2つを分けているのは接頭辞だけで、それはパッケージ全体で同じです。`hf-modules` は Furo のユーティリティクラス、`hc-module-imports` は import 順の規約です。**名前の語感でスキルを選ばないでください。** どの関所がどのスキルに委譲するかは [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) が言い、それだけが権威です。
+この2つを分けているのは接頭辞だけで、それはパッケージ全体で同じです。`hf-modules` は Furo のユーティリティクラス、`hc-module-imports` は import 順の規約です。**名前の語感でスキルを選ばないでください。** どの関所がどのスキルに委譲するかは [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) が、どの仕様ステージがどれに委譲するかは [`stages.md`](../.claude/skills/hora-spec/references/stages.md) が言い、**この2つだけが権威です。**
 
 ### 「参考までに」と名前を hora skill に書かないでください
 
@@ -101,7 +101,7 @@ hb-graphql-schema   renchan サーバーの SDL
 ls .claude/skills/
 ```
 
-そして「関所 → 委譲するスキル」の権威ある対応は [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) です。**意図的にここには再掲しません** — あの表の2つ目の写しは、まさにこのドキュメント全体が扱っている食い違いそのものになります。
+そして「関所 → 委譲するスキル」の権威ある対応は [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md)、「仕様ステージ → 委譲するスキル」は [`stages.md`](../.claude/skills/hora-spec/references/stages.md) です。**どちらも意図的にここには再掲しません** — あの表の2つ目の写しは、まさにこのドキュメント全体が扱っている食い違いそのものになります。
 
 ### `hb-` — バックエンド（renchan）
 

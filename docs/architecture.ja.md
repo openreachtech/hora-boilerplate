@@ -14,22 +14,25 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
         あなた ──  /hora
                    │  プロジェクトの現在地を判定し、git 操作をすべて所有する
                    ▼
-        /hora-setup   /hora-plan   /hora-build   /hora-accept
-                                        │  1機能を18の関所に通す
-                                        ▼
-                        hora-implementer   hora-verifier
-                                        │  1関所を書く / 検める
-                                        ▼
+   /hora-spec   /hora-setup   /hora-plan   /hora-build   /hora-accept
+        │                                       │
+        │  仕様の7ステージに                    │  1機能を18の関所に通す
+        │  1つずつ対応する skill                │
+        ▼                                       ▼
+  hora-spec-usecases … hora-spec-review   hora-implementer   hora-verifier
+        │  尋ね、提案し、1節を書く              │  1関所を書く / 検める
+        ▼                                       ▼
                     @openreachtech/ai-agent-skills
                        resolver / migration / component / test を
-                       実際にどう書くか。検収が何で落とすか
+                       実際にどう書くか。テーブル / SDL / Worker / 画面を
+                       どう設計するか。検収が何で落とすか
 ```
 
 | 層 | 決めること | 決してしないこと |
 |---|---|---|
 | `/hora` | 次にどの段階が来るか。すべてのブランチ・コミット・マージ | 作業の中身に関する一切 |
-| 4つの skill | 作業の順序と、各関所の終了条件 | その書き方 |
-| 2つの agent | 1関所ぶんのコード、あるいは1関所ぶんの判定 | 順序上の位置。git に関する一切 |
+| 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 |
+| ステージ skill と2つの agent | 仕様書の1節、あるいは1関所ぶんのコードや判定 | 順序上の位置。git に関する一切 |
 | `ai-agent-skills` | **すべての手順と、すべての合否基準** | それが呼ばれる時機 |
 
 **驚かれるのは最下層です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらは独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](../.claude/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
@@ -39,9 +42,9 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 ## 層ごとではなく、機能ごと
 
 ```
-/hora-setup ──> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
-                             ├─> /hora-build #B ─> /hora-accept ─┤
-                             └─> /hora-build #C ─> /hora-accept ─┴─> 掃引 ─> merge
+/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
+                                          ├─> /hora-build #B ─> /hora-accept ─┤
+                                          └─> /hora-build #C ─> /hora-accept ─┴─> 掃引 ─> merge
 ```
 
 1つの機能が、仕様 → バックエンド → フロントエンド → 検収 と進みます。**検収を通ってはじめて次の機能が始まります。**
@@ -71,6 +74,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 | **3–7, 10, 12–16** | `hora-implementer` | 通常の実装。1関所ぶんのファイルに範囲を絞る |
 | **8** | `hora-verifier` | セキュリティ監査は設計上 read-only。このエージェントは書き込みツールを1つも持ちません |
 | **17, 18** | メインセッション | コンテナ群の立ち上げと、全機能に対する受入レビューは、1関所ぶんのファイル作業ではありません |
+| **仕様の7ステージすべて** | **メインセッション（対話）** | 1 / 2 / 9 / 11 と同じ理由です。ステージは人と決着をつけるために存在し、サブエージェントは誰にも質問できません。ステージ7の機械的な確認（節の欠落、`id` の重複）だけは他所でも動きますが、その指摘もメインセッションに戻して決着させます |
 
 **`hora-verifier` が書き込みツールを持たないのは意図的です。** 同じエージェントに実装と検証をさせると、落ちているテストを通るまで緩める道が開きます。このエージェントは「落ちている」という事実を返すだけで、直しません。
 
@@ -233,4 +237,6 @@ Hora Kit はかつて完全な並列設計を持っていました — タスク
 | 関所が委譲するスキル群 | [`skills.ja.md`](./skills.ja.md) |
 | 既存プロジェクトへの適用 | [`adopting.ja.md`](./adopting.ja.md) |
 | 18の関所そのもの | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
+| 仕様書を書く7つのステージ | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| 仕様書を書くときの考え方 | [`principles.md`](../.claude/skills/hora-spec/references/principles.md) |
 | 仕様書の書式 | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
