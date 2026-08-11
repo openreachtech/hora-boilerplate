@@ -50,18 +50,21 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 
 ## `/hora-spec`
 
-**The author.** Writes the version's spec with you, and runs the seven stage skills that do it.
+**The author.** Reads whatever already exists, then writes the version's spec with you through the seven stage skills.
 
 | | |
 |---|---|
-| **Reads** | `specs/`, `.hora/spec/`, and what you tell it |
-| **Writes** | `specs/<version>/spec.md` and the version's feature files — **one section at a time, each one shown to you in full and written only once you approve it.** Also `.hora/spec/<version>/_stages.md` and `.hora/questions/` |
+| **Reads** | `specs/`, `.hora/spec/`, **the existing repositories and any document you point it at**, and what you tell it |
+| **Writes** | `specs/<version>/spec.md` and the version's feature files — **one section at a time, each one shown to you in full and written only once you approve it.** Also `.hora/spec/<version>/_stages.md`, `_assets.md` and `.hora/questions/` |
 | **Stops when** | there is nobody there to answer; a decision needs somebody who is not present |
 | **Run it directly** | to start a new version's spec, to continue one half-written, or to change a design decision without touching the plan |
 
-### The seven stages
+### Stage 0, then the seven stages
 
 ```
+0. Assets and sources        what already exists — the repositories, and every
+                             document anybody names. Over in a sentence on a
+                             new project
 1. Use cases and actors      who uses this, and what each completes end to end
 2. The horizon               what this release carries, what is deferred with a
                              seam kept open, what is never built
@@ -80,6 +83,22 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 **The order is a rule, and each stage is a gate.** A data model designed before the use cases are fixed is designed twice; a table designed before the user counts are known is designed for the wrong number. Each stage's exit condition is in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
 
 **Going back is normal.** Stage 7 exists to send the run back into whichever stage owns a shortfall — and so does checkpoint 2, 9, 11 or 18 when what it finds turns out to be the spec rather than the code.
+
+**Stage 0 is what stops a running product from having to be dictated.** It reads the repositories and the documents, drafts what they show, and hands it back for you to correct. On a project with nothing to read it records that and moves on ([`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)).
+
+### How it asks: a check, a proposal, a question
+
+**These are three different things and they are never phrased alike** ([`asking.md`](../.claude/skills/hora/references/asking.md)).
+
+| | What it means | What you are deciding |
+|---|---|---|
+| **a check** | "I read it as this. Is that right?" | right, or wrong |
+| **a proposal** | "I suggest this. It is yours to decide." | take it, or not |
+| **a question** | "Nothing decides this. What is it?" | what it is |
+
+**A confirmed check goes in as fact; an approved proposal goes in as your decision.** Mixing them matters in one direction especially: a proposal phrased as a check would put the kit's own idea into the spec as something the system already does, and nothing afterwards could tell them apart.
+
+**Answers are offered as choices wherever they can be**, so you correct rather than compose — with "other" always available. What is never folded into a choice is approving a section: that is the one place the exact words have to be read.
 
 ### How it writes
 
@@ -107,8 +126,10 @@ hora  Stage 1. You described "attendance management, approval, payroll".
 ### What it never does
 
 - **invent a requirement.** A proposal that goes in silently is exactly that
+- **let something it read become a requirement on its own.** Reading is what stage 0 is for; a reading is put up as a check, and only what you confirm is written
+- **conclude how far a feature is already built.** It lays out what it found and recommends nothing — a half-built screen and a finished one look identical from a file listing
 - **decide scope.** It says when a release is carrying too much, proposes the narrowing, records the answer
-- **plan, clone, or touch code or git.** The spec is all it writes
+- **plan, clone, or write code or touch git.** The spec is all it writes
 
 ---
 
