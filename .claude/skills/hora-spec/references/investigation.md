@@ -90,6 +90,24 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
 
 ---
 
+## Where a document has to sit before any of this works
+
+**A session reads only what is inside its own working directory, and `/hora` reaches a file only by following links from `specs/<version>/spec.md`.** A document anywhere else is a document stage 0 cannot open, however often somebody mentions it.
+
+```
+specs/<version>/
+  spec.md            the entry point. The only fixed name
+  <anything>/        names, nesting and depth are all free
+```
+
+**When somebody names a document that is not there, say where to put it and ask them to place it** — do not attempt to work from a description of it. Copying it into `specs/<version>/` takes them a moment; a document paraphrased across a conversation arrives with exactly the parts they remembered, which is the failure this whole stage exists to remove.
+
+**Never link into an implementation repository.** Those directories are gitignored, so a link into one resolves on the author's disk and breaks in every other clone — silently. Anything needed goes as a copy under `specs/<version>/`.
+
+**Material is closed inside one version, never shared across them** (`../hora/references/structure.md`, invariant 3). A later version that needs the same document gets its own copy; sharing one means editing it for the later version silently changes what the earlier one was written against.
+
+**A document that cannot be brought in at all is still worth naming.** Record what it is and who holds it, under "read but not settled here" — a wiki page nobody can export is a known gap, and a known gap is not the same as silence.
+
 ## Sources and Annex
 
 Both already exist in the format (`../hora/references/spec-format.md`). **Stage 0's job is to fill them, which nothing did before.**
