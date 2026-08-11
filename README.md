@@ -46,7 +46,9 @@ Do this before writing `specs/` — once the repository holds commits of its own
 /hora-spec
 ```
 
-**`/hora-spec` writes it with you.** It copies the blank spec and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
+**`/hora-spec` writes it with you.** It reads whatever already exists at stage 0, copies the blank spec, and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
+
+**On a project that already holds working code, you are not asked to dictate it.** Stage 0 reads the repositories and any document you point it at, drafts what they show, and puts it back for you to correct — **as a check, "I read it as this; is that right?", never as a requirement it decided.** What no reading can settle — who a feature is *for*, who *should* be allowed to call an operation, how much of it counts as finished — is asked outright, with the evidence laid out and nothing recommended. Answers come as choices wherever they can, so you correct far more than you compose.
 
 Writing it by hand is still supported, and produces the same document:
 
@@ -97,7 +99,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 
 | Skill | Does | Runs |
 |---|---|---|
-| [`/hora-spec`](./.claude/skills/hora-spec/SKILL.md) | writes the version's spec with you, through seven stages, one approved section at a time | once per version |
+| [`/hora-spec`](./.claude/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
 | [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
 | [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
 | [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
@@ -109,7 +111,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
                                           └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
-The seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
+Stage 0 and the seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](./.claude/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](./.claude/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
@@ -119,7 +121,7 @@ The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/r
 
 | | |
 |---|---|
-| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed,** in two parts and drawn out in figures. `/hora`: the four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial. `/hora-spec`: the seven stages, why every one of them is a conversation, and how approval works |
+| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed,** in two parts and drawn out in figures. `/hora`: the four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial. `/hora-spec`: reading what already exists, the seven stages, why every one of them is a conversation, and how approval works |
 | [`docs/commands.md`](./docs/commands.md) | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
