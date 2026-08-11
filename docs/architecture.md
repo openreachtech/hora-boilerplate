@@ -8,25 +8,32 @@ This document explains the design. It is not the authority on any rule — each 
 
 ---
 
+## Two halves
+
+**Hora Kit is two machines that share one document.** `/hora-spec` decides what gets built, in conversation with whoever wants the product. `/hora` builds what the resulting document says. `specs/<version>/spec.md` is the only thing the two of them share, and that is what lets each half be described on its own.
+
+![Two halves: /hora-spec decides what gets built, /hora builds it](./images/overview.svg)
+
+| | `/hora-spec` | `/hora` |
+|---|---|---|
+| **what it produces** | `specs/<version>/spec.md` | the implementation repositories, and `.hora/` |
+| **its unit of work** | one section of the spec, approved before it is written | one feature, through eighteen checkpoints |
+| **what it does with a gap** | asks, proposes, and writes only what was approved | stops, and says what to fix in `specs/` |
+| **what it never does** | design anything nobody approved; touch git, `.hora/tasks/` or any repository | invent a requirement; write `specs/` outside one narrow, approved exception |
+
+**In time, the spec half comes first.** This document takes `/hora` first because most of the machinery is there, and because the spec half is easier to read once it is clear what reads its output.
+
+**The two halves also differ in how much of your attention they need, and that is what the recommended way of running them follows.** `/hora-spec` is worth sitting through, stage by stage: it is conversation from end to end, and it is where a spec stops being a list of feature names. The implementation half can be left to run — **it stops when it needs an answer instead of deciding**, which is the whole reason unattended is safe here and not in the other half. See [`README.md`](../README.md#recommended-converse-through-the-spec-let-the-implementation-run).
+
+**This document is in two parts:** Part 1 is `/hora` — the layers, the eighteen checkpoints, the state, re-entrancy, git, and why it is serial. Part 2 is `/hora-spec` — the seven stages, why every one of them is a conversation, and how approval works.
+
+---
+
+# Part 1 — /hora: building the application
+
 ## Four layers
 
-```
-        you  ──  /hora
-                   │  decides where the project stands, owns every git operation
-                   ▼
-   /hora-spec   /hora-setup   /hora-plan   /hora-build   /hora-accept
-        │                                       │
-        │  seven stage skills,                  │  runs one feature through
-        │  one per stage of the spec            │  18 checkpoints
-        ▼                                       ▼
-  hora-spec-usecases … hora-spec-review   hora-implementer   hora-verifier
-        │  asks, proposes, writes one section   │  writes / checks one checkpoint
-        ▼                                       ▼
-                    @openreachtech/ai-agent-skills
-                       how to actually write a resolver, a migration,
-                       a component, a test — how to shape a table, an SDL,
-                       a job or a screen — and what acceptance fails on
-```
+![Four layers: /hora, the five skills, the stage skills and the two agents, and ai-agent-skills](./images/layers.svg)
 
 | Layer | What it decides | What it never decides |
 |---|---|---|
@@ -41,13 +48,9 @@ This document explains the design. It is not the authority on any rule — each 
 
 ## Feature by feature, not layer by layer
 
-```
-/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
-                                          ├─> /hora-build #B ─> /hora-accept ─┤
-                                          └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
-```
-
 One feature goes through its spec, its backend, its frontend and then acceptance. **Only once it has passed acceptance does the next feature start.**
+
+![One feature, eighteen checkpoints, four gates](./images/checkpoints.svg)
 
 **The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and a shortfall in the data model is by then twenty features deep, every one of them built on it.
 
@@ -74,7 +77,8 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no write tools at all |
 | **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
-| **all seven spec stages** | **the main session, in conversation** | for the same reason as 1, 2, 9 and 11: a stage exists to settle something with a person, and a subagent cannot ask anybody anything. Only stage 7's mechanical checks — a missing section, a duplicate `id` — could run anywhere else, and their findings still come back to be settled |
+
+**The seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
 **`hora-verifier` has no write tools, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It returns the fact that something is failing; it never fixes it.
 
@@ -91,6 +95,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 ```
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
+  spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks
     <feature-id>.md             one feature, and its eighteen checkpoints
@@ -108,11 +113,11 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 
 | Directory | Written by | Everyone else |
 |---|---|---|
-| `specs/` | **humans** | read-only — with one narrow exception: `/hora-plan` may write an edit **a person has just read and approved**, one at a time |
+| `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
 | `.hora/` | the skill whose work it records | humans read only |
 | the implementation repositories | `hora-implementer`, plus `/hora` for every git operation | — |
 
-**The `specs/` exception exists because planning is a conversation.** Asking someone to hand-edit twenty separate holes one at a time defeats the point of having it. What is protected is not the act of writing — it is that **no requirement ever enters `specs/` without a human having read the exact words first.** Approval is per edit; "yes, fix them all" is not approval of edits nobody has read.
+**What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.
 
 ### A feature file
 
@@ -141,15 +146,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 
 **A single session is not expected to finish a project.** Specs are assumed to be plentiful; `/hora` is started and restarted as many times as it takes, and each run decides where it is.
 
-```
-0. fetch, and check whether a hotfix landed on main
-1. are all declared repositories present?          missing → /hora-setup
-2. always run /hora-plan                           (it reconciles specs/ every time)
-3. any unresolved blocking question?               yes → stop, and say what to fix
-4. any unfinished feature in _plan.md?             yes → /hora-build
-5. every feature done, sweep not run?              → /hora-accept, whole-version
-6. sweep passed                                    → merge
-```
+![Re-entrancy: every run decides where the project stands](./images/reentrancy.svg)
 
 **Step 2 runs even when the feature list already exists.** A spec keeps moving while implementation is under way; sections get added, changed and withdrawn. Reconciling every time is the only way those reach the plan.
 
@@ -168,15 +165,7 @@ Conflating the two costs one of those properties. Keeping them apart costs nothi
 
 Every git operation belongs to `/hora`. No skill and no agent it starts ever touches git. The rules are in [`commits.md`](../.claude/skills/hora/references/commits.md); the shape is this:
 
-```
-main
- └── release/<version>            the version currently being built
-      ├── feature/<feature-id>    one per repository the feature touches
-      ├── install/<pkg>-<ver>     a dependency, on its own branch
-      ├── update/<file>-with-<x>  a planned change to a shared file
-      ├── retake/<what>-for-<why> a redo of something already merged
-      └── adhoc/<rule>-in-<file>  a lint-rule contradiction, scoped to one file
-```
+![The git model: main, release/version, and the branches cut from it](./images/git-model.svg)
 
 **A feature branch is cut per repository, under the same name, and merges at its own gate's boundary.**
 
@@ -195,7 +184,7 @@ main
 
 **Nothing runs alongside anything.** Not two features, not two checkpoints, not two agents.
 
-**Running features or checkpoints in parallel is not an optimization waiting to be switched on. It is blocked on an unsolved problem**, and the reason is written down here because otherwise somebody will build it.
+**Running features or checkpoints in parallel is not an optimization waiting to be switched on. It is blocked on an unsolved problem**, and that problem is written down here because without it, somebody who reads the serial design as an improvement nobody got around to will eventually build parallel execution — and hit the same problem described below. **A design whose "why serial" was never recorded looks, to the next person, like laziness.**
 
 **The problem is git, not throughput.** An implementer agent never touches git, so its work lands uncommitted in one shared working tree alongside whatever else is running. Splitting that back into one clean commit per task afterwards runs into this:
 
@@ -209,13 +198,90 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 ---
 
-## The two boundaries that hold it together
+# Part 2 — /hora-spec: deciding what gets built
+
+**Leaving `specs/` as human-only territory would make the first step of every project the one step nobody would do twice.** A blank spec plus a format document is a writing assignment, and the format is exacting: use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change. Handed that, a person writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time, for as long as it takes.
+
+**So `/hora-spec` writes it — and every mechanism in this half exists to keep that from becoming "the AI decided the requirements".** [`hora-spec/SKILL.md`](../.claude/skills/hora-spec/SKILL.md) is the authority on the skill; [`stages.md`](../.claude/skills/hora-spec/references/stages.md) on the stages; [`principles.md`](../.claude/skills/hora-spec/references/principles.md) on the thinking they apply.
+
+---
+
+## Seven stages, in order
+
+**A stage is a gate with one exit condition, exactly like a checkpoint.** Passing it is not "we talked about it" — it is that a stated condition now holds, and that the section it owns is in `specs/<version>/` with somebody's approval on it.
+
+![The seven stages of /hora-spec, and the return paths into them](./images/stages.svg)
+
+**No stage may be entered until every earlier one is `[x]`**, because each one's answers are the next one's input, and the alternative costs the work twice:
+
+- A data model designed before the use cases are fixed is designed twice, and the second time there is already a migration written against the first
+- A table designed before the user counts are known is designed for the wrong number, and nothing in it says so
+- A screen designed before the operations exist invents operations, which then exist only in the screen
+
+**Going back is normal, and it is not a failure.** A stage that turns up something an earlier one got wrong says so, names the stage, and the run returns there. Stage 7 exists to do exactly that, and it never patches a shortfall in place — patching in place is how a document ends up with a use case that no stage ever walked against a data model.
+
+**The same table is what brings a build finding back here.** A finding at checkpoint 2, 9, 11 or 18 that turns out to be a shortfall in the spec rather than in the code returns to the stage that owns it, instead of being fixed where it was found. Which finding returns where is in [`stages.md`](../.claude/skills/hora-spec/references/stages.md), "What sends a run back into a stage" — along with every stage's exit condition and the sub-skill that runs it.
+
+**No stage may write another stage's section.** Stage 4 does not write use cases; stage 1 does not choose a column type. A stage that reaches into the next one's section has decided something before the conversation that was supposed to decide it.
+
+---
+
+## Why every stage is a conversation
+
+**None of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
+
+**Stage 7's mechanical checks are the one exception, and only halfway.** A missing required section, a duplicate `id`, an operation with no kind, a feature with no acceptance criteria — those are cheap, precise, and could run anywhere. **Their findings still come back to the main session to be settled**, and running them first is worth it: what remains needs somebody to read the document as a whole, and it is better to arrive there with the cheap findings already cleared.
+
+---
+
+## Approval is per section
+
+![Approval is per section — not per line, not per document](./images/approval.svg)
+
+| Granularity | Why not |
+|---|---|
+| per line | twenty approvals for one section is a burden nobody carries twice, and a spec that never gets written is the result |
+| **per section** | **what this skill uses.** A section is the smallest unit that means anything on its own |
+| per document | a whole spec approved with one "yes" is a spec nobody read. That is worse than no approval, because the record says otherwise |
+
+**Invariant 2 was never "a human must type it".** It is that no requirement enters `specs/` without a human having read the exact words. Typing was never the protection; reading is — and a person made to type a section themselves read it no more carefully.
+
+### What may be written, and what may only be proposed
+
+| What it is | What happens to it |
+|---|---|
+| a requirement, a constraint or a decision **stated in the conversation** | **written into `specs/`.** That is the skill's entire job |
+| an improvement, an alternative or a gap **the skill thought of** | **proposed, marked as a proposal.** It becomes spec text only once the person says yes |
+| a requirement **nobody stated and nobody approved** | **never written.** That is inventing what the spec does not say |
+
+**Proposing is required, not merely allowed.** Whoever asks for a product describes the product they already have in mind, and the gaps in it are invisible from the inside. Breaking a request down, offering a better shape for a flow, and naming the case nobody thought of is the value of this half. What is forbidden is the proposal that goes in silently — so a proposal is labelled a proposal, every time, and an assumption a stage made in order to keep moving is stated in the same breath.
+
+---
+
+## The state of a spec run
+
+**Same model as Part 1, one directory over.** `/hora-spec` records where it got to in `.hora/spec/<version>/_stages.md`; there is no separate state file, the checkboxes are the state, and `git log .hora/` is the history.
+
+```markdown
+1. [x] Use cases and actors
+2. [x] The horizon
+...
+5. [x] Screens and interaction  <!-- n/a: this version declares no frontend -->
+```
+
+**Three states, and only three** — not passed, passed, and not-applicable-with-a-written-reason, exactly as in a feature file. The reason is checked against that stage's own "not applicable when" line, never against "the requester did not want to talk about it".
+
+**Only stage 5 has such a line at all** — a version that declares no frontend repository, an API-only release for a phone app, say. Every other stage is passed. A release with no authentication still has to say so at stage 6, and why; a version with no backend row still has to declare that at stage 4.
+
+---
+
+## The two boundaries that hold both halves together
 
 Everything above rests on two lines. Both are stated in [`structure.md`](../.claude/skills/hora/references/structure.md).
 
 ### 1. Ownership is split
 
-`specs/` is written by humans; `.hora/` is written by the kit. When something is wrong in `specs/`, the response is to ask — a typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone.
+`specs/` is human-owned; `.hora/` is written by the kit. When something is wrong in `specs/`, the response is to ask — a typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone. The two writing exceptions in Part 1's table are not a softening of this: both write only words a person has just read and approved.
 
 ### 2. Classifying may be inferred; content may not
 
@@ -240,3 +306,5 @@ Everything above rests on two lines. Both are stated in [`structure.md`](../.cla
 | the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
 | the thinking a spec is written with | [`principles.md`](../.claude/skills/hora-spec/references/principles.md) |
 | the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
+
+<!-- The figures in ./images/ are generated in pairs — x.svg and x.ja.svg. Edit one and edit the other. -->
