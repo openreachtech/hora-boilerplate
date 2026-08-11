@@ -117,6 +117,27 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 ステージ0と7つの仕様ステージは [`stages.md`](./.claude/skills/hora-spec/references/stages.md) に、ステージ0が何を読んでよいかは [`investigation.md`](./.claude/skills/hora-spec/references/investigation.md) に、人への尋ね方は [`asking.md`](./.claude/skills/hora/references/asking.md) に、そこで適用される考え方 — ユースケースから始めること、1つの版に機能を詰め込みすぎないこと、ロールで切るかエンドポイントで切るか、同期処理か Worker か、認可を操作ごとに明記すること — は [`principles.md`](./.claude/skills/hora-spec/references/principles.md) にあります。
 
+### 版を出した後に機能を足す
+
+**ここまではすべて1つの版の話です。2つ目の版は、仕様書が差分になるだけで、同じ5つの SKILL を回します。**
+
+```sh
+mkdir -p specs/1.1.0/request
+$EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言葉で
+```
+
+```
+/hora-spec       そこから specs/1.1.0/spec.md を起こす — 差分なので、
+                 文書情報と新しい機能だけ。他は書かない
+/hora            あとはいつもどおり
+```
+
+**`specs/1.1.0/spec.md` は 1.0.0 に対する差分です。** この版が変える節だけを書き、それ以外は「書かないこと」によって引き継がれ、**1.0.0 は決して書き換えません**。**空のスケルトンはコピーしません** — 機能を1つ足すだけの文書に、空の見出しが20個並ぶことになるからです。
+
+**ステージは、既に出したものへの同意を取り直しません。** この版が触らない節を持つステージは**引き継ぎ**として通過します — 直前の版の答えを、その文言のまま提示し、確認を取ります。**ステージ6と7だけは、あなたが足すものについて決して引き継ぎません** — 新しい操作は必ず「誰が呼べるか」を述べ、全体レビューは差分ではなく解決後の文書を読みます。
+
+**その前に、そもそも新しい版が要るかを決めてください。** 境界は変更の大きさではなく、**その版がリリース済みかどうか**です。`git tag -l '1.0.0'` が空なら `specs/1.0.0/` を直接編集してよく、版番号も変わりません。リリース済みなら手を触れず、次の版を始めます。新しい版番号の決め方を含む手順全体は [`docs/commands.ja.md`](./docs/commands.ja.md) にあります。
+
 18のチェックポイントは [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) にあります。仕様、想定ユースケース、DB / API スキーマ、stub API、実装に必要なモジュール、actual API、worker、セキュリティ検証、そしてフロントエンド、最後に検収です。
 
 **Hora Kit が持つのは「順序」と「関所」だけで、「やり方」は持ちません。** resolver / migration / コンポーネント / テストの書き方も、受入レビューが何を見るかも、すべて [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills) にあります。`/hora-setup` がこのリポジトリの `.claude/skills/` に配置します。詳しくは [`docs/skills.ja.md`](./docs/skills.ja.md) を参照してください。

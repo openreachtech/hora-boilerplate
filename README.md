@@ -117,6 +117,27 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 
 Stage 0 and the seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](./.claude/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](./.claude/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
 
+### Adding a feature after a version has shipped
+
+**Everything above describes one version. A second version is the same five skills over a spec that is a diff.**
+
+```sh
+mkdir -p specs/1.1.0/request
+$EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
+```
+
+```
+/hora-spec       drafts specs/1.1.0/spec.md from it — a DIFF: document
+                 information, and the new feature. Nothing else
+/hora            the usual run, from there
+```
+
+**`specs/1.1.0/spec.md` is a diff against 1.0.0**, so only the sections this version changes are written; everything else carries over by being absent, and **1.0.0 is never rewritten**. **The blank spec is not copied into it** — that would land twenty empty headings in a document that needed one new feature.
+
+**The stages do not make you re-agree to what shipped.** A stage whose section this version does not touch passes as a **carry-over**: the previous version's answer, quoted back and confirmed. **Stages 6 and 7 never carry over for anything you add** — every new operation states who may call it, and the whole-document review reads the resolved document rather than the diff.
+
+**First decide whether you need a new version at all.** The line is not the size of the change but whether the version has been released — `git tag -l '1.0.0'` empty means you edit `specs/1.0.0/` and the number does not change. Once released, leave it alone and start the next one. [`docs/commands.md`](./docs/commands.md) has the whole procedure, including how the new number is chosen.
+
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
 **Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`. See [`docs/skills.md`](./docs/skills.md).
