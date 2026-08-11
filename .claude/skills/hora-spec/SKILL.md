@@ -40,10 +40,11 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 |---|---|
 | a requirement, a constraint or a decision **stated in the conversation** | **write it into `specs/`.** This is the skill's entire job |
 | something **read off a repository or a document** | **put it up as a check** — "I read it as this; is that right?" Written once it is confirmed or corrected |
+| something **asked for in `request/`** | **draft it into the section that owns it and put it up as a proposal** — it is what somebody wants, not yet what the product does. Written once they approve the words |
 | an improvement, an alternative or a gap **this skill thought of** | **propose it, marked as a proposal.** It becomes spec text only once the person says yes |
 | a requirement **nobody stated and nobody approved** | **never written.** That is inventing what the spec does not say (`../hora/references/structure.md`, invariant 2) |
 
-**Rows two and three are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do. Stated in the same voice, a proposal becomes an existing fact in the record, and nothing afterwards can tell it apart from something that was actually there. **`../hora/references/asking.md` is the authority on this, and it is read by `/hora-plan` too.**
+**The check and the two kinds of proposal are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do — whether it came out of a request or out of the skill's own thinking, and the record says which. Stated in the same voice, a proposal becomes an existing fact, and nothing afterwards can tell it apart from something that was actually there. **`../hora/references/asking.md` is the authority on this, and it is read by `/hora-plan` too.**
 
 **Invariant 2 was never "a human must type it".** It is that **no requirement enters `specs/` without a human having read the exact words.** Typing was never the protection; reading is. A skill that drafts a section, shows it in full, and writes it only after the person says yes protects exactly what the invariant protects — and a person who was made to type it themselves read it no more carefully.
 

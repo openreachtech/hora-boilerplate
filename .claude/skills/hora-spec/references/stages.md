@@ -67,10 +67,10 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 |---|---|
 | **Skill** | **none — `/hora-spec` runs it itself.** It gathers; it decides nothing, so there is no design conversation to own |
 | **Delegate to** | nothing. Reading a tree is not a procedure the package holds |
-| **Exit condition** | everything readable has been read at breadth — the repositories that exist, and every document anybody named; each document is declared `Sources` or `Annex` with somebody vouching for it; what was read has been confirmed per section; and `.hora/spec/<version>/_assets.md` is written |
+| **Exit condition** | everything readable has been read at breadth — the repositories that exist, every document anybody named, and whatever sits in `request/`; each document is declared `Sources` or `Annex` with somebody vouching for it; a request is confirmed as this version's agenda and belongs to neither table; what was read has been confirmed per section; and `.hora/spec/<version>/_assets.md` is written |
 | **Not applicable when** | **never.** A new project passes it by recording that there was nothing to read, which is itself worth recording |
 | **Writes** | `Sources` and `Annex` (once confirmed), and `.hora/spec/<version>/_assets.md` |
-| **Reads** | everything, at breadth. No deeper than "what exists" |
+| **Reads** | everything, at breadth. No deeper than "what exists". **`request/` first** — what somebody wants is the agenda the seven stages then work through (`investigation.md`) |
 
 **`references/investigation.md` is the authority on this stage** — the line between a fact and an intent, the inventory procedure, how a document becomes a source, and what stage 0 never does.
 
