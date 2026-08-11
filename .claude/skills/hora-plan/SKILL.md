@@ -7,7 +7,7 @@ description: Plan one version of an application from its spec. Fixes which versi
 
 **The planner.** Decide which version is being built, get its spec into a state that can actually be built, and write the list of features to build.
 
-Read `../hora/references/structure.md` first — the layout, the invariants and the language rule all come from there.
+Read `../hora/references/structure.md` first — the layout, the invariants and the language rule all come from there. **`../hora/references/asking.md` fixes how anything here is put to a person**, and it is the same file `/hora-spec` reads: a check, a proposal and a question are three different acts, and the question tool is the default for all three.
 
 ## The three things this skill does
 
@@ -31,6 +31,10 @@ Planning is a conversation with whoever wrote the spec, and asking that person t
 ```
 
 **Approval is per edit, never blanket.** "Yes, fix them all" is not approval of edits nobody has read yet. What is protected here is not the act of writing — it is that **no requirement ever enters `specs/` without a human having read the exact words first.**
+
+**Step 2 is a proposal, and it is said as one** — "I suggest this edit; it is yours to decide". **Where the finding is instead that this skill may have misread the document, that is a check** — "I read this as X; is that right?" — and it is settled before any edit is proposed at all (`../hora/references/asking.md`). Half of what looks like a hole in a spec is a hole in the reading of it, and proposing an edit for one of those puts the planner's misunderstanding into the document.
+
+**Step 3 stays in prose.** The edit's exact words have to be read, and an option labelled "approve" is what lets somebody not read them. **Everything around it defaults to the question tool** — which of two readings holds, which of three fixes to take, whether a finding is worth blocking on.
 
 **A finding that needs design work goes to `/hora-spec` instead, at the stage that owns it.** The split is by what the fix is, not by how large it looks:
 
@@ -237,6 +241,8 @@ A feature with acceptance criteria but no use cases builds a set of operations t
 ### Resolving what was found
 
 **Resolve it here, in conversation, whenever the person who can answer is present.** For each finding: state it, propose the exact edit, wait for approval, write it. Then move to the next.
+
+**Batch the deciding, not the approving.** Which findings are real, and which of several fixes to take, go out through the question tool four at a time; the exact wording of each edit is then shown and approved on its own (`../hora/references/asking.md`). A person asked twenty separate free-text questions answers the first few properly.
 
 **Two things still go to `.hora/questions/<version>/open.md` instead:**
 
@@ -546,6 +552,7 @@ When it stopped with a `blocking: yes` outstanding, **put what the human has to 
 | File | Content |
 |---|---|
 | `../hora/references/structure.md` | the layout, the invariants, the language rule |
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this skill defaults to |
 | `../hora/references/spec-format.md` | the authority on the format of `specs/<version>/spec.md` |
 | `../hora-spec/SKILL.md` | **who writes a spec, and what to hand back to it.** Run it when a version's `spec.md` is still empty |
 | `../hora-spec/references/stages.md` | which stage a design-level finding goes back to |
