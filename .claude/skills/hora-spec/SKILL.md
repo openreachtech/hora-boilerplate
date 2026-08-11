@@ -102,6 +102,7 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 |---|---|
 | `specs/<version>/spec.md`, and the version's feature files | **written by this skill**, one approved section at a time |
 | `specs/skeleton/spec.md` | **copied from, never written to.** This skill does the copying, **and only for the first version** |
+| `specs/<version>/request/` | **read, never written to and never tidied up.** It is what somebody asked for, and it stays as they wrote it |
 | `specs/<older version>/` | **never.** Past versions are frozen (`../hora/references/spec-format.md`) |
 | `.hora/spec/<version>/_stages.md` | this skill's own record of where it got to |
 | `.hora/spec/<version>/_assets.md` | what stage 0 read, where from, and at what commit (`references/investigation.md`) |
@@ -186,6 +187,20 @@ hora  Stage 3. 1.0.0 fixed these, and nothing in the CSV export request
 **Which stages may carry over, and which never may, is stated per stage in `references/stages.md`** — as a `Carried over when` line, next to that stage's exit condition and its `Not applicable when`. It is not restated here, and there is one place to change it.
 
 **Stages 6 and 7 are the two that never carry over for anything this version adds, and they are what make a diff version safe to run quickly.** Everything above them is allowed to be brief because those two are not: every new operation states its caller at the version that introduced it, and the whole-document review reads the **resolved** document, where a new operation contradicting a rule 1.0.0 wrote is obvious — in a diff, it is invisible.
+
+---
+
+## A page of notes is enough to start from
+
+**Drop what is wanted into `specs/<version>/request/` and run `/hora-spec`.** Any file, any name, in anybody's own words — a mail, a ticket, a page of bullets, a meeting note. Stage 0 reads it first and treats it as **this version's agenda**: what somebody wants, in the form they had it (`references/investigation.md`).
+
+**A request is not a source, and the difference is the point.** Nothing in it is spec text. What it says clearly is drafted into the section that owns it and goes back as a **proposal**; what it implies goes back as a question — and only what somebody approves is written. `/hora-plan` never reads `request/` at all, so a wish list cannot become a task by sitting in a folder.
+
+**Requests are the one thing this skill reads that nobody has to be held to.** Somebody writing a request may contradict themselves, ask for two incompatible things, or describe a screen without saying who opens it. **That is expected, and each one is a question this skill asks rather than a defect in the file** — being able to hand over rough notes is the whole reason the directory exists.
+
+**Saying it in conversation works identically.** The directory exists because a request is regularly longer than a message, written by somebody who is not in the session, and worth keeping next to the version that answered it.
+
+**It works for the first version and earns its keep from the second.** A first version is a long conversation whatever it starts from; a later one is often one page of notes away from being a diff nobody had to write.
 
 ---
 
