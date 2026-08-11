@@ -303,6 +303,8 @@ read the code and write the requirement it implies                     forbidden
 
 **Only stage 5 has such a line at all** — a version that declares no frontend repository, an API-only release for a phone app, say. Every other stage is passed. A release with no authentication still has to say so at stage 6, and why; a version with no backend row still has to declare that at stage 4.
 
+**From the second version on, a stage may pass by carrying over, and that is still one of the three.** `spec.md` is a diff from there on, so most of what the seven stages settle was settled a release ago; a stage whose section this version does not touch states the previous version's answer, gets it confirmed, and passes with the carry-over written next to it — `<!-- carried: 1.0.0's numbers, confirmed unchanged -->`. **It is a check, never an assumption**, because a carry-over is the one kind of pass that is indistinguishable from a stage that did not run. **Stages 6 and 7 never carry over for anything a version adds**, which is what lets the rest be brief. Which stages may is per stage in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
+
 ---
 
 ## The two boundaries that hold both halves together
