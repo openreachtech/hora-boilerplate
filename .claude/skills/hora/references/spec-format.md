@@ -32,6 +32,8 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 specs/
   1.0.0/
     spec.md               ← the entry point. One per version. The only fixed name
+    sources/              ← drop-off: documents that ARE the spec (below). Recognized, not required
+    annex/                ← drop-off: documents that EXPLAIN it (below). Recognized, not required
     attendance/
       spec.md              ← a feature file (optional). Linked from spec.md
       monthly/
@@ -47,6 +49,27 @@ specs/
 ```
 
 **Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to — from `spec.md`, from a feature file, or transitively through either — is never read, and raises a question (`orphan`, `blocking: no`). This is the one thing that stays closed: not the shape of the directory, but the requirement that nothing depends on `/hora` noticing an unlinked file by luck.
+
+**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans.
+
+### `sources/` and `annex/` — a drop-off convention, and nothing more
+
+**Two directory names are recognized, so that somebody with documents to hand over has a place to put them without reading this file.** They ship empty in `specs/1.0.0/`.
+
+| | |
+|---|---|
+| `specs/<version>/sources/` | put a document here to say **it is part of the specification** |
+| `specs/<version>/annex/` | put a document here to say **it only explains the specification** |
+
+**They change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+
+**Recognized, never required**, in either direction:
+
+- a document placed anywhere else under `specs/<version>/` is found by stage 0 all the same, and asked about instead of checked
+- a project that brings its own layout across keeps it. `spec/` and `docs/` in the tree above are exactly as valid as they were
+- writing the tables by hand and using neither directory works, and produces the same document
+
+**A document sitting in `sources/` that nobody confirmed is still not a source.** The directory expresses an intent; the table records a decision. Placement is evidence of what somebody meant, which is what makes it a *check* rather than a *question* — it is not a substitute for their answer.
 
 **A linked file is read one of two ways, decided by whether it is declared under a `Sources` section — not by where it sits or what it is named.**
 

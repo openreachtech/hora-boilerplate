@@ -47,8 +47,10 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
 
 ```
 1. Is there anything to read at all?
-     an existing repository inside this one, a reference document, a PDF,
-     a diagram, a spreadsheet, an old spec
+     specs/<version>/sources/ and annex/ first — what is in them, and what
+     their placement says
+     then the rest of specs/<version>/, an existing repository inside this
+     one, a reference document, a PDF, a diagram, a spreadsheet, an old spec
      nothing  -> record "new project, nothing to read", pass the stage, go to 1
 
 2. Ask for what is not visible from here
@@ -97,8 +99,25 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
 ```
 specs/<version>/
   spec.md            the entry point. The only fixed name
+  sources/           drop-off: "this is part of the specification"
+  annex/             drop-off: "this only explains it"
   <anything>/        names, nesting and depth are all free
 ```
+
+### The two drop-off directories, and why they turn a question into a check
+
+**`sources/` and `annex/` ship empty and are read first.** They exist so that somebody handing over twenty documents can express, by where they put each one, what they would otherwise have been asked twenty times (`../hora/references/spec-format.md`, "`sources/` and `annex/` — a drop-off convention").
+
+| Where it was found | How it goes out |
+|---|---|
+| in `sources/` or `annex/` | **a check** — "you put this in `sources/`, so I am treating it as part of the specification. Is that right?" |
+| anywhere else under `specs/<version>/` | **a question** — "which of the two is this?" |
+
+**That difference is the entire value of the convention.** A person amending a list somebody else drafted gets through twenty documents; a person answering twenty separate questions stops reading around the sixth. Batch the checks — one exchange for everything in `sources/`, one for everything in `annex/`.
+
+**Placement is evidence of intent, never a decision.** A document in `sources/` that nobody confirmed is not a source, and is never written into the `Sources` table on the strength of the folder alone. The directory is what makes the question cheap; it is not what answers it.
+
+**Recognized, never required.** A project that brought its own layout across keeps it, and stage 0 reads the whole of `specs/<version>/` regardless — the directories are a place to look first, not the only place to look. **Never tell somebody their existing folders are wrong**, and never move a file to make it fit the convention.
 
 **When somebody names a document that is not there, say where to put it and ask them to place it** — do not attempt to work from a description of it. Copying it into `specs/<version>/` takes them a moment; a document paraphrased across a conversation arrives with exactly the parts they remembered, which is the failure this whole stage exists to remove.
 
@@ -119,7 +138,7 @@ Both already exist in the format (`../hora/references/spec-format.md`). **Stage 
 
 **The difference is not how useful the document is — it is whether anybody is willing to be held to it.** A design doc that is two years stale is `Annex` however good it is; a current requirements list is `Sources`.
 
-**Which one a document goes into is a question, not a judgment call.** Offer each document with the two options and what each entails.
+**Which one a document goes into is never stage 0's judgment call.** For anything found in `sources/` or `annex/`, put the placement up as a check; for anything found elsewhere, offer the two options and what each entails.
 
 **A document nobody can vouch for goes in `Annex`, and stage 0 says so.** Promoting it to `Sources` would make a stale statement a requirement that `/hora-plan` extracts tasks from.
 
