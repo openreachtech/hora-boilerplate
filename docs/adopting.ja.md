@@ -241,7 +241,7 @@ Treatment: keep it — Hora Kit is being adopted onto these repositories, not us
 
 ### CI
 
-`.github/workflows/` のワークフローは `light` ラベルのセルフホストランナーで動きます。用意できない場合、**`runs-on` を自分で書き換えないでください** — `specs/<version>/spec.md` にその旨を記載してください。
+`.github/workflows/` のワークフローは、既定では `light` ラベルのセルフホストランナーで動きます。**GitHub がホストするランナーを使う場合は、3つのワークフローの `runs-on` を自分で `ubuntu-latest` に書き換え**、`specs/<version>/spec.md` にその旨を記載してください — private リポジトリでは、実行ごとに課金されることを意味します。適用先リポジトリが元々持っているワークフローはそのままです。ここで言っているのは、キットが持ち込むワークフローだけです。
 
 ---
 
