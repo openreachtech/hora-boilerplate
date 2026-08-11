@@ -47,7 +47,7 @@ what each screen shows when there is nothing, when it is waiting, when it
 | **a button with no operation behind it** | a screen designed against a backend that does not exist. Either stage 4 is short one operation, or the button should not be there |
 | **an operation no screen calls** | either a missing screen, or a feature nobody wants. Ask which |
 
-**`hf-acceptance-review` looks for exactly these two**, at the far end of eighteen checkpoints. Finding one here costs a sentence.
+**The acceptance review looks for exactly these two**, at the far end of eighteen checkpoints. Finding one here costs a sentence.
 
 ---
 
@@ -78,7 +78,7 @@ what each screen shows when there is nothing, when it is waiting, when it
 
 **Question 1 is walked as the person, not described as a feature.** "The attendance screen has a list and a button" says nothing about whether anybody can finish anything.
 
-**Question 4 is the one nobody is ever asked, and it is where most of a real screen lives.** Every product has a first run with no data, every call can fail, and every screen someone is not allowed to open gets opened. **Propose these; do not wait to be asked.** `hf-uiux-forge` holds what a screen has to account for to be correct by construction — invoke it and design against it.
+**Question 4 is the one nobody is ever asked, and it is where most of a real screen lives.** Every product has a first run with no data, every call can fail, and every screen someone is not allowed to open gets opened. **Propose these; do not wait to be asked.** The skills covering correct-by-construction screens hold what a screen has to account for — invoke them and design against them.
 
 **Propose the shorter flow.** A use case that takes four screens usually takes two, and the person describing it has been picturing the four for months. Say which two, and why.
 
@@ -88,14 +88,16 @@ what each screen shows when there is nothing, when it is waiting, when it
 
 ## Delegates
 
-| What is needed | The skill that holds it |
-|---|---|
-| the project context file the UI generator and the UI auditor both read — app type, users, scope, tokens, accessibility target, project UX rules | `hf-uiux-context` |
-| what a screen has to account for to be correct by construction — states, empties, failures, accessibility, tokens, consent | `hf-uiux-forge` |
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
-**Invoke them; do not summarize them here.** `hf-uiux-context`'s file is read again at checkpoints 11 and 18 and by `hf-uiux-audit`, so **this stage is the cheapest place for it to be filled in correctly** — the users, the scope and the project's own UX rules are all already settled by stages 1 to 3.
+| What is needed |
+|---|
+| the shared UI/UX project context file the UI generator and the UI auditor both read — app type, users, scope, tokens, accessibility target, project UX rules |
+| what a screen has to account for to be correct by construction — states, empties, failures, accessibility, tokens, consent |
 
-If either is not under `.claude/skills/`, say so by name, carry on, and record the gap.
+**Invoke what you matched; do not summarize it here.** That context file is read again at checkpoints 11 and 18, and by the UI auditor, so **this stage is the cheapest place for it to be filled in correctly** — the users, the scope and the project's own UX rules are all already settled by stages 1 to 3.
+
+If nothing equipped covers a row, say so by the work it names, carry on, and record the gap.
 
 ---
 
@@ -137,7 +139,7 @@ For: a member of staff. Reached from the top navigation, and after clocking in.
 
 **Write `target` on the section**, naming the frontend repository this screen belongs to. A screen section whose `target` names a repository the layout does not declare stops the run.
 
-**The `Calls` table is what makes the mapping checkable.** Checkpoint 11 reads it, `hf-e2e-test-specification` derives scenarios that pass through it, and the acceptance review uses it to find the operation nothing reaches.
+**The `Calls` table is what makes the mapping checkable.** Checkpoint 11 reads it, the end-to-end test specification derives scenarios that pass through it, and the acceptance review uses it to find the operation nothing reaches.
 
 ---
 

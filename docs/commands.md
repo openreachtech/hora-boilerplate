@@ -259,14 +259,16 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 ### What it does
 
 ```
-1. Confirm the environment      build-e2e-test-environment
-2. Unit suites, per repository  test-execution and friends
-3. The scenario list            e2e-test-specification
-4. The acceptance review        acceptance-review
-5. UX findings                  uiux-audit
+1. Confirm the environment      the local end-to-end container stack
+2. Unit suites, per repository  test placement, and driving a suite green
+3. The scenario list            end-to-end test specification
+4. The acceptance review        the review itself, with its own criteria
+5. UX findings                  the UI/UX audit
 ```
 
-**It contains no criteria of its own.** What a review looks at and what it fails on lives in those skills; this command decides only which features are in scope, what order the delegates run in, and where the result is recorded. See [`skills.md`](./skills.md).
+**Each step names the work, not a skill.** No hora file writes down a package skill's name — the match is made at run time against the equipped skills' own descriptions, and the names that were matched go into the run's record. [`skills.md`](./skills.md) has the reasoning.
+
+**It contains no criteria of its own.** What a review looks at and what it fails on lives in those skills; this command decides only which features are in scope, what order the delegates run in, and where the result is recorded.
 
 **Step 1 is a gate, not a warm-up.** The review signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a frontend served on its own, and a review run that way reports a pass it has not earned.
 

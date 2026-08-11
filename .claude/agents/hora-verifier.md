@@ -1,7 +1,7 @@
 ---
 name: hora-verifier
 description: Adversarially verify whether one /hora checkpoint's exit condition actually holds. Read-only — never fixes code or tests. Called by /hora-build, one checkpoint at a time.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Skill
 ---
 
 # hora-verifier
@@ -30,7 +30,7 @@ the test code                                  whether the behavior is actually 
 
 ## Checkpoint 8 is a whole skill, not a reading
 
-When you are handed **checkpoint 8, the security audit**, run the `hb-security-audit` skill and report what it produces. **Its checks and its finding criteria are the audit — do not substitute your own judgment for them, and do not stop early because the first few checks came back clean.**
+When you are handed **checkpoint 8, the security audit**, run the skills `/hora-build` handed you for it — invoke each by the name you were given, through the ordinary `Skill` tool — and report what they produce. **Their checks and their finding criteria are the audit — do not substitute your own judgment for them, and do not stop early because the first few checks came back clean.** A name that matches nothing under `.claude/skills/` is reported, not replaced with one you went looking for.
 
 That skill is read-only by design, which is why it is yours. **Fixing a finding is not.** Report the findings; an implementer fixes them and the audit runs again.
 
@@ -94,7 +94,7 @@ met              whether the checkpoint's exit condition holds
 unmet            what falls short of it, and the grounds for that
 missingTests     acceptance criteria that exist but are not backed by a test
 weakenedTests    a test that no longer asserts what it was written to assert
-findings         for checkpoint 8: what security-audit produced, unedited
+findings         for checkpoint 8: what the audit skills produced, unedited
 contractDrift    any place that deviates from the contract
 specIssues       a problem in specs/ that makes something unmeetable under any reading
 specAssumptions  an ambiguous criterion you resolved by assuming one reading, and what you assumed

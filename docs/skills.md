@@ -26,7 +26,7 @@ Hora Kit          "a stub resolver lives under server/graphql/resolvers/<audienc
 
 So Hora Kit's rule is absolute:
 
-> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it. Delegate to it by name instead.**
+> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it. State the work and delegate it.**
 
 This is the same reasoning `/hora-setup` already applies to the boilerplates: **read the real thing; do not bake in what it currently says.** The package is the real thing here.
 
@@ -64,32 +64,54 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 
 ---
 
-## The prefix is the part worth reading
+## No hora file names one of these skills
 
-Each skill declares a `name:` in its own frontmatter, and the package's flatten build makes that the directory name. Hora Kit invokes exactly that name — there is nothing to resolve and no wildcard to expand.
-
-**Every name opens with the surface it serves.**
-
-| Prefix | Applies to | Example |
-|---|---|---|
-| `hb-` (hora-backend) | the backend repository | `hb-stub-api`, `hb-sequelize-migration` |
-| `hf-` (hora-frontend) | a frontend repository | `hf-acceptance-review`, `hf-css-units` |
-| `hc-` (hora-core) | either | `hc-requirement-definition`, `hc-jest` |
-
-So which one applies to the row you are working in is visible before you read anything else.
-
-### What follows the prefix is a label, not a classification
+Not [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), not [`stages.md`](../.claude/skills/hora-spec/references/stages.md), not an agent definition, not this page. **A skill's name belongs to the package, which is free to change it** — and a written-down name is the one kind of copy that fails silently.
 
 ```
-hf-graphql          operation clients in a Furo app
-hb-graphql-schema   SDL for a renchan server
+the package renames a skill
+       │
+       ▼
+Hora Kit    "delegate to <the name it used to have>"
+       ↑
+  matches nothing. The gate runs without its convention,
+  and reports that it passed
 ```
 
-Nothing but the prefix separates those two, and the same holds across the package: `hf-modules` is Furo's utility classes, `hc-module-imports` is an import-ordering convention. **Never pick a skill because its name sounds relevant.** [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) says which skill each checkpoint delegates to, and [`stages.md`](../.claude/skills/hora-spec/references/stages.md) which one each spec stage delegates to. **Those two files are the only authorities on it.**
+**A stale procedure at least disagrees with the real thing the moment somebody reads both. A stale name disagrees with nothing.** It simply stops resolving — and every mechanism Hora Kit has for reporting a missing skill then turns a skipped convention into a one-line footnote under a passing run. That is the worst possible place for a failure to be quiet.
 
-### Do not write a name into a hora skill "for reference"
+So the match is made at run time, against what is actually equipped:
 
-The same rule as the procedures themselves. A name recorded anywhere other than the one place that decides which checkpoint uses it is a second copy — **and a skill's name belongs to the package, which is free to change it.** That is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a denylist that stops matching says nothing when it stops.
+| | |
+|---|---|
+| **a hora file** | **states the work** — "the CSS conventions this project uses", "how a background job is written" |
+| **an equipped skill** | **states what it covers**, in its own `description:`, which the package updates along with the skill |
+| **the main session** | **matches the two, and records what it picked** |
+
+`checkpoints.md` and `stages.md` are still the authorities — on **what work each gate delegates**, never on which skill covers it.
+
+### The match is the main session's, and it gets recorded
+
+The main session is handed the equipped skills' descriptions as part of its own context, so it is the one place where the match can be made *and written down*. It records what it picked:
+
+```markdown
+- [x] 15. UI  <!-- skills: <every name matched> -->     ← .hora/tasks/<version>/<feature-id>.md
+| review | <the names matched> | 2 findings |           ← .hora/acceptance/<version>/...
+```
+
+**An agent never picks its own.** It would pick differently on a rerun, and nothing downstream could say which set the first run actually used. Recording the choice is also what makes a package rename visible: last run matched five skills for a checkpoint, this one matched four.
+
+### The prefix is the one part of a name worth reading
+
+| Prefix | Applies to |
+|---|---|
+| `hb-` (hora-backend) | the backend repository |
+| `hf-` (hora-frontend) | a frontend repository |
+| `hc-` (hora-core) | either |
+
+So which surface a skill serves is visible before anything else. **Everything after the prefix is a label, not a classification** — one skill in this package covers operation clients in the frontend app and another covers SDL for the backend server, and their names differ by no more than a word. **The description is the only thing that says which is which**, and matching on what a name sounds like is how the wrong one gets invoked.
+
+This is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a denylist that stops matching says nothing when it stops.
 
 ---
 
@@ -101,7 +123,7 @@ The same rule as the procedures themselves. A name recorded anywhere other than 
 ls .claude/skills/
 ```
 
-And the authoritative mapping from a checkpoint to the skills it delegates to is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](../.claude/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either table would be exactly the drift this whole document is about.
+And the authoritative statement of **what work** each checkpoint delegates is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](../.claude/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either would be exactly the drift this whole document is about.
 
 ### `hb-` — backend (renchan)
 
@@ -145,31 +167,33 @@ And the authoritative mapping from a checkpoint to the skills it delegates to is
 
 ## The ones Hora Kit leans on hardest
 
-Four are worth knowing by name, because a checkpoint is built around each.
+Four checkpoints are built around a single piece of the package. **They are listed by the work, not by a name** — the rule above applies to this page too.
 
-| Skill | Checkpoint | Why it shapes the design |
+| The work | Checkpoint | Why it shapes the design |
 |---|---|---|
-| `hb-stub-api` | **4** | it is why the frontend gate does not wait for the real API. The stub shares a class name and interface with the real resolver, so checkpoint 16 is a change of endpoint, not a rewrite |
-| `hb-security-audit` | **8** | read-only by design, which is why that checkpoint runs in a **verifier** agent with no write tools. Finding and fixing are separate acts |
-| `hb-build-e2e-test-environment` | **17** | acceptance is impossible without it, which is why it is a checkpoint of its own rather than a step inside 18 |
-| `hf-acceptance-review` | **18** | it holds every criterion acceptance passes or fails on. `/hora-accept` contributes scope, order and a record — nothing else |
+| **writing a stub API** | **4** | it is why the frontend gate does not wait for the real API. The stub shares a class name and interface with the real resolver, so checkpoint 16 is a change of endpoint, not a rewrite |
+| **the security audit** | **8** | read-only by design, which is why that checkpoint runs in a **verifier** agent. Finding and fixing are separate acts |
+| **building the local end-to-end environment** | **17** | acceptance is impossible without it, which is why it is a checkpoint of its own rather than a step inside 18 |
+| **the acceptance review** | **18** | it holds every criterion acceptance passes or fails on. `/hora-accept` contributes scope, order and a record — nothing else |
 
-`hc-requirement-definition`, `hf-uiux-context` and `hc-test-execution` are close behind: the first backs checkpoint 1, the second produces the context file that both the UI generator and the UI auditor read, and the third is the reason a failing suite is never "fixed" by loosening a test.
+Three more are close behind: **requirement definition** backs checkpoint 1, **the shared UI/UX project context** produces the file that both the UI generator and the UI auditor read, and **test execution** is the reason a failing suite is never "fixed" by loosening a test.
 
 ---
 
-## When a skill is missing
+## When nothing covers the work
 
-A named skill may not be there — the package renamed it, dropped it, or it has not been equipped yet. **Names are the package's to change**, so this is a real case, not a hypothetical.
+Matching against descriptions removes the rename problem, not the *dropped* one. A gate may state work that nothing equipped covers — the package removed that skill, narrowed it, or never had it.
 
 **Say so, and continue without it. Do not substitute a guess.**
 
 | | Why |
 |---|---|
-| a named skill that is not there | **report it by name.** A checkpoint that ran without its convention produced work nobody has checked against anything |
+| work nothing covers | **report it by the work, not by a name.** A checkpoint that ran without its convention produced work nobody has checked against anything |
 | improvising the missing procedure | **no.** That is the copy problem again, written fresh and with less care than the original |
-| `/hora-setup` | reports at equip time what a later checkpoint will look for and not find — better known then than at the moment it is needed |
+| picking the nearest-sounding skill | **no.** That is what matching on descriptions exists to prevent. A near miss is worse than a gap, because it reports a pass |
 | `/hora-accept` | records the gap in the run's own record. **A run with a step missing is not a pass with a footnote** — it is a partial run, and the record has to say so |
+
+**A shrinking match count is the signal to watch.** Because every run records what it matched, a checkpoint that used to match five skills and now matches three says so in a diff — which is the thing a written-down name could never do.
 
 ---
 
@@ -177,7 +201,7 @@ A named skill may not be there — the package renamed it, dropped it, or it has
 
 | | |
 |---|---|
-| the authoritative checkpoint → skill map | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
-| the boundary, stated as a rule | [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor" |
+| the authoritative statement of what work each checkpoint delegates | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
+| the boundary, stated as a rule | [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor" and "No hora file ever names one of those skills" |
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | what each command does | [`commands.md`](./commands.md) |

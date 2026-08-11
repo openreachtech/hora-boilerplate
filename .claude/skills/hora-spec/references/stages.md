@@ -2,7 +2,9 @@
 
 **The authority on the stage list.** `/hora-spec` copies the list from here into `.hora/spec/<version>/_stages.md`; each stage skill runs one of them.
 
-**This file holds the order and the exit conditions. It does not hold a single design rule.** How a table is shaped, how an SDL is named, where a background job belongs and what a screen must account for all live in `@openreachtech/ai-agent-skills`, and each stage below names the skill that holds it. **Never write one of those rules into this file** — the copy would go stale the first time the package is updated, and nothing would announce that it had (`../../hora/references/structure.md`, "The division of labor").
+**This file holds the order and the exit conditions. It does not hold a single design rule.** How a table is shaped, how an SDL is named, where a background job belongs and what a screen must account for all live in `@openreachtech/ai-agent-skills`, and each stage below states the *work* that skill covers. **Never write one of those rules into this file** — the copy would go stale the first time the package is updated, and nothing would announce that it had (`../../hora/references/structure.md`, "The division of labor").
+
+**No stage below names a package skill, and none ever may.** A skill's name belongs to the package, which is free to change it, and a renamed skill does not announce itself — the name stops matching and the stage runs without its design rules while reporting that it passed. Each **Delegate to** row therefore says what has to be covered, and the main session matches that against the equipped skills' own descriptions when it enters the stage (`../../hora/references/structure.md`, "No hora file ever names one of those skills"). Every stage runs in the main session, so there is nobody else to make the match.
 
 **`principles.md` is the other half of this file.** This one says what must be true before a stage is over; that one says what to weigh while getting there, and where the boundary against the package's own skills runs.
 
@@ -52,7 +54,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-usecases` |
-| **Delegate to** | `hc-requirement-definition` (turning a rough request into stated requirements, observable criteria and an out-of-scope list), `hf-uiux-context` (the project context both UI skills later read: app type, users, scope) |
+| **Delegate to** | the skills covering how a rough request becomes stated requirements, observable criteria and an out-of-scope list; and the skills covering the shared UI/UX project context both UI skills later read (app type, users, scope) |
 | **Exit condition** | every actor is named, with how they are identified; every use case is one person completing one thing end to end; every feature this release will build carries at least one use case; and the project name is written |
 | **Not applicable when** | never |
 | **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets`, and each feature section's `<!-- usecases -->` block |
@@ -66,7 +68,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-horizon` |
-| **Delegate to** | `hc-requirement-definition` (the out-of-scope list, and what makes a requirement decided rather than assumed) |
+| **Delegate to** | the skills covering the out-of-scope list, and what makes a requirement decided rather than assumed |
 | **Exit condition** | three separate lists exist — built this time, out of scope for now, permanently out of scope — every "for now" entry names what unblocks it, and every one that needs the design kept open names the seam to keep replaceable |
 | **Not applicable when** | never |
 | **Writes** | `Implementation scope`, in three parts, and `Implementation plan` |
@@ -98,7 +100,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-backend` |
-| **Delegate to** | `hb-database-design` (the logical shape of a table, what to normalize, how to hold a status, a time, a history), `hb-graphql-schema` (SDL, type and field naming, nullability, enums, pagination), `hb-restfulapi-architecture` (a REST renderer's route and version), `hb-execution-placement-pattern` (whether work belongs in the request path, in a post-worker, or in a background job), `hb-renchan-job-bullmq` (a queue, a schedule, a retry), `hb-post-worker` (a side effect after the response), `hb-graphql-server-engine` (what an endpoint is, and its auth filter) |
+| **Delegate to** | the skills covering each of: the logical shape of a table (what to normalize, how to hold a status, a time, a history); SDL, type and field naming, nullability, enums, pagination; a REST renderer's route and version; whether work belongs in the request path, in a post-worker or in a background job; a queue, a schedule, a retry; a side effect after the response; what an endpoint is and what its auth filter does |
 | **Exit condition** | the repository layout and the server table are declared; every use case from stage 1 can be walked against the data model and the operation list, step by step, without a gap; every operation states its kind; and every write states whether it completes inside the request or runs as a job |
 | **Not applicable when** | never. A version with no backend row still has to declare that (`../../hora/references/spec-format.md`, "Repository layout") |
 | **Writes** | `Repository layout` and its server table, `Data model`, `GraphQL`, `RESTful API`, `Background jobs`, and `Key file map` where anything about placement is already known |
@@ -114,7 +116,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-frontend` |
-| **Delegate to** | `hf-uiux-context` (the project context file the UI generator and the UI auditor both read), `hf-uiux-forge` (what a screen has to account for to be correct by construction — states, empties, failures, accessibility, tokens) |
+| **Delegate to** | the skills covering the shared UI/UX project context file that the UI generator and the UI auditor both read; and the skills covering what a screen has to account for to be correct by construction — states, empties, failures, accessibility, tokens |
 | **Exit condition** | every use case names the screens it passes through, in order; every screen names the operations it calls; nothing on a screen lacks an operation behind it, and no operation is unreachable from every screen |
 | **Not applicable when** | **this version declares no frontend repository** — an API-only release for a phone app, say. State the reason, and say which consumer the API is for instead |
 | **Writes** | `Screens`, and the per-screen use-case mapping |
@@ -128,7 +130,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-security` |
-| **Delegate to** | `hb-security-audit` (**the authority on what kinds of security defect exist** — injection, missing or over-broad auth, exposure, secrets, CORS, rate limiting, logging and PII, uploads, error leakage. It audits code, not a document, so what is borrowed here is its list of kinds, never a verdict), `hb-graphql-server-engine` (what an endpoint's auth filter is, and what a public-operation allowlist means) |
+| **Delegate to** | the skills covering the security audit — **the authority on what kinds of defect exist**: injection, missing or over-broad auth, exposure, secrets, CORS, rate limiting, logging and PII, uploads, error leakage. They audit code, not a document, so what is borrowed here is the list of kinds, never a verdict. Plus the skills covering what an endpoint's auth filter is, and what a public-operation allowlist means |
 | **Exit condition** | every operation names who may call it and what happens when somebody else does; every screen names who may open it; every piece of personal or regulated data is named as such; and the choice between roles on one endpoint and separate endpoints has a written reason |
 | **Not applicable when** | never. A release with no authentication at all still has to say that, and why |
 | **Writes** | the caller and permission of every operation, the security rows of `Non-functional requirements`, and the reason recorded against the endpoint split |
@@ -144,7 +146,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | | |
 |---|---|
 | **Skill** | `/hora-spec-review` |
-| **Delegate to** | `hc-requirement-definition` (whether a criterion is observable), `hf-e2e-test-specification` (**not run here** — but the acceptance criteria this stage settles are what it later derives scenarios from), `hc-documentation` (how the document itself is written) |
+| **Delegate to** | the skills covering whether a criterion is observable; the skills covering end-to-end test specification (**not run here** — but the acceptance criteria this stage settles are what they later derive scenarios from); and the skills covering how the document itself is written |
 | **Exit condition** | every required section is present; every feature carries use cases and acceptance criteria, each one observable; every use case is satisfiable by what stages 4 to 6 designed; the two out-of-scope lists still match the design; every `id` is unique; and no two statements in the document contradict each other |
 | **Not applicable when** | never. **This is the stage that makes the other six mean anything** |
 | **Writes** | whatever the review changes, in the section that owns it, through the stage that owns it |
