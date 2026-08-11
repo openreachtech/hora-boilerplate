@@ -224,7 +224,29 @@ The declaration lives in the spec's document information section.
 
 ---
 
-## What lives in `.hora/`
+## Citing a question in a report
+
+**A count is not a report.** "Three questions raised" says that something wants attention and nothing about where it is. Whoever reads it then has to already know that `.hora/questions/` exists, which version directory to open, and what to look for once inside — and a question nobody can find is a question nobody answers, which is the same as never having raised it.
+
+**Every question a run raised, or left open, is named and linked.** This holds in every report, from every skill, at every blocking value.
+
+```
+Q4  missing-authorization  blocking: yes
+    `closeMonth` does not say who may call it
+    → .hora/questions/1.0.0/open.md
+```
+
+| | |
+|---|---|
+| **a link, not a prose path** | write it as a relative markdown link, so it opens from wherever the report is being read rather than being retyped |
+| **the `Q<n>` id and its one-line title** | the file is append-only and grows. A link to a file holding forty questions, with no id, is a link to a search |
+| **never a bare count** | not for `blocking: yes`, not for `blocking: no`, not for the ones this run resolved |
+
+**Where a run raised none, say that** — "no questions raised" is a result, and it needs no link.
+
+**`blocking: no` gets the same treatment as `blocking: yes`.** It is the one people skip, on the grounds that nothing is stopping. What is actually true is that nothing is stopping *yet*: an `inferred-annotation` nobody checked and a `spec-assumption` nobody corrected are both decisions made by default, and both are cheapest to overturn in the run that raised them.
+
+**An `eslint-exception` still gets its own line, by name, as it always did** — now with the link alongside it.
 
 ```
 .hora/
