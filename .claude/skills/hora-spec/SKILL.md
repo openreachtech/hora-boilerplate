@@ -118,15 +118,21 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
    spec.md is missing or empty. If every one of those has content, the version
    /hora-plan would target (../hora-plan/SKILL.md, "Fix the version")
 
-2. If specs/<version>/ does not exist, create it
+2. If specs/<version>/ does not exist, create it, with sources/, annex/ and
+   request/ inside it — each holding a .gitkeep, so that an empty one survives
+   being committed and is there for somebody to drop a file into
+   (../hora/references/spec-format.md, "a drop-off convention")
 
-3. If spec.md is missing or empty:
+3. If spec.md is missing or empty, and this is the FIRST version:
        cp specs/skeleton/spec.md specs/<version>/spec.md
    Then say that it was copied, and that nothing in it is filled in yet
 
-4. From the second version on, what gets written is a DIFF against the version
-   before it — only the sections this version changes
-   (../hora/references/spec-format.md, "From the second version on, write a diff")
+4. From the second version on, DO NOT copy the skeleton. What gets written is a
+   DIFF against the version before it — only the sections this version changes.
+   Start spec.md with its H1 and Document information alone, and let each stage
+   add the sections it turns out this version touches
+   (../hora/references/spec-format.md, "The blank spec is not copied into a
+   diff version", and "The second version onward" below)
 
 5. Run stage 0 before entering stage 1, always
    (references/investigation.md). On a project with nothing to read it is over
@@ -135,6 +141,8 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 ```
 
 **Step 3 is a copy, not a draft.** The skeleton lands as it ships: headings and table headers, nothing filled in. Every value in it arrives through a stage's conversation.
+
+**Step 4 is why it is not copied twice.** The skeleton's empty headings mean "the body carries over" under the diff rule, so copying it into a later version writes twenty sections that say nothing while looking like they were written, and nothing afterwards can tell them from sections somebody meant to restate.
 
 **A version whose `spec.md` already has content is edited, never restarted.** Read what is there, work out which stages it already satisfies, record that in `_stages.md`, and enter the first stage that is not satisfied. A spec somebody wrote by hand is a spec at stage 7, not stage 1.
 

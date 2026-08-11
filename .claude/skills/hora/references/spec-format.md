@@ -2,9 +2,11 @@
 
 The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec that gets filled in.**
 
-**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/<version>/spec.md`. `specs/1.0.0/spec.md` ships empty.
+**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/1.0.0/spec.md`, which ships empty. **It is copied once, for the first version only** ("The blank spec is not copied into a diff version").
 
-**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way, and every later version's `spec.md` is written the same way as the first.
+**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way.
+
+**The first version's `spec.md` is a whole document; every one after it is a diff against the version before it** ("From the second version on, write a diff"). The format is the same; how much of it a version writes is not.
 
 ---
 
@@ -202,6 +204,30 @@ To change just one annotation, write only the heading and that annotation. There
 
 **Past versions must not be rewritten.** Fixing 1.0.0's material for the sake of 1.1.0 changes the meaning of 1.0.0's spec retroactively, and what was actually built there can no longer be reproduced. To fix it, place the full text on the 1.1.0 side instead.
 
+#### The blank spec is not copied into a diff version
+
+**`specs/skeleton/spec.md` is the first version's starting point and only the first version's.** Copied into `specs/1.1.0/spec.md`, it lands every required section as an empty heading — and under the rule above, a heading with no body means "the body carries over", so twenty sections would sit there saying nothing while appearing to have been written. Nobody reading the file afterwards can tell that from a version that deliberately restated them.
+
+**A diff version's `spec.md` holds two things:**
+
+```markdown
+# <project name> design document
+
+## 1. Document information          ← always restated: the product version changed
+
+| Item | Content |
+|---|---|
+| Product version | 1.1.0 |
+| ...
+
+## 12. CSV export                   ← and then only the sections this version changes
+<!-- id: csv-export -->
+```
+
+Everything else — the repository layout, the actors, the non-functional requirements, every feature 1.0.0 already carries — **is absent on purpose, and absent is how it carries over.** The required-sections table below is checked against the **resolved** document, not against the diff, so a section 1.0.0 declared satisfies it for every version after it.
+
+**Somebody who would rather not write even that can put a page of notes in `request/`** (above) and run `/hora-spec`, which drafts the sections from it and writes each one it gets approved.
+
 ---
 
 ## Section annotations
@@ -396,6 +422,8 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | (below this, one section per feature) | a repository name / `app` | what gets implemented | — |
 
 **Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states **the kind of every operation and who may call it** (below). None of the four may be inferred, and each is `blocking: yes` when missing.
+
+**This table is checked against the resolved document, never against one version's file.** A section the first version declared satisfies it for every version after it, so a diff that writes nothing but one new feature is complete. **A feature section this version adds is the exception**: it is new, nothing carries over into it, and it needs its own use cases and acceptance criteria like any other.
 
 **Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
 

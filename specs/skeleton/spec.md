@@ -32,6 +32,17 @@
   the Sources and Annex tables below. Neither directory is required — any
   layout works, and writing the tables by hand works too.
 
+  Only have a rough idea? Put it in specs/<version>/request/ — a mail, a
+  ticket, a page of bullets, in your own words — and run /hora-spec. Stage 0
+  reads it as what you want this version to do, and the seven stages turn it
+  into the sections below, one approved section at a time. Nothing in it
+  becomes spec text on its own, and /hora-plan never reads it.
+
+  This whole file is the FIRST version's starting point. From the second
+  version on, spec.md is a diff against the version before it — do not copy
+  this file into 1.1.0, or twenty empty headings land in a document that only
+  needed one new feature. See spec-format.md, "From the second version on".
+
   A feature section may also carry `<!-- built: spec | backend | frontend -->`,
   and it is deliberately absent from every block below. It is ONLY for adopting
   Hora Kit onto code that already runs — it says how far that feature was
