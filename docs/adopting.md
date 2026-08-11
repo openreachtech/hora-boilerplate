@@ -63,7 +63,65 @@ npm install
 
 ---
 
-## Step 2 — Write the spec, describing what is already there
+## Step 2 — Bring your existing documents in
+
+**Do this before running `/hora-spec`.** A session can only read what is inside its own working directory, and everything `/hora` reads is reached by following links from `specs/<version>/spec.md`. A requirements document sitting on a wiki is a document stage 0 cannot open.
+
+```
+myproject-app/
+  specs/
+    1.0.0/
+      spec.md               ← the entry point. /hora-spec creates it
+      spec/
+        api-reference.md    ← documents that ARE the specification
+        requirements.md
+      docs/
+        screens.pdf         ← documents that EXPLAIN it
+        er-diagram.png
+        old-design-doc.md
+  legacy-api/               ← your repositories, from step 1
+  admin-console/
+```
+
+**The folder names carry no meaning.** There is exactly one structural rule — `spec.md` sits directly under the version directory — and beyond that names, nesting and depth are free. **Bring your project's existing layout across as it is**; it does not have to be reorganized to be read.
+
+### Which documents to bring
+
+| Bring it | Because |
+|---|---|
+| requirements lists, API references, data dictionaries | they may become part of the specification itself |
+| mockups, screen designs, ER diagrams, flow charts | they explain what the screens and the model are for |
+| an old design document, even a stale one | stale is still evidence, and stage 0 records that it is stale |
+| spreadsheets somebody actually works from | often the only written form a rule has ever had |
+
+**Binary files are fine.** A PDF, a PNG, an exported mockup — they are linked and described, never transcribed into the spec as though a drawing were a stated requirement.
+
+### Two things that go wrong
+
+**Do not link into the implementation repositories.** `legacy-api/docs/` is gitignored, so a link into it **resolves on your disk and breaks in everybody else's clone** — and it breaks silently. Copy what you need into `specs/<version>/` instead.
+
+**Material is closed inside one version, not shared across them** ([`structure.md`](../.claude/skills/hora/references/structure.md), invariant 3). If 1.1.0 needs the same document, it gets its own copy. That looks redundant and is deliberate: shared material means editing it for 1.1.0 silently changes what 1.0.0 was written against.
+
+### You do not have to declare them yourself
+
+**Stage 0 finds what you placed and asks, per document, which of two things it is** — then writes the tables for you:
+
+| | What it means | How it is read |
+|---|---|---|
+| **`Sources`** | this document **is** part of the specification | extracted from, exactly like a feature file — it can produce tasks |
+| **`Annex`** | this document **explains** the specification | interpretation only. Never produces a task |
+
+**The split is not about quality — it is whether anybody is willing to be held to it.** A current API reference is `Sources`; a two-year-old design document is `Annex` however good it is. Anything nobody can vouch for goes in `Annex`, because promoting it would turn a stale sentence into a task `/hora-plan` extracts.
+
+Declaring them by hand works too — the format is in [`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Directory layout".
+
+### If you cannot bring something in
+
+**Say it exists anyway.** Stage 0 asks what lives somewhere it cannot reach — a wiki, a drive, a ticket tracker — precisely because the most useful document is regularly one nobody thought to mention. Naming it lets what is in it reach the spec through the conversation, even when the file never arrives.
+
+---
+
+## Step 3 — Write the spec, describing what is already there
 
 **Run `/hora-spec`.** It reads what already exists at stage 0, copies the blank spec, and writes it with you a section at a time through its seven stages ([`stages.md`](../.claude/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
 
@@ -98,7 +156,7 @@ Two stages earn their keep more here than anywhere else:
 
 [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) explains every section. Three of them matter more than usual when adopting.
 
-### 2.1 The repository layout, with a `Directory` column
+### 3.1 The repository layout, with a `Directory` column
 
 ```markdown
 ## 2. Repository layout
@@ -124,7 +182,7 @@ Two stages earn their keep more here than anywhere else:
 
 **The server table is not optional.** Contracts are derived from it, and it is what tells the kit which frontend reads which contract.
 
-### 2.2 `built:` on every feature that already exists
+### 3.2 `built:` on every feature that already exists
 
 This is the annotation that makes adoption possible.
 
@@ -157,7 +215,7 @@ that call them. What the tree cannot tell me is whether that is finished.
 
 **Still write the feature's use cases and acceptance criteria**, even for something already built. Checkpoint 18 verifies against them, and a `built:` feature with neither has nothing to be accepted against.
 
-### 2.3 Existing assets
+### 3.3 Existing assets
 
 ```markdown
 ## 5. Existing assets
@@ -170,7 +228,7 @@ Treatment: keep it — Hora Kit is being adopted onto these repositories, not us
 
 ---
 
-## Step 3 — Run `/hora`
+## Step 4 — Run `/hora`
 
 ```
 /hora
@@ -204,7 +262,7 @@ It works out that repositories are declared but not all set up, and runs `/hora-
 
 ---
 
-## Step 4 — Read the plan before building anything
+## Step 5 — Read the plan before building anything
 
 `/hora-plan` runs next. It fixes the version, asks about whatever the spec leaves undecided, and writes the feature list.
 
@@ -219,7 +277,7 @@ It works out that repositories are declared but not all set up, and runs `/hora-
 
 ---
 
-## Step 5 — The first acceptance sweep
+## Step 6 — The first acceptance sweep
 
 A feature whose only open checkpoint is 18 writes no code and cuts no branch. `/hora-build` goes straight to `/hora-accept`.
 
@@ -274,20 +332,23 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
 
 ```
 1. Create <myproject>-app from this template. Move the existing repositories inside it
-2. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
-     - stage 0 reads the repositories and every document you point it at,
-       and declares each one under Sources or Annex
+2. Copy your existing documents into specs/1.0.0/ — requirements, API references,
+   mockups, diagrams, old design docs. Folder names are free. Do NOT link into
+   the implementation repositories; they are gitignored and the link breaks quietly
+3. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
+     - stage 0 reads the repositories and the documents you placed, asks which
+       of Sources or Annex each belongs in, and writes those tables
      - repository layout, with a Directory column for each existing repository
      - built: spec | backend | frontend, asked per feature with the evidence shown
      - use cases and acceptance criteria on all of them, built or not
      - existing assets: keep it
-3. /hora
+4. /hora
      - setup skips cloning, registers the directories in both exclusion lists,
        fills in only what is still a placeholder
      - plan asks about whatever is undecided
-4. Check the plan: is every built: right?
-5. The first acceptance sweep tells you what the product actually does
-6. From there, new features go through all eighteen, one at a time
+5. Check the plan: is every built: right?
+6. The first acceptance sweep tells you what the product actually does
+7. From there, new features go through all eighteen, one at a time
 ```
 
 ---
