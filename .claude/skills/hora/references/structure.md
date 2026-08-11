@@ -1,6 +1,6 @@
 # What every hora skill assumes
 
-`/hora`, `/hora-setup`, `/hora-plan`, `/hora-build` and `/hora-accept` all stand on what is written here. **It is written once, in this file, and read by all of them** — copy any of it into a skill and the copy is what goes stale.
+`/hora`, `/hora-spec` (and its seven stage skills), `/hora-setup`, `/hora-plan`, `/hora-build` and `/hora-accept` all stand on what is written here. **It is written once, in this file, and read by all of them** — copy any of it into a skill and the copy is what goes stale.
 
 ---
 
@@ -16,22 +16,49 @@
 | which version is being built, and which features it holds | Hora Kit | `/hora-plan` |
 | **the order of the checkpoints, and each one's exit condition** | Hora Kit | `/hora-build` |
 | **how to write a resolver, a migration, a component, a test** | **`@openreachtech/ai-agent-skills`** | that package's own skills |
-| **how to shape a table, an SDL, a job, a screen** | **`@openreachtech/ai-agent-skills`** | `hb-database-design`, `hb-graphql-schema`, `hb-execution-placement-pattern`, `hf-uiux-forge` and their neighbours |
-| **what an acceptance review looks at, and what it fails on** | **`@openreachtech/ai-agent-skills`** | `hf-acceptance-review` and its neighbours |
+| **how to shape a table, an SDL, a job, a screen** | **`@openreachtech/ai-agent-skills`** | whichever of its skills covers that work |
+| **what an acceptance review looks at, and what it fails on** | **`@openreachtech/ai-agent-skills`** | whichever of its skills covers that work |
 
-**Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it.** Delegate to it by name instead. A copy disagrees with the original the first time the package is updated, and nothing announces that it has — the copy still reads as authoritative.
+**Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it.** State the work and delegate it. A copy disagrees with the original the first time the package is updated, and nothing announces that it has — the copy still reads as authoritative.
 
 This is the same reasoning `/hora-setup` already applies to the boilerplates: **read the real thing; do not bake in what it currently says.** The package is the real thing here.
 
-### Invoking one of those skills
+### No hora file ever names one of those skills
+
+**A skill's name belongs to the package, and the package is free to change it.** A name written into a checkpoint, a stage or a reference file is a copy of something Hora Kit does not own — and it is the one kind of copy that fails silently. A renamed skill does not disagree with anything: the name simply stops matching, the gate runs without its convention, and the run reports that it passed.
+
+So the rule is the same one the procedures follow, applied to the names themselves:
+
+| | |
+|---|---|
+| **a hora file** | **states the kind of work.** "the CSS conventions this project uses", "how a background job is written" |
+| **the equipped skills** | **state what they cover**, in their own `description:`, which the package updates along with the skill |
+| **the match between the two** | **made at run time, never written down in advance** |
+
+**This applies to every hora file without exception** — `checkpoints.md`, `stages.md`, an agent definition, a `docs/` page. A name written "just as an example" is the same copy with a softer label on it.
+
+**Skills Hora Kit itself ships may be named freely** — `/hora-spec`, `/hora-plan`, `/hora-build`, `/hora-accept`, `bank-id`, `hora-implementer`, `hora-verifier`. Those live in this repository, so a rename here is a rename everywhere, in the same commit.
+
+### How the match is made
 
 `/hora-setup` runs `.claude/skills/hora-setup/scripts/equip-skills.sh`, which copies every skill the package ships into this repository's own `.claude/skills/`. From then on they are invocable through the ordinary `Skill` tool, like any other.
 
-**Use the name exactly as it is written here.** Each skill declares a `name:` in its own frontmatter, and the package's flatten build makes that the directory name under `dist/skills/`, which `equip-skills.sh` copies unchanged. There is nothing to resolve and no wildcard to expand: `hb-stub-api`, `hf-acceptance-review`, `hc-requirement-definition`.
+```
+1. The checkpoint, stage or acceptance step states the kind of work
+2. The MAIN SESSION reads the equipped skills' own descriptions under
+   .claude/skills/, and picks the ones that cover that work, on the surface
+   the row being worked in requires
+3. It records which it picked, against the checkpoint, in .hora/
+4. It hands those names to the agent that runs the work
+```
 
-If nothing under `.claude/skills/` matches a name a checkpoint gave you, **say so and continue without it.** The package may have renamed or dropped that skill; guessing at a replacement is worse than proceeding and reporting the gap.
+**Step 2 is the main session's, never an agent's.** The main session is handed the equipped skills' descriptions as part of its own context, so the match is made once, in one place, where it can be recorded. An agent that picked its own would make a different choice on a rerun, and nothing would say which one the first run used.
 
-**The prefix says which surface a skill serves.**
+**Step 3 is what keeps this reproducible.** A checkpoint that ran against a set of conventions and does not say which is a checkpoint nobody can re-derive. Recording it also makes a package rename visible in a diff: last run picked five skills for checkpoint 15, this one picked four.
+
+**Match against what a description says, never against what a name sounds like.** What follows a prefix is a label, not a classification — one package skill is a Furo client and another is renchan SDL, and their names differ by no more than a word. **The description is the only thing that says which is which.**
+
+**The prefix says which surface a skill serves**, and it is the one part of a name worth reading:
 
 | Prefix | Applies to |
 |---|---|
@@ -39,7 +66,7 @@ If nothing under `.claude/skills/` matches a name a checkpoint gave you, **say s
 | `hf-` (hora-frontend) | a frontend repository |
 | `hc-` (hora-core) | either |
 
-**The prefix is the only part worth reading.** What follows it is a label, not a classification — `hf-graphql` is a Furo client and `hb-graphql-schema` is renchan SDL, and nothing but the prefix separates them. **What decides which skill applies is the checkpoint that names it**; `checkpoints.md` is the only authority on that, and choosing one because its name sounds relevant is how the wrong one gets invoked.
+If nothing equipped covers the work a checkpoint states, **say so and continue without it.** The package may have dropped that skill, or it may never have covered this. Guessing at a substitute is worse than proceeding and reporting the gap.
 
 ---
 
@@ -194,7 +221,8 @@ The declaration lives in the spec's document information section.
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it
-    <feature-id>.md             one feature. Holds its checkpoint checklist. /hora-build writes it
+    <feature-id>.md             one feature. Holds its checkpoint checklist, and the
+                                skills each checkpoint was matched to. /hora-build writes it
   contracts/<version>/          one file per server whose consumer is elsewhere
   questions/<version>/open.md   append-only. Answered by editing specs/
   acceptance/<version>/
