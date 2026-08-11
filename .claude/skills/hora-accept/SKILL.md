@@ -61,9 +61,11 @@ Two invocations differ only in scope and in what is written:
 
 ## The order to run in
 
+**Every name below is the skill's own, in full.** Invoke it exactly as written — there is nothing to strip and nothing to expand (`../hora/references/structure.md`, "Invoking one of those skills").
+
 ```
 1. Confirm the environment
-     build-e2e-test-environment
+     hb-build-e2e-test-environment
      The application must run together with every service behind it, each
      role must be able to sign in, and there must be reviewable data or a
      command that produces it.
@@ -72,22 +74,22 @@ Two invocations differ only in scope and in what is written:
                       "work around" a missing service
 
 2. Unit suites, per repository, from inside it
-     backend-testing (placement and order), jest (how
-     one is written), test-execution (driving them green)
+     hb-backend-testing (placement and order), hc-jest (how
+     one is written), hc-test-execution (driving them green)
      cd <repository> && <that repository's own test command>
 
 3. The scenario list
-     e2e-test-specification
+     hf-e2e-test-specification
      Reconcile it against the scope: every feature in scope has its
      scenarios, and coverage is derived from the API surface, not remembered
 
 4. The acceptance review itself
-     acceptance-review
+     hf-acceptance-review
      Its own phases, its own criteria. Do not restate them, do not
      abbreviate them, and do not stop early because the first phases passed
 
 5. UX findings
-     uiux-audit, against the context uiux-context produced
+     hf-uiux-audit, against the context hf-uiux-context produced
 ```
 
 **Step 1 is a gate, not a warm-up.** The review drives the real application against real services — it signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a stub or a frontend with nothing behind it, and a review run that way reports a pass it has not earned.
@@ -113,12 +115,12 @@ failed
 
 | Step | Delegate | Result |
 |---|---|---|
-| environment | build-e2e-test-environment | ready |
-| unit (backend) | test-execution | 214 passed |
-| unit (frontend-employee) | test-execution | 51 passed |
-| scenarios | e2e-test-specification | 12 scenarios, 12 covered |
-| review | acceptance-review | 2 findings |
-| UX | uiux-audit | 1 finding (minor) |
+| environment | hb-build-e2e-test-environment | ready |
+| unit (backend) | hc-test-execution | 214 passed |
+| unit (frontend-employee) | hc-test-execution | 51 passed |
+| scenarios | hf-e2e-test-specification | 12 scenarios, 12 covered |
+| review | hf-acceptance-review | 2 findings |
+| UX | hf-uiux-audit | 1 finding (minor) |
 
 ## Findings
 
