@@ -34,6 +34,7 @@ specs/
     spec.md               ← the entry point. One per version. The only fixed name
     sources/              ← drop-off: documents that ARE the spec (below). Recognized, not required
     annex/                ← drop-off: documents that EXPLAIN it (below). Recognized, not required
+    request/              ← drop-off: what somebody WANTS this version to do (below). Never spec text
     attendance/
       spec.md              ← a feature file (optional). Linked from spec.md
       monthly/
@@ -43,25 +44,41 @@ specs/
     docs/
       RPA_CORE_SPEC.md       ← supporting material. Linked from spec.md's Annex, not declared as a source
   1.1.0/
-    spec.md
+    spec.md               ← a DIFF against 1.0.0. Only the sections this version changes
+    request/
+      csv-export.md          ← "add a CSV export for the admin" — a page of notes, in anybody's words
     spec/
       00-overview.md          ← kept per version even if the content is the same
 ```
 
 **Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to — from `spec.md`, from a feature file, or transitively through either — is never read, and raises a question (`orphan`, `blocking: no`). This is the one thing that stays closed: not the shape of the directory, but the requirement that nothing depends on `/hora` noticing an unlinked file by luck.
 
-**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans.
+**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans. **`request/` raises nothing either** (below): it is read before the document is written and is never linked from it, so the rule that catches a file nobody will read does not apply to it.
 
-### `sources/` and `annex/` — a drop-off convention, and nothing more
+### `sources/`, `annex/` and `request/` — a drop-off convention, and nothing more
 
-**Two directory names are recognized, so that somebody with documents to hand over has a place to put them without reading this file.** They ship empty in `specs/1.0.0/`.
+**Three directory names are recognized, so that somebody with something to hand over has a place to put it without reading this file.** They ship empty in `specs/1.0.0/`.
 
 | | |
 |---|---|
 | `specs/<version>/sources/` | put a document here to say **it is part of the specification** |
 | `specs/<version>/annex/` | put a document here to say **it only explains the specification** |
+| `specs/<version>/request/` | put a document here to say **this is what I want this version to do.** Not specification text, and never becomes any |
 
-**They change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+**The first two change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+
+**`request/` is the third answer to "what does putting a document here decide", and it is a different kind of answer.** A source is a statement somebody is held to; an annex explains one; **a request is neither — it is the agenda for this version**, in whatever words the person had, and `/hora-spec` turns it into sections through the ordinary route: a **proposal** for what it asks for, a question for what it leaves open, and an approval before anything is written.
+
+| | `Sources` | `Annex` | `request/` |
+|---|---|---|---|
+| Declared in a table in `spec.md` | yes | yes | **never** |
+| Linked from `spec.md` | yes | yes | **never** |
+| `/hora-plan` extracts tasks from it | yes | no | **never — `/hora-plan` does not read it at all** |
+| What it is after the stages have run | still the specification | still the explanation | **spent.** The sections it produced are the specification |
+
+**A request is never promoted to a `Source`, however precisely it is written.** The two say different things — a source says "this is what the product must do", a request says "this is what I want somebody to work out". Promoting one would put a wish list where `/hora-plan` extracts tasks from it, which is exactly the dictation the seven stages exist to replace.
+
+**Leave the file where it is once its version is written.** It costs nothing, and it is the record of what was actually asked for, against which the sections that came out of it can be read. **It is not carried into the next version** — a request belongs to the version that answered it (invariant 3).
 
 **Recognized, never required**, in either direction:
 
