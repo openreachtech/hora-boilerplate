@@ -9,7 +9,24 @@ description: Stage 4 of /hora-spec. Declare the repositories and servers, then d
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition**, and `../hora/references/spec-format.md` on the format of every table written here.
 
-**This stage holds no design rule of its own.** How a table is shaped, how an SDL is named, where a job belongs and how a queue is tuned all live in `@openreachtech/ai-agent-skills`. **Invoke the skills named below and read them** — do not work from memory, and never restate one of their rules here.
+**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
+
+**This stage holds no design rule of its own.** How a table is shaped, how an SDL is named, where a job belongs and how a queue is tuned all live in `@openreachtech/ai-agent-skills`. **Invoke the skills the delegates table names and read them** — do not work from memory, and never restate one of their rules here.
+
+## What this stage reads
+
+**This is the stage that reads the backend properly.** Stage 0 established what exists; this one reads the migrations, the models, the SDL, the REST routes, the job definitions and the entry points, at depth.
+
+**The whole existing data model and operation list goes out as checks, batched per area** — one for the tables, one for the operations, one for what runs outside the request. Not per table and not per operation: a person confirming the fourteenth table in a row has stopped reading (`../hora-spec/references/investigation.md`).
+
+| Read it, put it up as a **check** | Ask, or **propose** |
+|---|---|
+| which tables exist, and what columns they hold | why the model came out that way, and what it rules out |
+| which operations exist, and what each returns | who each operation is *for* |
+| which work already runs outside the request path | whether work that runs in the request still belongs there |
+| what the existing tests assert | whether what they assert is what anybody wanted |
+
+**A shortfall found while reading is a proposal, never a check.** "There is no index on this foreign key" states a fact; "add one" is this stage's own thinking, and it goes out labelled as such. Stating the second in the first's voice writes a design decision into `specs/` as an existing fact.
 
 ---
 
@@ -226,6 +243,7 @@ The layout and server table declared; every table, operation and job written wit
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | roles or endpoints, GraphQL or REST, synchronous or a job, scale as a number |

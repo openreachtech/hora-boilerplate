@@ -11,7 +11,7 @@ description: Implement an application from its spec. Decides where a project sta
 
 | Skill | Does | Runs |
 |---|---|---|
-| **`/hora-spec`** | writes the version's spec, in conversation, through its own seven stages | once per version, until stage 7 passes |
+| **`/hora-spec`** | writes the version's spec, in conversation — stage 0 reads what already exists, then its own seven stages | once per version, until stage 7 passes |
 | **`/hora-setup`** | creates the repositories the spec declares, fills in the project's values, reads the real tree | once per version, idempotent |
 | **`/hora-plan`** | fixes the version, verifies the spec in conversation, writes the feature list | once per version, re-entered every run |
 | **`/hora-build`** | takes one feature through the eighteen checkpoints | **once per feature** |
@@ -129,7 +129,9 @@ What the report includes:
 the target version, and which skill the run reached
 how many features are done, how many are left, and which checkpoint the
   current one stopped at
-the state of the questions (how many blocking remain)
+every open question — its Q<n> id, its category, its blocking value, one line
+  of what it is, and a link to the file it is in (references/structure.md,
+  "Citing a question in a report"). Never a bare count
 the last acceptance verdict, and what it sent back
 git status for every repository, including the branch (state it explicitly if
   anything is uncommitted, or if a branch is not release/<version>)
@@ -138,9 +140,11 @@ what the next run of /hora will start from
 
 **Write it in the language of whoever ran it**, always — it is conversation, and it does not stay in a file (`references/structure.md`).
 
-When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** (which section to add what to, and the path to `.hora/questions/<version>/open.md`).
+**Every question is named and linked, whatever its blocking value.** "Two questions remain" is not a report — the person reading it cannot act on it without already knowing where `.hora/questions/` is and which of forty entries is new. `references/structure.md`, "Citing a question in a report", is the rule.
 
-**Every `eslint-exception` question gets its own, separate line, by name — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
+When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section to add what to, and the link, at the top rather than buried in a tally.
+
+**Every `eslint-exception` question gets its own, separate line, by name, with its link — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
 
 ### When a version cannot proceed, lay out the choices
 
@@ -168,10 +172,12 @@ Remaining: #payroll #bonus #year-end
 | `references/structure.md` | **read first.** The layout, where a command runs, the invariants, the division of labor, the language rule, what lives in `.hora/` |
 | `references/commits.md` | branches, commit granularity, merging, hotfix catch-up, merge order into main |
 | `references/done-criteria.md` | what "done" means for a checkpoint, a feature, a version and a session |
+| `references/asking.md` | **how anything is put to a person** — a check, a proposal or a question, and the question tool. Read by `/hora-spec` and `/hora-plan` |
 | `references/spec-format.md` | **the authority on the format** of `specs/<version>/spec.md`. Explains it; is not the thing filled in |
 | `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. Copied to `specs/<version>/spec.md`. Not a version, and never read as one |
 | `../hora-spec/SKILL.md` | **the author** — how a version's spec gets written |
-| `../hora-spec/references/stages.md` | the seven stages a spec is written through, and each one's exit condition |
+| `../hora-spec/references/stages.md` | stage 0, then the seven stages a spec is written through, and each one's exit condition |
+| `../hora-spec/references/investigation.md` | what stage 0 reads, and the line between a fact and an intent |
 | `../hora-spec/references/principles.md` | the thinking a spec is written with |
 | `../hora-setup/SKILL.md` | code setup |
 | `../hora-plan/SKILL.md` | the planner |
@@ -179,6 +185,8 @@ Remaining: #payroll #bonus #year-end
 | `../hora-build/references/checkpoints.md` | the eighteen checkpoints themselves |
 | `../hora-accept/SKILL.md` | acceptance |
 
-**When a human asks how to write a spec, run `/hora-spec`.** `specs/1.0.0/spec.md` ships empty, and that skill copies the skeleton, asks its way through seven stages, and writes each section once it has been read and approved.
+**When a human asks how to write a spec, run `/hora-spec`.** `specs/1.0.0/spec.md` ships empty, and that skill reads whatever already exists at stage 0, copies the skeleton, asks its way through seven stages, and writes each section once it has been read and approved.
+
+**On a project that already holds working code, that stage 0 is the difference between a spec somebody dictates and one they correct.** It reads the repositories and the declared sources, drafts what they show, and puts it back as something to confirm — never as a requirement it decided (`references/asking.md`).
 
 Point them at `references/spec-format.md` and `specs/skeleton/spec.md` when what they want is the format itself, or when they would rather write it by hand (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). Both routes produce the same document, and `/hora-plan` reads it the same way.

@@ -1,6 +1,8 @@
-# The seven stages
+# Stage 0, then the seven stages
 
 **The authority on the stage list.** `/hora-spec` copies the list from here into `.hora/spec/<version>/_stages.md`; each stage skill runs one of them.
+
+**Stage 0 is numbered 0 because it does not renumber anything.** The seven stages that decide a spec are still stages 1 to 7, in the same order, with the same exit conditions. Stage 0 gathers what already exists so that those seven have something to correct instead of something to dictate — on a new project it passes in a sentence.
 
 **This file holds the order and the exit conditions. It does not hold a single design rule.** How a table is shaped, how an SDL is named, where a background job belongs and what a screen must account for all live in `@openreachtech/ai-agent-skills`, and each stage below states the *work* that skill covers. **Never write one of those rules into this file** — the copy would go stale the first time the package is updated, and nothing would announce that it had (`../../hora/references/structure.md`, "The division of labor").
 
@@ -17,6 +19,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 ### Three states, and only three
 
 ```markdown
+0. [x] Assets and sources                                      passed
 1. [ ] Use cases and actors                                    not passed
 2. [x] The horizon                                             passed
 5. [x] Screens and interaction  <!-- n/a: this version declares no frontend -->
@@ -30,7 +33,15 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 ### Every stage runs in the main session
 
-**None of them may be delegated to a subagent.** Every one is a conversation, and a subagent cannot talk to anybody. The mechanical parts of stage 7 — checking that every required section exists, that every `id` is unique, that every operation states a kind — are the one exception, and even there the findings come back to the main session to be settled.
+**None of them may be delegated to a subagent.** Every one is a conversation, and a subagent cannot talk to anybody. The mechanical parts of stage 0 and stage 7 — reading a tree, checking that every required section exists, that every `id` is unique, that every operation states a kind — are the one exception, and even there the findings come back to the main session to be settled.
+
+### Every stage reads before it asks
+
+**A stage that has evidence puts its reading up as a check, and only asks about what the evidence cannot settle.** Stage 0 establishes what exists at all; each stage below then reads its own section's evidence for itself, at its own depth, and states below what that is.
+
+**Which form each thing goes out as is not a stylistic choice** — a fact read off the system is a check, a gap the stage noticed is a proposal, and something nobody has decided is a question. Putting a proposal in a check's voice writes the stage's own idea into `specs/` as an existing fact (`../../hora/references/asking.md`).
+
+**Default to the question tool, with the likely answer first.** Having read the evidence is exactly what lets a stage offer options worth choosing between rather than a blank to fill in.
 
 ---
 
@@ -38,6 +49,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 | What was found | Returns to |
 |---|---|
+| a document or a repository nobody declared, turning up mid-run | **0** |
 | a use case nobody stated, or one that turns out to be wrong | **1** |
 | a feature that belongs in a later release, or one that has to come forward | **2** |
 | a number that makes the design wrong (ten times the users, a heavier operation) | **3** |
@@ -49,6 +61,27 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 ---
 
+# Stage 0. Assets and sources
+
+| | |
+|---|---|
+| **Skill** | **none — `/hora-spec` runs it itself.** It gathers; it decides nothing, so there is no design conversation to own |
+| **Delegate to** | nothing. Reading a tree is not a procedure the package holds |
+| **Exit condition** | everything readable has been read at breadth — the repositories that exist, and every document anybody named; each document is declared `Sources` or `Annex` with somebody vouching for it; what was read has been confirmed per section; and `.hora/spec/<version>/_assets.md` is written |
+| **Not applicable when** | **never.** A new project passes it by recording that there was nothing to read, which is itself worth recording |
+| **Writes** | `Sources` and `Annex` (once confirmed), and `.hora/spec/<version>/_assets.md` |
+| **Reads** | everything, at breadth. No deeper than "what exists" |
+
+**`references/investigation.md` is the authority on this stage** — the line between a fact and an intent, the inventory procedure, how a document becomes a source, and what stage 0 never does.
+
+**This stage exists because dictation does not scale.** Asked to describe a running product from memory in an exacting format, a person covers what they remember and stops. **The system is the better witness for what it does, and no witness at all for what anybody wanted** — so stage 0 reads the first kind and puts it back as something to correct, leaving all seven stages their actual job.
+
+**Nothing it reads becomes a requirement.** A draft goes out as a check, and only what somebody confirms is written (`../../hora/references/structure.md`, "This forbids inferring. It does not forbid reading").
+
+**Ask what exists somewhere a session cannot reach.** The document that would have settled stage 4 is regularly on a wiki nobody mentioned. Ask, with options, before concluding there is nothing.
+
+---
+
 # Stage 1. Use cases and actors
 
 | | |
@@ -57,7 +90,8 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Delegate to** | the skills covering how a rough request becomes stated requirements, observable criteria and an out-of-scope list; and the skills covering the shared UI/UX project context both UI skills later read (app type, users, scope) |
 | **Exit condition** | every actor is named, with how they are identified; every use case is one person completing one thing end to end; every feature this release will build carries at least one use case; and the project name is written |
 | **Not applicable when** | never |
-| **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets`, and each feature section's `<!-- usecases -->` block |
+| **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets`, and each feature section's `<!-- usecases -->` and `<!-- built: -->` annotations |
+| **Reads** | the operation and screen surface, for the **feature list** it implies and the **actor candidates** the role checks imply. Never for what a feature is *for* |
 
 **A feature list is not a use case list, and the difference is the whole point of this stage.** "Attendance management" is a heading; "a member of staff who forgot to clock in files yesterday's hours the next day, and their manager sees it waiting for approval" is a use case. Three checkpoints and the acceptance review each read the second kind and can do nothing with the first (`../../hora/references/spec-format.md`, "How to write use cases").
 
@@ -72,6 +106,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | three separate lists exist — built this time, out of scope for now, permanently out of scope — every "for now" entry names what unblocks it, and every one that needs the design kept open names the seam to keep replaceable |
 | **Not applicable when** | never |
 | **Writes** | `Implementation scope`, in three parts, and `Implementation plan` |
+| **Reads** | nothing new. What exists is stage 1's finding; **what to build next is a decision, and no repository holds one** |
 
 **The two kinds of out-of-scope are not a formality.** "For now" makes `/hora` leave an extension point; "permanently" makes it exclude the thing from the design. Read the first as the second and the structure cannot take it later; read the second as the first and an abstraction layer gets built that nobody uses.
 
@@ -88,6 +123,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | initial and foreseen user counts, the heaviest single operation, the availability expectation, how long data is kept, and the security level are written — as numbers wherever a number exists — and the middleware the project needs is declared with each server's version |
 | **Not applicable when** | never |
 | **Writes** | `Non-functional requirements`, `Manual verification` |
+| **Reads** | the row counts, the retention already in place and the services the stack runs, **as today's numbers**. What the product must carry tomorrow is nobody's to read |
 
 **A number here changes the design at stage 4; an adjective does not.** "It should be fast" produces nothing. "Two hundred staff now, five thousand within two years, and the monthly close reads every record for the month" decides whether a total is stored or recalculated, and whether one operation gets a seam of its own.
 
@@ -104,6 +140,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | the repository layout and the server table are declared; every use case from stage 1 can be walked against the data model and the operation list, step by step, without a gap; every operation states its kind; and every write states whether it completes inside the request or runs as a job |
 | **Not applicable when** | never. A version with no backend row still has to declare that (`../../hora/references/spec-format.md`, "Repository layout") |
 | **Writes** | `Repository layout` and its server table, `Data model`, `GraphQL`, `RESTful API`, `Background jobs`, and `Key file map` where anything about placement is already known |
+| **Reads** | **deeply** — migrations, models, SDL, REST routes, job definitions and the entry points. This is the stage that reads the backend properly, and the whole existing data model and operation list can go out as one check per area |
 
 **Walking the use cases is the exit condition, not a review step.** A data model that is internally tidy and cannot represent one stated use case passes every other check in this document. Stage 7 walks them again; this stage walks them first, while changing a table still costs a sentence.
 
@@ -120,6 +157,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every use case names the screens it passes through, in order; every screen names the operations it calls; nothing on a screen lacks an operation behind it, and no operation is unreachable from every screen |
 | **Not applicable when** | **this version declares no frontend repository** — an API-only release for a phone app, say. State the reason, and say which consumer the API is for instead |
 | **Writes** | `Screens`, and the per-screen use-case mapping |
+| **Reads** | **deeply** — the pages, the routes and which operations each screen calls. **What is absent is the finding**: the empty, failed, waiting and forbidden states a screen does not handle, each of which goes out as a proposal, never as a check |
 
 **Unreachable in either direction is a defect, and both directions are checked here.** An operation no screen calls is either a missing screen or a feature nobody wants; a button with no operation behind it is a screen designed against a backend that does not exist. The acceptance review looks for exactly these two, at the far end of eighteen checkpoints.
 
@@ -134,6 +172,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every operation names who may call it and what happens when somebody else does; every screen names who may open it; every piece of personal or regulated data is named as such; and the choice between roles on one endpoint and separate endpoints has a written reason |
 | **Not applicable when** | never. A release with no authentication at all still has to say that, and why |
 | **Writes** | the caller and permission of every operation, the security rows of `Non-functional requirements`, and the reason recorded against the endpoint split |
+| **Reads** | **deeply** — the auth filters, the role checks and the public-operation allowlists, to establish **who may call each operation today.** That is a fact and goes out as a check. **Who *should* be able to is a decision nobody has made yet**, and it goes out as a question, one per operation whose current answer surprises anybody |
 
 **Authorization is the thing most often left unsaid, and the most expensive to add late.** An operation whose caller was never stated gets implemented with whatever filter its neighbours had, and nothing in the code says that nobody ever decided.
 
@@ -150,6 +189,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every required section is present; every feature carries use cases and acceptance criteria, each one observable; every use case is satisfiable by what stages 4 to 6 designed; the two out-of-scope lists still match the design; every `id` is unique; and no two statements in the document contradict each other |
 | **Not applicable when** | never. **This is the stage that makes the other six mean anything** |
 | **Writes** | whatever the review changes, in the section that owns it, through the stage that owns it |
+| **Reads** | the document against itself, and **`_assets.md` against the document** — anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here |
 
 **A shortfall found here is fixed by the stage that owns it, not patched in place.** Stage 7 does not write a use case; it sends the run back to stage 1 and says why. Patching in place is how a document ends up with a use case that no stage ever walked against a data model.
 
@@ -161,6 +201,8 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 | File | Content |
 |---|---|
+| `investigation.md` | **stage 0's authority** — what may be read, what reading never settles, `Sources` and `Annex`, `_assets.md` |
+| `../../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool every stage defaults to |
 | `principles.md` | the thinking every stage applies, and the boundary against the package's design skills |
 | `../SKILL.md` | how a stage is run, the approval rule, the state file |
 | `../../hora/references/spec-format.md` | **the authority on the format** every stage writes into |

@@ -160,6 +160,8 @@ failed
 
 **A finding is never resolved by deciding it is acceptable inside this skill.** That decision belongs to a person, and it goes into the question file with their name on it. Silently downgrading a finding is how an acceptance gate stops meaning anything.
 
+**Every question this run raised is reported by name, with a link to the file** — its `Q<n>` id, its category, its blocking value and one line of what it is (`../hora/references/structure.md`, "Citing a question in a report"). **Never a count.** An acceptance run is exactly where a question is easiest to lose: the verdict and the findings are what everyone reads, and a `spec-assumption` recorded alongside them disappears into the margin unless it is named and linked like everything else.
+
 ---
 
 ## Two things that are always checked, whatever the delegates find

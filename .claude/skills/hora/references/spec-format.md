@@ -32,6 +32,8 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 specs/
   1.0.0/
     spec.md               ← the entry point. One per version. The only fixed name
+    sources/              ← drop-off: documents that ARE the spec (below). Recognized, not required
+    annex/                ← drop-off: documents that EXPLAIN it (below). Recognized, not required
     attendance/
       spec.md              ← a feature file (optional). Linked from spec.md
       monthly/
@@ -47,6 +49,27 @@ specs/
 ```
 
 **Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to — from `spec.md`, from a feature file, or transitively through either — is never read, and raises a question (`orphan`, `blocking: no`). This is the one thing that stays closed: not the shape of the directory, but the requirement that nothing depends on `/hora` noticing an unlinked file by luck.
+
+**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans.
+
+### `sources/` and `annex/` — a drop-off convention, and nothing more
+
+**Two directory names are recognized, so that somebody with documents to hand over has a place to put them without reading this file.** They ship empty in `specs/1.0.0/`.
+
+| | |
+|---|---|
+| `specs/<version>/sources/` | put a document here to say **it is part of the specification** |
+| `specs/<version>/annex/` | put a document here to say **it only explains the specification** |
+
+**They change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+
+**Recognized, never required**, in either direction:
+
+- a document placed anywhere else under `specs/<version>/` is found by stage 0 all the same, and asked about instead of checked
+- a project that brings its own layout across keeps it. `spec/` and `docs/` in the tree above are exactly as valid as they were
+- writing the tables by hand and using neither directory works, and produces the same document
+
+**A document sitting in `sources/` that nobody confirmed is still not a source.** The directory expresses an intent; the table records a decision. Placement is evidence of what somebody meant, which is what makes it a *check* rather than a *question* — it is not a substitute for their answer.
 
 **A linked file is read one of two ways, decided by whether it is declared under a `Sources` section — not by where it sits or what it is named.**
 
@@ -263,6 +286,12 @@ The value is the gate the existing code already reaches.
 **When acceptance does send one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change, so the checkpoints from the earliest one affected are reopened and run for real.
 
 **`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
+
+**It is asked, one feature at a time, at stage 1 of `/hora-spec`** — but only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project every feature is correctly without it, and nobody is asked at all.
+
+**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist for this feature — is laid out alongside the choice, with **no option recommended**, because laying out evidence is legwork and recommending an answer is the inference this rule forbids (`../../hora/references/asking.md`, "What is never asked").
+
+**Absence has one meaning, and it is now unambiguous.** Before it was asked, an absent `built` could mean "new feature" or "nobody was ever asked"; those were indistinguishable, and the second silently planned working code from checkpoint 1. Stage 1 now settles it either way, and records in `.hora/spec/<version>/_stages.md` when the answer was "nothing is running here".
 
 **It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
@@ -577,6 +606,12 @@ Write this where you can. `/hora` decides placement together with the real tree 
 ### Sources and Annex
 
 Both optional, both covered above under "Directory layout". `Sources` promotes files into feature files; `Annex` only gathers relative links in one place and changes nothing about how they are read.
+
+**Stage 0 of `/hora-spec` is what fills them** — it gathers the reference documents, PDFs, diagrams and old specs that exist, asks which of the two each belongs in, and writes the tables once somebody has answered (`../../hora-spec/references/investigation.md`).
+
+**Which one a document goes into is not a judgment about quality.** It is whether anybody is willing to be held to it: a current requirements list is `Sources`, a two-year-old design document is `Annex` however good it is. **A document nobody can vouch for goes in `Annex`** — promoting it would turn a stale statement into a requirement `/hora-plan` extracts tasks from.
+
+**A file that is not text — a PDF, a screenshot, a mockup, a spreadsheet — is linked from `Annex` with one line saying what it shows.** Whatever was read out of it reaches the spec the ordinary way: put up as a check, confirmed, and written into the section that owns it. **Never pasted in as though a drawing were a stated requirement.**
 
 ---
 

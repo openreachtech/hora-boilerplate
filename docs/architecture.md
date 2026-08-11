@@ -25,7 +25,7 @@ This document explains the design. It is not the authority on any rule — each 
 
 **The two halves also differ in how much of your attention they need, and that is what the recommended way of running them follows.** `/hora-spec` is worth sitting through, stage by stage: it is conversation from end to end, and it is where a spec stops being a list of feature names. The implementation half can be left to run — **it stops when it needs an answer instead of deciding**, which is the whole reason unattended is safe here and not in the other half. See [`README.md`](../README.md#recommended-converse-through-the-spec-let-the-implementation-run).
 
-**This document is in two parts:** Part 1 is `/hora` — the layers, the eighteen checkpoints, the state, re-entrancy, git, and why it is serial. Part 2 is `/hora-spec` — the seven stages, why every one of them is a conversation, and how approval works.
+**This document is in two parts:** Part 1 is `/hora` — the layers, the eighteen checkpoints, the state, re-entrancy, git, and why it is serial. Part 2 is `/hora-spec` — reading what already exists, the seven stages, why every one of them is a conversation, and how approval works.
 
 ---
 
@@ -78,7 +78,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no write tools at all |
 | **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
 
-**The seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
+**Stage 0 and the seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
 **`hora-verifier` has no write tools, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It returns the fact that something is failing; it never fixes it.
 
@@ -96,6 +96,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
+  spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks
     <feature-id>.md             one feature, and its eighteen checkpoints
@@ -202,15 +203,42 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 **Leaving `specs/` as human-only territory would make the first step of every project the one step nobody would do twice.** A blank spec plus a format document is a writing assignment, and the format is exacting: use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change. Handed that, a person writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time, for as long as it takes.
 
-**So `/hora-spec` writes it — and every mechanism in this half exists to keep that from becoming "the AI decided the requirements".** [`hora-spec/SKILL.md`](../.claude/skills/hora-spec/SKILL.md) is the authority on the skill; [`stages.md`](../.claude/skills/hora-spec/references/stages.md) on the stages; [`principles.md`](../.claude/skills/hora-spec/references/principles.md) on the thinking they apply.
+**And on a project that already runs, dictation is worse still.** Asked to describe twenty existing features from memory in that format, a person covers what they remember — and the silence around the rest reads exactly like "there is nothing there". **The system is the better witness for what it does, and no witness at all for what anybody wanted.** Stage 0 reads the first kind; the seven stages are still for the second.
+
+**So `/hora-spec` writes it — and every mechanism in this half exists to keep that from becoming "the AI decided the requirements".** [`hora-spec/SKILL.md`](../.claude/skills/hora-spec/SKILL.md) is the authority on the skill; [`stages.md`](../.claude/skills/hora-spec/references/stages.md) on the stages; [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) on what stage 0 may read; [`asking.md`](../.claude/skills/hora/references/asking.md) on how anything is put to a person; [`principles.md`](../.claude/skills/hora-spec/references/principles.md) on the thinking they apply.
 
 ---
 
-## Seven stages, in order
+## Reading is not inferring
+
+**The invariant that protects `specs/` forbids inferring a requirement. It has never forbidden reading.** What it protects is that no requirement enters the document without a person having read the exact words — so the middle step is the whole rule:
+
+```
+read the code, draft what it shows, show it, let somebody confirm it   allowed
+read the code and write the requirement it implies                     forbidden
+```
+
+**Which is why every reading goes out in one of three forms, and they are never phrased alike:**
+
+| | | What the person judges |
+|---|---|---|
+| **a check** | "I read it as this. Is that right?" | right, or wrong |
+| **a proposal** | "I suggest this. It is yours to decide." | take it, or not |
+| **a question** | "Nothing decides this. What is it?" | what it is |
+
+**The mixing that matters runs one way.** A check dressed as a proposal costs a false approval over something that was true anyway. **A proposal dressed as a check puts the kit's own idea into `specs/` as an existing fact** — and nothing downstream can tell it apart from something read off the real system. That is the failure this whole distinction exists to prevent, and it is at its most tempting on an adopted project, where what exists and what is obviously missing turn up in the same breath.
+
+**What no reading ever settles is intent.** Which operations exist is a fact; who they are for, who *should* be allowed to call them, and how much of a feature counts as finished are not in the tree at all. Those are asked, always — with the evidence laid out and nothing recommended.
+
+---
+
+## Stage 0, then seven stages, in order
 
 **A stage is a gate with one exit condition, exactly like a checkpoint.** Passing it is not "we talked about it" — it is that a stated condition now holds, and that the section it owns is in `specs/<version>/` with somebody's approval on it.
 
-![The seven stages of /hora-spec, and the return paths into them](./images/stages.svg)
+**Stage 0 is numbered 0 because it renumbers nothing.** The seven stages that decide a spec are unchanged; stage 0 gathers what already exists — the repositories, and every document anybody names — so that those seven have something to correct rather than something to compose. On a new project it passes in a sentence.
+
+![Stage 0, then the seven stages of /hora-spec, and the return paths into them](./images/stages.svg)
 
 **No stage may be entered until every earlier one is `[x]`**, because each one's answers are the next one's input, and the alternative costs the work twice:
 
@@ -230,7 +258,9 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 **None of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
 
-**Stage 7's mechanical checks are the one exception, and only halfway.** A missing required section, a duplicate `id`, an operation with no kind, a feature with no acceptance criteria — those are cheap, precise, and could run anywhere. **Their findings still come back to the main session to be settled**, and running them first is worth it: what remains needs somebody to read the document as a whole, and it is better to arrive there with the cheap findings already cleared.
+**Stage 0's reading and stage 7's mechanical checks are the one exception, and only halfway.** Reading a tree; a missing required section, a duplicate `id`, an operation with no kind, a feature with no acceptance criteria — those are cheap, precise, and could run anywhere. **Their findings still come back to the main session to be settled**, and running them first is worth it: what remains needs somebody to read the document as a whole, and it is better to arrive there with the cheap findings already cleared.
+
+**Reading more does not make a stage less of a conversation — it makes it a better one.** A stage with no evidence asks a person to compose; a stage that has read the system asks them to correct, and offers the likely answer as a choice. **The number of questions does not go down.** What goes down is the cost of each one, which is the only part worth optimizing: people who get asked start writing it down in advance, and the asking is what trains whoever writes the spec.
 
 ---
 
@@ -303,7 +333,9 @@ Everything above rests on two lines. Both are stated in [`structure.md`](../.cla
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | putting this on a project that already exists | [`adopting.md`](./adopting.md) |
 | the eighteen checkpoints themselves | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
-| the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| stage 0, then the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| what stage 0 may read, and what no reading settles | [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) |
+| a check, a proposal or a question | [`asking.md`](../.claude/skills/hora/references/asking.md) |
 | the thinking a spec is written with | [`principles.md`](../.claude/skills/hora-spec/references/principles.md) |
 | the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
 
