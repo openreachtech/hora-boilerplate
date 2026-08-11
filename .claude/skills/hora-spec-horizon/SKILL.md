@@ -7,7 +7,9 @@ description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases s
 
 **Stage 2 of `/hora-spec`.** Decide what this release builds, what it deliberately leaves for later, and what it will never build — and keep the three apart.
 
-Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
+Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
+
+**This stage reads nothing new.** What already exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** Every question here is a question or a proposal — there is nothing to put up as a check.
 
 ---
 
@@ -164,6 +166,7 @@ Three separate lists; every "for now" entry naming what unblocks it and the seam
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | "A release carrying too much is the normal failure", and "Build for now. Design for what was named" |

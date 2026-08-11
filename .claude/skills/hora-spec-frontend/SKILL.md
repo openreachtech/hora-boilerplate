@@ -9,7 +9,22 @@ description: Stage 5 of /hora-spec. Design the screens each use case passes thro
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
 
+**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
+
 **Not applicable when this version declares no frontend repository** — an API-only release for a phone app, say. Mark the stage `n/a` with that reason, and say which consumer the API is for instead.
+
+## What this stage reads
+
+**This is the stage that reads the frontend properly** — the pages, the routes, and which operations each screen calls. That mapping goes out as one check per screen group, not per screen.
+
+**What is absent is the finding, and absence is never a check.** The empty, failed, waiting and forbidden states are the ones an existing product most often does not handle, and every one of them is **a proposal**: nobody decided against them, nobody decided for them, and the screen simply does not have them.
+
+```
+"The list screen calls listAttendance and renders its rows."       a check
+"The list screen has no empty state. I suggest adding one."        a proposal
+```
+
+**Never state the second as though the screen already had it.** That is the mixing this whole design exists to stop (`../hora/references/asking.md`), and this stage is where it is most tempting — a screen that "should obviously" show something when there is nothing reads, in prose, exactly like one that does.
 
 ---
 
@@ -163,6 +178,7 @@ Every use case naming its screens in order; every screen naming its operations; 
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | why a use case comes first, and why proposing is required |

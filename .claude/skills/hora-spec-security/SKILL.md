@@ -9,7 +9,24 @@ description: Stage 6 of /hora-spec. Give every operation and every screen a stat
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
 
+**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
+
 **This stage is never not applicable.** A release with no authentication at all still has to say so, and why. An unstated caller is not an open question — **it is an operation that will be implemented with whatever filter its neighbours had, and nothing in the resulting code says that nobody ever decided.**
+
+## What this stage reads, and the one distinction that decides everything
+
+**This is the stage that reads the auth filters, the role checks and the public-operation allowlists** — enough to say, for every operation, **who may call it today.**
+
+| | |
+|---|---|
+| **who may call it today** | **a fact.** Read it and put it up as a check |
+| **who should be able to call it** | **a decision nobody has made.** Ask it |
+
+**Those two are one word apart in English and are not the same claim at all.** "Anyone with a session token can call `deleteAccount`" is something the code says. "Anyone with a session token should be able to call `deleteAccount`" is something no code can say, and on a product that already runs it is usually something nobody ever said either.
+
+**That gap is this stage's entire yield on an adopted project.** Read the current answer, put it in front of somebody, and watch which ones surprise them — every surprise is an authorization nobody decided, already deployed.
+
+**Ask about every operation whose current answer surprises anybody, and about every operation with no filter at all.** Use the question tool, batched, with the current setting shown alongside each choice.
 
 ---
 
@@ -163,6 +180,7 @@ Every operation naming its caller and its refusal; every screen naming its actor
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | "Authorization is the thing left unsaid", and the roles-or-endpoints table |

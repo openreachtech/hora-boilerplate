@@ -9,7 +9,11 @@ description: Stage 7 of /hora-spec. Read the whole spec against itself — every
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition**, and `../hora/references/spec-format.md` on every rule the mechanical pass below checks.
 
+**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
+
 **This stage is never not applicable.** A document that six stages wrote and nothing reviewed is a document nobody has read whole.
+
+**It reads one thing besides the document: `.hora/spec/<version>/_assets.md`.** Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other.
 
 ---
 
@@ -169,6 +173,7 @@ The mechanical pass clean; all five readings done; every finding either fixed by
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition, and the table of what sends a run back where |
 | `../hora/references/spec-format.md` | **every rule the mechanical pass checks** |

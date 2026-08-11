@@ -7,7 +7,11 @@ description: Stage 3 of /hora-spec. Turn "it should be fast" into the four numbe
 
 **Stage 3 of `/hora-spec`.** Get the numbers that decide stage 4's design, and the middleware `/hora-setup` needs in order to bring anything up at all.
 
-Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
+Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
+
+**Where something is already running, today's numbers can be read and put up as checks** — how many rows each table holds, how long data has been kept, which services the stack brings up. **What the product must carry tomorrow cannot be**, and that is what this stage is actually for: a system reports its present, never its intended future.
+
+**Offer numbers as options, never as a blank.** "How many users?" produces a shrug; `200 / 2,000 / 20,000`, with today's row count named alongside, produces an answer in one exchange (`../hora/references/asking.md`).
 
 **Nothing in `@openreachtech/ai-agent-skills` owns this stage, and nothing could.** No skill states what a project's user count or availability target should be. What is written below is which questions to ask; every answer is the requester's.
 
@@ -142,6 +146,7 @@ The four numbers written, as numbers or as stated assumptions; availability, ret
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | "Scale is a number, or it is nothing" |
