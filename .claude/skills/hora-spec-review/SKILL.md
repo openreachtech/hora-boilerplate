@@ -81,7 +81,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 ### 2. Is every acceptance criterion observable?
 
-**Delegate to `hc-requirement-definition`** — it owns what makes a criterion observable rather than an intention.
+**Delegate to the skills covering requirement definition** — they own what makes a criterion observable rather than an intention.
 
 ```
 ✅  clocking in twice on one day is refused, and the screen says why
@@ -118,19 +118,21 @@ a term used in two sections with two meanings
 
 ### 5. Would somebody who was not in the room understand it?
 
-**The last reading, and the one that catches what fluent prose hides.** An abbreviation nobody expanded, a screen named two ways, a step that assumes a habit only the requester has. Delegate the document's own conventions to `hc-documentation`.
+**The last reading, and the one that catches what fluent prose hides.** An abbreviation nobody expanded, a screen named two ways, a step that assumes a habit only the requester has. Delegate the document's own conventions to the skills covering how a document is written.
 
 ---
 
 ## Delegates
 
-| What is needed | The skill that holds it |
-|---|---|
-| whether a criterion is observable, and what makes a requirement decided | `hc-requirement-definition` |
-| how the document itself is written | `hc-documentation` |
-| **not run here** — but the criteria this stage settles are what it later derives scenarios from | `hf-e2e-test-specification` |
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
-If one is not under `.claude/skills/`, say so by name, carry on, and record the gap.
+| What is needed |
+|---|
+| whether a criterion is observable, and what makes a requirement decided |
+| how the document itself is written |
+| end-to-end test specification — **not run here**, but the criteria this stage settles are what it later derives scenarios from |
+
+If nothing equipped covers a row, say so by the work it names, carry on, and record the gap.
 
 ---
 

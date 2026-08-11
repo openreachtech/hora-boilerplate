@@ -87,11 +87,13 @@ which use case is impossible without this?
 
 ## Delegates
 
-| What is needed | The skill that holds it |
-|---|---|
-| the out-of-scope list, and what makes a requirement decided rather than assumed | `hc-requirement-definition` |
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
-If it is not under `.claude/skills/`, say so, carry on, and record the gap.
+| What is needed |
+|---|
+| the out-of-scope list, and what makes a requirement decided rather than assumed |
+
+If nothing equipped covers it, say so by the work it names, carry on, and record the gap.
 
 ---
 

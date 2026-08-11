@@ -69,7 +69,7 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 - a transfer GraphQL is a poor fit for: a file download, a redirect, a raw payload
 - a public surface where a fixed URL shape is part of the contract
 
-**Both may exist in one backend, per server, and the server table is where that is declared.** `hb-graphql-schema` and `hb-restfulapi-architecture` own the two shapes; what belongs to the spec is which servers exist, who consumes each, and why.
+**Both may exist in one backend, per server, and the server table is where that is declared.** The package's skills own the two shapes — the SDL one and the REST renderer one; what belongs to the spec is which servers exist, who consumes each, and why.
 
 ---
 
@@ -85,7 +85,7 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 
 **Say which one, and why, in the spec** (stage 6's exit condition). The next version's new role is decided against that reason or against nothing.
 
-**How an endpoint is wired, what its auth filter is, and how a public operation is allowed through all belong to `hb-graphql-server-engine`.** What belongs here is how many endpoints there are and who each one is for.
+**How an endpoint is wired, what its auth filter is, and how a public operation is allowed through all belong to the package's skills covering the server engine.** What belongs here is how many endpoints there are and who each one is for.
 
 ---
 
@@ -120,7 +120,7 @@ how long data is kept, and what happens to it after
 
 **A job that must be able to scale alone gets its own queue.** That is the whole mechanism by which one heavy thing is scaled without scaling everything, and the decision is made here, at the spec, not discovered later.
 
-**`hb-execution-placement-pattern` owns the decision's implementation, `hb-renchan-job-bullmq` the job itself, and `hb-post-worker` the side effect after a response.** What belongs to the spec is which processing is which, and why — recorded in the `Background jobs` table, with the reason it is not in the request path.
+**The package owns all three: the decision's implementation, the job itself, and the side effect after a response.** What belongs to the spec is which processing is which, and why — recorded in the `Background jobs` table, with the reason it is not in the request path.
 
 **An external call is the case worth naming explicitly.** Anything that leaves the process can be slow or down, and putting it in the request path makes somebody else's outage your error page.
 
@@ -134,7 +134,7 @@ how long data is kept, and what happens to it after
 
 **An unstated caller is not an open question — it is an operation that will be implemented with whatever filter its neighbours had.** Nothing in the resulting code says that nobody ever decided, which is what makes this the one gate in this document that has no "not applicable" case.
 
-**`hb-security-audit` owns what kinds of defect exist, and it audits code, not documents.** What belongs to the spec is the stated caller, the stated failure behavior, and the named sensitive field — the three things the audit later has something to check against.
+**The package's audit skills own what kinds of defect exist, and they audit code, not documents.** What belongs to the spec is the stated caller, the stated failure behavior, and the named sensitive field — the three things the audit later has something to check against.
 
 ---
 

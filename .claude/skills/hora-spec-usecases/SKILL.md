@@ -114,12 +114,14 @@ you return    - a member of staff clocks in on arrival, and the day's hours
 
 ## Delegates
 
-| What is needed | The skill that holds it |
-|---|---|
-| turning a rough request into stated requirements, observable criteria and an out-of-scope list | `hc-requirement-definition` |
-| the project context file the UI generator and the UI auditor both read later — app type, users, scope | `hf-uiux-context` |
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
-**Invoke them; do not summarize them here.** If either is not under `.claude/skills/`, say so, carry on without it, and record the gap (`../hora/references/structure.md`).
+| What is needed |
+|---|
+| turning a rough request into stated requirements, observable criteria and an out-of-scope list |
+| the shared UI/UX project context file the UI generator and the UI auditor both read later — app type, users, scope |
+
+**Invoke what you matched; do not summarize it here.** If nothing equipped covers a row, say so by the work it names, carry on without it, and record the gap.
 
 ---
 

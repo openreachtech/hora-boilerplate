@@ -94,11 +94,11 @@ Everything else about this table — the `Directory` column's effect on the excl
 
 **Write the reason down.** Stage 6 checks that it is there, and the next version's new role is decided against that reason or against nothing. It goes in `.hora/spec/<version>/_stages.md` under "Decided in conversation".
 
-**`hb-graphql-server-engine` owns what an endpoint is and how its auth filter is wired.** What belongs here is how many there are and who each is for.
+**The package owns what an endpoint is and how its auth filter is wired.** What belongs here is how many there are and who each is for.
 
 ## 3. The data model
 
-**Delegate to `hb-database-design`.** It owns whether to normalize, how to hold a status or a category, which type to pick, how to store a time, how to version a master table, how to keep a history, and how to scale reads as data grows. **Invoke it and design against what it says.**
+**Delegate to the skills covering the logical shape of a table.** They own whether to normalize, how to hold a status or a category, which type to pick, how to store a time, how to version a master table, how to keep a history, and how to scale reads as data grows. **Invoke them and design against what they say.**
 
 What belongs in the spec is the logical shape:
 
@@ -121,7 +121,7 @@ What belongs in the spec is the logical shape:
 
 ## 4. The operations
 
-**GraphQL is the default; REST needs a stated reason** (`../hora-spec/references/principles.md`). Delegate to `hb-graphql-schema` for the GraphQL surface and `hb-restfulapi-architecture` for a REST one.
+**GraphQL is the default; REST needs a stated reason** (`../hora-spec/references/principles.md`). Delegate the GraphQL surface to the skills covering SDL, and a REST one to the skills covering a renderer's route and version.
 
 ```markdown
 | schema | input | result | kind |
@@ -154,7 +154,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## 5. What runs outside the request
 
-**Ask one question of every write: does it have to have finished before the person sees a response?** Delegate to `hb-execution-placement-pattern` for the decision's implementation, `hb-renchan-job-bullmq` for the job, `hb-post-worker` for a side effect after the response.
+**Ask one question of every write: does it have to have finished before the person sees a response?** Delegate the decision's implementation to the skills covering execution placement, the job to those covering queues and schedules, and a side effect after the response to those covering post-workers.
 
 ```markdown
 ## 12. Background jobs
@@ -190,17 +190,19 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## Delegates
 
-| What is needed | The skill that holds it |
-|---|---|
-| the logical shape of a table — normalization, status, types, times, history, read scaling | `hb-database-design` |
-| SDL, type and field naming, nullability, enums, pagination | `hb-graphql-schema` |
-| a REST renderer's route and version | `hb-restfulapi-architecture` |
-| whether work belongs in the request, in a post-worker, or in a job | `hb-execution-placement-pattern` |
-| a queue, a schedule, a retry, a concurrency limit | `hb-renchan-job-bullmq` |
-| a side effect that runs after the response | `hb-post-worker` |
-| what an endpoint is, and what its auth filter does | `hb-graphql-server-engine` |
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
-**Invoke them. Do not summarize them here, and do not design from memory.** If one is not under `.claude/skills/`, say so by name, carry on without it, and record the gap.
+| What is needed |
+|---|
+| the logical shape of a table — normalization, status, types, times, history, read scaling |
+| SDL, type and field naming, nullability, enums, pagination |
+| a REST renderer's route and version |
+| whether work belongs in the request, in a post-worker, or in a job |
+| a queue, a schedule, a retry, a concurrency limit |
+| a side effect that runs after the response |
+| what an endpoint is, and what its auth filter does |
+
+**Invoke what you matched. Do not summarize it here, and do not design from memory.** If nothing equipped covers a row, say so by the work it names, carry on without it, and record the gap.
 
 ---
 

@@ -29,8 +29,8 @@ what has to be true before this is exposed to the internet at all
 |---|---|
 | a new operation, or a new table | stage 4 |
 | a new screen | stage 5 |
-| how an auth filter is wired, or how a public operation is allowed through | **`hb-graphql-server-engine`** |
-| whether the built code has a defect | **`hb-security-audit`**, at checkpoint 8. It audits code; this stage writes what that audit will have something to check against |
+| how an auth filter is wired, or how a public operation is allowed through | **the package's skills covering the server engine** |
+| whether the built code has a defect | **the package's audit skills**, at checkpoint 8. They audit code; this stage writes what that audit will have something to check against |
 | a token lifetime, a hashing algorithm, a header | the package's own skills, at checkpoint 6 |
 
 **This stage produces the statements the later gates check.** Checkpoint 8's audit, checkpoint 18's review and `/security-review` all compare code against something, and this is where that something is written.
@@ -80,7 +80,7 @@ for each field:
 
 ## The kinds of defect to ask about
 
-**`hb-security-audit` is the authority on what kinds exist** — invoke it and read its list. It audits code, not documents, so **what is borrowed is the list of kinds; never a verdict.**
+**The package's audit skills are the authority on what kinds exist** — match them against the equipped descriptions, invoke them, and read the list. They audit code, not documents, so **what is borrowed is the list of kinds; never a verdict.**
 
 Turn each kind into a question about the spec rather than about code:
 
