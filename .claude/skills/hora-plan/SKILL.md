@@ -147,9 +147,12 @@ specs/1.0.0/attendance/spec.md           a feature file. Linked from spec.md
 specs/1.0.0/attendance/monthly/spec.md   nesting is allowed
 specs/1.0.0/spec/00-overview.md          a declared Source. Any name, any location
 specs/1.0.0/docs/RPA_CORE_SPEC.md        linked, but not declared. Interpretation material only
+specs/1.0.0/request/csv-export.md        what somebody asked for. NOT read here, and not an orphan
 ```
 
 **A file that is none of `spec.md` / a feature file / a declared Source, and that nothing links to at all, is never read** — and raises a question (`orphan`, `blocking: no`).
+
+**`specs/<version>/request/` is the one directory this does not apply to.** It holds what somebody wanted this version to do, in their own words; `/hora-spec` reads it, drafts sections from it and gets those approved, and **what it produced is in `spec.md` by the time planning starts** (`../hora/references/spec-format.md`, "a drop-off convention"). Reading it here would extract tasks from a wish list nobody was held to, and raising it as an orphan would report the intended arrangement as a defect on every run.
 
 | | Declared under `Sources`, or a `<feature>/spec.md` | Reached, but not declared |
 |---|---|---|
