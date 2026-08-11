@@ -23,7 +23,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | **Claude Code** | the skills run there |
 | **Node and npm** | for this repository's own `npm install` |
 | **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
-| **A self-hosted runner labeled `light`** | only before opening pull requests. See [Continuous integration](#continuous-integration) |
+| **A runner for CI** | only before opening pull requests. A self-hosted runner labeled `light` is the default; switching the workflows to GitHub-hosted runners is a change you make yourself. See [Continuous integration](#continuous-integration) |
 
 ### 1. Create `<myproject>-app`
 
@@ -64,11 +64,32 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **In normal use, `/hora` is the only command you type.** For what it is doing at each point, and for running one of the other skills directly, see [`docs/commands.md`](./docs/commands.md).
 
+### Recommended: converse through the spec, let the implementation run
+
+**`/hora-spec` is worth sitting through.** All seven of its stages are conversations, every section is shown in full and written only once you approve it, and what it proposes is where a spec stops being a list of feature names. Attention spent here is what the eighteen checkpoints later have something to build against.
+
+**From `/hora` onwards, letting it run unattended is fine.** Fetching the boilerplates, planning, taking a feature through its checkpoints and running acceptance need nobody watching, and the design is what makes that safe: **a run that needs an answer stops instead of deciding.** The interactive checkpoints exist to settle things with a person, and a subagent is never handed one.
+
+| | |
+|---|---|
+| `/hora-spec` | **be there.** Seven stages of conversation, approval per section |
+| `/hora-plan` | **be there for the questions.** It asks about whatever the spec left undecided, and writes one approved edit at a time |
+| `/hora-setup`, `/hora-build`, `/hora-accept` | **let them run.** They report what they did, and stop when they need you |
+
+**Unattended does not mean unattended to the end.** A question nobody can answer on the spot is written to `.hora/questions/`, and answering it means editing `specs/` and running `/hora` again. That is the normal rhythm, not a failure.
+
 ## Continuous integration
 
-The workflows under `.github/workflows/` run on a self-hosted runner labeled `light`, not GitHub's own `ubuntu-latest` — `<myproject>-app` is usually a private repository, and a GitHub-hosted runner would bill you for every run. **Register your own self-hosted runner with the `light` label** before opening pull requests, or these workflows stay queued and never run.
+**The workflows under `.github/workflows/` default to a self-hosted runner labeled `light`, not GitHub's own `ubuntu-latest`** — `<myproject>-app` is usually a private repository, and a GitHub-hosted runner bills you for every run. Register a self-hosted runner with the `light` label before opening pull requests, or these workflows stay queued and never run.
 
-If that is not possible, do not change `runs-on` yourself — note it in `specs/<version>/spec.md` instead.
+**Using GitHub-hosted runners instead is a supported choice, and it is yours to make.** Change `runs-on` yourself in all three workflows — `lint.yml`, `main-guard.yml` and `release.yml`:
+
+```yaml
+    runs-on: [self-hosted, light]   # the default
+    runs-on: ubuntu-latest          # GitHub-hosted, billed per run on a private repository
+```
+
+Then note the decision in `specs/<version>/spec.md`, so that everyone — and every later `/hora` run — reads the same thing rather than inferring it from the workflow files.
 
 ## Usage
 
@@ -98,7 +119,7 @@ The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/r
 
 | | |
 |---|---|
-| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed.** The four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial |
+| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed,** in two parts and drawn out in figures. `/hora`: the four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial. `/hora-spec`: the seven stages, why every one of them is a conversation, and how approval works |
 | [`docs/commands.md`](./docs/commands.md) | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |

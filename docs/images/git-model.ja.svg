@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="880" height="430" font-family="-apple-system, BlinkMacSystemFont, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans JP&#x27;, &#x27;Noto Sans CJK JP&#x27;, &#x27;Yu Gothic&#x27;, Meiryo, Helvetica, Arial, sans-serif" role="img" aria-label="git モデル — 操作はすべて /hora のもの"><title>git モデル — 操作はすべて /hora のもの</title><defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah" fill="#8b949e"/></marker><marker id="mb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-b" fill="#0969da"/></marker><marker id="mp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-p" fill="#8250df"/></marker><marker id="mo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-o" fill="#bc4c00"/></marker><marker id="mg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-g" fill="#1a7f37"/></marker></defs><style>
+.t{font-size:15px;font-weight:600}
+.l{font-size:12.5px}
+.n{font-size:12.5px;font-weight:600}
+.m{font-size:11.5px}
+.xs{font-size:10.5px}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.dash{stroke-dasharray:5 4}
+
+@media (prefers-color-scheme:dark){
+text{fill:#e6edf3}
+.m,.xs{fill:#9198a1}
+.bx{fill:#151b23;stroke:#3d444d}
+.bx-1{fill:#0d1117;stroke:#3d444d}
+.bx-b{fill:#0c2d59;stroke:#4493f8}
+.bx-p{fill:#251a44;stroke:#ab7df8}
+.bx-o{fill:#40200a;stroke:#f0883e}
+.bx-g{fill:#0f3018;stroke:#3fb950}
+.bx-r{fill:#3d1418;stroke:#f85149}
+.arr{stroke:#6e7681}
+.arr-b{stroke:#4493f8}
+.arr-p{stroke:#ab7df8}
+.arr-o{stroke:#f0883e}
+.arr-g{stroke:#3fb950}
+.ah{fill:#6e7681}
+.ah-b{fill:#4493f8}
+.ah-p{fill:#ab7df8}
+.ah-o{fill:#f0883e}
+.ah-g{fill:#3fb950}
+.ln{stroke:#3d444d}
+.lane{stroke:#6e7681}
+.lane-b{stroke:#4493f8}
+.lane-g{stroke:#3fb950}
+.dt{fill:#6e7681}
+.dt-b{fill:#4493f8}
+.dt-g{fill:#3fb950}
+}
+</style><text x="440.0" y="26" class="t" fill="#1f2328" text-anchor="middle">git モデル — 操作はすべて /hora のもの</text><text x="154" y="78" class="m code" fill="#59636e" text-anchor="end">main</text><text x="154" y="150" class="m code" fill="#59636e" text-anchor="end">release/&lt;version&gt;</text><text x="154" y="222" class="m code" fill="#59636e" text-anchor="end">feature/&lt;id&gt;・backend</text><text x="154" y="286" class="m code" fill="#59636e" text-anchor="end">feature/&lt;id&gt;・frontend</text><path d="M168,74 L848,74" fill="none" class="lane" stroke="#8b949e" stroke-width="2" stroke-linecap="round"/><circle cx="180" cy="74" r="4.5" class="dt" fill="#8b949e"/><circle cx="824" cy="74" r="4.5" class="dt" fill="#8b949e"/><path d="M220,146 L800,146" fill="none" class="lane-b" stroke="#0969da" stroke-width="2" stroke-linecap="round"/><path d="M180,74 C202,74 202,146 224,146" fill="none" class="lane-b" stroke="#0969da" stroke-width="2"/><path d="M800,146 C822,146 822,74 824,74" fill="none" class="lane-b" stroke="#0969da" stroke-width="2"/><path d="M300,218 L452,218" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2" stroke-linecap="round"/><path d="M276,146 C294,146 294,218 300,218" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2"/><path d="M452,218 C470,218 470,146 478,146" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2"/><circle cx="276" cy="146" r="4.5" class="dt-b" fill="#0969da"/><circle cx="478" cy="146" r="4.5" class="dt-b" fill="#0969da"/><circle cx="318" cy="218" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="352" cy="218" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="386" cy="218" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="420" cy="218" r="4.5" class="dt-g" fill="#1a7f37"/><text x="276" y="206" class="xs" fill="#59636e" text-anchor="middle">関所3 に入るとき切る</text><text x="482" y="206" class="xs" fill="#59636e" text-anchor="start">9 を通過したらマージ</text><path d="M500,282 L690,282" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2" stroke-linecap="round"/><path d="M476,146 C494,146 494,282 500,282" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2"/><path d="M690,282 C708,282 708,146 716,146" fill="none" class="lane-g" stroke="#1a7f37" stroke-width="2"/><circle cx="476" cy="146" r="4.5" class="dt-b" fill="#0969da"/><circle cx="716" cy="146" r="4.5" class="dt-b" fill="#0969da"/><circle cx="518" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="552" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="586" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="620" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="654" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><circle cx="688" cy="282" r="4.5" class="dt-g" fill="#1a7f37"/><text x="476" y="168" class="xs" fill="#59636e" text-anchor="middle">関所10 に入るとき切る</text><text x="720" y="304" class="xs" fill="#59636e" text-anchor="start">17 を通過したらマージ</text><circle cx="752" cy="146" r="4.5" class="dt-b" fill="#0969da"/><text x="748" y="130" class="xs" fill="#59636e" text-anchor="end">検収(18) — その時点の全機能</text><circle cx="790" cy="146" r="4.5" class="dt-b" fill="#0969da"/><text x="844" y="172" class="xs" fill="#59636e" text-anchor="end">版全体の掃引</text><path d="M228,156 L228,342" class="arr arr-b dash" fill="none" stroke="#0969da" stroke-width="1.4" marker-end="url(#mb)"/><rect x="172" y="344" width="680" height="62" rx="10" class="bx bx-b" fill="#ddf4ff" stroke="#0969da" stroke-width="1"/><rect x="184" y="354" width="160" height="26" rx="6" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="264" y="371" class="xs code" fill="#59636e" text-anchor="middle">install/&lt;pkg&gt;-&lt;ver&gt;</text><rect x="352" y="354" width="160" height="26" rx="6" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="432" y="371" class="xs code" fill="#59636e" text-anchor="middle">update/&lt;file&gt;-with-&lt;x&gt;</text><rect x="520" y="354" width="160" height="26" rx="6" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="600" y="371" class="xs code" fill="#59636e" text-anchor="middle">retake/&lt;what&gt;-for-&lt;why&gt;</text><rect x="688" y="354" width="160" height="26" rx="6" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="768" y="371" class="xs code" fill="#59636e" text-anchor="middle">adhoc/&lt;rule&gt;-in-&lt;file&gt;</text><text x="512" y="398" class="xs" fill="#59636e" text-anchor="middle">1度に1つ、次を始める前にマージ — package-lock.json は、2つの変更が同時にきれいに編集できないファイル</text><text x="440.0" y="422" class="xs" fill="#59636e" text-anchor="middle">skill も、それが起動したエージェントも、git には触れない</text></svg>

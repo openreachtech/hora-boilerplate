@@ -6,6 +6,8 @@ Six commands, described the same way each time: what it does, what it reads, wha
 
 **In normal use you only ever type `/hora`.** It decides which of the others to run. The rest are documented because you will sometimes want one directly — to redo an acceptance run, to re-plan after a spec change, to fix a setup that half-finished.
 
+**Two of them want you at the keyboard; the rest can be left to run.** `/hora-spec` is conversation from end to end, and `/hora-plan` asks about whatever the spec left undecided. `/hora-setup`, `/hora-build` and `/hora-accept` need nobody watching — **they stop and ask rather than deciding**, which is what makes leaving them alone safe. The recommendation, and what "unattended" does and does not mean, is in [`README.md`](../README.md#recommended-converse-through-the-spec-let-the-implementation-run).
+
 Every command runs **at the root of the hora repository** (`<myproject>-app`).
 
 ---

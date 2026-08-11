@@ -241,7 +241,7 @@ They are run as they are, by `/hora-accept` step 2. **They are never weakened to
 
 ### CI
 
-The workflows under `.github/workflows/` run on a self-hosted runner labeled `light`. If you cannot register one, **do not change `runs-on`** — note it in `specs/<version>/spec.md` instead.
+The workflows under `.github/workflows/` default to a self-hosted runner labeled `light`. **If you would rather use GitHub-hosted runners, change `runs-on` to `ubuntu-latest` yourself in all three workflows** and note that in `specs/<version>/spec.md` — on a private repository, it means paying for every run. An adopted repository's own existing workflows are left as they are; this is only about the ones the kit brings.
 
 ---
 
