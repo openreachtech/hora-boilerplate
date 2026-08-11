@@ -65,20 +65,36 @@ npm install
 
 ## Step 2 — Write the spec, describing what is already there
 
-**Run `/hora-spec`.** It copies the blank spec and writes it with you, a section at a time, through its seven stages ([`stages.md`](../.claude/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
+**Run `/hora-spec`.** It reads what already exists at stage 0, copies the blank spec, and writes it with you a section at a time through its seven stages ([`stages.md`](../.claude/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
 
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
 
-**Adopting changes what the stages are for, without changing their order.** They are describing a product that already runs, so most answers already exist — in the code, in somebody's head, in a spreadsheet. **What they must not do is read a repository and conclude what the product requires**: a half-finished screen and a finished one look identical from a file listing (`structure.md`, invariant 2). Every stage still asks, and still writes only what somebody stated.
+**You are not expected to dictate the product.** A person describing twenty existing features from memory, in an exacting format, describes the ones they remember — and the silence around the rest reads exactly like "there is nothing there". So stage 0 reads the repositories and every document you point it at, drafts what they show, and puts it back to you **to correct rather than to compose** ([`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)).
+
+**What it reads and what it asks are two different lists**, and the split is the whole design:
+
+| It reads this, and asks you to confirm it | It asks you outright — nothing can read it |
+|---|---|
+| which operations exist and what they return | who each one is for |
+| which tables exist and what they hold | why the model came out that way |
+| which screens call which operations | what somebody was trying to accomplish |
+| **who may call each operation today** | **who *should* be able to** |
+| | **how far each feature is actually built** |
+
+**The fourth row is where adoption pays for itself.** "Anyone signed in can call this" is read off an auth filter; whether that was ever anybody's decision usually turns out to be a different question entirely.
+
+**Nothing it reads becomes a requirement on its own.** A reading is shown to you as a check — *"I read it as this; is that right?"* — and only what you confirm or correct is written. What the kit proposes is labelled a proposal, separately, so that a suggestion never enters the document as something the system already does ([`asking.md`](../.claude/skills/hora/references/asking.md)).
+
+**Answers are offered as choices wherever they can be.** Existing row counts come with the retention question, current filters come with the authorization question, and what stage 0 found for a feature comes with the `built:` question. You correct far more than you compose.
 
 Two stages earn their keep more here than anywhere else:
 
 | Stage | Why, when adopting |
 |---|---|
 | **1, use cases** | the product has behavior nobody ever wrote down. This is where it gets stated, and where the gap between what it does and what anybody wanted becomes visible |
-| **6, security** | an operation whose caller was never decided is already deployed. The pass finds every one of them, and each becomes a criterion the first acceptance sweep checks |
+| **6, security** | an operation whose caller was never decided is already deployed. Reading the current filters and putting them in front of somebody finds every one — each surprise is an authorization nobody made, and each becomes a criterion the first acceptance sweep checks |
 
 [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) explains every section. Three of them matter more than usual when adopting.
 
@@ -128,7 +144,16 @@ This is the annotation that makes adoption possible.
 
 **Checkpoint 18 is never covered by any value.** It stays `[ ]`, whatever you write. That is the whole design: **adopting does not rebuild what works, but it does find out what actually works.**
 
-**Write it yourself. The kit will not infer it.** A half-finished screen and a finished one are indistinguishable from a file listing, and guessing wrong here silently skips the gates that would have caught it. A feature nobody declares is planned from checkpoint 1, however finished its code looks.
+**`/hora-spec` asks you for it, one feature at a time, and shows what it found.** A half-finished screen and a finished one are indistinguishable from a file listing, so the kit lays out the evidence — the resolvers, the migration, the tests, the screens — and **recommends nothing.** That is the difference between doing the legwork so you can decide in a second, and deciding for you.
+
+```
+For #attendance I found: 4 resolvers, a migration, 31 tests, and two screens
+that call them. What the tree cannot tell me is whether that is finished.
+
+  spec / backend / frontend / not built
+```
+
+**Writing it by hand still works** — the annotation is the same either way. What is not an option is the kit guessing: a feature nobody declares is planned from checkpoint 1, however finished its code looks.
 
 **Still write the feature's use cases and acceptance criteria**, even for something already built. Checkpoint 18 verifies against them, and a `built:` feature with neither has nothing to be accepted against.
 
@@ -249,9 +274,11 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
 
 ```
 1. Create <myproject>-app from this template. Move the existing repositories inside it
-2. Write specs/1.0.0/spec.md — /hora-spec writes it with you:
+2. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
+     - stage 0 reads the repositories and every document you point it at,
+       and declares each one under Sources or Annex
      - repository layout, with a Directory column for each existing repository
-     - built: spec | backend | frontend on every feature that already exists
+     - built: spec | backend | frontend, asked per feature with the evidence shown
      - use cases and acceptance criteria on all of them, built or not
      - existing assets: keep it
 3. /hora
@@ -273,5 +300,7 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
-| the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| stage 0, then the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
+| what stage 0 may read, and what no reading settles | [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) |
+| how a check differs from a proposal | [`asking.md`](../.claude/skills/hora/references/asking.md) |
 | the eighteen checkpoints | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
