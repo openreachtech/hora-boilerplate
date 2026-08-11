@@ -264,6 +264,12 @@ The value is the gate the existing code already reaches.
 
 **`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
 
+**It is asked, one feature at a time, at stage 1 of `/hora-spec`** — but only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project every feature is correctly without it, and nobody is asked at all.
+
+**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist for this feature — is laid out alongside the choice, with **no option recommended**, because laying out evidence is legwork and recommending an answer is the inference this rule forbids (`../../hora/references/asking.md`, "What is never asked").
+
+**Absence has one meaning, and it is now unambiguous.** Before it was asked, an absent `built` could mean "new feature" or "nobody was ever asked"; those were indistinguishable, and the second silently planned working code from checkpoint 1. Stage 1 now settles it either way, and records in `.hora/spec/<version>/_stages.md` when the answer was "nothing is running here".
+
 **It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
 ### `kicked`
@@ -577,6 +583,12 @@ Write this where you can. `/hora` decides placement together with the real tree 
 ### Sources and Annex
 
 Both optional, both covered above under "Directory layout". `Sources` promotes files into feature files; `Annex` only gathers relative links in one place and changes nothing about how they are read.
+
+**Stage 0 of `/hora-spec` is what fills them** — it gathers the reference documents, PDFs, diagrams and old specs that exist, asks which of the two each belongs in, and writes the tables once somebody has answered (`../../hora-spec/references/investigation.md`).
+
+**Which one a document goes into is not a judgment about quality.** It is whether anybody is willing to be held to it: a current requirements list is `Sources`, a two-year-old design document is `Annex` however good it is. **A document nobody can vouch for goes in `Annex`** — promoting it would turn a stale statement into a requirement `/hora-plan` extracts tasks from.
+
+**A file that is not text — a PDF, a screenshot, a mockup, a spreadsheet — is linked from `Annex` with one line saying what it shows.** Whatever was read out of it reaches the spec the ordinary way: put up as a check, confirmed, and written into the section that owns it. **Never pasted in as though a drawing were a stated requirement.**
 
 ---
 

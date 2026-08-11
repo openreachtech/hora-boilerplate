@@ -24,6 +24,13 @@
   Sections 9 onward are examples of feature sections, not a fixed list.
   Delete the ones this project has no use for, add the ones it needs, and
   renumber freely — /hora reads `id`, never a section number.
+
+  A feature section may also carry `<!-- built: spec | backend | frontend -->`,
+  and it is deliberately absent from every block below. It is ONLY for adopting
+  Hora Kit onto code that already runs — it says how far that feature was
+  already implemented, so that working code is not rebuilt — and it must never
+  be guessed. /hora-spec asks for it, one feature at a time, showing what it
+  found. A new project writes it nowhere.
 -->
 
 # <project name> design document
