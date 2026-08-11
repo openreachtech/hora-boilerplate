@@ -52,6 +52,8 @@ Do this before writing `specs/` — once the repository holds commits of its own
 
 **If you already have documents, drop them in before running this.** `specs/1.0.0/sources/` for anything that **is** the specification — requirements, an API reference — and `specs/1.0.0/annex/` for anything that only **explains** it — mockups, diagrams, an old design doc. Both ship empty, neither is required, and stage 0 confirms the split rather than asking you about each file. [`docs/adopting.md`](./docs/adopting.md), step 2, has the details.
 
+**If all you have is what you want, put that in `specs/1.0.0/request/`** — a mail, a ticket, a page of bullets, in your own words. Stage 0 reads it as this version's agenda and the seven stages turn it into sections you approve one at a time. It ships empty too, nothing in it becomes spec text on its own, and `/hora-plan` never reads it.
+
 Writing it by hand is still supported, and produces the same document:
 
 ```sh
