@@ -238,7 +238,7 @@ read the code and write the requirement it implies                     forbidden
 
 **Stage 0 is numbered 0 because it renumbers nothing.** The seven stages that decide a spec are unchanged; stage 0 gathers what already exists — the repositories, and every document anybody names — so that those seven have something to correct rather than something to compose. On a new project it passes in a sentence.
 
-![The seven stages of /hora-spec, and the return paths into them](./images/stages.svg)
+![Stage 0, then the seven stages of /hora-spec, and the return paths into them](./images/stages.svg)
 
 **No stage may be entered until every earlier one is `[x]`**, because each one's answers are the next one's input, and the alternative costs the work twice:
 
