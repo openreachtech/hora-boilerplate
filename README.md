@@ -50,7 +50,7 @@ Do this before writing `specs/` — once the repository holds commits of its own
 
 **On a project that already holds working code, you are not asked to dictate it.** Stage 0 reads the repositories and any document you point it at, drafts what they show, and puts it back for you to correct — **as a check, "I read it as this; is that right?", never as a requirement it decided.** What no reading can settle — who a feature is *for*, who *should* be allowed to call an operation, how much of it counts as finished — is asked outright, with the evidence laid out and nothing recommended. Answers come as choices wherever they can, so you correct far more than you compose.
 
-**If you already have documents — requirements, an API reference, mockups, diagrams — copy them under `specs/1.0.0/` before running this.** Folder names are free; stage 0 finds them and asks which belong to the specification and which only explain it. [`docs/adopting.md`](./docs/adopting.md), step 2, has the details.
+**If you already have documents, drop them in before running this.** `specs/1.0.0/sources/` for anything that **is** the specification — requirements, an API reference — and `specs/1.0.0/annex/` for anything that only **explains** it — mockups, diagrams, an old design doc. Both ship empty, neither is required, and stage 0 confirms the split rather than asking you about each file. [`docs/adopting.md`](./docs/adopting.md), step 2, has the details.
 
 Writing it by hand is still supported, and produces the same document:
 

@@ -67,23 +67,27 @@ npm install
 
 **Do this before running `/hora-spec`.** A session can only read what is inside its own working directory, and everything `/hora` reads is reached by following links from `specs/<version>/spec.md`. A requirements document sitting on a wiki is a document stage 0 cannot open.
 
+**Two directories ship empty for exactly this.** Drop each document into whichever one describes it:
+
 ```
 myproject-app/
   specs/
     1.0.0/
       spec.md               ← the entry point. /hora-spec creates it
-      spec/
-        api-reference.md    ← documents that ARE the specification
+      sources/              ← documents that ARE the specification
+        api-reference.md
         requirements.md
-      docs/
-        screens.pdf         ← documents that EXPLAIN it
+      annex/                ← documents that EXPLAIN it
+        screens.pdf
         er-diagram.png
         old-design-doc.md
   legacy-api/               ← your repositories, from step 1
   admin-console/
 ```
 
-**The folder names carry no meaning.** There is exactly one structural rule — `spec.md` sits directly under the version directory — and beyond that names, nesting and depth are free. **Bring your project's existing layout across as it is**; it does not have to be reorganized to be read.
+**Which folder you choose is what you would otherwise be asked, one document at a time.** Stage 0 reads both, puts your placement back as a check — *"these are in `sources/`, so I am treating them as part of the specification; right?"* — and writes the tables. Twenty documents become one exchange, plus whichever you want moved.
+
+**Neither directory is required.** A document placed anywhere else under `specs/<version>/` is found all the same; stage 0 just asks about it instead of confirming it. **Bring your project's existing layout across as it is if you prefer** — there is exactly one structural rule, that `spec.md` sits directly under the version directory, and beyond that names, nesting and depth are free.
 
 ### Which documents to bring
 
@@ -102,18 +106,22 @@ myproject-app/
 
 **Material is closed inside one version, not shared across them** ([`structure.md`](../.claude/skills/hora/references/structure.md), invariant 3). If 1.1.0 needs the same document, it gets its own copy. That looks redundant and is deliberate: shared material means editing it for 1.1.0 silently changes what 1.0.0 was written against.
 
-### You do not have to declare them yourself
+### What the two directories actually decide
 
-**Stage 0 finds what you placed and asks, per document, which of two things it is** — then writes the tables for you:
+They map onto two tables in `spec.md`, and **the difference is not filing — it is whether the kit will build what the document says**:
 
-| | What it means | How it is read |
+| | What it means | What `/hora` does with it |
 |---|---|---|
-| **`Sources`** | this document **is** part of the specification | extracted from, exactly like a feature file — it can produce tasks |
-| **`Annex`** | this document **explains** the specification | interpretation only. Never produces a task |
+| **`Sources`** | this document **is** part of the specification | reads it **exactly as it reads a feature file.** What is in it becomes tasks, and gets built |
+| **`Annex`** | this document **explains** the specification | interpretation only. **Never produces a task** |
 
-**The split is not about quality — it is whether anybody is willing to be held to it.** A current API reference is `Sources`; a two-year-old design document is `Annex` however good it is. Anything nobody can vouch for goes in `Annex`, because promoting it would turn a stale sentence into a task `/hora-plan` extracts.
+**So a five-year-old line about a Slack integration, in a document you put in `sources/`, is a Slack integration somebody builds.** In `annex/` the same line is background: it informs what stage 4 puts to you, and only what you confirm reaches the spec.
 
-Declaring them by hand works too — the format is in [`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Directory layout".
+**The split is therefore not about quality — it is whether anybody is willing to be held to it.** A current API reference is `Sources`; a two-year-old design document is `Annex` however good it is.
+
+**When in doubt, `annex/`.** Nothing is lost: if its content matters, it reaches the spec through the conversation and becomes a feature from there. All the longer route adds is one place where a person reads it and says yes — which is exactly what `sources/` skips.
+
+Writing the tables by hand and using neither directory works too — the format is in [`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Directory layout".
 
 ### If you cannot bring something in
 
@@ -332,12 +340,14 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
 
 ```
 1. Create <myproject>-app from this template. Move the existing repositories inside it
-2. Copy your existing documents into specs/1.0.0/ — requirements, API references,
-   mockups, diagrams, old design docs. Folder names are free. Do NOT link into
-   the implementation repositories; they are gitignored and the link breaks quietly
+2. Drop your existing documents into specs/1.0.0/sources/ (they ARE the spec —
+   requirements, API references) or specs/1.0.0/annex/ (they EXPLAIN it —
+   mockups, diagrams, old design docs). Both ship empty. Neither is required.
+   Do NOT link into the implementation repositories; they are gitignored and
+   the link breaks quietly
 3. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
-     - stage 0 reads the repositories and the documents you placed, asks which
-       of Sources or Annex each belongs in, and writes those tables
+     - stage 0 reads the repositories and the documents you placed, confirms
+       the sources/annex split you expressed by placing them, and writes the tables
      - repository layout, with a Directory column for each existing repository
      - built: spec | backend | frontend, asked per feature with the evidence shown
      - use cases and acceptance criteria on all of them, built or not
