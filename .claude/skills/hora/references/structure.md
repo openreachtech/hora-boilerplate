@@ -146,7 +146,7 @@ These three must not be broken.
 
 | | Writes | Granularity of approval |
 |---|---|---|
-| **`/hora-spec`** | a whole version's spec, from a conversation with whoever wants the product | **a section**, at the end of the stage that drafted it |
+| **`/hora-spec`** | a whole version's spec, from a conversation with whoever wants the product — **and, from the second version on, that version's diff against the one before it** | **a section**, at the end of the stage that drafted it |
 | **`/hora-plan`** | the holes and contradictions found while planning | **an edit** |
 
 **Approval is never blanket.** "Yes, fix them all" is not approval of text nobody has read yet, and one "yes" over a whole document is worse than none, because the record then says it was read. Go back to step 2 for each unit.
