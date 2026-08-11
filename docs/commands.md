@@ -259,11 +259,11 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 ### What it does
 
 ```
-1. Confirm the environment      build-e2e-test-environment
-2. Unit suites, per repository  test-execution and friends
-3. The scenario list            e2e-test-specification
-4. The acceptance review        acceptance-review
-5. UX findings                  uiux-audit
+1. Confirm the environment      hb-build-e2e-test-environment
+2. Unit suites, per repository  hc-test-execution and friends
+3. The scenario list            hf-e2e-test-specification
+4. The acceptance review        hf-acceptance-review
+5. UX findings                  hf-uiux-audit
 ```
 
 **It contains no criteria of its own.** What a review looks at and what it fails on lives in those skills; this command decides only which features are in scope, what order the delegates run in, and where the result is recorded. See [`skills.md`](./skills.md).
