@@ -169,7 +169,20 @@ These three must not be broken.
 
 **`id` is not `target`.** Getting `target` wrong only changes which checkpoints apply, but `id` is the reference key from `.hora/tasks/` and is permanent — once given, it never changes. Inferred from heading text, the next run after someone edits the heading produces a different `id`, and recorded references come loose in silence.
 
-**Do not try to keep the number of questions down.** People who are asked start writing it down in advance. Asking is also the mechanism that trains whoever writes the spec.
+#### This forbids inferring. It does not forbid reading
+
+**Reading a repository, a document or a diagram is evidence-gathering, and it is not what this invariant is about.** What it forbids is evidence turning into a requirement without anybody having said so.
+
+```
+read the code, draft what it shows, show it, let somebody confirm it   allowed
+read the code and write the requirement it implies                     forbidden
+```
+
+The middle step is the whole invariant. A skill that reads a repository and puts its findings to a person **as a check** — "I read it as this; is that right?" — has invented nothing: the person supplied the requirement, and the reading only saved them from dictating it. `asking.md` is the authority on how that is put.
+
+**What no amount of reading settles is intent.** Which operations exist is a fact. Who they are *for*, who *should* be allowed to call them, and how much of a feature counts as finished are not in the tree at all, and a half-built screen and a finished one look identical from a file listing. Those stay in the right-hand column above, whatever was read.
+
+**Do not try to keep the number of questions down.** People who are asked start writing it down in advance. Asking is also the mechanism that trains whoever writes the spec — and `asking.md` is about making each question cheap to answer, never about asking fewer of them.
 
 ### 3. Pin things to stay reproducible
 
@@ -215,9 +228,12 @@ The declaration lives in the spec's document information section.
 
 ```
 .hora/
-  spec/<version>/_stages.md     the seven spec stages, what was decided in conversation
+  spec/<version>/_stages.md     the spec stages (0 to 7), what was decided in conversation
                                 and is not visible in spec.md, and the proposals
                                 that were declined. /hora-spec writes it
+  spec/<version>/_assets.md     what stage 0 found in the existing repositories and the
+                                declared sources, and what tag it read it at. /hora-spec
+                                writes it. A cache and an audit trail, never a requirement
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it
