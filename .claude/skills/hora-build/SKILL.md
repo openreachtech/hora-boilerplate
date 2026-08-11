@@ -47,25 +47,27 @@ Report the decision in one line before starting work — "building #attendance, 
 
 ```
 1. Read the checkpoint's entry in references/checkpoints.md — its exit
-   condition, its delegate, and when it does not apply
+   condition, the work it delegates, and when it does not apply
 2. Decide whether it applies. If it does not, write the reason and mark it
    [x] with the n/a comment. Move on
-3. Cut this repository's feature/<feature-id> branch, if this is the first
+3. Match that work against the equipped skills, and record what you picked
+   (below). This is the main session's step, never an agent's
+4. Cut this repository's feature/<feature-id> branch, if this is the first
    checkpoint in this gate (see ../hora/references/commits.md)
-4. Run it:
+5. Run it:
      an interactive checkpoint (1, 2, 9, 11, 17, 18)
        -> the main session runs it. Never an agent
      an implementing checkpoint (3-7, 10, 12-16)
        -> hora-implementer, one agent per checkpoint, given that checkpoint's
-          exit condition and its delegate skill
+          exit condition and the skill names from step 3
      an auditing checkpoint (8)
-       -> hora-verifier, read-only
-5. Handle whatever the agent reported that is not code (below): a dependency,
+       -> hora-verifier, read-only, given the same
+6. Handle whatever the agent reported that is not code (below): a dependency,
    a conflict-proof change, a new identifier, a contract it wanted to change
-6. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
+7. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
    files it touched
      fails -> fix it, retry (up to a limit; see "A lint rule contradiction")
-7. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
+8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
    that same repository, npx jest on exactly the files this checkpoint wrote
      fails, from something code could fix -> fix it, retry
      fails, from something no code change could fix (the middleware is not
@@ -74,14 +76,43 @@ Report the decision in one line before starting work — "building #attendance, 
        retry limit. Retrying does not fix an environment, and "fixing" code
        that was never wrong only makes it worse. Report it as a
        `lacked-environment` question and stop the feature there
-8. Verify the exit condition actually holds — with hora-verifier for anything
+9. Verify the exit condition actually holds — with hora-verifier for anything
    a reading of the code can settle, in conversation for the four gates that
    check against use cases
-9. Write [x] into the feature file. Commit at the gate boundary, not here
-10. Move to the next checkpoint
+10. Write [x] into the feature file. Commit at the gate boundary, not here
+11. Move to the next checkpoint
 ```
 
-**Step 9's split matters.** The checkbox is written the moment the checkpoint passes, so an interrupted run resumes at the exact right place; the commit happens once per gate, so `git log .hora/` stays readable (`../hora/references/commits.md`, "Committing `.hora/`").
+**Step 10's split matters.** The checkbox is written the moment the checkpoint passes, so an interrupted run resumes at the exact right place; the commit happens once per gate, so `git log .hora/` stays readable (`../hora/references/commits.md`, "Committing `.hora/`").
+
+### Step 3 — matching a checkpoint to the skills that cover it
+
+**`references/checkpoints.md` names no package skill, and it never may.** A name written there is a copy of something the package owns and is free to change, and it is the one kind of copy that fails silently: the name stops matching, the gate runs without its convention, and the run reports a pass. `../hora/references/structure.md`, "No hora file ever names one of those skills", is the full statement of this.
+
+So the match is made here, once per checkpoint, against what is actually equipped:
+
+```
+1. Take the work the checkpoint's "Delegate to" row states
+2. Read the descriptions of the skills equipped under .claude/skills/
+3. Pick every one whose description covers that work, on the surface this
+   checkpoint's repository requires (hb- backend, hf- frontend, hc- either)
+4. Write them into the feature file, against this checkpoint
+5. Hand the names to the agent, in its assignment
+```
+
+```markdown
+- [x] 15. UI  <!-- skills: <every name you matched, comma-separated> -->
+```
+
+**The example above carries no real name on purpose.** This file is a hora file, so the rule it is stating applies to it too.
+
+**Match on what a description says, never on what a name sounds like.** Two skills whose names differ by one word can serve different surfaces entirely; the description is the only thing that says which is which.
+
+**Where a checkpoint's row says "every skill covering X" (12 and 15), read the descriptions exhaustively rather than stopping at the obvious few.** Those two rows are worded that way because the package ships a family there — one skill per existing component, one per CSS convention — and a partial match is how a screen gets built against four of eleven conventions with nothing saying so.
+
+**Record it even when nothing matched.** An empty list is the evidence that the gate ran without its conventions; no list at all is indistinguishable from a checkpoint nobody thought about. Report the gap by name in the closing report too.
+
+**Never let an agent do this matching.** An agent that picks its own would pick differently on a rerun, and nothing downstream could say which set the first run actually used.
 
 ### Which checkpoints the main session must run itself
 
