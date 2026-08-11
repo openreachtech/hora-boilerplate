@@ -55,7 +55,7 @@ Two of them deserve particular suspicion, because both look skippable and are us
 
 | | Why it gets wrongly skipped | What has to be true |
 |---|---|---|
-| **7. Worker** | the processing "looks synchronous" | `hb-execution-placement-pattern` was actually run, and said so |
+| **7. Worker** | the processing "looks synchronous" | the execution-placement skill was actually run, and said so |
 | **5 / 13. The modules the implementation needs** | "nothing extra is needed" | what the next checkpoint will import was actually listed and checked |
 
 ### Tests, where a checkpoint's exit condition names them
@@ -73,9 +73,9 @@ Acceptance criterion: createRpaFlow returns an error on a duplicate flow_key
 ✅ a test that checks the kind or content of the error on a duplicate
 ```
 
-**Never weaken a test to pass a checkpoint.** No test skipped, deleted, loosened or waited out. `hc-test-execution` is the authority; the reason it is repeated here is that "make the suite green" is exactly the instruction that produces a suite which no longer checks anything.
+**Never weaken a test to pass a checkpoint.** No test skipped, deleted, loosened or waited out. The skills covering test execution are the authority; the reason it is repeated here is that "make the suite green" is exactly the instruction that produces a suite which no longer checks anything.
 
-Where tests live, how they are named, how their order is guaranteed and which helpers to use all come from `hb-backend-testing` and the real tree `/hora-setup` read — not from here.
+Where tests live, how they are named, how their order is guaranteed and which helpers to use all come from the skills covering backend test placement, and from the real tree `/hora-setup` read — not from here.
 
 **A checkpoint whose spec has no acceptance criteria must not be marked done.** It should already have been raised as `missing-acceptance` (`blocking: yes`) by `/hora-plan`, so this is never reached.
 
@@ -172,4 +172,4 @@ Forbidden syntax      while / do-while / for / for-of / for-in / let / switch
 | the run history (what happened when) | `git log .hora/` already holds it. No separate state file is kept |
 | the history of identifier changes | git holds it. The glossary only records "why this name" |
 | the result of manual verification | `/hora` never does it. It only points at the steps |
-| how an acceptance review reached its verdict | `hf-acceptance-review` owns that. `.hora/acceptance/` records the verdict and the findings, not the reasoning behind each criterion |
+| how an acceptance review reached its verdict | the skills covering the acceptance review own that. `.hora/acceptance/` records the verdict, the findings and which skills were matched — not the reasoning behind each criterion |

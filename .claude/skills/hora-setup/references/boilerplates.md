@@ -232,7 +232,7 @@ default (no profile)   mariadb / redis
 profiles                elasticsearch / kafka / qdrant / minio
 ```
 
-**Redis is a required dependency of `hb-renchan-job-bullmq`**, so a project with any Job cannot drop it. Even a check against SQLite still brings Redis up.
+**Redis is a required dependency of the queue the Job convention runs on**, so a project with any Job cannot drop it. Even a check against SQLite still brings Redis up.
 
 **Write values in directly. Do not reference `.env`.** `.env` is gitignored and is guaranteed not to exist right after a clone, so a value referenced from compose would come out empty. Fix the host to localhost and fix the port.
 
