@@ -537,13 +537,17 @@ State, in one report:
 
 ```
 the version fixed, and why that one
-how many findings were raised, how many were resolved in conversation, how many were written to the question file
-how many blocking questions remain
+how many findings were raised, and how many were resolved in conversation
+every question written to the question file — its Q<n> id, its category, its
+  blocking value, one line of what it is, and a link to the file
+  (../hora/references/structure.md, "Citing a question in a report")
 how many features are in the plan, and how many are already done
 what /hora will start on next
 ```
 
-When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section needs what added, and the path to `.hora/questions/<version>/open.md`.
+**Findings resolved in conversation may be counted. Questions may not.** A resolved finding is over — the edit is in `specs/` and the question file records it after the fact. An open question is work somebody still has to do, and a number is not something anybody can act on.
+
+When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section needs what added, and a link to `.hora/questions/<version>/open.md`.
 
 ---
 

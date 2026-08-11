@@ -208,7 +208,9 @@ which stages passed, and which are still open
 what the release ended up containing, in one line per feature
 how many checks were confirmed, and how many came back corrected
 how many proposals were made, taken, and declined
-how many questions were raised, and how many are blocking
+every question raised — its Q<n> id, its category, its blocking value, one
+  line of what it is, and a link to the file it is in
+  (../hora/references/structure.md, "Citing a question in a report")
 what /hora will start on next (normally /hora-setup, then /hora-plan)
 ```
 
@@ -216,7 +218,9 @@ what /hora will start on next (normally /hora-setup, then /hora-plan)
 
 **Write it in the language of whoever ran it** — it is conversation, and it does not stay in a file.
 
-When a `blocking: yes` is outstanding, **put what the human has to do first**: which decision is missing, who can make it, and the path to `.hora/questions/<version>/open.md`.
+When a `blocking: yes` is outstanding, **put what the human has to do first**: which decision is missing, who can make it, and a link to `.hora/questions/<version>/open.md`.
+
+**Never report questions as a count.** A stage can raise several in one pass, and "four questions raised" leaves whoever reads it to find out which four, in a file that only grows. Name each one and link it (`../hora/references/structure.md`, "Citing a question in a report").
 
 **Never report a spec as finished while stage 7 has not passed.** A document that every earlier stage wrote and nothing reviewed is a document whose sections agree with their own conversations and with nothing else.
 

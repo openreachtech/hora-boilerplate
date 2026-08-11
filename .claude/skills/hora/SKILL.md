@@ -129,7 +129,9 @@ What the report includes:
 the target version, and which skill the run reached
 how many features are done, how many are left, and which checkpoint the
   current one stopped at
-the state of the questions (how many blocking remain)
+every open question — its Q<n> id, its category, its blocking value, one line
+  of what it is, and a link to the file it is in (references/structure.md,
+  "Citing a question in a report"). Never a bare count
 the last acceptance verdict, and what it sent back
 git status for every repository, including the branch (state it explicitly if
   anything is uncommitted, or if a branch is not release/<version>)
@@ -138,9 +140,11 @@ what the next run of /hora will start from
 
 **Write it in the language of whoever ran it**, always — it is conversation, and it does not stay in a file (`references/structure.md`).
 
-When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** (which section to add what to, and the path to `.hora/questions/<version>/open.md`).
+**Every question is named and linked, whatever its blocking value.** "Two questions remain" is not a report — the person reading it cannot act on it without already knowing where `.hora/questions/` is and which of forty entries is new. `references/structure.md`, "Citing a question in a report", is the rule.
 
-**Every `eslint-exception` question gets its own, separate line, by name — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
+When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section to add what to, and the link, at the top rather than buried in a tally.
+
+**Every `eslint-exception` question gets its own, separate line, by name, with its link — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
 
 ### When a version cannot proceed, lay out the choices
 

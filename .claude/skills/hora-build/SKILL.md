@@ -337,8 +337,11 @@ Checkpoint 18 passing is what finishes a feature. Then:
 1. Set the feature's entry to [x] in _plan.md
 2. Commit .hora/ for the acceptance gate
 3. Report: the feature, how many checkpoints applied, how many were n/a and why,
-   what questions it raised, git status for every repository it touched
+   every question it raised — id, category, blocking value, one line, and a
+   link to the file — and git status for every repository it touched
 ```
+
+**Name and link every question, never count them** (`../hora/references/structure.md`, "Citing a question in a report"). A feature's run can raise a `reinvention`, a `spec-assumption` and an `eslint-exception` without ever stopping, and all three are decisions taken by default that somebody would want to look at while the work is one commit old.
 
 **Never set `[x]` while any checkpoint in that feature is still `[ ]`.** A missed checkbox is picked up on the next run; one set by mistake is never revisited by anyone.
 
