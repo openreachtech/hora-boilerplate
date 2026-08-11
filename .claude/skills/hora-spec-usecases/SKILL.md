@@ -1,6 +1,6 @@
 ---
 name: hora-spec-usecases
-description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Writes the document information, the project name, the actors and roles, the terminology, the existing assets and every feature's use-case block. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Where something already runs, starts from what stage 0 read and asks each feature how far it is actually built. Writes the document information, the project name, the actors and roles, the terminology, the existing assets, and every feature's use-case block and built annotation. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-usecases
@@ -39,6 +39,10 @@ what already exists, and whether it may be used
 
 ## The conversation
 
+**Where stage 0 found something running, start from what it read, not from a blank page.** The operation and screen surface implies a feature list and a set of actor candidates; put those up **as checks**, batched per area, and let the person correct them. Everything below is then a conversation about a list somebody is amending, which is a different and far shorter conversation than one about a list they must produce (`../hora-spec/references/investigation.md`).
+
+**What no surface implies is question 1, 3, 5 and 6.** Why it exists, what somebody is trying to accomplish, what they do without it, and what must never happen are not in any tree. Those are asked outright whatever stage 0 found.
+
 **Ask in this order.** Each answer narrows the next question, and the last three are the ones people have never been asked before.
 
 ```
@@ -61,6 +65,9 @@ what already exists, and whether it may be used
 6. What must never happen?
 
 7. What is the product called?
+
+8. Only where something is already running: for each feature, how far is it
+   actually built? (below)
 ```
 
 **Question 3 is the stage.** Everything else supports it.
@@ -79,6 +86,41 @@ what already exists, and whether it may be used
 **Question 6 becomes two things**: an acceptance criterion at stage 7, and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
 
 **Question 7's answer becomes the prefix of every repository name.** Ask for it explicitly and confirm the spelling — it is expensive to change, because changing it renames every repository (`../hora/references/structure.md`).
+
+---
+
+## Question 8 — `built:`, and why it is asked one feature at a time
+
+**`built:` records how far a feature was implemented before Hora Kit was adopted**, and it is what lets an existing product be accepted rather than rebuilt: `built: frontend` marks checkpoints 1 to 17 not-applicable and leaves only the acceptance gate open (`../hora/references/spec-format.md`).
+
+**Skip question 8 entirely where stage 0 found nothing running.** On a new project every feature is unbuilt, the annotation is correctly absent everywhere, and asking would be twenty questions with one possible answer.
+
+### It is asked, never concluded
+
+**No amount of reading settles it.** A half-built screen and a finished one look identical from a file listing; tests exist for features nobody finished and are missing for features that work. **Offer the evidence and leave the choice open — do not recommend an option** (`../hora/references/asking.md`, "What is never asked").
+
+```
+"For #attendance I found: 4 resolvers, a migration, 31 tests, and two screens
+ that call them. What the tree cannot tell me is whether that is finished.
+
+   spec       the specification exists; no code does
+   backend    the backend work is there
+   frontend   the frontend work is there too
+   not built  none of it counts as done"
+```
+
+**This is the one thing in this stage asked per feature rather than per section.** Every other reading of an existing product is confirmed per area, because a person answering the twentieth identical check has stopped reading (`../hora-spec/references/investigation.md`). `built:` cannot be batched that way: it is a different answer per feature, and getting one wrong changes which seventeen gates run.
+
+**Use the question tool**, four features per exchange, with `not built` always present as an option.
+
+### Which way an error goes
+
+| Wrong how | What follows |
+|---|---|
+| declared built, but it is not | **acceptance fails it**, the marks are cleared, and it is built for real. The safe direction |
+| not declared, but it is | seventeen gates run against working code. Nothing breaks; the time is wasted |
+
+**Checkpoint 18 is never covered by any value.** Whatever is answered, acceptance still runs — which is why an over-declaration is recoverable and why the annotation stops one short of the end.
 
 ---
 
@@ -166,6 +208,19 @@ One `<!-- usecases -->` block per feature section, or **once on a feature file's
 - a manager approves a month's attendance in one pass, and the totals lock
 ```
 
+**Where something is already running, the feature's `built:` annotation is written here too**, from question 8's answer and from nowhere else:
+
+```markdown
+## Attendance
+<!-- id: attendance -->
+<!-- target: backend, frontend-admin -->
+<!-- built: frontend -->
+```
+
+**Absent is a valid and common state** — it is what every feature on a new project carries, and it means "nothing exists yet". Write the annotation only where somebody answered one of the three values.
+
+**A feature carrying `built:` still needs its use cases and its acceptance criteria.** Checkpoint 18 verifies against them, so a built feature with neither has nothing to be accepted against — and finding out what an existing product actually does is the entire reason the kit was adopted onto it.
+
 ### Terminology, and existing assets
 
 ```markdown
@@ -183,7 +238,7 @@ Treatment: reference it — match the behavior, rewrite the implementation
 
 ## Exit condition
 
-Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one; the project name written. `../hora-spec/references/stages.md` is the authority.
+Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built. `../hora-spec/references/stages.md` is the authority.
 
 **Where an actor or a use case cannot be settled because the person who knows is not here**, record it (`undefined-detail`, or `missing-authorization` where it is an actor's identification that is missing) and carry on. Do not invent one to keep the stage moving.
 
@@ -193,6 +248,8 @@ Every actor named with how they are identified; every use case a whole sentence 
 
 | File | Content |
 |---|---|
+| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
+| `../hora-spec/references/investigation.md` | what stage 0 read, and why `built:` is the one thing no reading settles |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition, and what sends a run back into it |
 | `../hora-spec/references/principles.md` | why a use case comes first, and why proposing is required |
