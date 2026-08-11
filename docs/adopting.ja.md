@@ -65,11 +65,20 @@ npm install
 
 ## 手順2 — 「既にあるもの」として仕様書を書く
 
-空の仕様書をコピーして埋めます。
+**`/hora-spec` を実行してください。** 空の仕様書をコピーし、7つのステージ（[`stages.md`](../.claude/skills/hora-spec/references/stages.md)）を通して、1節ずつあなたと書きます。手でコピーして埋める方法も使えます。同じ文書になります。
 
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
+
+**既存プロジェクトへの適用では、ステージの目的が変わります（順序は変わりません）。** 記述の対象は既に動いている製品なので、答えの多くはすでにどこかにあります — コードの中、誰かの頭の中、表計算の中に。**やってはいけないのは、リポジトリを読んで「製品の要件」を結論すること**です。作りかけの画面と完成した画面は、ファイル一覧の上では見分けがつきません（`structure.md` の不変条件2）。どのステージも尋ね、誰かが述べたことだけを書きます。
+
+とくに効くステージが2つあります。
+
+| ステージ | 適用時に効く理由 |
+|---|---|
+| **1（想定ユースケース）** | 誰も書き残していない挙動が製品にはあります。ここでそれが言語化され、「実際の動き」と「本来望まれていたもの」の差が見えるようになります |
+| **6（セキュリティ）** | 呼び出し元が決められたことのない操作が、すでに動いています。この工程がそれを全部洗い出し、1つずつが最初の検収掃引で確認される基準になります |
 
 各節の説明は [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) にあります。適用時にはそのうち3つがいつも以上に重要です。
 
@@ -126,7 +135,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ### 2.3 既存資産
 
 ```markdown
-## 4. Existing assets
+## 5. Existing assets
 
 Current implementation: legacy-api, admin-console (adopted in place)
 Treatment: keep it — Hora Kit is being adopted onto these repositories, not used to rewrite them
@@ -240,7 +249,7 @@ Treatment: keep it — Hora Kit is being adopted onto these repositories, not us
 
 ```
 1. このテンプレートから <myproject>-app を作り、既存リポジトリを中に移す
-2. specs/1.0.0/spec.md を書く：
+2. specs/1.0.0/spec.md を書く（/hora-spec が対話しながら書きます）：
      - リポジトリ構成表に、既存リポジトリごとの Directory 列
      - 既に存在する機能すべてに built: spec | backend | frontend
      - 想定ユースケースと受入基準は、作られているか否かに関わらず全機能に
@@ -264,4 +273,5 @@ Treatment: keep it — Hora Kit is being adopted onto these repositories, not us
 | なぜこの設計なのか | [`architecture.ja.md`](./architecture.ja.md) |
 | 関所が委譲するスキル群 | [`skills.ja.md`](./skills.ja.md) |
 | 仕様書の書式 | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
+| 仕様書を書く7つのステージ | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
 | 18の関所 | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |

@@ -65,11 +65,20 @@ npm install
 
 ## Step 2 — Write the spec, describing what is already there
 
-Copy the blank spec and fill it in.
+**Run `/hora-spec`.** It copies the blank spec and writes it with you, a section at a time, through its seven stages ([`stages.md`](../.claude/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
 
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
+
+**Adopting changes what the stages are for, without changing their order.** They are describing a product that already runs, so most answers already exist — in the code, in somebody's head, in a spreadsheet. **What they must not do is read a repository and conclude what the product requires**: a half-finished screen and a finished one look identical from a file listing (`structure.md`, invariant 2). Every stage still asks, and still writes only what somebody stated.
+
+Two stages earn their keep more here than anywhere else:
+
+| Stage | Why, when adopting |
+|---|---|
+| **1, use cases** | the product has behavior nobody ever wrote down. This is where it gets stated, and where the gap between what it does and what anybody wanted becomes visible |
+| **6, security** | an operation whose caller was never decided is already deployed. The pass finds every one of them, and each becomes a criterion the first acceptance sweep checks |
 
 [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) explains every section. Three of them matter more than usual when adopting.
 
@@ -126,7 +135,7 @@ This is the annotation that makes adoption possible.
 ### 2.3 Existing assets
 
 ```markdown
-## 4. Existing assets
+## 5. Existing assets
 
 Current implementation: legacy-api, admin-console (adopted in place)
 Treatment: keep it — Hora Kit is being adopted onto these repositories, not used to rewrite them
@@ -240,7 +249,7 @@ The workflows under `.github/workflows/` run on a self-hosted runner labeled `li
 
 ```
 1. Create <myproject>-app from this template. Move the existing repositories inside it
-2. Write specs/1.0.0/spec.md:
+2. Write specs/1.0.0/spec.md — /hora-spec writes it with you:
      - repository layout, with a Directory column for each existing repository
      - built: spec | backend | frontend on every feature that already exists
      - use cases and acceptance criteria on all of them, built or not
@@ -264,4 +273,5 @@ The workflows under `.github/workflows/` run on a self-hosted runner labeled `li
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
+| the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
 | the eighteen checkpoints | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |

@@ -19,9 +19,9 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 
 **The task list is feature-level, never implementation-level.** "Build the attendance feature" is an entry. "Write the `RpaFlow` model" is not — that is a checkpoint inside `/hora-build`, and this skill does not decide it. A planner that writes implementation steps has decided how to build something before anyone has looked at the tree it will be built in.
 
-## This skill may write into `specs/`. Nothing else may
+## This skill may write into `specs/`. Only `/hora-spec` may too
 
-Planning is a conversation with whoever wrote the spec, and asking that person to hand-edit twenty separate holes one at a time defeats the point of having the conversation. So this skill — and only this skill — may write into `specs/`, under the procedure in `../hora/references/structure.md`, invariant 1:
+Planning is a conversation with whoever wrote the spec, and asking that person to hand-edit twenty separate holes one at a time defeats the point of having the conversation. So this skill may write into `specs/`, under the procedure in `../hora/references/structure.md`, invariant 1:
 
 ```
 1. state the hole or contradiction found
@@ -32,19 +32,28 @@ Planning is a conversation with whoever wrote the spec, and asking that person t
 
 **Approval is per edit, never blanket.** "Yes, fix them all" is not approval of edits nobody has read yet. What is protected here is not the act of writing — it is that **no requirement ever enters `specs/` without a human having read the exact words first.**
 
+**A finding that needs design work goes to `/hora-spec` instead, at the stage that owns it.** The split is by what the fix is, not by how large it looks:
+
+| The finding | Where it is fixed |
+|---|---|
+| a missing annotation, a `target` that names no repository, a typo, a section number that drifted | **here**, one edit at a time |
+| a missing use case, a use case the design cannot serve, an operation with no kind or no caller, a scope split nobody has made, a contradiction between two designed things | **`/hora-spec`**, at the stage `../hora-spec/references/stages.md` names |
+
+**Why it is not all done here.** A use case written into `specs/` by the planner is a use case no stage ever walked against a data model or a screen — which is the exact failure the seven stages exist to prevent, reintroduced at the point where it is cheapest to reintroduce.
+
 **Never write into a past version's directory.** Past versions are frozen (below). A fix that belongs to an already-released version goes into the version currently being planned, as a full replacement of that section.
 
 ---
 
 ## 1. Fix the version
 
-**A version directory is one under `specs/` whose name is a semver version, and nothing else.** `specs/skeleton/` holds the blank spec a human copies from (`../hora/references/spec-format.md`) — it is never planned, never implemented, and never counted as unfinished. Any other non-semver directory is treated the same way: skipped, and reported once so nobody assumes it was read.
+**A version directory is one under `specs/` whose name is a semver version, and nothing else.** `specs/skeleton/` holds the blank spec that gets copied from (`../hora/references/spec-format.md`; `/hora-spec` does the copying) — it is never planned, never implemented, and never counted as unfinished. Any other non-semver directory is treated the same way: skipped, and reported once so nobody assumes it was read.
 
 **The target version:** among those directories, the **lowest** one whose `.hora/tasks/<version>/` has not been generated or still holds unfinished features. If all are finished, the lowest version that exists under `specs/` but not under `.hora/tasks/`. If there is no such version either, report that every version is complete.
 
 **Only the directory name counts.** If the version written inside `spec.md` contradicts it, have a human fix it (a document's revision number is not the product's version).
 
-**If the target version's `spec.md` is empty or missing, stop and say what to do**: copy the blank spec (`cp specs/skeleton/spec.md specs/<version>/spec.md`) and fill it in. Never write it yourself — the first spec of a version is exactly the content invariant 2 forbids inventing.
+**If the target version's `spec.md` is empty or missing, hand the run to `/hora-spec`** and stop. That skill copies the blank spec and writes it through its seven stages, in conversation, one approved section at a time. **Never write the first spec of a version here** — not because writing it is forbidden, but because writing it without those stages means writing use cases nothing ever walked against a design.
 
 ### Resolve the diffs first
 
@@ -152,7 +161,7 @@ specs/1.0.0/docs/RPA_CORE_SPEC.md        linked, but not declared. Interpretatio
 | Place | How it is decided |
 |---|---|
 | the H1 of a feature file | **join the path segments relative to `specs/<version>/` with `--`.** Deterministic and unique |
-| a `##` section | **a human writes it.** If it is not written, do not infer it |
+| a `##` section | **somebody states it and it is written** (`/hora-spec`, or by hand). If it is not written, do not infer it |
 | a `##` with no `id` | tie that section's content **to the H1's `id`.** The reference stays stable |
 
 ```
@@ -207,6 +216,7 @@ Work through the resolved document and check every one of these. **The first thr
 | **Use cases per feature** | checkpoints 2, 9 and 11 have nothing to verify against | **yes** |
 | **Acceptance criteria per feature** | "what counts as done" would have to be invented | **yes** |
 | **The kind of each API operation** — query / mutation / subscription / REST renderer | checkpoints 3, 6 and 14 cannot choose which convention to follow | **yes** |
+| **A stated caller per operation**, and an actors table to state it against | the operation gets whatever filter its neighbours had, and nothing says nobody decided | **yes** |
 | The implementation scope, split into "for now" and "permanently" | the design cannot tell an extension point from a dead abstraction | yes |
 | Whether existing assets may be used | "reimplement" is implied, but whether the code is visible is unknown | yes |
 | Unknown fields in an SDL or a REST payload | it would mean inventing the shape of an API | yes |
@@ -262,6 +272,9 @@ whether an extension point should be left in place.
 | `missing-usecase` | a feature with no stated use cases | yes |
 | `missing-acceptance` | missing acceptance criteria | yes |
 | `undefined-api-kind` | an operation whose kind (query / mutation / subscription / REST) is not stated | yes |
+| `missing-authorization` | an operation, a screen or a spec that does not say who may reach it | yes |
+| `unmet-usecase` | a stated use case that the design as written cannot complete | yes |
+| `spec-proposal` | an improvement `/hora-spec` proposed and whoever decided declined or deferred it. **Recorded so it is not proposed again every run** | no |
 | `existing-assets` | whether existing code may be used | yes |
 | `contradiction` | a contradiction in the text | yes |
 | `dependency-install` | a declared dependency failed to install, or a conflict-proof change failed to apply | yes |
@@ -534,6 +547,8 @@ When it stopped with a `blocking: yes` outstanding, **put what the human has to 
 |---|---|
 | `../hora/references/structure.md` | the layout, the invariants, the language rule |
 | `../hora/references/spec-format.md` | the authority on the format of `specs/<version>/spec.md` |
-| `specs/skeleton/spec.md` | the blank spec a human copies. Point at it when a version's `spec.md` is still empty |
+| `../hora-spec/SKILL.md` | **who writes a spec, and what to hand back to it.** Run it when a version's `spec.md` is still empty |
+| `../hora-spec/references/stages.md` | which stage a design-level finding goes back to |
+| `specs/skeleton/spec.md` | the blank spec that gets copied. `/hora-spec` does the copying |
 | `../hora-build/references/checkpoints.md` | the checkpoint list to write into each feature file |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |

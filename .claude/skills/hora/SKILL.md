@@ -1,16 +1,17 @@
 ---
 name: hora
-description: Implement an application from its spec. Decides where a project stands and runs the four skills that do the work — setup, plan, build, accept — feature by feature, taking each one to acceptance before starting the next. Runs at the root of the hora repository (myproject-app). Started or restarted only by an explicit `/hora` invocation — each run picks up where the last one stopped.
+description: Implement an application from its spec. Decides where a project stands and runs the five skills that do the work — spec, setup, plan, build, accept — feature by feature, taking each one to acceptance before starting the next. Runs at the root of the hora repository (myproject-app). Started or restarted only by an explicit `/hora` invocation — each run picks up where the last one stopped.
 ---
 
 # hora
 
 **The orchestrator.** Decide where this project stands, run the skill that comes next, and own every git operation on the way.
 
-`/hora` does no implementation of its own. Four skills do the work:
+`/hora` does no implementation of its own. Five skills do the work:
 
 | Skill | Does | Runs |
 |---|---|---|
+| **`/hora-spec`** | writes the version's spec, in conversation, through its own seven stages | once per version, until stage 7 passes |
 | **`/hora-setup`** | creates the repositories the spec declares, fills in the project's values, reads the real tree | once per version, idempotent |
 | **`/hora-plan`** | fixes the version, verifies the spec in conversation, writes the feature list | once per version, re-entered every run |
 | **`/hora-build`** | takes one feature through the eighteen checkpoints | **once per feature** |
@@ -23,14 +24,14 @@ Read `references/structure.md` before anything else — the repository layout, w
 ## The shape of a run
 
 ```
-/hora-setup ──> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
-                             ├─> /hora-build #B ─> /hora-accept ─┤
-                             └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
+/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
+                                          ├─> /hora-build #B ─> /hora-accept ─┤
+                                          └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
 **One feature goes all the way to acceptance before the next one starts.** Backend, then frontend, then acceptance — per feature, not per layer.
 
-**This is the whole point of the design, so it is worth saying what it replaces.** Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written — at which point a shortfall in the data model is twenty features deep, every one of them built on it. Taking one feature to acceptance costs a container stack coming up more often, and buys the failure arriving while its cause is one commit old.
+**This is the whole point of the design, so the alternative is worth naming.** Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written — at which point a shortfall in the data model is twenty features deep, every one of them built on it. Taking one feature to acceptance costs a container stack coming up more often, and buys the failure arriving while its cause is one commit old.
 
 **Re-entrancy is the center.** Specs are assumed to be plentiful, so a single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
 
@@ -47,23 +48,30 @@ Do this first, every time — a fresh start and a restart alike.
    that already exists. Then check for a hotfix that landed on main
    (references/commits.md, "Keeping release/<version> current")
 
-1. Are all declared repositories present, per the current spec's layout?
+1. Does the target version have a spec at all — a specs/<version>/spec.md with
+   content in it?                             if not → /hora-spec.
+                                              A version with no spec declares no
+                                              layout, so /hora-setup has nothing
+                                              to read and /hora-plan nothing to
+                                              verify
+
+2. Are all declared repositories present, per the current spec's layout?
                                               if any is missing  → /hora-setup
 
-2. Always run /hora-plan. It fixes the version, and reconciles the feature
+3. Always run /hora-plan. It fixes the version, and reconciles the feature
    list against specs/ on every re-entry
 
-3. Does .hora/questions/<version>/open.md still hold an unresolved
+4. Does .hora/questions/<version>/open.md still hold an unresolved
    blocking: yes?                             if so → stop. Report what to fix
 
-4. Does .hora/tasks/<version>/_plan.md still hold an unfinished feature?
+5. Does .hora/tasks/<version>/_plan.md still hold an unfinished feature?
                                               if so → /hora-build, on the
                                                       first one that is ready
 
-5. Every feature is done, and the sweep has not run
+6. Every feature is done, and the sweep has not run
                                               → /hora-accept, whole-version
 
-6. The sweep passed                           → merge (references/commits.md,
+7. The sweep passed                           → merge (references/commits.md,
                                                 "Merge order into main")
 ```
 
@@ -71,7 +79,9 @@ Do this first, every time — a fresh start and a restart alike.
 
 **`/hora` does not ask before running this check, or before acting on an ordinary result.** It only stops and asks once the check turns up something it genuinely cannot resolve on its own.
 
-**Step 2 runs even when the feature list already exists.** A spec keeps moving while implementation is under way, so sections may have been added, changed or withdrawn after the list was settled. Only once `/hora-plan`'s reconciliation shows no difference does a version move on.
+**Step 1 is not "write the spec for them".** `/hora-spec` writes nothing without somebody reading it first, and a run that reaches step 1 with nobody there to answer stops at step 1 (`../hora-spec/SKILL.md`).
+
+**Step 3 runs even when the feature list already exists.** A spec keeps moving while implementation is under way, so sections may have been added, changed or withdrawn after the list was settled. Only once `/hora-plan`'s reconciliation shows no difference does a version move on.
 
 Report the decision in one line before starting work — for example, "continuing 1.0.0. 4 of 11 features done, building #payroll from checkpoint 6".
 
@@ -85,7 +95,7 @@ Report the decision in one line before starting work — for example, "continuin
 |---|---|
 | git, in every repository | **`/hora` itself** |
 | writing `.hora/` | the skill whose work it records (`/hora-plan` the plan, `/hora-build` the checkpoints, `/hora-accept` the acceptance records) |
-| writing `specs/` | **nobody, except `/hora-plan`, one approved edit at a time** (`references/structure.md`, invariant 1) |
+| writing `specs/` | **`/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time. Nobody else** (`references/structure.md`, invariant 1) |
 | writing code and tests | the agents `/hora-build` starts |
 
 **Manual verification is not one of the phases.** A human does it whenever they want (in the backend: `./docker.sh start` → `npm run db:refresh` → `npm run dev`). `/hora` does not do it for them. What *is* required is the local end-to-end environment checkpoint 17 builds — that one is a prerequisite of acceptance, not a convenience, and `/hora-accept` stops without it rather than reviewing something that is not really running.
@@ -159,11 +169,16 @@ Remaining: #payroll #bonus #year-end
 | `references/commits.md` | branches, commit granularity, merging, hotfix catch-up, merge order into main |
 | `references/done-criteria.md` | what "done" means for a checkpoint, a feature, a version and a session |
 | `references/spec-format.md` | **the authority on the format** of `specs/<version>/spec.md`. Explains it; is not the thing filled in |
-| `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. A human copies it to `specs/<version>/spec.md`. Not a version, and never read as one |
+| `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. Copied to `specs/<version>/spec.md`. Not a version, and never read as one |
+| `../hora-spec/SKILL.md` | **the author** — how a version's spec gets written |
+| `../hora-spec/references/stages.md` | the seven stages a spec is written through, and each one's exit condition |
+| `../hora-spec/references/principles.md` | the thinking a spec is written with |
 | `../hora-setup/SKILL.md` | code setup |
 | `../hora-plan/SKILL.md` | the planner |
 | `../hora-build/SKILL.md` | one feature through the checkpoints |
 | `../hora-build/references/checkpoints.md` | the eighteen checkpoints themselves |
 | `../hora-accept/SKILL.md` | acceptance |
 
-When a human asks about the format of `specs/`, point them at `references/spec-format.md` to read and `specs/skeleton/spec.md` to copy (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). **No hora skill copies it there itself** — `specs/1.0.0/spec.md` ships empty, and writing the first spec is a human's job.
+**When a human asks how to write a spec, run `/hora-spec`.** `specs/1.0.0/spec.md` ships empty, and that skill copies the skeleton, asks its way through seven stages, and writes each section once it has been read and approved.
+
+Point them at `references/spec-format.md` and `specs/skeleton/spec.md` when what they want is the format itself, or when they would rather write it by hand (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). Both routes produce the same document, and `/hora-plan` reads it the same way.

@@ -60,7 +60,7 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 
 - **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It is a plain copy, safe to re-run
 - **It does not wait for any repository to be cloned.** `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
-- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own six skills back in — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
+- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
 ---
 
@@ -85,11 +85,11 @@ hf-graphql          operation clients in a Furo app
 hb-graphql-schema   SDL for a renchan server
 ```
 
-Nothing but the prefix separates those two, and the same holds across the package: `hf-modules` is Furo's utility classes, `hc-module-imports` is an import-ordering convention. **Never pick a skill because its name sounds relevant.** [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) says which skill each checkpoint delegates to, and it is the only authority on that.
+Nothing but the prefix separates those two, and the same holds across the package: `hf-modules` is Furo's utility classes, `hc-module-imports` is an import-ordering convention. **Never pick a skill because its name sounds relevant.** [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) says which skill each checkpoint delegates to, and [`stages.md`](../.claude/skills/hora-spec/references/stages.md) which one each spec stage delegates to. **Those two files are the only authorities on it.**
 
 ### Do not write a name into a hora skill "for reference"
 
-The same rule as the procedures themselves. A name recorded anywhere other than the one place that decides which checkpoint uses it is a second copy — **and the package has already renamed all of them twice.** That is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a stale denylist matches nothing and says nothing.
+The same rule as the procedures themselves. A name recorded anywhere other than the one place that decides which checkpoint uses it is a second copy — **and a skill's name belongs to the package, which is free to change it.** That is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a denylist that stops matching says nothing when it stops.
 
 ---
 
@@ -101,7 +101,7 @@ The same rule as the procedures themselves. A name recorded anywhere other than 
 ls .claude/skills/
 ```
 
-And the authoritative mapping from a checkpoint to the skills it delegates to is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md). **It is deliberately not repeated here** — a second copy of that table would be exactly the drift this whole document is about.
+And the authoritative mapping from a checkpoint to the skills it delegates to is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](../.claude/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either table would be exactly the drift this whole document is about.
 
 ### `hb-` — backend (renchan)
 
@@ -160,7 +160,7 @@ Four are worth knowing by name, because a checkpoint is built around each.
 
 ## When a skill is missing
 
-A named skill may not be there — the package renamed it, dropped it, or it has not been equipped yet. **The package has already renamed every one of them twice**, so this is a real case, not a hypothetical.
+A named skill may not be there — the package renamed it, dropped it, or it has not been equipped yet. **Names are the package's to change**, so this is a real case, not a hypothetical.
 
 **Say so, and continue without it. Do not substitute a guess.**
 

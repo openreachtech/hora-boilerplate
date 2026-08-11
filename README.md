@@ -42,6 +42,14 @@ Do this before writing `specs/` — once the repository holds commits of its own
 
 ### 2. Write the spec
 
+```
+/hora-spec
+```
+
+**`/hora-spec` writes it with you.** It copies the blank spec and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
+
+Writing it by hand is still supported, and produces the same document:
+
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
@@ -52,7 +60,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 ### 3. Run `/hora`
 
-`/hora` fetches the boilerplates, plans the version with you, then builds and accepts one feature at a time. It stops on its own whenever it needs an answer — the planner asks in conversation, and anything nobody can answer on the spot is written to `.hora/questions/` for you to settle by editing `specs/`.
+`/hora` runs `/hora-spec` first if the version has no spec yet, then fetches the boilerplates, plans the version with you, and builds and accepts one feature at a time. It stops on its own whenever it needs an answer — the planner asks in conversation, and anything nobody can answer on the spot is written to `.hora/questions/` for you to settle by editing `specs/`.
 
 **In normal use, `/hora` is the only command you type.** For what it is doing at each point, and for running one of the other skills directly, see [`docs/commands.md`](./docs/commands.md).
 
@@ -64,20 +72,23 @@ If that is not possible, do not change `runs-on` yourself — note it in `specs/
 
 ## Usage
 
-`/hora` is an orchestrator. Four skills do the work:
+`/hora` is an orchestrator. Five skills do the work:
 
 | Skill | Does | Runs |
 |---|---|---|
+| [`/hora-spec`](./.claude/skills/hora-spec/SKILL.md) | writes the version's spec with you, through seven stages, one approved section at a time | once per version |
 | [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
 | [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
 | [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
 | [`/hora-accept`](./.claude/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
 
 ```
-/hora-setup ──> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
-                             ├─> /hora-build #B ─> /hora-accept ─┤
-                             └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
+/hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
+                                          ├─> /hora-build #B ─> /hora-accept ─┤
+                                          └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
+
+The seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
@@ -92,7 +103,7 @@ The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/r
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
 
-The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](./.claude/skills/hora/SKILL.md), [`structure.md`](./.claude/skills/hora/references/structure.md), [`commits.md`](./.claude/skills/hora/references/commits.md), [`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md), [`spec-format.md`](./.claude/skills/hora/references/spec-format.md) and [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md).
+The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](./.claude/skills/hora/SKILL.md), [`structure.md`](./.claude/skills/hora/references/structure.md), [`commits.md`](./.claude/skills/hora/references/commits.md), [`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md), [`spec-format.md`](./.claude/skills/hora/references/spec-format.md), [`stages.md`](./.claude/skills/hora-spec/references/stages.md), [`principles.md`](./.claude/skills/hora-spec/references/principles.md) and [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md).
 
 ## Contribution
 

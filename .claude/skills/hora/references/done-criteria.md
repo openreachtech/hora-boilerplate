@@ -114,7 +114,7 @@ Point 5 checks that nothing drifted from a contract during implementation. **On 
 
 Point 7's ordering — app last, after every declared row — is in `commits.md`, "Merge order into main". It is what makes a single tag on app sufficient evidence that a version was released.
 
-Once a version is done, check whether the next version's `specs/<version>/` exists and report that. If not, it is a human's turn to create it.
+Once a version is done, check whether the next version's `specs/<version>/` exists and report that. If not, say so and offer `/hora-spec` — the next version's spec is a diff against this one, and it is written the same way the first one was.
 
 ### Running lint and test for the whole repository
 

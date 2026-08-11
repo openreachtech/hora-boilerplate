@@ -1,8 +1,10 @@
 # The design document format
 
-The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec you fill in.**
+The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec that gets filled in.**
 
-**This file explains the format. It is not the thing you fill in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/<version>/spec.md`. `specs/1.0.0/spec.md` ships empty; a human writes it, reading this and filling in that, the same way every later version's `spec.md` gets written.
+**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/<version>/spec.md`. `specs/1.0.0/spec.md` ships empty.
+
+**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way, and every later version's `spec.md` is written the same way as the first.
 
 ---
 
@@ -17,6 +19,7 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 | forgetting an annotation | the implementation scope (what to build this time, what is out of scope) |
 | how sections are numbered | **the use cases** and **the acceptance criteria** of every feature |
 | the order chapters appear in | **which kind each API operation is** (query / mutation / subscription / REST) |
+| the wording of a heading | **who may call each API operation**, and what happens when somebody else does |
 | typos (raised as a question, but not blocking) | how existing assets are handled, and links to supporting material |
 
 ---
@@ -92,8 +95,9 @@ The contract (`.hora/contracts/`) exists precisely because "backend and frontend
 What stays in the entry point is **only what applies to the whole version.**
 
 ```
-repository layout / implementation scope / terminology / non-functional requirements /
-implementation plan / existing assets / manual verification
+repository layout / actors and roles / implementation scope / terminology /
+non-functional requirements / implementation plan / existing assets /
+manual verification
 + links to the feature files
 ```
 
@@ -258,7 +262,7 @@ The value is the gate the existing code already reaches.
 
 **When acceptance does send one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change, so the checkpoints from the earliest one affected are reopened and run for real.
 
-**`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. A human writes it, or it is absent.
+**`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
 
 **It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
@@ -334,6 +338,7 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 |---|---|---|---|
 | **Application prefix** (the project name) | `none` | **the prefix every repository name is built from. `/hora` stops without it** | **No — write it directly in `spec.md`** |
 | **Repository layout** | `none` | **declares which repositories and servers to create, and where an already-existing one sits. Written in the entry point. `/hora` stops without it** | **No — write it directly in `spec.md`** |
+| **Actors and roles** | `none` | **who uses this product, and how each of them is identified. Every permission and every screen is written against this table, so `/hora` stops without it** | Yes |
 | Implementation scope | `none` | declares what to build this time and what is out of scope | Yes |
 | Existing assets | `none` | port existing code, or build new | Yes |
 | Manual verification | `none` | the middleware needed, and its version | Yes |
@@ -344,7 +349,7 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | Annex (optional) | `none` | gathers relative links to supporting material in one place. Unlike `Sources`, a file listed here never becomes a feature file and produces no task | — |
 | (below this, one section per feature) | a repository name / `app` | what gets implemented | — |
 
-**Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states the kind of every operation (below). None of the three may be inferred, and each is `blocking: yes` when missing.
+**Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states **the kind of every operation and who may call it** (below). None of the four may be inferred, and each is `blocking: yes` when missing.
 
 **Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
 
@@ -372,9 +377,9 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **`specs/skeleton/` is not a version, and is never treated as one.** `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, never implemented, and never counted as unfinished. It also raises no `orphan` question: that rule is about files inside a version that nothing links to.
 
-**Copying it is a human's action.** No hora skill writes into `specs/` — `/hora-plan` is the single exception, and only one approved edit at a time, in conversation.
+**`/hora-spec` does the copying, and anybody who prefers to run the `cp` themselves still can.** Only two skills ever write into `specs/`: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time (`structure.md`, invariant 1).
 
-The skeleton's sections 8 onward are **examples of feature sections, not a fixed list.** Delete what a project has no use for, add what it needs, renumber freely: `/hora` reads `id`, never a section number.
+The skeleton's sections 9 onward are **examples of feature sections, not a fixed list.** Delete what a project has no use for, add what it needs, renumber freely: `/hora` reads `id`, never a section number.
 
 ---
 
@@ -445,7 +450,23 @@ The skeleton's sections 8 onward are **examples of feature sections, not a fixed
 
 **Writing `Directory` also changes what gets excluded.** The hora repository's `.gitignore` and its own `eslint.config.js` exclude implementation repositories **by name** (`*-backend*/`, `*-frontend*/`), and a directory named anything else matches neither. `/hora-setup` registers it in both and reports that it did — see its own step 1. This is not something to leave to whoever adopts the kit: an unexcluded repository gets committed wholesale into the hora repository, and nothing says so until someone reads `git status`.
 
-### 3. Implementation scope
+### 3. Actors and roles
+
+```markdown
+| Actor | Identified by | Roughly how many | Inside / outside |
+|---|---|---|---|
+| member of staff | an email and password issued on hire | 200, 5000 foreseen | inside |
+| manager | the same login, with a `manager` role | 20 | inside |
+| administrator | a separate login, issued by us | 3 | inside |
+```
+
+**Every permission, every screen and every endpoint decision is written against this table.** Two actors who share a login are roles on one endpoint; two who do not are separate entities, and separating them is what stops a privilege escalation being built by accident (`../../hora-spec/references/principles.md` holds the full decision).
+
+- **`Identified by` is the column that does the work.** "A manager" says nothing about whether there is one login or two, and that is the decision the whole backend hangs off
+- **An actor named nowhere else in the document is either a missing feature or a role that does not exist.** Both are worth asking about
+- **A missing actor is not a small omission** — it is an authentication mechanism nobody designed
+
+### 4. Implementation scope
 
 **Always keep the two kinds of "out of scope" apart. Confusing them wrecks the design.**
 
@@ -460,7 +481,7 @@ Read the first as the second and the structure cannot take it later. Read the se
 
 Write "for now" entries with what unblocks them (`<feature C> → planned for 1.1.0`, or `→ once the trigger condition is met`).
 
-### 4. Existing assets
+### 5. Existing assets
 
 ```markdown
 Current implementation: <none (new) / repository name or path>
@@ -469,15 +490,15 @@ Treatment: <port it (read the logic and move it) / reference it (match the behav
 
 **Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
 
-### 5. Terminology and domain concepts
+### 6. Terminology and domain concepts
 
 Becomes the source of `.hora/glossary.md`. **Identifiers (class names, table names) are decided by `/hora-plan` after checking them against the lint rules**, so a term and its description are enough here. Write a name down only if one has already been decided.
 
-### 6. Non-functional requirements
+### 7. Non-functional requirements
 
 Produces no feature of its own, **but becomes a design constraint on every one of them**, so `/hora` always reads it. Performance, availability, security, and the like.
 
-### 7. Manual verification
+### 8. Manual verification
 
 ```markdown
 | Middleware | Version | profile | Purpose |
@@ -491,7 +512,7 @@ What `/hora-setup` uses to decide `docker-compose.development.yml`'s profiles an
 
 **Write the server's version.** An npm dependency — a mariadb driver, say — does not indicate the server's version, and without this `/hora` has to guess. **Redis cannot be dropped in a project with any Job (BullMQ).**
 
-### 8 onward — the feature sections
+### 9 onward — the feature sections
 
 Each one carries its annotations, then its content, then its `<!-- usecases -->` and `<!-- acceptance -->` blocks (above, "The two blocks every feature carries").
 
@@ -499,13 +520,17 @@ Each one carries its annotations, then its content, then its `<!-- usecases -->`
 
 **An API table must state the kind of every operation**, and the kind is never inferred (`structure.md`, invariant 2) — query, mutation and subscription are three different conventions on both sides of the wire, and `/hora-build` branches on the value at three separate checkpoints. Leave it out and `/hora-plan` stops with `undefined-api-kind` (`blocking: yes`).
 
+**It must also state who may call every operation**, in the same table, for the same reason: nothing else in the document says it, and an operation whose caller was never stated gets implemented with whatever filter its neighbours had. Leave it out and `/hora-plan` stops with `missing-authorization` (`blocking: yes`).
+
 ```markdown
-| schema | input | result | kind |
-|---|---|---|---|
-| `rpaFlows` | `RpaFlowsInput(pagination)` | `RpaFlowsResult` | query |
-| `createRpaFlow` | `CreateRpaFlowInput` | `CreateRpaFlowResult` | mutation |
-| `rpaFlowUpdated` | `RpaFlowUpdatedInput` | `RpaFlowUpdatedResult` | subscription |
+| schema | input | result | kind | caller |
+|---|---|---|---|---|
+| `rpaFlows` | `RpaFlowsInput(pagination)` | `RpaFlowsResult` | query | any signed-in user, own flows only |
+| `createRpaFlow` | `CreateRpaFlowInput` | `CreateRpaFlowResult` | mutation | any signed-in user |
+| `rpaFlowUpdated` | `RpaFlowUpdatedInput` | `RpaFlowUpdatedResult` | subscription | the owner of the flow |
 ```
+
+**The caller belongs beside the operation, never in a security appendix.** A permission written somewhere else is a permission nobody reads next to the thing it governs.
 
 **If an input's fields are unknown, `/hora` would have to invent the shape of an API, so it stops.**
 
@@ -521,12 +546,23 @@ Writing the SDL directly is the most reliable option.
 **The RESTful API section is written only when the repository layout declares a server whose protocol is REST**, and a project with none leaves it out entirely. The same rules apply — an unknown request or response shape stops with `blocking: yes` — and **the renderer's own name is what gets implemented and what the frontend's client is built against.**
 
 ```markdown
-| method | path | renderer | request | response |
-|---|---|---|---|---|
-| `GET` | `/v1/rpa-flows` | `GetRpaFlowsRenderer` | `?page=&limit=` | `RpaFlowsResponse` |
+| method | path | renderer | request | response | caller |
+|---|---|---|---|---|---|
+| `GET` | `/v1/rpa-flows` | `GetRpaFlowsRenderer` | `?page=&limit=` | `RpaFlowsResponse` | the phone app, with a device token |
 ```
 
-### 12. Implementation plan
+**A background-jobs section states what does not run inside a request, and why not.** It is written only where something does — a project whose every write finishes in the request path leaves it out, and one that has any row at all must also declare Redis in the manual verification table (BullMQ needs it).
+
+```markdown
+| Job | Trigger | Queue | Payload | Why not in the request path |
+|---|---|---|---|---|
+| compile a flow | `createRpaFlow` mutation | `compile` | `{ rpaFlowId }` | minutes at real flow sizes, and retried |
+| email the result | after `compileRpaFlow` | (post-worker) | `{ rpaFlowId }` | the caller does not wait on somebody else's mail server |
+```
+
+**"Why not in the request path" is a required column, not a note.** A job with no stated reason is a job somebody moves back into the request later, having found no reason it was ever moved out. `/hora-build`'s checkpoint 7 builds what this table declares.
+
+### 14. Implementation plan
 
 `/hora-plan` extracts the order of `_plan.md` from this. **It does not derive an order of its own.**
 
@@ -534,7 +570,7 @@ Writing the SDL directly is the most reliable option.
 
 **Check that "fine to leave for later" matches up with the scope section's "out of scope for now".** `/hora` stops with a question if the two do not clearly correspond.
 
-### 13. Key file map
+### 15. Key file map
 
 Write this where you can. `/hora` decides placement together with the real tree `/hora-setup` reads.
 

@@ -2,7 +2,7 @@
 
 # What each command does
 
-Five commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own.
+Six commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own.
 
 **In normal use you only ever type `/hora`.** It decides which of the others to run. The rest are documented because you will sometimes want one directly — to redo an acceptance run, to re-plan after a spec change, to fix a setup that half-finished.
 
@@ -25,12 +25,13 @@ Every command runs **at the root of the hora repository** (`<myproject>-app`).
 
 ```
 0. git fetch origin --prune, everywhere. Then: did a hotfix land on main?
-1. are all declared repositories present?     missing → /hora-setup
-2. always run /hora-plan
-3. any unresolved blocking question?          yes → stop, and say what to fix
-4. any unfinished feature in _plan.md?        yes → /hora-build on the first ready one
-5. every feature done, sweep not run?         → /hora-accept, whole-version
-6. sweep passed                               → merge into main
+1. does the target version have a spec at all?  no → /hora-spec
+2. are all declared repositories present?     missing → /hora-setup
+3. always run /hora-plan
+4. any unresolved blocking question?          yes → stop, and say what to fix
+5. any unfinished feature in _plan.md?        yes → /hora-build on the first ready one
+6. every feature done, sweep not run?         → /hora-accept, whole-version
+7. sweep passed                               → merge into main
 ```
 
 It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11 features done, building #payroll from checkpoint 6."*
@@ -40,8 +41,72 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 ### What it never does
 
 - **decide scope.** When a version cannot proceed it lays out the choices (build it / drop it / defer it) and waits
-- **write `specs/`.** Only `/hora-plan` may, and only one approved edit at a time
+- **write `specs/`.** Only `/hora-spec` may, a section at a time, and `/hora-plan`, an edit at a time — both with your approval on the exact text
 - **run manual verification for you.** `./docker.sh start` → `npm run db:refresh` → `npm run dev` is yours to run whenever you want
+
+---
+
+## `/hora-spec`
+
+**The author.** Writes the version's spec with you, and runs the seven stage skills that do it.
+
+| | |
+|---|---|
+| **Reads** | `specs/`, `.hora/spec/`, and what you tell it |
+| **Writes** | `specs/<version>/spec.md` and the version's feature files — **one section at a time, each one shown to you in full and written only once you approve it.** Also `.hora/spec/<version>/_stages.md` and `.hora/questions/` |
+| **Stops when** | there is nobody there to answer; a decision needs somebody who is not present |
+| **Run it directly** | to start a new version's spec, to continue one half-written, or to change a design decision without touching the plan |
+
+### The seven stages
+
+```
+1. Use cases and actors      who uses this, and what each completes end to end
+2. The horizon               what this release carries, what is deferred with a
+                             seam kept open, what is never built
+3. Non-functional            users now and foreseen, the heaviest operation,
+                             availability, retention, the middleware
+4. Data, API and execution   the repositories and servers, the tables, the
+                             operations and their kinds, what runs as a job
+5. Screens and interaction   which screens each use case passes through, and
+                             what each screen calls
+6. Security                  who may call each operation, and what happens when
+                             somebody else does
+7. Whole-document review     whether it all holds together, and every use case
+                             is satisfiable
+```
+
+**The order is a rule, and each stage is a gate.** A data model designed before the use cases are fixed is designed twice; a table designed before the user counts are known is designed for the wrong number. Each stage's exit condition is in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
+
+**Going back is normal.** Stage 7 exists to send the run back into whichever stage owns a shortfall — and so does checkpoint 2, 9, 11 or 18 when what it finds turns out to be the spec rather than the code.
+
+### How it writes
+
+**It proposes, and you decide.** Anything the skill thought of itself — a use case nobody mentioned, a shorter flow, a role that is really two roles — is shown as a proposal and stays out of the file until you say yes.
+
+```
+hora  Stage 1. You described "attendance management, approval, payroll".
+      Breaking that into what somebody completes:
+
+        - a member of staff clocks in on arrival, and the day's hours appear
+        - a manager approves a month in one pass, and the totals lock
+        ...
+
+      Two proposals, neither of them yours:
+
+        - a member of staff who forgot to clock in files yesterday's hours.
+          You have four use cases and none of them handles a mistake.
+        - the first run: no staff, no records, nobody set anything up.
+
+      Add either?
+```
+
+**Approval is per section, never per document.** One "yes" over a whole spec is worse than none, because the record then says it was read. The reasoning is in [`structure.md`](../.claude/skills/hora/references/structure.md), invariant 1.
+
+### What it never does
+
+- **invent a requirement.** A proposal that goes in silently is exactly that
+- **decide scope.** It says when a release is carrying too much, proposes the narrowing, records the answer
+- **plan, clone, or touch code or git.** The spec is all it writes
 
 ---
 
@@ -83,7 +148,7 @@ vendoring the boilerplate, keeping an upstream remote, making it a submodule, `n
 | | |
 |---|---|
 | **Reads** | every version directory under `specs/`, resolved as diffs; `.hora/tasks/`, `.hora/questions/` |
-| **Writes** | `.hora/tasks/<version>/_plan.md` and one file per feature; `.hora/contracts/`; `.hora/questions/`; `.hora/glossary.md`. **And `specs/`, one approved edit at a time** |
+| **Writes** | `.hora/tasks/<version>/_plan.md` and one file per feature; `.hora/contracts/`; `.hora/questions/`; `.hora/glossary.md`. **And `specs/`, one approved edit at a time — a one-line hole only. Anything that needs design work goes back to `/hora-spec`** |
 | **Stops when** | a blocking question cannot be answered by whoever is present |
 | **Run it directly** | after editing `specs/`, to see what changed and what it invalidates, without starting a build |
 
@@ -237,6 +302,9 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 
 ```
 you   /hora
+      →  specs/1.0.0/spec.md is empty. Runs /hora-spec: copies the blank spec
+         and works through its seven stages with you, writing each section
+         once you have read it.
       →  no repositories yet. Runs /hora-setup: clones the boilerplates at their
          newest tags, fills in the project's values, equips the skills, reads
          the trees.

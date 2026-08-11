@@ -1,15 +1,17 @@
 <!--
-  A blank spec. Copy this file to specs/<version>/spec.md and fill it in,
-  then delete this comment.
+  A blank spec. It gets copied to specs/<version>/spec.md and filled in.
 
-      cp specs/skeleton/spec.md specs/1.0.0/spec.md
+      /hora-spec                        writes it with you, in conversation
+      cp specs/skeleton/spec.md specs/1.0.0/spec.md    to fill it in by hand
 
   Headings and table headers only — nothing here is filled in for you, and
   nothing here explains itself. What each section is for, which ones are
   required, and what makes /hora stop and ask are all in
   .claude/skills/hora/references/spec-format.md. Read that; write this.
 
-  Copying is a human's action. No hora skill ever writes into specs/.
+  /hora-spec does the copying itself, and writes each section once you have
+  read and approved it. Nothing else ever writes into specs/, except
+  /hora-plan, one approved edit at a time.
 
   specs/skeleton/ is not a version. /hora only ever reads directories under
   specs/ whose name is a semver version, so this one is never planned, never
@@ -19,7 +21,7 @@
   a repository that already exists under another name. A new project leaves
   the whole column out.
 
-  Sections 8 onward are examples of feature sections, not a fixed list.
+  Sections 9 onward are examples of feature sections, not a fixed list.
   Delete the ones this project has no use for, add the ones it needs, and
   renumber freely — /hora reads `id`, never a section number.
 -->
@@ -52,7 +54,14 @@
 |  |  |  |
 
 
-## 3. Implementation scope
+## 3. Actors and roles
+
+| Actor | Identified by | Roughly how many | Inside / outside |
+|---|---|---|---|
+|  |  |  |  |
+
+
+## 4. Implementation scope
 
 ### Built this time (<version>)
 
@@ -67,39 +76,39 @@
 -
 
 
-## 4. Existing assets
+## 5. Existing assets
 
 Current implementation:
 Treatment:
 
 
-## 5. Terminology and domain concepts
+## 6. Terminology and domain concepts
 
 | Term | Description |
 |---|---|
 |  |  |
 
 
-## 6. Non-functional requirements
+## 7. Non-functional requirements
 
 | Item | Requirement |
 |---|---|
 |  |  |
 
 
-## 7. Manual verification
+## 8. Manual verification
 
 | Middleware | Version | profile | Purpose |
 |---|---|---|---|
 |  |  |  |  |
 
 
-## 8. Data model
+## 9. Data model
 <!-- id: data-model -->
 <!-- target: backend -->
 <!-- depends: none -->
 
-### 8.1 <table name>
+### 9.1 <table name>
 
 | Column | Type | Constraint | Description |
 |---|---|---|---|
@@ -111,32 +120,12 @@ Treatment:
 -
 
 
-## 9. GraphQL
+## 10. GraphQL
 <!-- id: graphql -->
 <!-- target:  -->
 <!-- depends:  -->
 
-| schema | input | result | kind |
-|---|---|---|---|
-|  |  |  |  |
-
-### Use cases
-<!-- usecases -->
-
--
-
-### Acceptance criteria
-<!-- acceptance -->
-
--
-
-
-## 10. RESTful API
-<!-- id: rest -->
-<!-- target:  -->
-<!-- depends:  -->
-
-| method | path | renderer | request | response |
+| schema | input | result | kind | caller |
 |---|---|---|---|---|
 |  |  |  |  |  |
 
@@ -151,12 +140,14 @@ Treatment:
 -
 
 
-## 11. Screens
-<!-- id: screens -->
+## 11. RESTful API
+<!-- id: rest -->
 <!-- target:  -->
 <!-- depends:  -->
 
-### 11.1 <screen name>
+| method | path | renderer | request | response | caller |
+|---|---|---|---|---|---|
+|  |  |  |  |  |  |
 
 ### Use cases
 <!-- usecases -->
@@ -169,7 +160,46 @@ Treatment:
 -
 
 
-## 12. Implementation plan
+## 12. Background jobs
+<!-- id: jobs -->
+<!-- target: backend -->
+<!-- depends:  -->
+
+| Job | Trigger | Queue | Payload | Why not in the request path |
+|---|---|---|---|---|
+|  |  |  |  |  |
+
+### Acceptance criteria
+<!-- acceptance -->
+
+-
+
+
+## 13. Screens
+<!-- id: screens -->
+<!-- target:  -->
+<!-- depends:  -->
+
+### 13.1 <screen name>
+
+For:
+
+| Calls | Kind | When |
+|---|---|---|
+|  |  |  |
+
+### Use cases
+<!-- usecases -->
+
+-
+
+### Acceptance criteria
+<!-- acceptance -->
+
+-
+
+
+## 14. Implementation plan
 
 ### Milestone 1 (MVP)
 
@@ -184,7 +214,7 @@ Treatment:
 -
 
 
-## 13. Key file map
+## 15. Key file map
 
 | Path | Role |
 |---|---|
