@@ -88,6 +88,8 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 
 **Stage 0 is what stops a running product from having to be dictated.** It reads the repositories and the documents, drafts what they show, and hands it back for you to correct. On a project with nothing to read it records that and moves on ([`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)).
 
+**On a project with code, one declaration decides how much of that conversation you get: `Authority:`** — `as-built` (what runs is what this version is; questions drop to a handful, and use cases are drafted from the system for you to correct) or `to-spec` (the spec is the truth; the code catches up through the checkpoints). It is asked once at stage 1, overridable per feature, and required — the whole procedure is in [`adopting.md`](./adopting.md), "First, decide which of the two adoptions this is".
+
 ### Adding a feature to a version that already shipped
 
 **From the second version on, `spec.md` is a diff against the version before it** — only the sections this version changes. Everything else carries over by being absent, and past versions are never rewritten ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "From the second version on"). **The blank spec is not copied into a diff version**: it would land twenty empty headings in a document that needed one new feature.
