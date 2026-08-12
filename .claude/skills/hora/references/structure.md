@@ -261,8 +261,8 @@ Q4  missing-authorization  blocking: yes
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it
-    <feature-id>.md             one feature. Holds its checkpoint checklist, and the
-                                skills each checkpoint was matched to. /hora-build writes it
+    <feature-id>.md             one feature. /hora-plan creates it, checklist and all;
+                                /hora-build writes the checkboxes and the matched skills into it
   contracts/<version>/          one file per server whose consumer is elsewhere
   questions/<version>/open.md   append-only. Answered by editing specs/
   acceptance/<version>/
