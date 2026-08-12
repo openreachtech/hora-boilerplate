@@ -130,10 +130,10 @@ ls .claude/skills/
 | 領域 | 覆う範囲 |
 |---|---|
 | **データベース** | 論理設計、migration、model、seeder、名前付き subquery |
-| **GraphQL** | SDL と audience ごとのスキーマ、サーバーエンジン、query / mutation / subscription resolver、入力バリデータ、共有コンテナ `Share`、**stub resolver** |
-| **REST** | `server/restfulapi/` 配下の renderer アーキテクチャ |
+| **GraphQL** | SDL と audience ごとのスキーマ、サーバーエンジン、query / mutation / subscription resolver、入力バリデータ、共有の resolver コンテナ、**stub resolver** |
+| **REST** | RESTful renderer のアーキテクチャ |
 | **実行配置** | その処理がリクエスト経路か、post-worker か、バックグラウンドジョブかを決め、実装する |
-| **型と定数** | `.d.ts` 宣言ファイルと、定数の2ファイル規約 |
+| **型と定数** | `.d.ts` 宣言ファイルと、定数の規約 |
 | **外部連携** | 外部 HTTP/REST API クライアント |
 | **設計パターン** | `else-if` の連鎖を置き換える strategy の三点セット |
 | **AI 機能** | エージェント構造とループ、複数 LLM プロバイダ、light RAG、プロンプト文書ストア |

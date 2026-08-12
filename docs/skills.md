@@ -130,10 +130,10 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | Area | Covers |
 |---|---|
 | **Database** | logical schema design, migrations, models, seeders, named subqueries |
-| **GraphQL** | SDL and per-audience schemas, the server engine, query / mutation / subscription resolvers, input validators, the shared `Share` container, **stub resolvers** |
-| **REST** | the renderer architecture under `server/restfulapi/` |
+| **GraphQL** | SDL and per-audience schemas, the server engine, query / mutation / subscription resolvers, input validators, the shared resolver container, **stub resolvers** |
+| **REST** | the RESTful renderer architecture |
 | **Execution placement** | deciding whether work belongs in the request path, in a post-worker, or in a background job — then implementing it |
-| **Types and constants** | `.d.ts` declaration files, and the two-file constant convention |
+| **Types and constants** | `.d.ts` declaration files, and the constant convention |
 | **Integration** | external HTTP/REST API clients |
 | **Design patterns** | the strategy trio that replaces an `else-if` chain |
 | **AI features** | agent structure and loops, multi-LLM providers, light RAG, prompt document stores |
