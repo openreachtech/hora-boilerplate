@@ -151,20 +151,12 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 
 **There are more than 40 in-house packages, and the utility layer is never named in a spec, which makes it the most reinvented.** This checkpoint is where that check happens, once, for the whole feature.
 
-```
-node_modules/@openreachtech/hora-ecosystem/
-  config/lookup.js                        package name (no `@openreachtech/` scope) → catalogued (`true`)
-                                          or known but excluded (`false`). Absent = never a candidate
-  lib/docs/<package-name>/README.md       a verbatim copy of that package's own README
-  lib/docs/<package-name>/API.md          its exported classes/functions, members and signatures
-```
+The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repository itself, resolved under its own `node_modules/`. **How the catalog is laid out — where the tracked-package list lives, where each package's docs sit, how an import name is spelled — is that package's own to change: read its README at run time, never a layout restated here** (`../../hora/references/structure.md`, "The division of labor").
 
-- Read `config/lookup.js` first and keep only the entries that are `true` — that is the search space
-- **Match a description of the processing about to be written against a candidate's `README.md`/`API.md`, not against a category**
-- **`surface` is not a field in the catalog — infer it.** A `renchan-*` name is backend-only, a `furo-*` name frontend-only. A `mentsu-*` name can go either way; judge it from what its docs describe
-- **When a `mentsu-*` package and a `renchan-*` package both address the same need, prefer the one matching the surface** — unless `specs/` says otherwise
+- Keep only the packages the catalog currently tracks — that is the search space
+- **Match a description of the processing about to be written against a candidate's own docs, not against a category**
+- **Judge which surface a package serves from what its docs describe, never from what its name sounds like.** When two candidates address the same need, prefer the one matching the surface — unless `specs/` says otherwise
 - An identifier whose name starts with `Base` is used by extending it, not directly
-- The import name restores the scope `lookup.js`'s key omits: `@openreachtech/<package-name>`
 - **The spec overrides this.** When `specs/` states a particular way to implement something — a specific algorithm, an explicit exclusion of a package — follow that and implement it fresh
 - When something looks close but there is no confidence, record it as `reinvention` (`blocking: no`) and proceed with your own implementation
 
