@@ -70,8 +70,9 @@ what already exists, and whether it may be used
 7. What is the product called?
 
 8. Only where something is already running: how far is each feature actually
-   built? Under as-built this is one exclusion question; under to-spec, or
-   without a declaration, it is asked per feature (below)
+   built? Under as-built the derived table goes up whole, then each feature
+   is confirmed by selection; under to-spec it is never asked; without a
+   declaration, it is asked per feature, open (below)
 ```
 
 **Question 3 is the stage.** Everything else supports it.
@@ -99,29 +100,31 @@ what already exists, and whether it may be used
 
 **Skip question 8 entirely where stage 0 found nothing running.** On a new project every feature is unbuilt, the annotation is correctly absent everywhere, and asking would be twenty questions with one possible answer.
 
-**Question 5's `Authority` answer decides which of the two shapes below this takes.** A `to-spec` feature is skipped in both: it never carries `built:` — its code is unfinished work, not evidence of completion — and its checkpoints all run.
+**Question 5's `Authority` answer decides which of the two shapes below this takes.** A `to-spec` feature is skipped in both: it never carries `built:` — its code is unfinished work, not evidence of completion — and its checkpoints all run. **What a `to-spec` feature gets instead is not silence**: its use cases are settled in conversation ("Drafting use cases", below) and its divergences routed — put to the person per feature, with prepared options like everything else, but **with more of the answer left to them**, because under `to-spec` what the spec should say is theirs to decide, not the tree's to show.
 
-### Under `as-built`: ask once which features are NOT finished
+### Under `as-built`: present the derived table whole, then confirm feature by feature
 
-**The declaration already answered the twenty questions in one direction; what remains is the exceptions.** Ask them as one multi-select, then confirm the derived gates in the same exchange:
+**The declaration already answered the direction; what remains is each feature's gate, and the exceptions.** Put the whole derived table up first, so the person sees the shape of the answer before confirming any one row of it:
 
 ```
 "You said the implementation is authoritative. Stage 0 found code for all
- 20 features. Which of these are NOT finished — still being worked toward
- a spec, rather than describing themselves?
+ 20 features. The gates I derived from the tree:
 
-   [ ] #attendance--monthly    [ ] #payroll    ...    [x] none of them
+   #attendance    frontend   (screens call its resolvers)
+   #export-api    backend    (no screen calls it)
+   ...
 
- Everything not selected is as-built. For those, the gate I derived from
- the tree: 17 reach the frontend gate; #export-api and 2 others are
- backend-only (no screens call them). Confirm, or correct."
+ I will confirm each one with you below — answer `not finished` on any
+ feature still being worked toward a spec rather than describing itself."
 ```
 
-Whatever is selected becomes `<!-- authority: to-spec -->` on that feature — no `built:`, all checkpoints open. Everything else gets `built:` at the derived gate. **The derivation is allowed by the declaration and by nothing else** (`../hora/references/asking.md`, "What is never asked"): the person decided the direction once; deriving the gate works that decision out, and the derived values are still shown and still correctable.
+**Then confirm feature by feature, by selection, with the derived gate as the default.** Use the question tool, four features per exchange; every feature's options are the derived gate first, the other gates, and `not finished (to-spec)`. The person mostly selects — composing is never asked for, and an open question is never put where a drafted answer can be corrected instead.
 
-**Over-declaring is the recoverable direction** (below), which is why one batched exchange is safe where twenty careful questions used to be.
+A feature answered `not finished` becomes `<!-- authority: to-spec -->` — no `built:`, all checkpoints open. Every other answer writes `built:` at the confirmed gate. **The derivation is allowed by the declaration and by nothing else** (`../hora/references/asking.md`, "What is never asked"): the person decided the direction once; deriving the gate works that decision out, and every derived value is still confirmed, per feature, before it is written.
 
-### Under `to-spec`, or where no declaration exists: asked, never concluded
+**Over-declaring is the recoverable direction** (below), which is why drafted defaults are safe here where open questions used to be.
+
+### Where no declaration exists: asked, never concluded
 
 **No amount of reading settles it.** A half-built screen and a finished one look identical from a file listing; tests exist for features nobody finished and are missing for features that work. **Offer the evidence and leave the choice open — do not recommend an option** (`../hora/references/asking.md`, "What is never asked").
 
@@ -287,7 +290,10 @@ One `<!-- acceptance -->` block per feature section, beside the use cases — th
 
 Current implementation: `acme-attendance` (visible, read-only access granted)
 Treatment: reference it — match the behavior, rewrite the implementation
+Authority: as-built — what runs is what this version is
 ```
+
+**The `Authority` line is required whenever `Current implementation` is not `none`** — leaving it out is an `existing-assets` stop (`blocking: yes`) at `/hora-plan` (`../hora/references/spec-format.md`, "Existing assets").
 
 **Terms only. No identifiers.** `/hora-plan` decides the class and table names, against the lint rules, and a name written here that lint rejects is a name somebody has to unpick later.
 

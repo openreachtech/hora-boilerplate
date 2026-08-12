@@ -240,6 +240,8 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 | `deleteAccount` is callable with no auth filter | `legacy-api` schema | Q7 `undeclared-behavior`, blocking: no |
 ```
 
+**The example shows the file after later stages routed each row. Stage 0 writes every `Routed to` cell blank** — it records the disagreement and never the verdict. Once stage 1 has fixed the `Authority` declaration, **each row is routed by the stage that owns its subject** (`stages.md`, "What sends a run back into a stage" — an unmet use case is stage 1's row to route, an unstated operation stage 4's, a missing caller stage 6's), and that stage writes the cell, in conversation like everything else it settles.
+
 **Which way a row is routed follows the `Authority` declaration** (`../../hora/references/spec-format.md`, "Existing assets"):
 
 | Divergence | Under `as-built` | Under `to-spec` |

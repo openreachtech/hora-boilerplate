@@ -75,6 +75,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | a use case the data model cannot represent, or that no operation can complete | **4** |
 | a use case with no screen path, or a screen with nothing behind it | **5** |
 | an operation with no stated caller | **6** |
+| a `_divergence.md` row with a blank `Routed to` | **the stage that owns its subject** — the rows above decide which (`investigation.md`) |
 
 **`/hora-plan` and `/hora-build` use this table too.** A finding at checkpoint 2, 9, 11 or 18 that turns out to be a shortfall in the spec rather than in the code comes back to `/hora-spec`, at the stage this table names, instead of being patched line by line where it was found.
 
@@ -89,7 +90,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | everything readable has been read at breadth — the repositories that exist, every document anybody named, and whatever sits in `request/`; each document is declared `Sources` or `Annex` with somebody vouching for it; a request is confirmed as this version's agenda and belongs to neither table; what was read has been confirmed per section; `.hora/spec/<version>/_assets.md` is written; and, where documents and code both exist, every disagreement between them is a row in `.hora/spec/<version>/_divergence.md` |
 | **Not applicable when** | **never.** A new project passes it by recording that there was nothing to read, which is itself worth recording |
 | **Carried over when** | **never.** It is the stage that establishes what this version is working from, and on a diff version that is exactly the thing that moved: a release shipped, the repositories changed, and somebody dropped a request in. Its cheapest form is reading `request/` and what changed since the previous version's `_assets.md` — **the tree wins over that file**, as always |
-| **Writes** | `Sources` and `Annex` (once confirmed), and `.hora/spec/<version>/_assets.md` |
+| **Writes** | `Sources` and `Annex` (once confirmed), `.hora/spec/<version>/_assets.md`, and — where documents and code both exist — `.hora/spec/<version>/_divergence.md`, **its every `Routed to` cell left blank** (`investigation.md`) |
 | **Reads** | everything, at breadth. No deeper than "what exists". **`request/` first** — what somebody wants is the agenda the seven stages then work through (`investigation.md`) |
 
 **`references/investigation.md` is the authority on this stage** — the line between a fact and an intent, the inventory procedure, how a document becomes a source, and what stage 0 never does.

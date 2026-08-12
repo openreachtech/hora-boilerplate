@@ -97,6 +97,9 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
+  spec/<version>/_divergence.md where the documents and the code disagree — one row
+                                per divergence, each routed by the stage that owns
+                                its subject (Part 2)
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks
     <feature-id>.md             one feature, and its eighteen checkpoints
@@ -231,6 +234,8 @@ read the code and write the requirement it implies                     forbidden
 **The mixing that matters runs one way.** A check dressed as a proposal costs a false approval over something that was true anyway. **A proposal dressed as a check puts the kit's own idea into `specs/` as an existing fact** — and nothing downstream can tell it apart from something read off the real system. That is the failure this whole distinction exists to prevent, and it is at its most tempting on an adopted project, where what exists and what is obviously missing turn up in the same breath.
 
 **What no reading ever settles is intent.** Which operations exist is a fact; who they are for, who *should* be allowed to call them, and how much of a feature counts as finished are not in the tree at all. Those are asked, always — with the evidence laid out and nothing recommended.
+
+**The one carve-out is a declaration — written, never inferred.** `Authority: as-built` is a person settling that intent once, in the spec: from there the kit derives `built:` and drafts the use cases off the running system, and puts each up for correction with the drafted value as the default. `to-spec` settles it the other way — completion is never asked, and every checkpoint runs against the code as it stands. Where no declaration is written, the paragraph above applies in full ([`structure.md`](../.claude/skills/hora/references/structure.md), invariant 2, "`Authority: as-built`").
 
 ---
 

@@ -106,6 +106,7 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 | `specs/<older version>/` | **never.** Past versions are frozen (`../hora/references/spec-format.md`) |
 | `.hora/spec/<version>/_stages.md` | this skill's own record of where it got to |
 | `.hora/spec/<version>/_assets.md` | what stage 0 read, where from, and at what commit (`references/investigation.md`) |
+| `.hora/spec/<version>/_divergence.md` | where the documents and the code disagree. **Stage 0 writes the rows, unrouted; the stage that owns a row's subject writes its `Routed to`, once stage 1 has fixed the `Authority` declaration** (`references/investigation.md`) |
 | `.hora/questions/<version>/open.md` | appended to, like any other skill |
 | `.hora/tasks/`, `.hora/contracts/`, `.hora/glossary.md` | **never.** They are `/hora-plan`'s |
 | code, tests, any implementation repository | **read, never written.** Reading is how stage 0 and stages 4 to 6 get something to put up for confirmation; nothing read is ever written back, and nothing read becomes a requirement on its own |
