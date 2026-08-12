@@ -1,6 +1,6 @@
 ---
 name: hora-spec-frontend
-description: Stage 5 of /hora-spec. Design the screens each use case passes through and the operations each screen calls, so that nothing on a screen lacks an operation behind it and no operation is unreachable — including the empty, failed, waiting and forbidden states every screen has and no request ever mentions. Writes the screen sections and the per-screen use-case mapping. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 5 of /hora-spec. Design the screens each use case passes through and the operations each screen calls, so that nothing on a screen lacks an operation behind it and no operation is unreachable — including the empty, failed, waiting and forbidden states every screen has and no request ever mentions. Writes the screen sections — their use-case and acceptance blocks included — and the per-screen use-case mapping. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-frontend

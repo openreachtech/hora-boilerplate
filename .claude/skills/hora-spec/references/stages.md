@@ -56,6 +56,12 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 **Default to the question tool, with the likely answer first.** Having read the evidence is exactly what lets a stage offer options worth choosing between rather than a blank to fill in.
 
+### Acceptance criteria are drafted by the stage that writes the section
+
+**A section's owner writes its `<!-- acceptance -->` block, in the same approved write as the section itself** — stage 1 for the feature sections, stage 4 for the sections its design owns (a data model section carries acceptance criteria without use cases of its own, `../../hora/references/spec-format.md`), stage 5 for the screens. **Stage 6 is the one stage that adds to another stage's block**: one refusal criterion per operation whose refusal matters, proposed and approved like any other text.
+
+**Draft them; never demand them blank.** Whoever wants the product can say when a feature is done in their own words, but rarely arrives with observable criteria — so the stage derives them from the use cases and from what the conversation decided, keeps each one observable, and puts the draft out **as a proposal** (`../../hora/references/asking.md`). A criterion that goes in silently is an invented requirement; a person handed an empty block to fill writes none, and the missing block is `blocking: yes` at stage 7 (`spec-format.md`).
+
 ---
 
 ## What sends a run back into a stage
@@ -105,7 +111,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every actor is named, with how they are identified; every use case is one person completing one thing end to end; every feature this release will build carries at least one use case; and the project name is written |
 | **Not applicable when** | never |
 | **Carried over when** | **the actors are unchanged and this version adds no feature** — a version that only changes a number or a wording. Otherwise it runs **on what this version adds alone**: the features already in the resolved document are not re-agreed to, and their use cases are not restated. **A new actor or a new role is never a carry-over**, whatever it was added for |
-| **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets`, and each feature section's `<!-- usecases -->` and `<!-- built: -->` annotations |
+| **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets`, and each feature section's `<!-- usecases -->` and `<!-- acceptance -->` blocks and `<!-- built: -->` annotation ("Acceptance criteria are drafted by the stage that writes the section", above) |
 | **Reads** | the operation and screen surface, for the **feature list** it implies and the **actor candidates** the role checks imply. Never for what a feature is *for* |
 
 **A feature list is not a use case list, and the difference is the whole point of this stage.** "Attendance management" is a heading; "a member of staff who forgot to clock in files yesterday's hours the next day, and their manager sees it waiting for approval" is a use case. Three checkpoints and the acceptance review each read the second kind and can do nothing with the first (`../../hora/references/spec-format.md`, "How to write use cases").
@@ -157,7 +163,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | the repository layout and the server table are declared; every use case from stage 1 can be walked against the data model and the operation list, step by step, without a gap; every operation states its kind; and every write states whether it completes inside the request or runs as a job |
 | **Not applicable when** | never. A version with no backend row still has to declare that (`../../hora/references/spec-format.md`, "Repository layout") |
 | **Carried over when** | **this version adds no table, no operation and no job.** Otherwise it runs **on the new ones alone** — but it reads the existing model and operation list as context, because what makes a new operation right is that it fits what is already there. **A new repository row or a new server is never a carry-over**: `/hora-setup` creates what this section declares |
-| **Writes** | `Repository layout` and its server table, `Data model`, `GraphQL`, `RESTful API`, `Background jobs`, and `Key file map` where anything about placement is already known |
+| **Writes** | `Repository layout` and its server table, `Data model`, `GraphQL`, `RESTful API`, `Background jobs`, and `Key file map` where anything about placement is already known — with the `<!-- acceptance -->` blocks those sections carry (a data model section has acceptance criteria without use cases of its own, `../../hora/references/spec-format.md`) |
 | **Reads** | **deeply** — migrations, models, SDL, REST routes, job definitions and the entry points. This is the stage that reads the backend properly, and the whole existing data model and operation list can go out as one check per area |
 
 **Walking the use cases is the exit condition, not a review step.** A data model that is internally tidy and cannot represent one stated use case passes every other check in this document. Stage 7 walks them again; this stage walks them first, while changing a table still costs a sentence.
@@ -175,7 +181,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every use case names the screens it passes through, in order; every screen names the operations it calls; nothing on a screen lacks an operation behind it, and no operation is unreachable from every screen |
 | **Not applicable when** | **this version declares no frontend repository** — an API-only release for a phone app, say. State the reason, and say which consumer the API is for instead |
 | **Carried over when** | **this version adds no screen and changes none.** Otherwise it runs on the new ones alone — **and on every existing screen the new operations touch**, which is the part a diff hides: an operation added to a screen that already exists changes that screen, and the screen's own section is where that has to show |
-| **Writes** | `Screens`, and the per-screen use-case mapping |
+| **Writes** | `Screens` — each screen section's `<!-- usecases -->` and `<!-- acceptance -->` blocks included — and the per-screen use-case mapping |
 | **Reads** | **deeply** — the pages, the routes and which operations each screen calls. **What is absent is the finding**: the empty, failed, waiting and forbidden states a screen does not handle, each of which goes out as a proposal, never as a check |
 
 **Unreachable in either direction is a defect, and both directions are checked here.** An operation no screen calls is either a missing screen or a feature nobody wants; a button with no operation behind it is a screen designed against a backend that does not exist. The acceptance review looks for exactly these two, at the far end of eighteen checkpoints.
@@ -191,7 +197,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Exit condition** | every operation names who may call it and what happens when somebody else does; every screen names who may open it; every piece of personal or regulated data is named as such; and the choice between roles on one endpoint and separate endpoints has a written reason |
 | **Not applicable when** | never. A release with no authentication at all still has to say that, and why |
 | **Carried over when** | **never, for anything this version adds.** Every new operation and every new screen states its caller and its refusal at the version that introduced it, and no wording anywhere else counts as having said it. Operations this version does not touch carry over untouched — that part is free, and it is the only part that is |
-| **Writes** | the caller and permission of every operation, the security rows of `Non-functional requirements`, and the reason recorded against the endpoint split |
+| **Writes** | the caller and permission of every operation, the security rows of `Non-functional requirements`, the reason recorded against the endpoint split — and the refusal criteria it adds to other stages' `<!-- acceptance -->` blocks, the one write into another stage's section any stage is allowed ("Acceptance criteria are drafted by the stage that writes the section", above) |
 | **Reads** | **deeply** — the auth filters, the role checks and the public-operation allowlists, to establish **who may call each operation today.** That is a fact and goes out as a check. **Who *should* be able to is a decision nobody has made yet**, and it goes out as a question, one per operation whose current answer surprises anybody |
 
 **Authorization is the thing most often left unsaid, and the most expensive to add late.** An operation whose caller was never stated gets implemented with whatever filter its neighbours had, and nothing in the code says that nobody ever decided.
