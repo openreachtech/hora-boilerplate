@@ -127,7 +127,7 @@ npm run lint
 npm test
 ```
 
-The parent (`myproject-app`) also has lint, covering `.claude/`.
+The parent (`myproject-app`) also has lint. Its own tree holds almost no JavaScript — the implementation rows and the equipped skills are ignored by design — so this is a self-check of the root's own config and of any script that ever lands there, not a review of `.claude/`'s markdown.
 
 ```bash
 npm run lint
