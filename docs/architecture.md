@@ -164,7 +164,7 @@ Conflating the two costs one of those properties. Keeping them apart costs nothi
 
 ## The git model
 
-Every git operation belongs to `/hora`. No skill and no agent it starts ever touches git. The rules are in [`commits.md`](../.claude/skills/hora/references/commits.md); the shape is this:
+Every git operation happens in the main session — `/hora` itself, or a skill it runs. No agent any of them starts ever touches git. The rules are in [`commits.md`](../.claude/skills/hora/references/commits.md); the shape is this:
 
 ![The git model: main, release/version, and the branches cut from it](./images/git-model.svg)
 

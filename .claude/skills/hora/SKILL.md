@@ -89,11 +89,11 @@ Report the decision in one line before starting work — for example, "continuin
 
 ## What `/hora` owns, and what it never does
 
-**`/hora` owns every git operation.** Cutting a branch, committing, merging, rebasing, catching up with a hotfix — all of it, in every repository. No skill and no agent it starts ever touches git.
+**Every git operation happens in the main session.** Cutting a branch, committing, merging, rebasing, catching up with a hotfix — whether `/hora` runs it directly or a skill it invoked does (`/hora-setup` initializing a row, `/hora-build` cutting a feature branch), it is the same session following `references/commits.md`. **No agent any skill starts ever touches git.**
 
 | | Who does it |
 |---|---|
-| git, in every repository | **`/hora` itself** |
+| git, in every repository | **the main session** — `/hora` and the skills it runs. Never an agent |
 | writing `.hora/` | the skill whose work it records (`/hora-plan` the plan, `/hora-build` the checkpoints, `/hora-accept` the acceptance records) |
 | writing `specs/` | **`/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time. Nobody else** (`references/structure.md`, invariant 1) |
 | writing code and tests | the agents `/hora-build` starts |

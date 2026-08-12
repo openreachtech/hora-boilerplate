@@ -164,7 +164,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 
 ## git モデル
 
-git 操作はすべて `/hora` のものです。skill も、それが起動したエージェントも、git には触れません。規則は [`commits.md`](../.claude/skills/hora/references/commits.md) にあります。形はこうです。
+git 操作はすべてメインセッションで行われます — `/hora` 自身か、それが走らせた skill です。エージェントは決して git に触れません。規則は [`commits.md`](../.claude/skills/hora/references/commits.md) にあります。形はこうです。
 
 ![git モデル：main、release/&lt;version&gt;、そこから切られるブランチ](./images/git-model.ja.svg)
 

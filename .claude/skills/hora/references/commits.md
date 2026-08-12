@@ -1,6 +1,6 @@
 # Branches and commits
 
-Every hora skill that touches git follows this file. **`/hora` itself owns every git operation** — the agents it starts never touch git at all.
+Every hora skill that touches git follows this file. **Every git operation runs in the main session — `/hora`'s own hands, or a skill it invoked** — the agents they start never touch git at all.
 
 `git log .hora/` becomes the history of what ran, and the checkboxes hold what is done. There is no separate state file. **That is what the commits are for.**
 
