@@ -60,7 +60,7 @@ git ls-remote --tags --sort=-v:refname \
 
 **Do not take the HEAD of `main`.** Since a version is the unit of management, take a released state. `main` risks grabbing a work-in-progress commit that carries no tag.
 
-The existing boilerplates leave `package.json`'s `version` at `0.0.0` and manage the real version through git tags. `release.yml` also reads the version from `git tag -l`, never from `package.json`. **The tag is what carries the version.**
+The existing boilerplates leave `package.json`'s `version` at `0.0.0` and manage the real version through git tags. `release.yml` also treats the tags as the record of what was released — it derives a new version from the release PR and checks it against the tags already pushed, never against `package.json`. **The tag is what carries the version.**
 
 ### 4. Clone it and throw away its history
 
