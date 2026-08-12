@@ -20,6 +20,26 @@ After that, new features go through the full eighteen, one at a time.
 
 ---
 
+## First, decide which of the two adoptions this is
+
+**Before any step below, answer one question: when the spec and the code disagree, which one is right?** Everything else in this document branches on the answer, and it is declared in one line of the spec — `Authority:`, in the `Existing assets` section ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Existing assets").
+
+| | **`as-built`** — the implementation is the truth | **`to-spec`** — the spec is the truth |
+|---|---|---|
+| Your situation | the product runs, and what it does is what you want. You are adopting the kit to **fix the current state as a version** and grow from there | the product is **mid-implementation** against a spec somebody wrote. You are adopting the kit to **finish the distance** |
+| The spec describes | the product as it runs today | the product as it should be |
+| A divergence between them | the spec text gets corrected | a task — the code gets corrected |
+| Questions you get asked | **the minimum**: the declaration, one "which features are NOT finished?", batched confirmations of what was read, and one question per operation reachable without signing in | the ordinary seven-stage conversation |
+| Use cases and acceptance criteria | **drafted from the running system**, corrected rather than composed | from the conversation — unfinished code is not evidence of what should exist |
+| The plan | every feature `built:`, **one adoption sweep** closes checkpoint 18 for all of them | each unfinished feature runs its checkpoints, which **reconcile** existing code toward the spec rather than starting over |
+| Then | sweep passes → merge → **tag `1.0.0` — the current state is now the fixed baseline.** New work arrives as `1.1.0`, a diff, drafted from a note in `specs/1.1.0/request/` | the version finishes when the code reaches the spec, and is accepted like any other |
+
+**Mixing them is normal, and it is declared per feature.** Fifteen features are done and three are half-way: write `Authority: as-built` in `Existing assets` and put `<!-- authority: to-spec -->` on the three ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "`authority`"). The one exclusion question at stage 1 produces exactly this shape without you editing anything by hand.
+
+**What `as-built` does not buy:** checkpoint 18 still runs — the adoption sweep is what makes the fixed baseline a verified one, not a claimed one. Anything reachable without authentication is still asked about one operation at a time, whatever the declaration says. And the declaration reaches only the features built when it was made — a feature added in `1.1.0` is specified in conversation like any other new feature.
+
+---
+
 ## Before you start
 
 | | |
@@ -237,9 +257,12 @@ that call them. What the tree cannot tell me is whether that is finished.
 
 Current implementation: legacy-api, admin-console (adopted in place)
 Treatment: keep it — Hora Kit is being adopted onto these repositories, not used to rewrite them
+Authority: as-built — what these repositories do is what 1.0.0 is
 ```
 
-**This section normally means something else** — "port this old code into the new repository" versus "match its behavior but rewrite it". Under adoption the honest answer is usually neither, and saying so plainly here is what stops a checkpoint from deciding to rewrite something.
+**`Treatment` normally means something else** — "port this old code into the new repository" versus "match its behavior but rewrite it". Under adoption the honest answer is usually neither, and saying so plainly here is what stops a checkpoint from deciding to rewrite something. It stays required whatever `Authority` says.
+
+**`Authority` is the declaration from ["First, decide which of the two adoptions this is"](#first-decide-which-of-the-two-adoptions-this-is)**, and on a project with code it is required — `/hora` stops without it. Features that are exceptions to it carry their own `<!-- authority: -->`.
 
 ---
 
@@ -354,20 +377,30 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
    All three ship empty. None is required.
    Do NOT link into the implementation repositories; they are gitignored and
    the link breaks quietly
-3. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
+3. Decide which side is authoritative: as-built (what runs is what 1.0.0 is)
+   or to-spec (the spec is; the code catches up). It goes in Existing assets,
+   and it decides how much you get asked
+4. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:
      - stage 0 reads the repositories and the documents you placed, confirms
-       the sources/annex split you expressed by placing them, and writes the tables
+       the sources/annex split you expressed by placing them, writes the tables,
+       and records every spec-vs-code disagreement for routing
      - repository layout, with a Directory column for each existing repository
-     - built: spec | backend | frontend, asked per feature with the evidence shown
-     - use cases and acceptance criteria on all of them, built or not
-     - existing assets: keep it
-4. /hora
+     - as-built: one question — which features are NOT finished — and the
+       derived built: gates confirmed in a batch; use cases and acceptance
+       criteria drafted from the running system for you to correct
+     - to-spec: built: asked per feature with the evidence shown; use cases
+       from the conversation
+     - existing assets: keep it, plus the Authority line
+5. /hora
      - setup skips cloning, registers the directories in both exclusion lists,
        fills in only what is still a placeholder
-     - plan asks about whatever is undecided
-5. Check the plan: is every built: right?
-6. The first acceptance sweep tells you what the product actually does
-7. From there, new features go through all eighteen, one at a time
+     - plan asks about whatever is undecided. An all-as-built version plans
+       as one adoption sweep
+6. Check the plan: is every built: right?
+7. The first acceptance sweep tells you what the product actually does
+8. as-built: sweep passes → merge → tag 1.0.0. The baseline is fixed, and new
+   work arrives as 1.1.0 — a page of notes in specs/1.1.0/request/ is enough.
+   to-spec: the checkpoints reconcile the code toward the spec, feature by feature
 ```
 
 ---
