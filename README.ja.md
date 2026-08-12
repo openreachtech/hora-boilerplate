@@ -36,9 +36,12 @@ git clone https://github.com/openreachtech/hora-boilerplate.git <myproject>-app
 cd <myproject>-app
 rm -rf .git
 git init
+npm install
 ```
 
 `specs/` を書く前に行ってください。リポジトリに自分のコミットができた後で `.git` を捨てると、それも一緒に失われます。
+
+**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。** キット自身が読むパッケージ — `@openreachtech/ai-agent-skills`（装備されるスキル群）と `@openreachtech/hora-ecosystem`（パッケージカタログ）— はこのリポジトリ自身の devDependencies から来ており、他の何もそれをインストールしません。
 
 ### 2. 仕様書を書く
 
@@ -150,6 +153,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 | [`docs/commands.ja.md`](./docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
 | [`docs/adopting.ja.md`](./docs/adopting.ja.md) | **既存プロジェクトへの適用。** 動くコードを持つ renchan バックエンドと furo フロントエンドに被せる |
+| [`about-boilerplate.md`](./about-boilerplate.md) | **このテンプレート自身の版の記録** — プロジェクトがどの hora-boilerplate から始まったか。製品の版ではありません。製品の版は git タグが持ちます |
 
 規則そのものは、それを所有する skill 側にあります：[`hora/SKILL.md`](./.claude/skills/hora/SKILL.md)、[`structure.md`](./.claude/skills/hora/references/structure.md)、[`commits.md`](./.claude/skills/hora/references/commits.md)、[`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md)、[`spec-format.md`](./.claude/skills/hora/references/spec-format.md)、[`stages.md`](./.claude/skills/hora-spec/references/stages.md)、[`principles.md`](./.claude/skills/hora-spec/references/principles.md)、[`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md)。
 

@@ -12,7 +12,7 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 
 ## The thinking behind the format
 
-**Make a format that someone a little sloppy can still write.** A missing annotation (`id` / `target` / `depends`) is inferred from the content and filled in by `/hora`, which records that it inferred it as a question. Strict adherence to the format is not the goal.
+**Make a format that someone a little sloppy can still write.** A missing `target` or `depends` is inferred from the content and filled in by `/hora`, which records that it inferred it as a question. **A missing `id` is the one annotation never inferred** — `/hora` ties that section's tasks to the H1's `id` and raises a question instead ("The folder name becomes the `id`", below; `structure.md`, invariant 2). Strict adherence to the format is not the goal.
 
 **But "what to build" and "what counts as done" have to be written.** If `/hora` infers those, it ends up inventing what the spec does not say.
 

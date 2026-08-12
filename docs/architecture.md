@@ -75,12 +75,12 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 |---|---|---|
 | **1, 2, 9, 11** | **the main session, in conversation** | they exist to settle something *with a person*. **A subagent cannot ask anyone anything**, so delegating one turns "settle this with the author" into "the agent decided" — which is inventing a requirement |
 | **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
-| **8** | `hora-verifier` | a security audit is read-only by design; the agent has no write tools at all |
+| **8** | `hora-verifier` | a security audit is read-only by design; the agent has no file-editing tools and fixes nothing |
 | **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
 
 **Stage 0 and the seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
-**`hora-verifier` has no write tools, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It returns the fact that something is failing; it never fixes it.
+**`hora-verifier` never fixes anything, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It has no file-editing tools; it returns the fact that something is failing, and never fixes it.
 
 **`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint and reports everything else — a dependency it needs, a shared file it must not edit, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
 
@@ -116,7 +116,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 |---|---|---|
 | `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
 | `.hora/` | the skill whose work it records | humans read only |
-| the implementation repositories | `hora-implementer`, plus `/hora` for every git operation | — |
+| the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's code and tests, and the main session for every git operation | — |
 
 **What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.
 
@@ -149,7 +149,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 
 ![Re-entrancy: every run decides where the project stands](./images/reentrancy.svg)
 
-**Step 2 runs even when the feature list already exists.** A spec keeps moving while implementation is under way; sections get added, changed and withdrawn. Reconciling every time is the only way those reach the plan.
+**Step 3 runs even when the feature list already exists.** A spec keeps moving while implementation is under way; sections get added, changed and withdrawn. Reconciling every time is the only way those reach the plan.
 
 ### Two different acts, on purpose
 
@@ -164,7 +164,7 @@ Conflating the two costs one of those properties. Keeping them apart costs nothi
 
 ## The git model
 
-Every git operation belongs to `/hora`. No skill and no agent it starts ever touches git. The rules are in [`commits.md`](../.claude/skills/hora/references/commits.md); the shape is this:
+Every git operation happens in the main session — `/hora` itself, or a skill it runs. No agent any of them starts ever touches git. The rules are in [`commits.md`](../.claude/skills/hora/references/commits.md); the shape is this:
 
 ![The git model: main, release/version, and the branches cut from it](./images/git-model.svg)
 
@@ -176,6 +176,8 @@ Every git operation belongs to `/hora`. No skill and no agent it starts ever tou
 | in a frontend row | entering checkpoint 10 | **checkpoint 17 passes** |
 
 **Not after acceptance** — acceptance (18) covers every feature so far, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up comes back as a `retake/` branch instead, which is already the name for "merged, then found lacking".
+
+**Checkpoint 17 is the one that falls outside the table.** The local end-to-end environment lives in the backend row, whose feature branch merged eight checkpoints earlier — so its changes go on their own `update/e2e-<what>-for-<feature-id>` branch, cut and merged like any other `update/` ([`commits.md`](../.claude/skills/hora/references/commits.md)).
 
 **Why a dependency gets its own branch:** `package-lock.json` is the file two changes cannot both edit cleanly. One change at a time, merged before the next starts, is how a human team avoids that conflict, and it is how this does too.
 
@@ -256,7 +258,7 @@ read the code and write the requirement it implies                     forbidden
 
 ## Why every stage is a conversation
 
-**None of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
+**Neither stage 0 nor any of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
 
 **Stage 0's reading and stage 7's mechanical checks are the one exception, and only halfway.** Reading a tree; a missing required section, a duplicate `id`, an operation with no kind, a feature with no acceptance criteria — those are cheap, precise, and could run anywhere. **Their findings still come back to the main session to be settled**, and running them first is worth it: what remains needs somebody to read the document as a whole, and it is better to arrive there with the cheap findings already cleared.
 

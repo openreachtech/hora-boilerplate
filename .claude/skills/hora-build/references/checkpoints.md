@@ -151,20 +151,12 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 
 **There are more than 40 in-house packages, and the utility layer is never named in a spec, which makes it the most reinvented.** This checkpoint is where that check happens, once, for the whole feature.
 
-```
-node_modules/@openreachtech/hora-ecosystem/
-  config/lookup.js                        package name (no `@openreachtech/` scope) → catalogued (`true`)
-                                          or known but excluded (`false`). Absent = never a candidate
-  lib/docs/<package-name>/README.md       a verbatim copy of that package's own README
-  lib/docs/<package-name>/API.md          its exported classes/functions, members and signatures
-```
+The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repository itself, resolved under its own `node_modules/`. **How the catalog is laid out — where the tracked-package list lives, where each package's docs sit, how an import name is spelled — is that package's own to change: read its README at run time, never a layout restated here** (`../../hora/references/structure.md`, "The division of labor").
 
-- Read `config/lookup.js` first and keep only the entries that are `true` — that is the search space
-- **Match a description of the processing about to be written against a candidate's `README.md`/`API.md`, not against a category**
-- **`surface` is not a field in the catalog — infer it.** A `renchan-*` name is backend-only, a `furo-*` name frontend-only. A `mentsu-*` name can go either way; judge it from what its docs describe
-- **When a `mentsu-*` package and a `renchan-*` package both address the same need, prefer the one matching the surface** — unless `specs/` says otherwise
+- Keep only the packages the catalog currently tracks — that is the search space
+- **Match a description of the processing about to be written against a candidate's own docs, not against a category**
+- **Judge which surface a package serves from what its docs describe, never from what its name sounds like.** When two candidates address the same need, prefer the one matching the surface — unless `specs/` says otherwise
 - An identifier whose name starts with `Base` is used by extending it, not directly
-- The import name restores the scope `lookup.js`'s key omits: `@openreachtech/<package-name>`
 - **The spec overrides this.** When `specs/` states a particular way to implement something — a specific algorithm, an explicit exclusion of a package — follow that and implement it fresh
 - When something looks close but there is no confidence, record it as `reinvention` (`blocking: no`) and proceed with your own implementation
 
@@ -319,10 +311,12 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 
 | | |
 |---|---|
-| **Delegate to** | the skills covering the frontend's context patterns, and its GraphQL operation clients |
+| **Delegate to** | the skills covering the frontend's context patterns, its GraphQL operation clients, and how a frontend test is written and placed |
 | **Runs in** | an implementer agent |
-| **Exit condition** | the screen shows real data from the **actual** API, not the stub, and its loading and error paths are driven by real responses |
+| **Exit condition** | the screen shows real data from the **actual** API, not the stub, its loading and error paths are driven by real responses, and the unit tests covering this feature's frontend acceptance criteria pass |
 | **Not applicable when** | this feature's screen calls no API |
+
+**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6.
 
 **This is where the stub is left behind.** Because the stub and the real implementation share a class name and an interface (checkpoint 4), this is a change of which endpoint is being called, not a rewrite of the client.
 

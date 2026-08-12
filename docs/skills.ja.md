@@ -58,9 +58,11 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
                  .claude/skills/<skill>/
 ```
 
-- **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。ただのコピーなので再実行は安全です
+- **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。上書きではなく同期です — パッケージ由来のディレクトリ（gitignore されているもの。自前のスキルには決して触れません）を先に削除してからコピーし直すので、パッケージが改名・削除したスキルが残留せず、再実行は安全です
 - **リポジトリの clone を待ちません。** `ai-agent-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
 - **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身のスキルを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
+
+**キットが読むパッケージは `ai-agent-skills` を含めて2つあります。** もう1つは **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 
@@ -130,10 +132,10 @@ ls .claude/skills/
 | 領域 | 覆う範囲 |
 |---|---|
 | **データベース** | 論理設計、migration、model、seeder、名前付き subquery |
-| **GraphQL** | SDL と audience ごとのスキーマ、サーバーエンジン、query / mutation / subscription resolver、入力バリデータ、共有コンテナ `Share`、**stub resolver** |
-| **REST** | `server/restfulapi/` 配下の renderer アーキテクチャ |
+| **GraphQL** | SDL と audience ごとのスキーマ、サーバーエンジン、query / mutation / subscription resolver、入力バリデータ、共有の resolver コンテナ、**stub resolver** |
+| **REST** | RESTful renderer のアーキテクチャ |
 | **実行配置** | その処理がリクエスト経路か、post-worker か、バックグラウンドジョブかを決め、実装する |
-| **型と定数** | `.d.ts` 宣言ファイルと、定数の2ファイル規約 |
+| **型と定数** | `.d.ts` 宣言ファイルと、定数の規約 |
 | **外部連携** | 外部 HTTP/REST API クライアント |
 | **設計パターン** | `else-if` の連鎖を置き換える strategy の三点セット |
 | **AI 機能** | エージェント構造とループ、複数 LLM プロバイダ、light RAG、プロンプト文書ストア |

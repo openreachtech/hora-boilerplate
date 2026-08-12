@@ -1,6 +1,6 @@
 ---
 name: hora-spec-usecases
-description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Where something already runs, starts from what stage 0 read and asks each feature how far it is actually built. Writes the document information, the project name, the actors and roles, the terminology, the existing assets, and every feature's use-case block and built annotation. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Where something already runs, starts from what stage 0 read and asks each feature how far it is actually built. Writes the document information, the project name, the actors and roles, the terminology, the existing assets, and every feature's use-case block, drafted acceptance criteria and built annotation. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-usecases
@@ -83,7 +83,7 @@ what already exists, and whether it may be used
 
 **Question 5 has two halves and both are required.** What exists, and whether it may be read. "Reimplement it" with the code invisible is a different job from "reimplement it" with the code in front of you, and **which one it is may never be inferred** (`../hora/references/structure.md`, invariant 2).
 
-**Question 6 becomes two things**: an acceptance criterion at stage 7, and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
+**Question 6 becomes two things**: an acceptance criterion in the owning feature's `<!-- acceptance -->` block — this stage drafts and writes it ("What it writes", below) — and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
 
 **Question 7's answer becomes the prefix of every repository name.** Ask for it explicitly and confirm the spelling — it is expensive to change, because changing it renames every repository (`../hora/references/structure.md`).
 
@@ -221,6 +221,20 @@ One `<!-- usecases -->` block per feature section, or **once on a feature file's
 
 **A feature carrying `built:` still needs its use cases and its acceptance criteria.** Checkpoint 18 verifies against them, so a built feature with neither has nothing to be accepted against — and finding out what an existing product actually does is the entire reason the kit was adopted onto it.
 
+### Acceptance criteria, per feature
+
+One `<!-- acceptance -->` block per feature section, beside the use cases — the format requires both, and a missing block is `blocking: yes` (`../hora/references/spec-format.md`).
+
+**Draft them and propose them; never hand over an empty block to fill.** Whoever wants the product can say when a feature is done in their own words — question 6's answer is exactly that — but rarely arrives with observable criteria. Derive each one from a use case or a stated must-never-happen, keep it observable (somebody with no access to the code could check it), and put the draft out **as a proposal** (`../hora/references/asking.md`). Stage 6 later appends a refusal criterion per operation whose refusal matters; leave those to it.
+
+```markdown
+### Acceptance criteria
+<!-- acceptance -->
+
+- clocking in twice on one day is refused, and the second attempt changes nothing
+- a manager's approval locks the month: no clock-in for it succeeds afterwards
+```
+
 ### Terminology, and existing assets
 
 ```markdown
@@ -238,7 +252,7 @@ Treatment: reference it — match the behavior, rewrite the implementation
 
 ## Exit condition
 
-Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built. `../hora-spec/references/stages.md` is the authority.
+Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one, and an `<!-- acceptance -->` block this stage drafted and got approved; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built. `../hora-spec/references/stages.md` is the authority.
 
 **Where an actor or a use case cannot be settled because the person who knows is not here**, record it (`undefined-detail`, or `missing-authorization` where it is an actor's identification that is missing) and carry on. Do not invent one to keep the stage moving.
 

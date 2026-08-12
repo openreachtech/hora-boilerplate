@@ -2,7 +2,7 @@
 
 # What each command does
 
-Six commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own.
+The six main commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own. Alongside them, and also invocable directly: `/bank-id` (at the end of this page), and the seven stage skills `/hora-spec` runs (named under `/hora-spec`, below).
 
 **In normal use you only ever type `/hora`.** It decides which of the others to run. The rest are documented because you will sometimes want one directly — to redo an acceptance run, to re-plan after a spec change, to fix a setup that half-finished.
 
@@ -44,7 +44,7 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 
 - **decide scope.** When a version cannot proceed it lays out the choices (build it / drop it / defer it) and waits
 - **write `specs/`.** Only `/hora-spec` may, a section at a time, and `/hora-plan`, an edit at a time — both with your approval on the exact text
-- **run manual verification for you.** `./docker.sh start` → `npm run db:refresh` → `npm run dev` is yours to run whenever you want
+- **run manual verification for you.** It is yours to run whenever you want, with the commands `/hora-setup` recorded in `.hora/tree/<repository>.md`
 
 ---
 
@@ -79,6 +79,8 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 7. Whole-document review     whether it all holds together, and every use case
                              is satisfiable
 ```
+
+**Each stage from 1 to 7 is its own skill, and each may be run directly**: `/hora-spec-usecases`, `/hora-spec-horizon`, `/hora-spec-nonfunctional`, `/hora-spec-backend`, `/hora-spec-frontend`, `/hora-spec-security`, `/hora-spec-review`. `/hora-spec` runs them in order; run one alone to redo just that stage's conversation. Stage 0 has no skill of its own — `/hora-spec` runs it itself.
 
 **The order is a rule, and each stage is a gate.** A data model designed before the use cases are fixed is designed twice; a table designed before the user counts are known is designed for the wrong number. Each stage's exit condition is in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
 
@@ -229,7 +231,7 @@ git fetch --tags && git tag -l '1.0.0'    # empty = not released
 
 | Difference in the contract | The valid bump |
 |---|---|
-| none | patch |
+| none | patch (if nothing was added) |
 | fields or types **only added** | minor |
 | removed, renamed, retyped, or a **required field added** | **major** |
 
@@ -308,7 +310,7 @@ Each one's exit condition, delegate skill and not-applicable rule is in [`checkp
 **Three things about the order are deliberate:**
 
 - **4 (stub) comes before the frontend gate** so that 12–14 can build a client and a screen against something real-shaped, without waiting for 6. 16 swaps them onto the actual API — a change of endpoint, not a rewrite, because the stub and the real resolver share a class name and interface
-- **5 and 13 gather the modules the next checkpoint will import**, before it starts. A resolver that turns out mid-implementation to need an external client it does not have is exactly the interruption those exist to remove
+- **5 and 13 gather the modules the next checkpoint will import**, before it starts — and 5 first checks the in-house package catalog (`@openreachtech/hora-ecosystem`, a devDependency of this repository) so nothing the company already ships gets reinvented. A resolver that turns out mid-implementation to need an external client it does not have is exactly the interruption those exist to remove
 - **2, 9, 11 and 18 verify against the use cases**, three times over and then once for real. They fail in different ways: 2 asks whether the spec supports them, 9 whether the API does, 11 whether a screen does, 18 whether the product does
 
 ### Going backwards is normal

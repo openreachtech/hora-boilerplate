@@ -73,7 +73,7 @@ npm install
 myproject-app/
   specs/
     1.0.0/
-      spec.md               ← the entry point. /hora-spec creates it
+      spec.md               ← the entry point. Ships empty; /hora-spec fills it
       sources/              ← documents that ARE the specification
         api-reference.md
         requirements.md

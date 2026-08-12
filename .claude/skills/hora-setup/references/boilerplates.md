@@ -60,7 +60,7 @@ git ls-remote --tags --sort=-v:refname \
 
 **Do not take the HEAD of `main`.** Since a version is the unit of management, take a released state. `main` risks grabbing a work-in-progress commit that carries no tag.
 
-The existing boilerplates leave `package.json`'s `version` at `0.0.0` and manage the real version through git tags. `release.yml` also reads the version from `git tag -l`, never from `package.json`. **The tag is what carries the version.**
+The existing boilerplates leave `package.json`'s `version` at `0.0.0` and manage the real version through git tags. `release.yml` also treats the tags as the record of what was released — it derives a new version from the release PR and checks it against the tags already pushed, never against `package.json`. **The tag is what carries the version.**
 
 ### 4. Clone it and throw away its history
 
@@ -84,9 +84,9 @@ git -C <myproject>-frontend-admin checkout -b release/<version>
 git -C <myproject>-frontend-admin commit --allow-empty -m "Release <version>"
 ```
 
-**The `checkout -b` right after `init` matters.** `HEAD` is unborn at that point (there is no commit yet), and `checkout -b` on an unborn `HEAD` is valid — it just points the next commit at the named branch instead of whatever `git init`'s configured default happens to be. Skip this and step 12's initial commit lands wherever that default is (often literally `main`), which is exactly the branch this skill's git-operation rule (Commits, in the main skill) says never to commit straight to.
+**The `checkout -b` right after `init` matters.** `HEAD` is unborn at that point (there is no commit yet), and `checkout -b` on an unborn `HEAD` is valid — it just points the next commit at the named branch instead of whatever `git init`'s configured default happens to be. Skip this and step 13's initial commit lands wherever that default is (often literally `main`), which is exactly the branch the commit rules (`../../hora/references/commits.md`, "Where work lands") say never to commit straight to.
 
-**The empty `commit --allow-empty` right after that is the branch's opening marker**, not a placeholder for real content. `<version>` here is the hora project's own version (`1.0.0`, matching the branch name) — not the boilerplate's tag fetched two lines above (`1.8.1`, or whatever the boilerplate's own version happens to be). It is the first commit on `release/<version>`; step 12's initial commit is the second.
+**The empty `commit --allow-empty` right after that is the branch's opening marker**, not a placeholder for real content. `<version>` here is the hora project's own version (`1.0.0`, matching the branch name) — not the boilerplate's tag fetched two lines above (`1.8.1`, or whatever the boilerplate's own version happens to be). It is the first commit on `release/<version>`; step 13's initial commit is the second.
 
 **Skip this step entirely for a row whose directory already exists.** Do not clone into it, and do not touch its `.git` — treat it as already fetched, however it got there. A human commonly places it there themselves when the boilerplate is private and a non-interactive `git clone` has no credentials to authenticate with (a session has no terminal to type a username/password into, so the clone fails immediately rather than prompting). The remaining steps (filling in `package.json`/`.env.development`, and the like) still run for that row — each is checked on its own, not skipped as a group.
 
@@ -136,7 +136,7 @@ ignores: [
 
 Skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`, never under that path. Without this step, everything `ai-agent-skills` ships stays invisible for the rest of the session.
 
-The package already ships its skills flattened under `dist/skills/` (one directory per skill, name unique, no frontmatter left to strip), so the script clones them into this repository's `.claude/skills/` as-is — no renaming, no rewriting. **Safe to re-run** — each destination is a straight copy of its source, so a re-run just overwrites each destination with whatever the package currently holds.
+The package already ships its skills flattened under `dist/skills/` (one directory per skill, name unique, no frontmatter left to strip), so the script clones them into this repository's `.claude/skills/` as-is — no renaming, no rewriting. **Safe to re-run** — it synchronizes rather than overlays: every package-equipped directory (the ones `.gitignore` ignores; this repository's own skills are named back in there and are never touched) is removed first, then copied fresh, so a skill the package renamed or dropped does not linger as a live match candidate.
 
 ```bash
 .claude/skills/hora-setup/scripts/equip-skills.sh

@@ -92,7 +92,7 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 
 **Going back is normal, and it is not a failure.** A stage that turns up something an earlier one got wrong says so, names the stage, and the run returns there. Stage 7 exists to do exactly this. `references/stages.md` holds which stage each kind of shortfall returns to.
 
-**No stage may write another stage's section.** Stage 4 does not write use cases; stage 1 does not choose a column type. A stage that reaches into the next one's section has decided something before the conversation that was supposed to decide it.
+**No stage may write another stage's section.** Stage 4 does not write use cases; stage 1 does not choose a column type. A stage that reaches into the next one's section has decided something before the conversation that was supposed to decide it. **The one exception is stage 6's refusal criteria**: a refusal is a behavior, so it belongs in the owning section's `<!-- acceptance -->` block, and stage 6 appends it there — proposed and approved like any other text (`references/stages.md`, "Acceptance criteria are drafted by the stage that writes the section").
 
 ---
 

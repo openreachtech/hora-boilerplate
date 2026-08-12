@@ -36,9 +36,12 @@ git clone https://github.com/openreachtech/hora-boilerplate.git <myproject>-app
 cd <myproject>-app
 rm -rf .git
 git init
+npm install
 ```
 
 Do this before writing `specs/` — once the repository holds commits of its own, discarding `.git` would take those with it too.
+
+**Either way, run `npm install` in the new repository before `/hora`.** The packages the kit itself reads — `@openreachtech/ai-agent-skills` (the equipped skills) and `@openreachtech/hora-ecosystem` (the package catalog) — come from this repository's own devDependencies, and nothing else installs them.
 
 ### 2. Write the spec
 
@@ -150,6 +153,7 @@ The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/r
 | [`docs/commands.md`](./docs/commands.md) | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
+| [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
 
 The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](./.claude/skills/hora/SKILL.md), [`structure.md`](./.claude/skills/hora/references/structure.md), [`commits.md`](./.claude/skills/hora/references/commits.md), [`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md), [`spec-format.md`](./.claude/skills/hora/references/spec-format.md), [`stages.md`](./.claude/skills/hora-spec/references/stages.md), [`principles.md`](./.claude/skills/hora-spec/references/principles.md) and [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md).
 

@@ -349,16 +349,7 @@ A server with no consumer, and a frontend with no server to match it, are both e
 
 `.hora/glossary.md` (not split per version, append-only). It stops one concept from acquiring two names. A contract pins the type names on an API's surface, but **not class names, method names or internal variable names.** That is the glossary's territory.
 
-**Check names against `@openreachtech/eslint-config`'s naming rules as they are written.** Skip that and implementation walks into lint errors, each of which invents its own local workaround name.
-
-```
-Forbidden suffixes  ~Data ~Info ~Helper ~Item ~List ~Manager ~Utils ~Wrapper
-Forbidden words     data item list info acc arr attr btn cate cfg cnt col cond ctx
-                    err el ev evt ex ext fmt idx img len msg no num obj opt
-                    pos prod ret str usr temp tmp tx txt val callback
-Enforced spelling   cancelled → canceled
-Forbidden syntax    while / do-while / for / for-of / for-in / let / switch
-```
+**Check names against `@openreachtech/eslint-config`'s naming rules as they are written — read them from the package itself, under the backend row's `node_modules/@openreachtech/eslint-config/`, never from a list restated here.** The denylist of suffixes, words and syntax is the package's to grow, and a copy here would still read as authoritative after it had (`../hora/references/structure.md`, "The division of labor"). Skip the check and implementation walks into lint errors, each of which invents its own local workaround name.
 
 ```markdown
 | Term | Identifier | Kind | Used in | Notes |

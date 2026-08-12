@@ -7,7 +7,7 @@ description: Build one feature by taking it through the eighteen checkpoints —
 
 **Take one feature through the eighteen checkpoints, in order.**
 
-Read `../hora/references/structure.md` (the layout, the invariants, where a command runs) and `references/checkpoints.md` (the checkpoint list itself) before starting. **This skill is read-only on `specs/`, with the single exception checkpoint 1 names.**
+Read `../hora/references/structure.md` (the layout, the invariants, where a command runs) and `references/checkpoints.md` (the checkpoint list itself) before starting. **This skill is read-only on `specs/`; checkpoint 1 is where a problem found there is routed to the two skills that may write it** (`references/checkpoints.md`, checkpoint 1).
 
 ## One feature at a time, never two
 
@@ -66,7 +66,7 @@ Report the decision in one line before starting work — "building #attendance, 
    a conflict-proof change, a new identifier, a contract it wanted to change
 7. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
    files it touched
-     fails -> fix it, retry (up to a limit; see "A lint rule contradiction")
+     fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
    that same repository, npx jest on exactly the files this checkpoint wrote
      fails, from something code could fix -> fix it, retry
@@ -133,8 +133,23 @@ So the match is made here, once per checkpoint, against what is actually equippe
 | `registrations` | records that an aggregation file could only be inserted into (below) |
 | `reinvention` | raises a `reinvention` question (`blocking: no`) |
 | `specIssues` | takes it to checkpoint 1's procedure, or raises a question |
+| `missingSkill` | records the gap against the checkpoint in the feature file, continues without it, and names it in the closing report. **Never substitutes a different skill** (`../hora/references/structure.md`, "How the match is made") |
 
 **A reported dependency or conflict-proof change pauses the checkpoint where it is.** A separate agent applies it on its own branch, it merges into `release/<version>`, and `feature/<feature-id>` rebases onto the new tip before work continues. Nothing else is running, so that rebase has no concurrent state to reconcile.
+
+### What the verifier's report drives
+
+`hora-verifier` returns a judgment, never a fix (`../../agents/hora-verifier.md`, "What to return"). This skill acts on what it returns:
+
+| It reports | This skill does |
+|---|---|
+| `met` | writes `[x]` and moves on |
+| `unmet`, with `sendBackTo` | clears the checkpoints from `sendBackTo` on and re-enters there — the same movement the four verification gates use. **`sendBackTo` is required whenever anything is unmet**; a report missing it goes back to the verifier, never into a guess |
+| `missingTests` / `weakenedTests` | the checkpoint is not passed — back to an implementer agent, with the shortfall named |
+| `findings` (checkpoint 8) | an implementer fixes them, then the audit runs again. An accepted finding is recorded as a question, never left as a silent pass |
+| `contractDrift` | raises a `contradiction` question (`blocking: yes`). **Never edits the contract** |
+| `specIssues` | takes it to checkpoint 1's procedure, or raises a question — the same as the implementer's |
+| `specAssumptions` | records each as a `spec-assumption` question (`blocking: no`), so the reading it assumed is visible to whoever edits `specs/` next |
 
 ---
 
@@ -150,74 +165,11 @@ For each server, the contract in `.hora/contracts/<version>/` is authoritative f
 
 `.hora/glossary.md` holds the names. When a new concept gets one, check it against `@openreachtech/eslint-config`'s naming rules first, then append it — **including the workaround chosen for a forbidden name, and why.** Without that record, somebody later restores the naive name and lint fails.
 
-### File and folder names
+### File and folder names, and import order
 
-**Only class definitions are PascalCase. Everything else is kebab-case.**
+**How a file is named and how imports are ordered are the package's conventions, and neither is restated here.** A copy would go stale the first time the package updates, and nothing would announce that it had (`../hora/references/structure.md`, "The division of labor"). At step 3, match the equipped skills whose descriptions cover naming and import order along with the rest, and hand them to the agent.
 
-```
-lib/models/RpaFlow.js               a class definition. PascalCase
-lib/scalars/AuditLog.js             a class definition
-docker-compose.development.yml      not a class. kebab-case
-.hora/tasks/1.0.0/attendance.md
-specs/1.0.0/attendance/spec.md
-```
-
-**The intent is for the name itself to say "this is not a class definition."** Keep the tree in a state where starting with a capital reads as "there is exactly one class in here".
-
-### How to order imports
-
-**Farthest first.** What is farthest from the current file goes on top. One blank line between groups.
-
-```
-1. Native Node modules (node:*)
-2. External modules from outside the company. Largest first
-3. The company's shared modules (@openreachtech/*)
-4. Modules inside the application
-5. Constant files (gathered at the end when there are any, since they are not classes)
-```
-
-```js
-import fs from 'node:fs'
-
-import { z } from 'zod'
-import dayjs from 'dayjs'
-
-import RandomTextGenerator from '@openreachtech/mentsu-random-text-generator'
-
-import Base from './lib/Base.js'
-
-import RpaFlow from './lib/models/RpaFlow.js'
-import User from './lib/models/User.js'
-
-import { RPA_STATUS } from './constants/rpa.js'
-```
-
-**"Largest first" in group 2 cannot be decided mechanically.** Follow the order in existing files. Judgment that wobbles from run to run costs reproducibility, so decide it yourself only where no precedent exists.
-
-**Inside group 4, order by folder as well**: by the folder part of the path first, then by file name, with one blank line where the folder changes. **Never order the path as a single string** — files in the same folder end up separated by a group of subfolders (measured).
-
-```
-Ordered by the whole path         folder → file name (correct)
-./lib/Base.js                     ./lib/Base.js
-./lib/models/RpaFlow.js           ./lib/zoo.js          ← same folder, so adjacent
-./lib/models/User.js
-./lib/scalars/AuditLog.js         ./lib/models/RpaFlow.js
-./lib/scalars/Email.js            ./lib/models/User.js
-./lib/zoo.js  ← ends up far away
-                                  ./lib/scalars/AuditLog.js
-                                  ./lib/scalars/Email.js
-```
-
-**Compare by locale-independent code units** (the order where `LC_ALL=C sort` and JavaScript's `Array#sort()` agree). **This applies inside group 4 only.**
-
-**Never let a code-unit comparison decide the order of the groups themselves.** The list above decides it. Left to the comparison, it comes out backwards.
-
-```
-Code-unit comparison   @openreachtech/... (0x40) → dayjs → zod → ./lib/... (0x2E comes first)
-Farthest first (right) zod / dayjs → @openreachtech/... → ./lib/...
-```
-
-**Lint does not enforce this order.** `sort-imports` is set to `off`. A broken order still passes CI, so it is maintained as a convention.
+**Lint does not enforce all of it**, so a broken convention can still pass CI — the conventions hold because the matched skills are followed, not because a check would catch a miss.
 
 ### Aggregation files are regenerated
 
@@ -296,7 +248,7 @@ Rarely, two lint rules conflict outright — fixing one violation only trips the
 
 **Detecting a genuine loop needs every lint error this fix loop has ever seen, not only the latest one.** Keep every reported violation (rule, file, line) from every attempt. The moment a newly-reported violation exactly matches one already kept — same rule, same file, same line — that is definitive proof of a loop. Act on it immediately, without waiting for the retry limit; comparing the errors directly catches a longer cycle (A trips B trips C trips A) faster than comparing the code.
 
-**Reaching the retry limit without ever detecting an exact repeat is handled exactly the same way.** A loop that keeps producing different violations is not *proven* to be a rule contradiction, but there is no way to tell the two apart from here, and stopping to ask a human over what is likely a trivial style rule is not worth it either way.
+**The retry limit is five attempts per checkpoint. Reaching it without ever detecting an exact repeat is handled exactly the same way.** A loop that keeps producing different violations is not *proven* to be a rule contradiction, but there is no way to tell the two apart from here, and stopping to ask a human over what is likely a trivial style rule is not worth it either way.
 
 **Either trigger resolves identically:** from every distinct violation kept so far, pick whichever rule sits lowest on the protection order below, cut an `adhoc/<rule-name>-in-<filename>` branch, add a `files`-scoped override disabling that one rule for that one file **in that repository's own `eslint.config.js`**, and merge it in like any other branch. Report it as an `eslint-exception` question — `blocking: no`, but **fail-loud**: name it on its own in the closing report. **Reset the retry count and run lint again.**
 

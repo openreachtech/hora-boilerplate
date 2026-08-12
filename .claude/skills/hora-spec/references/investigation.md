@@ -23,7 +23,7 @@ This file is where those two are separated.
 
 **The fourth row is the one that matters most and is missed most often.** "Anyone with a session token can call this" is a fact read off an auth filter. "Anyone with a session token should be able to call this" is a decision nobody has made — and stage 6 exists because, in a product that already runs, the second has usually never happened.
 
-**The last row cannot be moved by any amount of evidence.** A half-built screen and a finished one look identical from a file listing; tests exist for features nobody finished and are absent for features that work. `built:` is asked, always, and the evidence is offered as material rather than as a recommendation (`../hora/references/asking.md`, "What is never asked").
+**The last row cannot be moved by any amount of evidence.** A half-built screen and a finished one look identical from a file listing; tests exist for features nobody finished and are absent for features that work. `built:` is asked, always, and the evidence is offered as material rather than as a recommendation (`../../hora/references/asking.md`, "What is never asked").
 
 ---
 
@@ -35,7 +35,7 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
                                                               unanswerable? ──> spec-assumption
 ```
 
-**The draft is not the spec.** Nothing read enters `specs/` until somebody has confirmed the words, exactly as if they had said them — which is what invariant 2 protects and all it protects (`../hora/references/structure.md`, "This forbids inferring. It does not forbid reading").
+**The draft is not the spec.** Nothing read enters `specs/` until somebody has confirmed the words, exactly as if they had said them — which is what invariant 2 protects and all it protects (`../../hora/references/structure.md`, "This forbids inferring. It does not forbid reading").
 
 **A gap found while reading is a proposal, never a check.** "There is no error state on this screen" states a fact; "add an error state to this screen" is the skill's own thinking, and it goes out labelled as such. Stating the second in the voice of the first is the one mixing this whole design guards against (`asking.md`).
 
@@ -108,7 +108,7 @@ specs/<version>/
 
 ### The three drop-off directories, and why they turn a question into a check
 
-**They ship empty and are read first.** They exist so that somebody handing over twenty documents can express, by where they put each one, what they would otherwise have been asked twenty times (`../hora/references/spec-format.md`, "a drop-off convention").
+**They ship empty and are read first.** They exist so that somebody handing over twenty documents can express, by where they put each one, what they would otherwise have been asked twenty times (`../../hora/references/spec-format.md`, "a drop-off convention").
 
 | Where it was found | How it goes out |
 |---|---|
@@ -126,7 +126,7 @@ specs/<version>/
 
 **Never link into an implementation repository.** Those directories are gitignored, so a link into one resolves on the author's disk and breaks in every other clone — silently. Anything needed goes as a copy under `specs/<version>/`.
 
-**Material is closed inside one version, never shared across them** (`../hora/references/structure.md`, invariant 3). A later version that needs the same document gets its own copy; sharing one means editing it for the later version silently changes what the earlier one was written against.
+**Material is closed inside one version, never shared across them** (`../../hora/references/structure.md`, invariant 3). A later version that needs the same document gets its own copy; sharing one means editing it for the later version silently changes what the earlier one was written against.
 
 **A document that cannot be brought in at all is still worth naming.** Record what it is and who holds it, under "read but not settled here" — a wiki page nobody can export is a known gap, and a known gap is not the same as silence.
 
@@ -142,7 +142,7 @@ read the request  ──>  the parts that are clear  ──> draft them, per sta
                   ──>  what it does not mention  ──> the stage asks, as it always would
 ```
 
-**A request is drafted from as a proposal, not confirmed as a check.** "You wrote that the admin exports a CSV, so the admin may call this operation" reads the caller off a sentence nobody wrote as a permission. What the request said goes back as *this is what I understood you to be asking for*; what it implies goes back as *this is what that would mean; is it what you want?* (`../hora/references/asking.md`).
+**A request is drafted from as a proposal, not confirmed as a check.** "You wrote that the admin exports a CSV, so the admin may call this operation" reads the caller off a sentence nobody wrote as a permission. What the request said goes back as *this is what I understood you to be asking for*; what it implies goes back as *this is what that would mean; is it what you want?* (`../../hora/references/asking.md`).
 
 **Take the whole request through the stages, and never only the parts that fit.** Anything in it that no stage claimed by the end of stage 7 is reported — a line nobody could place is either a misunderstanding or a feature nobody scheduled, and both are worth saying out loud. Record each one under "read but not settled here" with the stage it should have belonged to.
 
@@ -154,7 +154,7 @@ read the request  ──>  the parts that are clear  ──> draft them, per sta
 
 ## Sources and Annex
 
-Both already exist in the format (`../hora/references/spec-format.md`). **Stage 0's job is to fill them, which nothing did before.**
+Both already exist in the format (`../../hora/references/spec-format.md`). **Stage 0's job is to fill them, which nothing did before.**
 
 | | What it means | Read as |
 |---|---|---|
@@ -226,7 +226,7 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 - **treat a request as settled requirements**, or promote one into `Sources`. It is the agenda; the stages are what turn it into a specification
 - **edit, tidy or annotate `request/`.** What was asked for stays as it was asked
 - **go deep.** Each later stage reads its own section's evidence for itself
-- **conclude `built:`** from what it read. It offers the evidence and the choice (`../hora/references/asking.md`)
+- **conclude `built:`** from what it read. It offers the evidence and the choice (`../../hora/references/asking.md`)
 - **resolve a disagreement between a document and the code.** It reports both readings and asks which holds
 - **touch git, or any implementation repository's contents.** Reading is the whole of its access
 
@@ -236,8 +236,8 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 
 | File | Content |
 |---|---|
-| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool |
-| `../hora/references/structure.md` | invariant 2, and why reading is not inferring |
-| `../hora/references/spec-format.md` | `Sources`, `Annex`, and the `built:` annotation |
+| `../../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool |
+| `../../hora/references/structure.md` | invariant 2, and why reading is not inferring |
+| `../../hora/references/spec-format.md` | `Sources`, `Annex`, and the `built:` annotation |
 | `stages.md` | stage 0's exit condition, and what each later stage reads |
 | `../SKILL.md` | the approval model everything drafted here passes through |

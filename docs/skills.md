@@ -58,9 +58,11 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
                  .claude/skills/<skill>/
 ```
 
-- **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It is a plain copy, safe to re-run
+- **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It synchronizes rather than overlays — package-equipped directories (the gitignored ones; your own skills are never touched) are removed first, then copied fresh — so a skill the package renamed or dropped does not linger, and a re-run is safe
 - **It does not wait for any repository to be cloned.** `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
+
+**`ai-agent-skills` is one of two packages the kit reads.** The other is **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 
@@ -130,10 +132,10 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | Area | Covers |
 |---|---|
 | **Database** | logical schema design, migrations, models, seeders, named subqueries |
-| **GraphQL** | SDL and per-audience schemas, the server engine, query / mutation / subscription resolvers, input validators, the shared `Share` container, **stub resolvers** |
-| **REST** | the renderer architecture under `server/restfulapi/` |
+| **GraphQL** | SDL and per-audience schemas, the server engine, query / mutation / subscription resolvers, input validators, the shared resolver container, **stub resolvers** |
+| **REST** | the RESTful renderer architecture |
 | **Execution placement** | deciding whether work belongs in the request path, in a post-worker, or in a background job — then implementing it |
-| **Types and constants** | `.d.ts` declaration files, and the two-file constant convention |
+| **Types and constants** | `.d.ts` declaration files, and the constant convention |
 | **Integration** | external HTTP/REST API clients |
 | **Design patterns** | the strategy trio that replaces an `else-if` chain |
 | **AI features** | agent structure and loops, multi-LLM providers, light RAG, prompt document stores |

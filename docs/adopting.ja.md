@@ -73,7 +73,7 @@ npm install
 myproject-app/
   specs/
     1.0.0/
-      spec.md               ← 入口。/hora-spec が作る
+      spec.md               ← 入口。空で同梱され、/hora-spec が埋める
       sources/              ← それ自体が「仕様」である文書
         api-reference.md
         requirements.md

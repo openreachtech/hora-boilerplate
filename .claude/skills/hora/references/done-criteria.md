@@ -2,7 +2,7 @@
 
 The conditions for a checkpoint, a feature, a version and a session to be done.
 
-**Manual verification is not part of this.** A human does it whenever they want, in `<myproject>-backend`: `./docker.sh start` → `npm run db:refresh` → `npm run dev`. `/hora` neither does it for them nor makes it a condition of being done. **The local end-to-end environment is a different thing** — checkpoint 17 builds it and `/hora-accept` requires it, because an acceptance review has nothing to review without one.
+**Manual verification is not part of this.** A human does it whenever they want, in `<myproject>-backend`, with the commands `/hora-setup` read in that row's real tree — `.hora/tree/<repository>.md` holds them. `/hora` neither does it for them nor makes it a condition of being done. **The local end-to-end environment is a different thing** — checkpoint 17 builds it and `/hora-accept` requires it, because an acceptance review has nothing to review without one.
 
 ---
 
@@ -127,7 +127,7 @@ npm run lint
 npm test
 ```
 
-The parent (`myproject-app`) also has lint, covering `.claude/`.
+The parent (`myproject-app`) also has lint. Its own tree holds almost no JavaScript — the implementation rows and the equipped skills are ignored by design — so this is a self-check of the root's own config and of any script that ever lands there, not a review of `.claude/`'s markdown.
 
 ```bash
 npm run lint
@@ -143,23 +143,14 @@ npm run lint
 | a lint naming violation | **do not invent a workaround name on the spot.** Check the glossary; if it is not there, append to it first, then fix the code |
 | two lint rules that cannot both be satisfied | `/hora-build`, "A lint rule contradiction". Never handed to the user |
 | an acceptance criterion cannot be met | the spec may describe something unachievable. Raise it as `contradiction` |
-| a DB connection error | the middleware is not running. Point at the manual-verification steps. `/hora` does not run `docker.sh start` on its own |
+| a DB connection error | the middleware is not running. Point at the manual-verification steps (`.hora/tree/<repository>.md` holds the commands). `/hora` does not bring the middleware up on its own |
 | an existing test fails | the implementation broke existing behavior. Fix it. If the spec calls for breaking it on purpose, confirm through a question |
 
 **Never set `- [x]` while a test does not pass.** Report the fact that it did not.
 
 ### Lint's naming rules
 
-`@openreachtech/eslint-config` strictly forbids certain identifier names. **A naive name fails.**
-
-```
-Forbidden suffixes    ~Data ~Info ~Helper ~Item ~List ~Manager ~Utils ~Wrapper
-Forbidden words       data item list info acc arr attr btn cate cfg cnt col cond ctx
-                      err el ev evt ex ext fmt idx img len msg no num obj opt
-                      pos prod ret str usr temp tmp tx txt val callback
-Enforced spelling     cancelled → canceled
-Forbidden syntax      while / do-while / for / for-of / for-in / let / switch
-```
+`@openreachtech/eslint-config` strictly forbids certain identifier names — suffixes, words and syntax. **A naive name fails.** The rules are read from the package itself, under the linted repository's own `node_modules/@openreachtech/eslint-config/`, never from a list restated here — the denylist is the package's to grow, and a copy would still read as authoritative after it had (`structure.md`, "The division of labor").
 
 `/hora-plan` already checks the glossary against these rules, so following it avoids failing here. A failure here means something is missing from the glossary. **Once a workaround name is chosen, append it to the glossary's "names avoided, and why".** Without that record, somebody later restores the naive name and it fails again.
 
