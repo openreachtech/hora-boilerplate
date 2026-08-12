@@ -231,7 +231,7 @@ git fetch --tags && git tag -l '1.0.0'    # empty = not released
 
 | Difference in the contract | The valid bump |
 |---|---|
-| none | patch |
+| none | patch (if nothing was added) |
 | fields or types **only added** | minor |
 | removed, renamed, retyped, or a **required field added** | **major** |
 
