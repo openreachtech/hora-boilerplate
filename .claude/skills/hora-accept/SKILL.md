@@ -54,6 +54,8 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 
 **A feature that was implemented before Hora Kit was adopted is in scope like any other.** Its checkpoints are marked not-applicable up to the acceptance gate, never through it — so the first sweep after adoption is the run that says what the existing product actually does. Expect findings there, and expect them to be the reason adopting the kit was worth doing.
 
+**Where the plan collapsed an all-`built:` version to a single sweep** (`../hora-plan/SKILL.md`, "collapses to one sweep"), that adoption sweep is one invocation with every adopted feature in scope, and it stands in for each one's checkpoint 18. It runs the same five steps as any sweep — nothing about the work shrinks, only the number of times it is repeated. Its findings route to checkpoints per feature, exactly as always, and a feature a finding reopens gets its checkpoints back for real.
+
 **Cumulative scope is the whole point of running acceptance per feature.** A feature that breaks an earlier one fails here, in the run that broke it, while the change is one commit old — instead of at the end of the version, where it arrives alongside twenty other changes and nobody can say which caused it.
 
 Two invocations differ only in scope and in what is written:
