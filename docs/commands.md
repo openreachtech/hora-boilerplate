@@ -323,23 +323,23 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 
 ## `/hora-accept`
 
-**Acceptance, over every feature implemented so far.**
+**Acceptance — the full unit suites every time, the review at the invocation's reach.** A feature gate (checkpoint 18) reviews its own feature, with the live browser sweep skipped unless explicitly requested; the whole-version sweep reviews every feature implemented so far and always drives the product.
 
 | | |
 |---|---|
 | **Reads** | `.hora/tasks/` (to work out the scope), the running application, the test suites |
 | **Writes** | `.hora/acceptance/<version>/<feature-id>.md`, or `_sweep.md` for the whole-version run |
-| **Stops when** | the local end-to-end environment is not there or not complete — it reports `lacked-environment` rather than reviewing something that is not really running |
+| **Stops when** | a run that drives the product finds the local end-to-end environment missing or incomplete — it reports `lacked-environment` rather than reviewing something that is not really running |
 | **Run it directly** | to re-run acceptance after fixing something, or to get a current picture of what the product actually does |
 
 ### What it does
 
 ```
-1. Confirm the environment      the local end-to-end container stack
-2. Unit suites, per repository  test placement, and driving a suite green
+1. Confirm the environment      the local end-to-end container stack — live runs only
+2. Unit suites, per repository  test placement, and driving a suite green — EVERY run
 3. The scenario list            end-to-end test specification
-4. The acceptance review        the review itself, with its own criteria
-5. UX findings                  the UI/UX audit
+4. The acceptance review        the review itself, with its own criteria, at the run's reach
+5. UX findings                  the UI/UX audit — the sweep, or on explicit request
 ```
 
 **Each step names the work, not a skill.** No hora file writes down a package skill's name — the match is made at run time against the equipped skills' own descriptions, and the names that were matched go into the run's record. [`skills.md`](./skills.md) has the reasoning.

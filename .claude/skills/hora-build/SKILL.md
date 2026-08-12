@@ -16,7 +16,7 @@ Read `../hora/references/structure.md` (the layout, the invariants, where a comm
 | | |
 |---|---|
 | a feature reaches acceptance while its author still remembers it | rather than at the end of the version, alongside twenty others |
-| a break shows up in the run that caused it | checkpoint 18 covers every feature so far, so a regression fails immediately |
+| a break shows up in the run that caused it | checkpoint 18's unit suites cover every feature so far, so a regression fails immediately |
 | one branch per repository is open at a time | no shared, uncommitted state between two features to untangle |
 
 **The failure mode this avoids is building every backend task, then every frontend task, then testing.** Under that order, the first time anyone finds out whether a feature works is after all of them are written.
@@ -153,7 +153,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 **1, 2, 9, 11 — the ones that talk to a person.** An agent cannot ask anyone anything, so a gate that exists to resolve a problem in conversation cannot be delegated to one. Handing checkpoint 2 to an agent turns "settle this with the author" into "the agent decided", which is invariant 2.
 
-**17 and 18 — the ones that drive the whole system.** Bringing up a container stack and running an acceptance review across every feature so far is not one feature's implementation work, and neither fits an agent scoped to one checkpoint's files.
+**17 and 18 — the ones that drive the whole system.** Bringing up a container stack, and running an acceptance gate whose unit suites span every repository, is not one feature's implementation work, and neither fits an agent scoped to one checkpoint's files.
 
 ### What an implementer agent may not do
 

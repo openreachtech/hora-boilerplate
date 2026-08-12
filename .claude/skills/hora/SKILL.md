@@ -15,7 +15,7 @@ description: Implement an application from its spec. Decides where a project sta
 | **`/hora-setup`** | creates the repositories the spec declares, fills in the project's values, reads the real tree | once per version, idempotent |
 | **`/hora-plan`** | fixes the version, verifies the spec in conversation, writes the feature list | once per version, re-entered every run |
 | **`/hora-build`** | takes one feature through the eighteen checkpoints | **once per feature** |
-| **`/hora-accept`** | runs acceptance over every feature implemented so far | at each feature's checkpoint 18, and once as a whole-version sweep |
+| **`/hora-accept`** | runs the full unit suites every time, and the acceptance review at the invocation's reach — the gate's own feature, or every feature so far | at each feature's checkpoint 18 (scoped), and once as a whole-version sweep (full) |
 
 Read `references/structure.md` before anything else — the repository layout, where a per-repository command runs, and the three invariants all come from there. `references/commits.md` holds every git rule.
 

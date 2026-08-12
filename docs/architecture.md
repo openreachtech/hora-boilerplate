@@ -63,7 +63,7 @@ One feature goes through its spec, its backend, its frontend and then acceptance
 
 The cost is real and it is accepted deliberately: bringing a container stack up per feature is cheap next to unwinding twenty features built on a wrong table.
 
-**Acceptance is cumulative, which is what makes the middle row work.** [`/hora-accept`](../.claude/skills/hora-accept/SKILL.md) runs over **every feature implemented so far**, not the newest one. A feature that breaks an earlier one therefore fails in the run that broke it.
+**The regression net is cumulative, which is what makes the middle row work.** At every gate, [`/hora-accept`](../.claude/skills/hora-accept/SKILL.md) runs the **unit suites across whole repositories** — so a feature that breaks an earlier one fails in the run that broke it. The expensive half, driving screens in a real browser, is scoped to the gate's own feature there; every feature is driven end to end once, at the whole-version sweep, or earlier on explicit request.
 
 ---
 
@@ -76,7 +76,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | **1, 2, 9, 11** | **the main session, in conversation** | they exist to settle something *with a person*. **A subagent cannot ask anyone anything**, so delegating one turns "settle this with the author" into "the agent decided" — which is inventing a requirement |
 | **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no file-editing tools and fixes nothing |
-| **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
+| **17, 18** | the main session | bringing up a container stack, and an acceptance gate whose unit suites span every repository, is not one checkpoint's file-scoped work |
 
 **Stage 0 and the seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
@@ -178,7 +178,7 @@ Every git operation happens in the main session — `/hora` itself, or a skill i
 | in the backend row | entering checkpoint 3 | **checkpoint 9 passes** |
 | in a frontend row | entering checkpoint 10 | **checkpoint 17 passes** |
 
-**Not after acceptance** — acceptance (18) covers every feature so far, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up comes back as a `retake/` branch instead, which is already the name for "merged, then found lacking".
+**Not after acceptance** — acceptance (18) runs suites spanning every feature so far and can fail on any of them, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up comes back as a `retake/` branch instead, which is already the name for "merged, then found lacking".
 
 **Checkpoint 17 is the one that falls outside the table.** The local end-to-end environment lives in the backend row, whose feature branch merged eight checkpoints earlier — so its changes go on their own `update/e2e-<what>-for-<feature-id>` branch, cut and merged like any other `update/` ([`commits.md`](../.claude/skills/hora/references/commits.md)).
 

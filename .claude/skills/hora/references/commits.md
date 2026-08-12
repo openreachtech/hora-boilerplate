@@ -45,7 +45,7 @@ A feature is built through the checkpoints of `/hora-build`, and those checkpoin
 | the backend row | entering checkpoint 3 (the first one that writes backend code) | **once checkpoint 9 passes** (the backend gate's last one) |
 | a frontend row | entering checkpoint 10 | **once checkpoint 17 passes** (the frontend gate's last one) |
 
-**A feature's branches merge at their own gate's boundary, not after acceptance.** Acceptance (checkpoint 18) covers **every feature implemented so far**, not just this one, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up instead comes back as a `retake/` branch — the existing name for "already implemented, found lacking later", which is exactly what an acceptance failure is.
+**A feature's branches merge at their own gate's boundary, not after acceptance.** Acceptance (checkpoint 18) runs suites that span **every feature implemented so far** and can fail on any of them, not just this one, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up instead comes back as a `retake/` branch — the existing name for "already implemented, found lacking later", which is exactly what an acceptance failure is.
 
 **A repository the feature does not touch gets no branch.** A backend-only feature never cuts one in a frontend row.
 
