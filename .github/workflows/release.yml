@@ -23,10 +23,13 @@ jobs:
     runs-on: [self-hosted, light]
 
     steps:
-      - name: 🛎 Checkout code
+      - name: 🛎 Checkout the merge commit on main
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # On a pull_request event the default ref is refs/pull/<n>/merge,
+          # an ephemeral test merge — tagging that puts the tag on a commit
+          # main never holds. Tag the commit that actually landed instead.
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - name: ✅️ Extract the version from the PR title, or the release branch name
         id: extract_version
@@ -61,7 +64,9 @@ jobs:
         env:
           VERSION: ${{ steps.extract_version.outputs.version }}
         run: |
-          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+          # Ask the remote — the checkout above does not fetch tags, so a
+          # local lookup would miss every tag and re-push on every re-run.
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
             echo "Tag $VERSION already exists. Skipping."
           else
@@ -73,9 +78,6 @@ jobs:
         env:
           VERSION: ${{ steps.extract_version.outputs.version }}
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
           git tag "$VERSION"
           git push origin "$VERSION"
           echo "Created and pushed tag: $VERSION"
