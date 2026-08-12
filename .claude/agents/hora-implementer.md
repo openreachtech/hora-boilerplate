@@ -133,7 +133,7 @@ Two things are yours regardless of which convention applies.
 
 ### Do not run lint, and do not run the tests
 
-`/hora-build` runs both, from inside the right repository, right after you finish — and a verifier judges the result separately. **Report what you wrote instead** (below).
+`/hora-build` runs both, from inside the right repository, right after you finish — and the result is judged separately, never by you. **Report what you wrote instead** (below).
 
 The reason is not scheduling. **An agent that both writes a test and decides whether it passed can loosen the test until it does**, and nothing downstream can tell that apart from a test that passed on its own merits.
 

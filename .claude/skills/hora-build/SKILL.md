@@ -16,7 +16,7 @@ Read `../hora/references/structure.md` (the layout, the invariants, where a comm
 | | |
 |---|---|
 | a feature reaches acceptance while its author still remembers it | rather than at the end of the version, alongside twenty others |
-| a break shows up in the run that caused it | checkpoint 18 covers every feature so far, so a regression fails immediately |
+| a break shows up in the run that caused it | checkpoint 18's unit suites cover every feature so far, so a regression fails immediately |
 | one branch per repository is open at a time | no shared, uncommitted state between two features to untangle |
 
 **The failure mode this avoids is building every backend task, then every frontend task, then testing.** Under that order, the first time anyone finds out whether a feature works is after all of them are written.
@@ -64,9 +64,11 @@ Report the decision in one line before starting work — "building #attendance, 
        -> hora-verifier, read-only, given the same
 6. Handle whatever the agent reported that is not code (below): a dependency,
    a conflict-proof change, a new identifier, a contract it wanted to change
-7. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
-   files it touched
-     fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
+7. Lint: cd into this checkpoint's repository, then npx eslint --fix on
+   exactly the files it touched, then npx eslint on the same files for what
+   remains. --fix clears the mechanical violations (most of @stylistic/*)
+   without an agent round trip; only what it cannot fix is worth one
+     still fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
    that same repository, npx jest on exactly the files this checkpoint wrote,
    with the output written to a file and read from there (below)
@@ -83,7 +85,9 @@ Report the decision in one line before starting work — "building #attendance, 
        died under (below), and stop the feature there
 9. Verify the exit condition actually holds — with hora-verifier for anything
    a reading of the code can settle, in conversation for the four gates that
-   check against use cases
+   check against use cases. At 6 and 16, where step 8's suite is itself the
+   proof, the verifier is usually skipped ("When the suite is the
+   verification", below)
 10. Write [x] into the feature file. Commit at the gate boundary, not here
 11. Move to the next checkpoint
 ```
@@ -125,11 +129,31 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 **A run that dies without a result is the third kind of failure, and it is an environment one.** The first two cases in step 8 both leave results to read; this one leaves nothing — the process was killed, or the machine ran out of memory under it. No code change fixes that, so it is recorded as a `lacked-environment` question, and what makes the record worth writing is the configuration it names: how many workers ran, what per-worker memory ceiling they were given, and what else was resident on the machine competing for it. A record without those is "it died"; the next run keeps the same settings and dies the same way. What the right values *are* is the package's knowledge — the skill matched at step 3 for running tests owns that — but naming what this run died under is this skill's job, because this skill is the one holding the evidence when it happens.
 
+### Step 9 — when the suite is the verification (checkpoints 6 and 16)
+
+**At 6 and 16 the exit condition names tests, and step 8 just ran them — a passing suite already proves most of what a verifier would re-derive.** What a verifier really adds at these two gates is catching a test that is missing or was weakened, and both are cheaper to check directly:
+
+```
+1. Map the implementer's testsWritten against the acceptance criteria this
+   checkpoint covers. Every criterion carries a test file that exists and ran
+   in step 8's suite. A criterion with none -> back to an implementer, with
+   the shortfall named. This is the main session's own read, never an agent's
+2. Did step 8's fix loop touch any test file?
+     no  -> the checkpoint is verified; write [x]. The implementer never runs
+            the tests (its own file forbids it), so a suite that passed
+            without a test being edited afterwards was never exposed to the
+            loosen-until-green failure mode
+     yes -> spawn hora-verifier after all, scoped to exactly the test files
+            the fix loop touched, judging missingTests / weakenedTests only
+```
+
+**What this skips is the re-derivation, never the standard.** A test loosened, skipped or deleted to make the suite pass still fails the checkpoint — step 2's `yes` branch is where that is caught, and it runs precisely when the risk exists: a test edited *after* its result was visible. The rest of these exit conditions — the stub's class name and interface at 6, the stub left intact at 16 — is a two-file read the main session does itself.
+
 ### Which checkpoints the main session must run itself
 
 **1, 2, 9, 11 — the ones that talk to a person.** An agent cannot ask anyone anything, so a gate that exists to resolve a problem in conversation cannot be delegated to one. Handing checkpoint 2 to an agent turns "settle this with the author" into "the agent decided", which is invariant 2.
 
-**17 and 18 — the ones that drive the whole system.** Bringing up a container stack and running an acceptance review across every feature so far is not one feature's implementation work, and neither fits an agent scoped to one checkpoint's files.
+**17 and 18 — the ones that drive the whole system.** Bringing up a container stack, and running an acceptance gate whose unit suites span every repository, is not one feature's implementation work, and neither fits an agent scoped to one checkpoint's files.
 
 ### What an implementer agent may not do
 
