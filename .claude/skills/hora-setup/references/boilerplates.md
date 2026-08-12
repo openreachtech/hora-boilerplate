@@ -136,7 +136,7 @@ ignores: [
 
 Skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`, never under that path. Without this step, everything `ai-agent-skills` ships stays invisible for the rest of the session.
 
-The package already ships its skills flattened under `dist/skills/` (one directory per skill, name unique, no frontmatter left to strip), so the script clones them into this repository's `.claude/skills/` as-is — no renaming, no rewriting. **Safe to re-run** — each destination is a straight copy of its source, so a re-run just overwrites each destination with whatever the package currently holds.
+The package already ships its skills flattened under `dist/skills/` (one directory per skill, name unique, no frontmatter left to strip), so the script clones them into this repository's `.claude/skills/` as-is — no renaming, no rewriting. **Safe to re-run** — it synchronizes rather than overlays: every package-equipped directory (the ones `.gitignore` ignores; this repository's own skills are named back in there and are never touched) is removed first, then copied fresh, so a skill the package renamed or dropped does not linger as a live match candidate.
 
 ```bash
 .claude/skills/hora-setup/scripts/equip-skills.sh

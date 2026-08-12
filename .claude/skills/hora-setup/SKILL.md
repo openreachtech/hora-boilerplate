@@ -95,7 +95,7 @@ When this step finishes, make an initial commit in each repository it created, o
 
 It copies every skill that package ships into this repository's own `.claude/skills/`, so they become usable for the rest of the session — **skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`, never under that path.**
 
-**This does not wait on any declared row being cloned.** Like `@openreachtech/hora-ecosystem`, `ai-agent-skills` comes from this repository's own devDependencies, so run it as its own step, independent of the loop above. Run it on every invocation — the package may have been updated since the last one, and the script is a straight copy, safe to re-run.
+**This does not wait on any declared row being cloned.** Like `@openreachtech/hora-ecosystem`, `ai-agent-skills` comes from this repository's own devDependencies, so run it as its own step, independent of the loop above. Run it on every invocation — the package may have been updated since the last one, and the script synchronizes rather than overlays (it removes every package-equipped directory first, then copies fresh), so a re-run is safe and leaves nothing stale behind.
 
 **Everything `/hora-build` and `/hora-accept` delegate to comes from here.** Those skills carry the order and the exit conditions; the procedures and the pass/fail criteria live in this package (`../hora/references/structure.md`, "The division of labor"). Without this step, every one of those delegations has nothing to reach.
 

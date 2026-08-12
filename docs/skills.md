@@ -58,7 +58,7 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
                  .claude/skills/<skill>/
 ```
 
-- **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It is a plain copy, safe to re-run
+- **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It synchronizes rather than overlays — package-equipped directories (the gitignored ones; your own skills are never touched) are removed first, then copied fresh — so a skill the package renamed or dropped does not linger, and a re-run is safe
 - **It does not wait for any repository to be cloned.** `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
