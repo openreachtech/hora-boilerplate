@@ -2,7 +2,7 @@
 
 The conditions for a checkpoint, a feature, a version and a session to be done.
 
-**Manual verification is not part of this.** A human does it whenever they want, in `<myproject>-backend`: `./docker.sh start` → `npm run db:refresh` → `npm run dev`. `/hora` neither does it for them nor makes it a condition of being done. **The local end-to-end environment is a different thing** — checkpoint 17 builds it and `/hora-accept` requires it, because an acceptance review has nothing to review without one.
+**Manual verification is not part of this.** A human does it whenever they want, in `<myproject>-backend`, with the commands `/hora-setup` read in that row's real tree — `.hora/tree/<repository>.md` holds them. `/hora` neither does it for them nor makes it a condition of being done. **The local end-to-end environment is a different thing** — checkpoint 17 builds it and `/hora-accept` requires it, because an acceptance review has nothing to review without one.
 
 ---
 
@@ -143,7 +143,7 @@ npm run lint
 | a lint naming violation | **do not invent a workaround name on the spot.** Check the glossary; if it is not there, append to it first, then fix the code |
 | two lint rules that cannot both be satisfied | `/hora-build`, "A lint rule contradiction". Never handed to the user |
 | an acceptance criterion cannot be met | the spec may describe something unachievable. Raise it as `contradiction` |
-| a DB connection error | the middleware is not running. Point at the manual-verification steps. `/hora` does not run `docker.sh start` on its own |
+| a DB connection error | the middleware is not running. Point at the manual-verification steps (`.hora/tree/<repository>.md` holds the commands). `/hora` does not bring the middleware up on its own |
 | an existing test fails | the implementation broke existing behavior. Fix it. If the spec calls for breaking it on purpose, confirm through a question |
 
 **Never set `- [x]` while a test does not pass.** Report the fact that it did not.

@@ -98,7 +98,7 @@ Report the decision in one line before starting work — for example, "continuin
 | writing `specs/` | **`/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time. Nobody else** (`references/structure.md`, invariant 1) |
 | writing code and tests | the agents `/hora-build` starts |
 
-**Manual verification is not one of the phases.** A human does it whenever they want (in the backend: `./docker.sh start` → `npm run db:refresh` → `npm run dev`). `/hora` does not do it for them. What *is* required is the local end-to-end environment checkpoint 17 builds — that one is a prerequisite of acceptance, not a convenience, and `/hora-accept` stops without it rather than reviewing something that is not really running.
+**Manual verification is not one of the phases.** A human does it whenever they want, in the backend row, with the commands `/hora-setup` read in its real tree (`.hora/tree/<repository>.md` holds them). `/hora` does not do it for them. What *is* required is the local end-to-end environment checkpoint 17 builds — that one is a prerequisite of acceptance, not a convenience, and `/hora-accept` stops without it rather than reviewing something that is not really running.
 
 ---
 

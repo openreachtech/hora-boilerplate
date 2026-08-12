@@ -44,7 +44,7 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 
 - **decide scope.** When a version cannot proceed it lays out the choices (build it / drop it / defer it) and waits
 - **write `specs/`.** Only `/hora-spec` may, a section at a time, and `/hora-plan`, an edit at a time — both with your approval on the exact text
-- **run manual verification for you.** `./docker.sh start` → `npm run db:refresh` → `npm run dev` is yours to run whenever you want
+- **run manual verification for you.** It is yours to run whenever you want, with the commands `/hora-setup` recorded in `.hora/tree/<repository>.md`
 
 ---
 
