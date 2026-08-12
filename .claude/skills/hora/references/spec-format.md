@@ -2,9 +2,11 @@
 
 The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec that gets filled in.**
 
-**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/<version>/spec.md`. `specs/1.0.0/spec.md` ships empty.
+**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/1.0.0/spec.md`, which ships empty. **It is copied once, for the first version only** ("The blank spec is not copied into a diff version").
 
-**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way, and every later version's `spec.md` is written the same way as the first.
+**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way.
+
+**The first version's `spec.md` is a whole document; every one after it is a diff against the version before it** ("From the second version on, write a diff"). The format is the same; how much of it a version writes is not.
 
 ---
 
@@ -34,6 +36,7 @@ specs/
     spec.md               ← the entry point. One per version. The only fixed name
     sources/              ← drop-off: documents that ARE the spec (below). Recognized, not required
     annex/                ← drop-off: documents that EXPLAIN it (below). Recognized, not required
+    request/              ← drop-off: what somebody WANTS this version to do (below). Never spec text
     attendance/
       spec.md              ← a feature file (optional). Linked from spec.md
       monthly/
@@ -43,25 +46,41 @@ specs/
     docs/
       RPA_CORE_SPEC.md       ← supporting material. Linked from spec.md's Annex, not declared as a source
   1.1.0/
-    spec.md
+    spec.md               ← a DIFF against 1.0.0. Only the sections this version changes
+    request/
+      csv-export.md          ← "add a CSV export for the admin" — a page of notes, in anybody's words
     spec/
       00-overview.md          ← kept per version even if the content is the same
 ```
 
 **Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to — from `spec.md`, from a feature file, or transitively through either — is never read, and raises a question (`orphan`, `blocking: no`). This is the one thing that stays closed: not the shape of the directory, but the requirement that nothing depends on `/hora` noticing an unlinked file by luck.
 
-**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans.
+**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans. **`request/` raises nothing either** (below): it is read before the document is written and is never linked from it, so the rule that catches a file nobody will read does not apply to it.
 
-### `sources/` and `annex/` — a drop-off convention, and nothing more
+### `sources/`, `annex/` and `request/` — a drop-off convention, and nothing more
 
-**Two directory names are recognized, so that somebody with documents to hand over has a place to put them without reading this file.** They ship empty in `specs/1.0.0/`.
+**Three directory names are recognized, so that somebody with something to hand over has a place to put it without reading this file.** They ship empty in `specs/1.0.0/`.
 
 | | |
 |---|---|
 | `specs/<version>/sources/` | put a document here to say **it is part of the specification** |
 | `specs/<version>/annex/` | put a document here to say **it only explains the specification** |
+| `specs/<version>/request/` | put a document here to say **this is what I want this version to do.** Not specification text, and never becomes any |
 
-**They change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+**The first two change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+
+**`request/` is the third answer to "what does putting a document here decide", and it is a different kind of answer.** A source is a statement somebody is held to; an annex explains one; **a request is neither — it is the agenda for this version**, in whatever words the person had, and `/hora-spec` turns it into sections through the ordinary route: a **proposal** for what it asks for, a question for what it leaves open, and an approval before anything is written.
+
+| | `Sources` | `Annex` | `request/` |
+|---|---|---|---|
+| Declared in a table in `spec.md` | yes | yes | **never** |
+| Linked from `spec.md` | yes | yes | **never** |
+| `/hora-plan` extracts tasks from it | yes | no | **never — `/hora-plan` does not read it at all** |
+| What it is after the stages have run | still the specification | still the explanation | **spent.** The sections it produced are the specification |
+
+**A request is never promoted to a `Source`, however precisely it is written.** The two say different things — a source says "this is what the product must do", a request says "this is what I want somebody to work out". Promoting one would put a wish list where `/hora-plan` extracts tasks from it, which is exactly the dictation the seven stages exist to replace.
+
+**Leave the file where it is once its version is written.** It costs nothing, and it is the record of what was actually asked for, against which the sections that came out of it can be read. **It is not carried into the next version** — a request belongs to the version that answered it (invariant 3).
 
 **Recognized, never required**, in either direction:
 
@@ -184,6 +203,30 @@ To change just one annotation, write only the heading and that annotation. There
 **Annex material is not diffed in parts.** Prose cannot be patched, so **the version that wants to change it places the whole text.** A version that does not change it need not hold a copy. It is the same overwrite rule as `spec.md`.
 
 **Past versions must not be rewritten.** Fixing 1.0.0's material for the sake of 1.1.0 changes the meaning of 1.0.0's spec retroactively, and what was actually built there can no longer be reproduced. To fix it, place the full text on the 1.1.0 side instead.
+
+#### The blank spec is not copied into a diff version
+
+**`specs/skeleton/spec.md` is the first version's starting point and only the first version's.** Copied into `specs/1.1.0/spec.md`, it lands every required section as an empty heading — and under the rule above, a heading with no body means "the body carries over", so twenty sections would sit there saying nothing while appearing to have been written. Nobody reading the file afterwards can tell that from a version that deliberately restated them.
+
+**A diff version's `spec.md` holds two things:**
+
+```markdown
+# <project name> design document
+
+## 1. Document information          ← always restated: the product version changed
+
+| Item | Content |
+|---|---|
+| Product version | 1.1.0 |
+| ...
+
+## 12. CSV export                   ← and then only the sections this version changes
+<!-- id: csv-export -->
+```
+
+Everything else — the repository layout, the actors, the non-functional requirements, every feature 1.0.0 already carries — **is absent on purpose, and absent is how it carries over.** The required-sections table below is checked against the **resolved** document, not against the diff, so a section 1.0.0 declared satisfies it for every version after it.
+
+**Somebody who would rather not write even that can put a page of notes in `request/`** (above) and run `/hora-spec`, which drafts the sections from it and writes each one it gets approved.
 
 ---
 
@@ -379,6 +422,8 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | (below this, one section per feature) | a repository name / `app` | what gets implemented | — |
 
 **Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states **the kind of every operation and who may call it** (below). None of the four may be inferred, and each is `blocking: yes` when missing.
+
+**This table is checked against the resolved document, never against one version's file.** A section the first version declared satisfies it for every version after it, so a diff that writes nothing but one new feature is complete. **A feature section this version adds is the exception**: it is new, nothing carries over into it, and it needs its own use cases and acceptance criteria like any other.
 
 **Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
 

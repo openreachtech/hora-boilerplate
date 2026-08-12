@@ -67,7 +67,7 @@ npm install
 
 **Do this before running `/hora-spec`.** A session can only read what is inside its own working directory, and everything `/hora` reads is reached by following links from `specs/<version>/spec.md`. A requirements document sitting on a wiki is a document stage 0 cannot open.
 
-**Two directories ship empty for exactly this.** Drop each document into whichever one describes it:
+**Three directories ship empty for exactly this.** Drop each document into whichever one describes it:
 
 ```
 myproject-app/
@@ -81,13 +81,17 @@ myproject-app/
         screens.pdf
         er-diagram.png
         old-design-doc.md
+      request/              ← what you want built now, in your own words
+        this-quarter.md
   legacy-api/               ← your repositories, from step 1
   admin-console/
 ```
 
-**Which folder you choose is what you would otherwise be asked, one document at a time.** Stage 0 reads both, puts your placement back as a check — *"these are in `sources/`, so I am treating them as part of the specification; right?"* — and writes the tables. Twenty documents become one exchange, plus whichever you want moved.
+**Which folder you choose is what you would otherwise be asked, one document at a time.** Stage 0 reads them all, puts your placement back as a check — *"these are in `sources/`, so I am treating them as part of the specification; right?"* — and writes the tables. Twenty documents become one exchange, plus whichever you want moved.
 
-**Neither directory is required.** A document placed anywhere else under `specs/<version>/` is found all the same; stage 0 just asks about it instead of confirming it. **Bring your project's existing layout across as it is if you prefer** — there is exactly one structural rule, that `spec.md` sits directly under the version directory, and beyond that names, nesting and depth are free.
+**`request/` is the one that is not about documents you already have.** It is where what you want built goes — a mail, a ticket, a page of bullets, in whatever words you have it in. Stage 0 reads it as this version's agenda, and the seven stages turn it into sections you approve one at a time. Nothing in it ever becomes spec text on its own, and `/hora-plan` does not read it at all.
+
+**No directory is required.** A document placed anywhere else under `specs/<version>/` is found all the same; stage 0 just asks about it instead of confirming it. **Bring your project's existing layout across as it is if you prefer** — there is exactly one structural rule, that `spec.md` sits directly under the version directory, and beyond that names, nesting and depth are free.
 
 ### Which documents to bring
 
@@ -106,14 +110,17 @@ myproject-app/
 
 **Material is closed inside one version, not shared across them** ([`structure.md`](../.claude/skills/hora/references/structure.md), invariant 3). If 1.1.0 needs the same document, it gets its own copy. That looks redundant and is deliberate: shared material means editing it for 1.1.0 silently changes what 1.0.0 was written against.
 
-### What the two directories actually decide
+### What the directories actually decide
 
-They map onto two tables in `spec.md`, and **the difference is not filing — it is whether the kit will build what the document says**:
+The first two map onto two tables in `spec.md`, and **the difference is not filing — it is whether the kit will build what the document says**:
 
 | | What it means | What `/hora` does with it |
 |---|---|---|
 | **`Sources`** | this document **is** part of the specification | reads it **exactly as it reads a feature file.** What is in it becomes tasks, and gets built |
 | **`Annex`** | this document **explains** the specification | interpretation only. **Never produces a task** |
+| **`request/`** | this is what somebody **wants**, and nobody has worked it out yet | `/hora-spec` drafts sections from it, which you approve. **Never a table, never a task, never read by `/hora-plan`** |
+
+**The third row is why a rough note is safe to hand over and a rough `Source` is not.** Put a wish list in `sources/` and the wishes become tasks; put it in `request/` and each one arrives back at you as a question or a proposal first.
 
 **So a five-year-old line about a Slack integration, in a document you put in `sources/`, is a Slack integration somebody builds.** In `annex/` the same line is background: it informs what stage 4 puts to you, and only what you confirm reaches the spec.
 
@@ -342,7 +349,9 @@ The workflows under `.github/workflows/` default to a self-hosted runner labeled
 1. Create <myproject>-app from this template. Move the existing repositories inside it
 2. Drop your existing documents into specs/1.0.0/sources/ (they ARE the spec —
    requirements, API references) or specs/1.0.0/annex/ (they EXPLAIN it —
-   mockups, diagrams, old design docs). Both ship empty. Neither is required.
+   mockups, diagrams, old design docs), and what you want built into
+   specs/1.0.0/request/ (your own words; never becomes spec text on its own).
+   All three ship empty. None is required.
    Do NOT link into the implementation repositories; they are gitignored and
    the link breaks quietly
 3. Write specs/1.0.0/spec.md — /hora-spec reads what exists, then writes it with you:

@@ -52,6 +52,8 @@ Do this before writing `specs/` — once the repository holds commits of its own
 
 **If you already have documents, drop them in before running this.** `specs/1.0.0/sources/` for anything that **is** the specification — requirements, an API reference — and `specs/1.0.0/annex/` for anything that only **explains** it — mockups, diagrams, an old design doc. Both ship empty, neither is required, and stage 0 confirms the split rather than asking you about each file. [`docs/adopting.md`](./docs/adopting.md), step 2, has the details.
 
+**If all you have is what you want, put that in `specs/1.0.0/request/`** — a mail, a ticket, a page of bullets, in your own words. Stage 0 reads it as this version's agenda and the seven stages turn it into sections you approve one at a time. It ships empty too, nothing in it becomes spec text on its own, and `/hora-plan` never reads it.
+
 Writing it by hand is still supported, and produces the same document:
 
 ```sh
@@ -114,6 +116,27 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 ```
 
 Stage 0 and the seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](./.claude/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](./.claude/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
+
+### Adding a feature after a version has shipped
+
+**Everything above describes one version. A second version is the same five skills over a spec that is a diff.**
+
+```sh
+mkdir -p specs/1.1.0/request
+$EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
+```
+
+```
+/hora-spec       drafts specs/1.1.0/spec.md from it — a DIFF: document
+                 information, and the new feature. Nothing else
+/hora            the usual run, from there
+```
+
+**`specs/1.1.0/spec.md` is a diff against 1.0.0**, so only the sections this version changes are written; everything else carries over by being absent, and **1.0.0 is never rewritten**. **The blank spec is not copied into it** — that would land twenty empty headings in a document that needed one new feature.
+
+**The stages do not make you re-agree to what shipped.** A stage whose section this version does not touch passes as a **carry-over**: the previous version's answer, quoted back and confirmed. **Stages 6 and 7 never carry over for anything you add** — every new operation states who may call it, and the whole-document review reads the resolved document rather than the diff.
+
+**First decide whether you need a new version at all.** The line is not the size of the change but whether the version has been released — `git tag -l '1.0.0'` empty means you edit `specs/1.0.0/` and the number does not change. Once released, leave it alone and start the next one. [`docs/commands.md`](./docs/commands.md) has the whole procedure, including how the new number is chosen.
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 

@@ -1,6 +1,6 @@
 ---
 name: hora-spec
-description: Write one version's spec from a conversation with whoever wants the product — reading whatever already exists first, then use cases, the horizon, the non-functional requirements, the data / API / execution design, the screens, security, and a whole-document review. On a project that already runs, it reads the repositories and documents and puts them back as something to confirm, so nobody dictates a product from memory. Writes `specs/<version>/spec.md` itself, one approved section at a time, and runs the seven stage skills that do the work. Runs at the root of the hora repository (myproject-app). Invoked by /hora when a version has no spec, by /hora-plan when a finding needs design work, or directly as /hora-spec.
+description: Write one version's spec from a conversation with whoever wants the product — reading whatever already exists first, then use cases, the horizon, the non-functional requirements, the data / API / execution design, the screens, security, and a whole-document review. On a project that already runs, it reads the repositories and documents and puts them back as something to confirm, so nobody dictates a product from memory. From the second version on it writes a diff against the version before it, drafted from a page of notes dropped into `specs/<version>/request/` or from what somebody says, so that adding a feature to a released product costs a conversation about that feature and not about the twenty already built. Writes `specs/<version>/spec.md` itself, one approved section at a time, and runs the seven stage skills that do the work. Runs at the root of the hora repository (myproject-app). Invoked by /hora when a version has no spec, by /hora-plan when a finding needs design work, or directly as /hora-spec.
 ---
 
 # hora-spec
@@ -40,10 +40,11 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 |---|---|
 | a requirement, a constraint or a decision **stated in the conversation** | **write it into `specs/`.** This is the skill's entire job |
 | something **read off a repository or a document** | **put it up as a check** — "I read it as this; is that right?" Written once it is confirmed or corrected |
+| something **asked for in `request/`** | **draft it into the section that owns it and put it up as a proposal** — it is what somebody wants, not yet what the product does. Written once they approve the words |
 | an improvement, an alternative or a gap **this skill thought of** | **propose it, marked as a proposal.** It becomes spec text only once the person says yes |
 | a requirement **nobody stated and nobody approved** | **never written.** That is inventing what the spec does not say (`../hora/references/structure.md`, invariant 2) |
 
-**Rows two and three are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do. Stated in the same voice, a proposal becomes an existing fact in the record, and nothing afterwards can tell it apart from something that was actually there. **`../hora/references/asking.md` is the authority on this, and it is read by `/hora-plan` too.**
+**The check and the two kinds of proposal are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do — whether it came out of a request or out of the skill's own thinking, and the record says which. Stated in the same voice, a proposal becomes an existing fact, and nothing afterwards can tell it apart from something that was actually there. **`../hora/references/asking.md` is the authority on this, and it is read by `/hora-plan` too.**
 
 **Invariant 2 was never "a human must type it".** It is that **no requirement enters `specs/` without a human having read the exact words.** Typing was never the protection; reading is. A skill that drafts a section, shows it in full, and writes it only after the person says yes protects exactly what the invariant protects — and a person who was made to type it themselves read it no more carefully.
 
@@ -100,7 +101,8 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 | | |
 |---|---|
 | `specs/<version>/spec.md`, and the version's feature files | **written by this skill**, one approved section at a time |
-| `specs/skeleton/spec.md` | **copied from, never written to.** This skill does the copying |
+| `specs/skeleton/spec.md` | **copied from, never written to.** This skill does the copying, **and only for the first version** |
+| `specs/<version>/request/` | **read, never written to and never tidied up.** It is what somebody asked for, and it stays as they wrote it |
 | `specs/<older version>/` | **never.** Past versions are frozen (`../hora/references/spec-format.md`) |
 | `.hora/spec/<version>/_stages.md` | this skill's own record of where it got to |
 | `.hora/spec/<version>/_assets.md` | what stage 0 read, where from, and at what commit (`references/investigation.md`) |
@@ -117,15 +119,21 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
    spec.md is missing or empty. If every one of those has content, the version
    /hora-plan would target (../hora-plan/SKILL.md, "Fix the version")
 
-2. If specs/<version>/ does not exist, create it
+2. If specs/<version>/ does not exist, create it, with sources/, annex/ and
+   request/ inside it — each holding a .gitkeep, so that an empty one survives
+   being committed and is there for somebody to drop a file into
+   (../hora/references/spec-format.md, "a drop-off convention")
 
-3. If spec.md is missing or empty:
+3. If spec.md is missing or empty, and this is the FIRST version:
        cp specs/skeleton/spec.md specs/<version>/spec.md
    Then say that it was copied, and that nothing in it is filled in yet
 
-4. From the second version on, what gets written is a DIFF against the version
-   before it — only the sections this version changes
-   (../hora/references/spec-format.md, "From the second version on, write a diff")
+4. From the second version on, DO NOT copy the skeleton. What gets written is a
+   DIFF against the version before it — only the sections this version changes.
+   Start spec.md with its H1 and Document information alone, and let each stage
+   add the sections it turns out this version touches
+   (../hora/references/spec-format.md, "The blank spec is not copied into a
+   diff version", and "The second version onward" below)
 
 5. Run stage 0 before entering stage 1, always
    (references/investigation.md). On a project with nothing to read it is over
@@ -135,11 +143,64 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 
 **Step 3 is a copy, not a draft.** The skeleton lands as it ships: headings and table headers, nothing filled in. Every value in it arrives through a stage's conversation.
 
+**Step 4 is why it is not copied twice.** The skeleton's empty headings mean "the body carries over" under the diff rule, so copying it into a later version writes twenty sections that say nothing while looking like they were written, and nothing afterwards can tell them from sections somebody meant to restate.
+
 **A version whose `spec.md` already has content is edited, never restarted.** Read what is there, work out which stages it already satisfies, record that in `_stages.md`, and enter the first stage that is not satisfied. A spec somebody wrote by hand is a spec at stage 7, not stage 1.
 
 **Stage 0 still runs, even then.** A hand-written spec says nothing about which documents exist or what the repositories hold, and `Sources` / `Annex` are exactly what a person writing by hand leaves empty.
 
 **Never write into a past version's directory.** A fix that belongs to a released version goes into the version being written now, as a full replacement of that section.
+
+---
+
+## The second version onward
+
+**A released product's next version is one or two features on top of twenty that already work, and the seven stages must not make somebody re-agree to the twenty.** Run head-on, stage 3 asks for user counts that were settled a release ago and stage 6 asks who may call operations nobody has touched — and a person answering those for the third time answers them without reading, which is the failure the whole approval model exists to prevent.
+
+**Nothing about the format changes. What changes is how much of it this version writes** (`../hora/references/spec-format.md`, "From the second version on, write a diff").
+
+### A stage passes by carry-over, and says so
+
+**A stage whose section nothing in this version touches is passed, with the reason written** — it is not skipped, and it is not `n/a`. The three states are still the only three (`references/stages.md`); carrying over is a stage that passed for a stated reason, exactly like any other.
+
+```markdown
+3. [x] Non-functional requirements  <!-- carried: 1.0.0's numbers, confirmed unchanged -->
+```
+
+**Carrying over is a check, never an assumption.** The stage states what the previous version fixed, in the words it fixed it in, and asks whether what this version adds changes it. A confirmed carry-over is a decision somebody made this release; an unexamined one is a stage that did not run while reporting that it did.
+
+```
+hora  Stage 3. 1.0.0 fixed these, and nothing in the CSV export request
+      touches them on the face of it:
+
+        200 staff now, 5,000 within two years
+        the heaviest single operation: the monthly close
+        records kept for 7 years
+
+      An export that reads a whole year for every member of staff would be
+      heavier than the monthly close. Is it in scope to be, or is it a month
+      at a time like the close?
+```
+
+**That is the shape of every stage on a diff version:** what already holds, what this version adds, and the one question the addition actually raises.
+
+**Which stages may carry over, and which never may, is stated per stage in `references/stages.md`** — as a `Carried over when` line, next to that stage's exit condition and its `Not applicable when`. It is not restated here, and there is one place to change it.
+
+**Stages 6 and 7 are the two that never carry over for anything this version adds, and they are what make a diff version safe to run quickly.** Everything above them is allowed to be brief because those two are not: every new operation states its caller at the version that introduced it, and the whole-document review reads the **resolved** document, where a new operation contradicting a rule 1.0.0 wrote is obvious — in a diff, it is invisible.
+
+---
+
+## A page of notes is enough to start from
+
+**Drop what is wanted into `specs/<version>/request/` and run `/hora-spec`.** Any file, any name, in anybody's own words — a mail, a ticket, a page of bullets, a meeting note. Stage 0 reads it first and treats it as **this version's agenda**: what somebody wants, in the form they had it (`references/investigation.md`).
+
+**A request is not a source, and the difference is the point.** Nothing in it is spec text. What it says clearly is drafted into the section that owns it and goes back as a **proposal**; what it implies goes back as a question — and only what somebody approves is written. `/hora-plan` never reads `request/` at all, so a wish list cannot become a task by sitting in a folder.
+
+**Requests are the one thing this skill reads that nobody has to be held to.** Somebody writing a request may contradict themselves, ask for two incompatible things, or describe a screen without saying who opens it. **That is expected, and each one is a question this skill asks rather than a defect in the file** — being able to hand over rough notes is the whole reason the directory exists.
+
+**Saying it in conversation works identically.** The directory exists because a request is regularly longer than a message, written by somebody who is not in the session, and worth keeping next to the version that answered it.
+
+**It works for the first version and earns its keep from the second.** A first version is a long conversation whatever it starts from; a later one is often one page of notes away from being a diff nobody had to write.
 
 ---
 
@@ -176,6 +237,8 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 | splitting approval into its own release | keep it in 1.0.0 | Q4, `scope`, blocking: no |
 ```
 
+**On a diff version, a stage that carried over is `[x]` with the carry-over written next to it** — `<!-- carried: ... -->`, saying what it was confirmed against ("The second version onward"). It reads as what it is: a stage that ran, found the previous version's answer still standing, and got that confirmed.
+
 **"Decided in conversation, and not visible in `spec.md`" is the part worth the file.** A spec states what the product is; it does not state what it was nearly instead, and the reason a design came out this way is exactly what somebody later needs in order not to undo it. This is the same reasoning `/hora-plan`'s glossary applies to names it avoided.
 
 **"Proposals not taken" stops a run from proposing the same thing every time.** A proposal that was declined is closed until something changes; re-raising it every session is how a person learns to say yes without reading.
@@ -202,9 +265,12 @@ Appended to `.hora/questions/<version>/open.md`, in the format and the language 
 
 ```
 the version written, and whether it was created or continued
+  — and, from the second version on, that it is a diff, and against which version
 what stage 0 found — repositories read, documents declared as Sources or Annex,
-  and anything it recorded as read but not settled
+  what was in request/ and what became of it, and anything it recorded as read
+  but not settled
 which stages passed, and which are still open
+which stages carried over, and what each carry-over was confirmed against
 what the release ended up containing, in one line per feature
 how many checks were confirmed, and how many came back corrected
 how many proposals were made, taken, and declined
@@ -215,6 +281,8 @@ what /hora will start on next (normally /hora-setup, then /hora-plan)
 ```
 
 **Report checks and proposals separately, never as one number.** "Twelve things confirmed, three corrected, two proposals taken, one declined" says what actually happened; "eighteen items agreed" says nothing, and hides the corrections — which are the most interesting part, because each one is a place the system and somebody's understanding of it had drifted apart.
+
+**Name every stage that carried over, never a count of them.** "Four stages carried over" and "stages 3 and 6 carried over untouched, 1 and 4 ran on the export alone" describe the same run, and only the second lets somebody notice that a stage carried over which should not have. A carry-over is the one kind of pass that looks identical to not having run.
 
 **Write it in the language of whoever ran it** — it is conversation, and it does not stay in a file.
 

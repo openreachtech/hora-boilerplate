@@ -86,6 +86,32 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
 
 **Stage 0 is what stops a running product from having to be dictated.** It reads the repositories and the documents, drafts what they show, and hands it back for you to correct. On a project with nothing to read it records that and moves on ([`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)).
 
+### Adding a feature to a version that already shipped
+
+**From the second version on, `spec.md` is a diff against the version before it** — only the sections this version changes. Everything else carries over by being absent, and past versions are never rewritten ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "From the second version on"). **The blank spec is not copied into a diff version**: it would land twenty empty headings in a document that needed one new feature.
+
+**Write the outline, not the document.** Drop what you want into `specs/<version>/request/` — a mail, a ticket, a page of bullets, in your own words, written by whoever wanted it — and run `/hora-spec`. Stage 0 reads it first and treats it as this version's agenda; the seven stages turn it into sections, each one shown to you in full before it is written.
+
+```
+specs/1.1.0/
+  request/
+    csv-export.md    "the admin wants a month of attendance as a CSV"
+  spec.md            ← what /hora-spec writes from it. A diff: document
+                       information, and the CSV export feature. Nothing else
+```
+
+| | `sources/` | `annex/` | `request/` |
+|---|---|---|---|
+| What putting a file here says | **it is the spec** | **it explains the spec** | **this is what I want; work it out** |
+| Declared in a table, and linked from `spec.md` | yes | yes | **never** |
+| `/hora-plan` extracts tasks from it | yes | no | **never reads it at all** |
+
+**A request is never held to like a source.** It may contradict itself, ask for two incompatible things, or describe a screen without saying who opens it — each of those becomes a question, not a defect in your file. **Being able to hand over rough notes is the whole point of the directory.** Saying the same thing in conversation works identically; the directory exists because a request is often longer than a message and written by somebody who is not in the session.
+
+**The stages do not make you re-agree to what shipped.** A stage whose section this version does not touch passes as a **carry-over** — the previous version's answer, stated back to you in the words it was fixed in, and confirmed. It is checked, never assumed, and the closing report names every one, because a carry-over is the one kind of pass that looks the same as not having run.
+
+**Two stages never carry over, and they are why the rest may be brief.** Stage 6 states the caller and the refusal of every operation this version adds, at the version that adds it; stage 7 reviews the **resolved** document rather than the diff — a new operation contradicting a rule 1.0.0 wrote is invisible in two pages and plain in the whole. Which stages may carry over is per stage in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
+
 ### How it asks: a check, a proposal, a question
 
 **These are three different things and they are never phrased alike** ([`asking.md`](../.claude/skills/hora/references/asking.md)).
@@ -185,6 +211,31 @@ vendoring the boilerplate, keeping an upstream remote, making it a submodule, `n
 5. Write the plan and one file per feature
 6. On re-entry, reconcile specs/ against what is already there
 ```
+
+### Which version, and whether it may be a new one
+
+**Step 1 is where a new version number is judged, and the line is not the size of the change — it is whether the version has been released.** The tag in the hora repository decides it, and `release.yml` creates that tag when a merge into main happens.
+
+```bash
+git fetch --tags && git tag -l '1.0.0'    # empty = not released
+```
+
+| | Treatment |
+|---|---|
+| **not released** | additions, changes and removals are all accepted, and **the version number does not change.** No users, so a changed contract breaks nobody — what happens is rework, not broken compatibility. A spec change right before release is entirely normal |
+| **released** | leave it alone. Do it in the next version, whose number comes from the table below |
+
+**From the second version on, the number is judged against the contract diff** in `.hora/contracts/`, not against how the change feels:
+
+| Difference in the contract | The valid bump |
+|---|---|
+| none | patch |
+| fields or types **only added** | minor |
+| removed, renamed, retyped, or a **required field added** | **major** |
+
+Changes that appear in no contract (wording, an internal refactor) are patch; something visible to users but absent from every contract — a new screen — is minor. **A version number becomes three directory names and a tag, so anything unclear about it is `blocking: yes`.** Skipped numbers are reported; numbers that go backwards or repeat are blocking.
+
+**Then it resolves the versions as diffs**: sorted ascending, each one overwriting the last, keyed on `id`, **each a diff against the version immediately before it** — not against the lowest. Everything after that step, including every digest and every "this section disappeared" judgment, runs against the resolved document.
 
 ### The part that talks to you
 

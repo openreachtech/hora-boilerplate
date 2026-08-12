@@ -47,8 +47,9 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
 
 ```
 1. Is there anything to read at all?
-     specs/<version>/sources/ and annex/ first — what is in them, and what
-     their placement says
+     specs/<version>/request/ first — what somebody wants this version to do,
+     which is the agenda every later stage works through (below)
+     then sources/ and annex/ — what is in them, and what their placement says
      then the rest of specs/<version>/, an existing repository inside this
      one, a reference document, a PDF, a diagram, a spreadsheet, an old spec
      nothing  -> record "new project, nothing to read", pass the stage, go to 1
@@ -101,19 +102,21 @@ specs/<version>/
   spec.md            the entry point. The only fixed name
   sources/           drop-off: "this is part of the specification"
   annex/             drop-off: "this only explains it"
+  request/           drop-off: "this is what I want. Turn it into the two above"
   <anything>/        names, nesting and depth are all free
 ```
 
-### The two drop-off directories, and why they turn a question into a check
+### The three drop-off directories, and why they turn a question into a check
 
-**`sources/` and `annex/` ship empty and are read first.** They exist so that somebody handing over twenty documents can express, by where they put each one, what they would otherwise have been asked twenty times (`../hora/references/spec-format.md`, "`sources/` and `annex/` — a drop-off convention").
+**They ship empty and are read first.** They exist so that somebody handing over twenty documents can express, by where they put each one, what they would otherwise have been asked twenty times (`../hora/references/spec-format.md`, "a drop-off convention").
 
 | Where it was found | How it goes out |
 |---|---|
 | in `sources/` or `annex/` | **a check** — "you put this in `sources/`, so I am treating it as part of the specification. Is that right?" |
-| anywhere else under `specs/<version>/` | **a question** — "which of the two is this?" |
+| in `request/` | **a check on the agenda** — "you put this in `request/`, so I am reading it as what you want this version to add, and nothing in it goes into the spec until a stage drafts it and you approve the words. Right?" |
+| anywhere else under `specs/<version>/` | **a question** — "which of the three is this?" |
 
-**That difference is the entire value of the convention.** A person amending a list somebody else drafted gets through twenty documents; a person answering twenty separate questions stops reading around the sixth. Batch the checks — one exchange for everything in `sources/`, one for everything in `annex/`.
+**That difference is the entire value of the convention.** A person amending a list somebody else drafted gets through twenty documents; a person answering twenty separate questions stops reading around the sixth. Batch the checks — one exchange for everything in `sources/`, one for everything in `annex/`, one for `request/`.
 
 **Placement is evidence of intent, never a decision.** A document in `sources/` that nobody confirmed is not a source, and is never written into the `Sources` table on the strength of the folder alone. The directory is what makes the question cheap; it is not what answers it.
 
@@ -127,6 +130,28 @@ specs/<version>/
 
 **A document that cannot be brought in at all is still worth naming.** Record what it is and who holds it, under "read but not settled here" — a wiki page nobody can export is a known gap, and a known gap is not the same as silence.
 
+### What a request is read for
+
+**Everything else stage 0 reads is a fact about a system. A request is the other column of the table at the top of this file** — somebody's intent, which no amount of reading a repository ever settles, arriving as text for once instead of having to be asked for one question at a time.
+
+**That is what makes it worth a directory of its own, and what makes it dangerous to file under `Sources`.** A source states what the product must do and somebody is held to it. A request states what somebody wants and nobody has worked out yet whether it is coherent, who may do it, or what it does to the monthly close. **Read as a source, an unexamined wish becomes a requirement with tasks extracted from it**, which is the failure this whole file guards against, arriving through the one door that looks like cooperation.
+
+```
+read the request  ──>  the parts that are clear  ──> draft them, per stage, as PROPOSALS
+                  ──>  the parts that are not    ──> questions, in the stage that owns them
+                  ──>  what it does not mention  ──> the stage asks, as it always would
+```
+
+**A request is drafted from as a proposal, not confirmed as a check.** "You wrote that the admin exports a CSV, so the admin may call this operation" reads the caller off a sentence nobody wrote as a permission. What the request said goes back as *this is what I understood you to be asking for*; what it implies goes back as *this is what that would mean; is it what you want?* (`../hora/references/asking.md`).
+
+**Take the whole request through the stages, and never only the parts that fit.** Anything in it that no stage claimed by the end of stage 7 is reported — a line nobody could place is either a misunderstanding or a feature nobody scheduled, and both are worth saying out loud. Record each one under "read but not settled here" with the stage it should have belonged to.
+
+**Contradictions inside a request are expected and are not defects in it.** Somebody writing down what they want is not writing a specification — that is the job being asked for. Put each one up as a question with both readings, and never resolve it by picking the one that is easier to build.
+
+**Never edit `request/`.** Not to tidy it, not to strike through what turned out to be out of scope, not to append what was decided. It is the record of what was actually asked for, and the answer lives in `spec.md` and in `_stages.md`, both of which say what became of it.
+
+---
+
 ## Sources and Annex
 
 Both already exist in the format (`../hora/references/spec-format.md`). **Stage 0's job is to fill them, which nothing did before.**
@@ -138,7 +163,7 @@ Both already exist in the format (`../hora/references/spec-format.md`). **Stage 
 
 **The difference is not how useful the document is — it is whether anybody is willing to be held to it.** A design doc that is two years stale is `Annex` however good it is; a current requirements list is `Sources`.
 
-**Which one a document goes into is never stage 0's judgment call.** For anything found in `sources/` or `annex/`, put the placement up as a check; for anything found elsewhere, offer the two options and what each entails.
+**Which one a document goes into is never stage 0's judgment call.** For anything found in `sources/` or `annex/`, put the placement up as a check; for anything found elsewhere, offer the options and what each entails — **including "none of them: this is a request"**, which is what a page of wishes found loose under `specs/<version>/` usually is.
 
 **A document nobody can vouch for goes in `Annex`, and stage 0 says so.** Promoting it to `Sources` would make a stale statement a requirement that `/hora-plan` extracts tasks from.
 
@@ -171,12 +196,19 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 | `docs/api-reference.md` | `Sources` | the API owner | current as of the last release |
 | `docs/screens.pdf` | `Annex` | nobody | 2 years old; three screens no longer exist |
 
+## This version's request
+
+| File | Asked for | Where it went |
+|---|---|---|
+| `request/csv-export.md` | a CSV export of a month's attendance, for the admin | stages 1, 4, 5 and 6. One line unplaced, below |
+
 ## Read but not settled here
 
 | What | Which stage settles it |
 |---|---|
 | the `status` column holds four values, one of them unused | 4 |
 | `deleteAccount` has no auth filter at all | 6 |
+| the request says "and the same for payroll", which no feature covers | 2 |
 ```
 
 **"Read but not settled here" is the part worth the file.** Stage 0 turns up things it must not decide, and the only alternative to recording them is that it either decides them or forgets them. Each one names the stage that owns it.
@@ -191,6 +223,8 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 
 - **decide anything.** It reads, drafts and asks. Every answer is somebody else's
 - **write into `specs/` beyond `Sources` and `Annex`**, and those only once confirmed
+- **treat a request as settled requirements**, or promote one into `Sources`. It is the agenda; the stages are what turn it into a specification
+- **edit, tidy or annotate `request/`.** What was asked for stays as it was asked
 - **go deep.** Each later stage reads its own section's evidence for itself
 - **conclude `built:`** from what it read. It offers the evidence and the choice (`../hora/references/asking.md`)
 - **resolve a disagreement between a document and the code.** It reports both readings and asks which holds

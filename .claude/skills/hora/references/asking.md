@@ -12,7 +12,7 @@
 |---|---|---|---|
 | What the skill is doing | stating its own understanding | offering a course of action | naming something undecided |
 | What the person judges | **is this right, or wrong** | **do we take this, or not** | **what is it** |
-| Where the content came from | evidence the skill read | the skill's own thinking | nowhere yet |
+| Where the content came from | evidence the skill read | the skill's own thinking, **or something somebody asked for that nobody has worked out yet** | nowhere yet |
 | If the person says yes | it goes in **as fact** | it goes in **as an approved decision** | — |
 | If the person says no | the correction goes in | it is dropped, and recorded | — |
 
@@ -23,6 +23,8 @@ a question   "This is not decided anywhere. What is it?"
 ```
 
 **Open with the form.** Not with the content — with which of the three this is. A person who has to work out from the wording whether they are being asked to verify or to decide will sometimes get it wrong, and nothing downstream can tell that they did.
+
+**What somebody asked for is a proposal, never a check.** A request — said in the conversation, or dropped into `specs/<version>/request/` — states what they want; the section drafted from it states what the product would then do, which is a step nobody has taken yet. Put back as a check ("you want a CSV export, so the admin may call this operation"), it turns one sentence of wishing into a permission nobody decided. **Say whose idea it was in the same breath**: *"you asked for this; here is what it would mean"* and *"nobody asked for this; I am suggesting it"* are both proposals, and the record distinguishes them.
 
 ---
 

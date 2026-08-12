@@ -146,7 +146,7 @@ These three must not be broken.
 
 | | Writes | Granularity of approval |
 |---|---|---|
-| **`/hora-spec`** | a whole version's spec, from a conversation with whoever wants the product | **a section**, at the end of the stage that drafted it |
+| **`/hora-spec`** | a whole version's spec, from a conversation with whoever wants the product — **and, from the second version on, that version's diff against the one before it** | **a section**, at the end of the stage that drafted it |
 | **`/hora-plan`** | the holes and contradictions found while planning | **an edit** |
 
 **Approval is never blanket.** "Yes, fix them all" is not approval of text nobody has read yet, and one "yes" over a whole document is worse than none, because the record then says it was read. Go back to step 2 for each unit.
@@ -155,7 +155,7 @@ These three must not be broken.
 
 **An improvement a skill thought of is a proposal, and it is labelled one.** Proposing is expected — whoever asks for a product cannot see the gaps from inside their own request. What is forbidden is the proposal that goes in silently.
 
-**`specs/skeleton/spec.md` is written to by nobody, and is not a version.** It is the blank spec that gets copied to `specs/<version>/spec.md` — `/hora-spec` does the copying, and a human may run the `cp` instead. `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, implemented, or counted as unfinished.
+**`specs/skeleton/spec.md` is written to by nobody, and is not a version.** It is the blank spec that gets copied to `specs/1.0.0/spec.md` — `/hora-spec` does the copying, and a human may run the `cp` instead. **It is copied for the first version only**; every version after it is a diff, and copying the blank into one lands twenty empty headings that read as though somebody wrote them (`spec-format.md`). `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, implemented, or counted as unfinished.
 
 **Every other skill — `/hora-setup`, `/hora-build`, `/hora-accept`, and every agent any of them starts — is strictly read-only on `specs/`.** On finding a problem there, they report it; they never fix it. A typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone.
 
