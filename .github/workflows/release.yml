@@ -17,8 +17,14 @@ concurrency:
 
 jobs:
   tag-and-release:
-    # Only run when PR is merged
-    if: github.event.pull_request.merged == true
+    # Only run when a release/* or hotfix/* PR is merged. dev and env also
+    # merge into main (main-guard.yml allows them), but neither means a
+    # release — a version-looking substring in one of their PR titles
+    # ("bump eslint 9.39.5") must not create a tag.
+    if: >-
+      github.event.pull_request.merged == true &&
+      (startsWith(github.event.pull_request.head.ref, 'release/') ||
+       startsWith(github.event.pull_request.head.ref, 'hotfix/'))
 
     runs-on: [self-hosted, light]
 
@@ -51,8 +57,19 @@ jobs:
           fi
 
           if [ -z "$VERSION" ]; then
-            echo "version=" >> "$GITHUB_OUTPUT"
-            echo "No version found in the PR title or the branch name. Skipping the tag and release."
+            case "$HEAD_REF" in
+              release/*)
+                # A release branch that yields no version would otherwise
+                # leave the version untagged behind a green run — and an
+                # untagged version reads as "never released".
+                echo "::error::No version found in the PR title, and the branch name '$HEAD_REF' is not release/x.y.z."
+                exit 1
+                ;;
+              *)
+                echo "version=" >> "$GITHUB_OUTPUT"
+                echo "No version in the PR title. A hotfix without one gets no tag."
+                ;;
+            esac
           else
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
             echo "Version: $VERSION"
@@ -89,7 +106,9 @@ jobs:
           tag_name: ${{ steps.extract_version.outputs.version }}
           name: ${{ steps.extract_version.outputs.version }}
           draft: false
-          prerelease: false
+          # The version regex deliberately accepts a prerelease suffix; an
+          # rc must not become "Latest" on the releases page.
+          prerelease: ${{ contains(steps.extract_version.outputs.version, '-') }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
