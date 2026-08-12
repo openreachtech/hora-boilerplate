@@ -116,7 +116,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 |---|---|---|
 | `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
 | `.hora/` | the skill whose work it records | humans read only |
-| the implementation repositories | `hora-implementer`, plus `/hora` for every git operation | — |
+| the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's code and tests, and the main session for every git operation | — |
 
 **What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.
 
