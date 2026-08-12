@@ -115,21 +115,9 @@ export { default as Base } from './lib/Base.js'
 
 ---
 
-## How to order imports
+## Naming and import order
 
-Farthest first. One blank line between groups.
-
-```
-1. Native Node modules (node:*)
-2. External modules from outside the company. Largest first
-3. The company's shared modules (@openreachtech/*)
-4. Modules inside the application
-5. Constant files (gathered at the end when there are any)
-```
-
-Inside group 4, order by the folder part first, then by file name, with one blank line where the folder changes. **Never order the whole path as a single string** (files in the same folder end up separated by a subfolder in between). Compare by locale-independent code units, and apply that only inside group 4.
-
-"Largest first" in group 2 cannot be decided mechanically, so **follow the order in existing files.**
+**How a file is named and how imports are ordered are conventions of the skills you were handed — follow whichever of them covers each, and the order in existing files where a call is not mechanical.** They are deliberately not restated here: a copy would go stale the first time the package updates, and nothing would say so.
 
 ---
 

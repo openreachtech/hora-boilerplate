@@ -165,74 +165,11 @@ For each server, the contract in `.hora/contracts/<version>/` is authoritative f
 
 `.hora/glossary.md` holds the names. When a new concept gets one, check it against `@openreachtech/eslint-config`'s naming rules first, then append it — **including the workaround chosen for a forbidden name, and why.** Without that record, somebody later restores the naive name and lint fails.
 
-### File and folder names
+### File and folder names, and import order
 
-**Only class definitions are PascalCase. Everything else is kebab-case.**
+**How a file is named and how imports are ordered are the package's conventions, and neither is restated here.** A copy would go stale the first time the package updates, and nothing would announce that it had (`../hora/references/structure.md`, "The division of labor"). At step 3, match the equipped skills whose descriptions cover naming and import order along with the rest, and hand them to the agent.
 
-```
-lib/models/RpaFlow.js               a class definition. PascalCase
-lib/scalars/AuditLog.js             a class definition
-docker-compose.development.yml      not a class. kebab-case
-.hora/tasks/1.0.0/attendance.md
-specs/1.0.0/attendance/spec.md
-```
-
-**The intent is for the name itself to say "this is not a class definition."** Keep the tree in a state where starting with a capital reads as "there is exactly one class in here".
-
-### How to order imports
-
-**Farthest first.** What is farthest from the current file goes on top. One blank line between groups.
-
-```
-1. Native Node modules (node:*)
-2. External modules from outside the company. Largest first
-3. The company's shared modules (@openreachtech/*)
-4. Modules inside the application
-5. Constant files (gathered at the end when there are any, since they are not classes)
-```
-
-```js
-import fs from 'node:fs'
-
-import { z } from 'zod'
-import dayjs from 'dayjs'
-
-import RandomTextGenerator from '@openreachtech/mentsu-random-text-generator'
-
-import Base from './lib/Base.js'
-
-import RpaFlow from './lib/models/RpaFlow.js'
-import User from './lib/models/User.js'
-
-import { RPA_STATUS } from './constants/rpa.js'
-```
-
-**"Largest first" in group 2 cannot be decided mechanically.** Follow the order in existing files. Judgment that wobbles from run to run costs reproducibility, so decide it yourself only where no precedent exists.
-
-**Inside group 4, order by folder as well**: by the folder part of the path first, then by file name, with one blank line where the folder changes. **Never order the path as a single string** — files in the same folder end up separated by a group of subfolders (measured).
-
-```
-Ordered by the whole path         folder → file name (correct)
-./lib/Base.js                     ./lib/Base.js
-./lib/models/RpaFlow.js           ./lib/zoo.js          ← same folder, so adjacent
-./lib/models/User.js
-./lib/scalars/AuditLog.js         ./lib/models/RpaFlow.js
-./lib/scalars/Email.js            ./lib/models/User.js
-./lib/zoo.js  ← ends up far away
-                                  ./lib/scalars/AuditLog.js
-                                  ./lib/scalars/Email.js
-```
-
-**Compare by locale-independent code units** (the order where `LC_ALL=C sort` and JavaScript's `Array#sort()` agree). **This applies inside group 4 only.**
-
-**Never let a code-unit comparison decide the order of the groups themselves.** The list above decides it. Left to the comparison, it comes out backwards.
-
-```
-Code-unit comparison   @openreachtech/... (0x40) → dayjs → zod → ./lib/... (0x2E comes first)
-Farthest first (right) zod / dayjs → @openreachtech/... → ./lib/...
-```
-
-**Lint does not enforce this order.** `sort-imports` is set to `off`. A broken order still passes CI, so it is maintained as a convention.
+**Lint does not enforce all of it**, so a broken convention can still pass CI — the conventions hold because the matched skills are followed, not because a check would catch a miss.
 
 ### Aggregation files are regenerated
 
