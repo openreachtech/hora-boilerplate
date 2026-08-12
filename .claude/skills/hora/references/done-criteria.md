@@ -150,16 +150,7 @@ npm run lint
 
 ### Lint's naming rules
 
-`@openreachtech/eslint-config` strictly forbids certain identifier names. **A naive name fails.**
-
-```
-Forbidden suffixes    ~Data ~Info ~Helper ~Item ~List ~Manager ~Utils ~Wrapper
-Forbidden words       data item list info acc arr attr btn cate cfg cnt col cond ctx
-                      err el ev evt ex ext fmt idx img len msg no num obj opt
-                      pos prod ret str usr temp tmp tx txt val callback
-Enforced spelling     cancelled → canceled
-Forbidden syntax      while / do-while / for / for-of / for-in / let / switch
-```
+`@openreachtech/eslint-config` strictly forbids certain identifier names — suffixes, words and syntax. **A naive name fails.** The rules are read from the package itself, under the linted repository's own `node_modules/@openreachtech/eslint-config/`, never from a list restated here — the denylist is the package's to grow, and a copy would still read as authoritative after it had (`structure.md`, "The division of labor").
 
 `/hora-plan` already checks the glossary against these rules, so following it avoids failing here. A failure here means something is missing from the glossary. **Once a workaround name is chosen, append it to the glossary's "names avoided, and why".** Without that record, somebody later restores the naive name and it fails again.
 

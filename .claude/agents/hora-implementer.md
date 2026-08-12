@@ -65,18 +65,7 @@ This is not a list of particular commands. What decides it is whether the comman
 specs/<version>/               your feature's section: its use cases and acceptance criteria
 ```
 
-**Use the glossary's identifiers.** When a new concept gets a name, do not append it to the glossary yourself — **report it in your return value**. `@openreachtech/eslint-config` strictly forbids certain identifier names, and a naive name fails:
-
-```
-Forbidden suffixes    ~Data ~Info ~Helper ~Item ~List ~Manager ~Utils ~Wrapper
-Forbidden words       data item list info acc arr attr btn cate cfg cnt col cond ctx
-                      err el ev evt ex ext fmt idx img len msg no num obj opt
-                      pos prod ret str usr temp tmp tx txt val callback
-Enforced spelling     cancelled → canceled
-Forbidden syntax      while / do-while / for / for-of / for-in / let / switch
-```
-
-Once a workaround name is chosen, report that too.
+**Use the glossary's identifiers.** When a new concept gets a name, do not append it to the glossary yourself — **report it in your return value**. `@openreachtech/eslint-config` strictly forbids certain identifier names — suffixes, words and syntax — and a naive name fails. **Read the rules from the package itself, under your repository's `node_modules/@openreachtech/eslint-config/`; they are deliberately not copied here**, because the denylist is the package's to grow and a copy would still read as authoritative after it had. Once a workaround name is chosen, report that too.
 
 ### Do not install anything
 
