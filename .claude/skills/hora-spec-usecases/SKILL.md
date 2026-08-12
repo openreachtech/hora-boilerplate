@@ -144,7 +144,7 @@ Whatever is selected becomes `<!-- authority: to-spec -->` on that feature — n
 | Wrong how | What follows |
 |---|---|
 | declared built, but it is not | **acceptance fails it**, the marks are cleared, and it is built for real. The safe direction |
-| not declared, but it is | seventeen gates run against working code. Nothing breaks; the time is wasted |
+| not declared, but it is | seventeen gates run against finished code, reconciling it against a spec it already matches. Nothing breaks; the time is spent confirming what a declaration would have settled (`../hora-build/references/checkpoints.md`, "reconciles rather than creates") |
 
 **Checkpoint 18 is never covered by any value.** Whatever is answered, acceptance still runs — which is why an over-declaration is recoverable and why the annotation stops one short of the end.
 
