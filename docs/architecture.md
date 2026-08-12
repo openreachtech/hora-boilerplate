@@ -256,7 +256,7 @@ read the code and write the requirement it implies                     forbidden
 
 ## Why every stage is a conversation
 
-**None of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
+**Neither stage 0 nor any of the seven may be delegated to a subagent** — the same line as checkpoints 1, 2, 9 and 11 in Part 1, for the same reason. Every stage exists to settle something with a person, and **a subagent cannot ask anybody anything**; a delegated stage turns "settle this with the author" into "the agent decided", which is inventing a requirement.
 
 **Stage 0's reading and stage 7's mechanical checks are the one exception, and only halfway.** Reading a tree; a missing required section, a duplicate `id`, an operation with no kind, a feature with no acceptance criteria — those are cheap, precise, and could run anywhere. **Their findings still come back to the main session to be settled**, and running them first is worth it: what remains needs somebody to read the document as a whole, and it is better to arrive there with the cheap findings already cleared.
 
