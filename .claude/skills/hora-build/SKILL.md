@@ -66,7 +66,7 @@ Report the decision in one line before starting work — "building #attendance, 
    a conflict-proof change, a new identifier, a contract it wanted to change
 7. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
    files it touched
-     fails -> fix it, retry (up to a limit; see "A lint rule contradiction")
+     fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
    that same repository, npx jest on exactly the files this checkpoint wrote
      fails, from something code could fix -> fix it, retry
@@ -311,7 +311,7 @@ Rarely, two lint rules conflict outright — fixing one violation only trips the
 
 **Detecting a genuine loop needs every lint error this fix loop has ever seen, not only the latest one.** Keep every reported violation (rule, file, line) from every attempt. The moment a newly-reported violation exactly matches one already kept — same rule, same file, same line — that is definitive proof of a loop. Act on it immediately, without waiting for the retry limit; comparing the errors directly catches a longer cycle (A trips B trips C trips A) faster than comparing the code.
 
-**Reaching the retry limit without ever detecting an exact repeat is handled exactly the same way.** A loop that keeps producing different violations is not *proven* to be a rule contradiction, but there is no way to tell the two apart from here, and stopping to ask a human over what is likely a trivial style rule is not worth it either way.
+**The retry limit is five attempts per checkpoint. Reaching it without ever detecting an exact repeat is handled exactly the same way.** A loop that keeps producing different violations is not *proven* to be a rule contradiction, but there is no way to tell the two apart from here, and stopping to ask a human over what is likely a trivial style rule is not worth it either way.
 
 **Either trigger resolves identically:** from every distinct violation kept so far, pick whichever rule sits lowest on the protection order below, cut an `adhoc/<rule-name>-in-<filename>` branch, add a `files`-scoped override disabling that one rule for that one file **in that repository's own `eslint.config.js`**, and merge it in like any other branch. Report it as an `eslint-exception` question — `blocking: no`, but **fail-loud**: name it on its own in the closing report. **Reset the retry count and run lint again.**
 
