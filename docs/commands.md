@@ -310,7 +310,7 @@ Each one's exit condition, delegate skill and not-applicable rule is in [`checkp
 **Three things about the order are deliberate:**
 
 - **4 (stub) comes before the frontend gate** so that 12–14 can build a client and a screen against something real-shaped, without waiting for 6. 16 swaps them onto the actual API — a change of endpoint, not a rewrite, because the stub and the real resolver share a class name and interface
-- **5 and 13 gather the modules the next checkpoint will import**, before it starts. A resolver that turns out mid-implementation to need an external client it does not have is exactly the interruption those exist to remove
+- **5 and 13 gather the modules the next checkpoint will import**, before it starts — and 5 first checks the in-house package catalog (`@openreachtech/hora-ecosystem`, a devDependency of this repository) so nothing the company already ships gets reinvented. A resolver that turns out mid-implementation to need an external client it does not have is exactly the interruption those exist to remove
 - **2, 9, 11 and 18 verify against the use cases**, three times over and then once for real. They fail in different ways: 2 asks whether the spec supports them, 9 whether the API does, 11 whether a screen does, 18 whether the product does
 
 ### Going backwards is normal
