@@ -47,8 +47,10 @@
   and it is deliberately absent from every block below. It is ONLY for adopting
   Hora Kit onto code that already runs — it says how far that feature was
   already implemented, so that working code is not rebuilt — and it must never
-  be guessed. /hora-spec asks for it, one feature at a time, showing what it
-  found. A new project writes it nowhere.
+  be guessed. /hora-spec confirms it with you, one feature at a time, showing
+  what it found — under `Authority: as-built` with the derived gate as the
+  default to select; a `to-spec` feature never carries it at all. A new
+  project writes it nowhere.
 -->
 
 # <project name> design document
