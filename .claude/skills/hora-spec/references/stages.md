@@ -146,7 +146,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | **Not applicable when** | never |
 | **Carried over when** | **the numbers still hold, confirmed one by one against what this version adds.** They rarely move between minor versions, which is what makes this the most common carry-over of the seven. **The heaviest single operation is the exception, and it is the one this stage must ask about every time** — a new feature is precisely what moves it, and a version that carried this row over without asking has an operation nobody sized. Middleware a new feature needs (a queue, a cache, an object store) is likewise never a carry-over |
 | **Writes** | `Non-functional requirements`, `Manual verification` |
-| **Reads** | the row counts, the retention already in place and the services the stack runs, **as today's numbers**. What the product must carry tomorrow is nobody's to read |
+| **Reads** | the row counts, the retention already in place and the services the stack runs, **as today's numbers**. Under `Authority: as-built` those go up as one batched check. **What the product must carry tomorrow is nobody's to read, and no declaration changes that** — the foreseen counts and the availability expectation are asked, always |
 
 **A number here changes the design at stage 4; an adjective does not.** "It should be fast" produces nothing. "Two hundred staff now, five thousand within two years, and the monthly close reads every record for the month" decides whether a total is stored or recalculated, and whether one operation gets a seam of its own.
 
