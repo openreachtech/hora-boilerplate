@@ -61,13 +61,17 @@ what already exists, and whether it may be used
 4. Which of those happens every day, and which once a month?
 
 5. What do they do today, without this? Is there code, and may it be used?
+   And where there is code: when it and the spec disagree, which one is right —
+   as-built (what runs is what this version is) or to-spec (the spec is; the
+   code catches up)?
 
 6. What must never happen?
 
 7. What is the product called?
 
-8. Only where something is already running: for each feature, how far is it
-   actually built? (below)
+8. Only where something is already running: how far is each feature actually
+   built? Under as-built this is one exclusion question; under to-spec, or
+   without a declaration, it is asked per feature (below)
 ```
 
 **Question 3 is the stage.** Everything else supports it.
@@ -81,7 +85,7 @@ what already exists, and whether it may be used
 
 **Question 4 is not small talk.** Frequency decides what a screen puts first at stage 5, and the once-a-month operation that touches everything is usually the heaviest one stage 3 is about to ask for.
 
-**Question 5 has two halves and both are required.** What exists, and whether it may be read. "Reimplement it" with the code invisible is a different job from "reimplement it" with the code in front of you, and **which one it is may never be inferred** (`../hora/references/structure.md`, invariant 2).
+**Question 5 has three parts wherever code exists, and two on a new project.** What exists; whether it may be read ("reimplement it" with the code invisible is a different job from "reimplement it" with the code in front of you, and **which one it is may never be inferred** — `../hora/references/structure.md`, invariant 2); and **which side is authoritative when the code and the spec disagree** — `as-built` or `to-spec` (`../hora/references/spec-format.md`, "Existing assets"). The third part is asked before question 8, never after: it decides how question 8 is asked at all. One question, two options, overridable per feature (`<!-- authority: -->`) when the honest answer is "fifteen are done, three are not".
 
 **Question 6 becomes two things**: an acceptance criterion in the owning feature's `<!-- acceptance -->` block — this stage drafts and writes it ("What it writes", below) — and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
 
@@ -89,13 +93,35 @@ what already exists, and whether it may be used
 
 ---
 
-## Question 8 — `built:`, and why it is asked one feature at a time
+## Question 8 — `built:`, and how the `Authority` answer changes its shape
 
 **`built:` records how far a feature was implemented before Hora Kit was adopted**, and it is what lets an existing product be accepted rather than rebuilt: `built: frontend` marks checkpoints 1 to 17 not-applicable and leaves only the acceptance gate open (`../hora/references/spec-format.md`).
 
 **Skip question 8 entirely where stage 0 found nothing running.** On a new project every feature is unbuilt, the annotation is correctly absent everywhere, and asking would be twenty questions with one possible answer.
 
-### It is asked, never concluded
+**Question 5's `Authority` answer decides which of the two shapes below this takes.** A `to-spec` feature is skipped in both: it never carries `built:` — its code is unfinished work, not evidence of completion — and its checkpoints all run.
+
+### Under `as-built`: ask once which features are NOT finished
+
+**The declaration already answered the twenty questions in one direction; what remains is the exceptions.** Ask them as one multi-select, then confirm the derived gates in the same exchange:
+
+```
+"You said the implementation is authoritative. Stage 0 found code for all
+ 20 features. Which of these are NOT finished — still being worked toward
+ a spec, rather than describing themselves?
+
+   [ ] #attendance--monthly    [ ] #payroll    ...    [x] none of them
+
+ Everything not selected is as-built. For those, the gate I derived from
+ the tree: 17 reach the frontend gate; #export-api and 2 others are
+ backend-only (no screens call them). Confirm, or correct."
+```
+
+Whatever is selected becomes `<!-- authority: to-spec -->` on that feature — no `built:`, all checkpoints open. Everything else gets `built:` at the derived gate. **The derivation is allowed by the declaration and by nothing else** (`../hora/references/asking.md`, "What is never asked"): the person decided the direction once; deriving the gate works that decision out, and the derived values are still shown and still correctable.
+
+**Over-declaring is the recoverable direction** (below), which is why one batched exchange is safe where twenty careful questions used to be.
+
+### Under `to-spec`, or where no declaration exists: asked, never concluded
 
 **No amount of reading settles it.** A half-built screen and a finished one look identical from a file listing; tests exist for features nobody finished and are missing for features that work. **Offer the evidence and leave the choice open — do not recommend an option** (`../hora/references/asking.md`, "What is never asked").
 
@@ -109,7 +135,7 @@ what already exists, and whether it may be used
    not built  none of it counts as done"
 ```
 
-**This is the one thing in this stage asked per feature rather than per section.** Every other reading of an existing product is confirmed per area, because a person answering the twentieth identical check has stopped reading (`../hora-spec/references/investigation.md`). `built:` cannot be batched that way: it is a different answer per feature, and getting one wrong changes which seventeen gates run.
+**This is the one thing in this stage asked per feature rather than per section.** Every other reading of an existing product is confirmed per area, because a person answering the twentieth identical check has stopped reading (`../hora-spec/references/investigation.md`). Without a declaration, `built:` cannot be batched that way: it is a different answer per feature, and getting one wrong changes which seventeen gates run.
 
 **Use the question tool**, four features per exchange, with `not built` always present as an option.
 
