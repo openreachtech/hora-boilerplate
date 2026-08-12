@@ -55,7 +55,9 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 5. Every operation states a caller (stage 6)
 
-6. Every file under specs/<version>/ reachable by a link from spec.md
+6. Every file under specs/<version>/ reachable by a link from spec.md —
+     except request/ and its contents, and an empty directory's .gitkeep,
+     which raise nothing (spec-format.md, "a drop-off convention")
 
 7. The version in the document matches the directory name
 
