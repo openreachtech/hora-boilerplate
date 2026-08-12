@@ -333,7 +333,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Exit condition** | the application runs locally **together with every service behind it**, each role can sign in, and there is reviewable data or a command that produces it |
 | **Not applicable when** | one already exists and this feature added no service, no role and no seed data it needs |
 
-**This is checkpoint 18's prerequisite, which is why it sits here and not inside it.** An acceptance review drives the real application against real services, signs in as each role, and stops dependencies on purpose to watch what the screen says. None of that is possible against a frontend served on its own.
+**This is the live acceptance run's prerequisite, which is why it sits here and not inside checkpoint 18.** A live review drives the real application against real services, signs in as each role, and stops dependencies on purpose to watch what the screen says. None of that is possible against a frontend served on its own. The runs that need it are the whole-version sweep and any gate run whose live sweep was explicitly requested — a gate run that skips the live sweep does not exercise this environment, but the sweep always will, so the environment is still built here, while the feature that changed it is fresh.
 
 **A feature that adds a service, a role or a fixture updates the environment here**, even when the environment as a whole already exists. That is the common case, and it is why the not-applicable condition names all three.
 
@@ -349,10 +349,10 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 |---|---|
 | **Delegate to** | **the `/hora-accept` skill** |
 | **Runs in** | the main session |
-| **Exit condition** | `/hora-accept` reports a pass over **every feature implemented so far**, not only this one |
+| **Exit condition** | `/hora-accept`, in its feature-gate form, reports a pass — the unit suites across **every repository in full**, and the acceptance review scoped to this feature |
 | **Not applicable when** | never |
 
-**What is reviewed is not this feature alone.** `/hora-accept` takes the set of features already implemented and runs the whole thing, so a feature that broke an earlier one fails here, in the run that broke it, rather than at the end of the version.
+**The gate is scoped; the regression net is not.** The unit suites run whole repositories every time, so a feature that broke an earlier one still fails here, in the run that broke it, rather than at the end of the version. What a gate run does not do by default is drive earlier features' screens end to end — that is the whole-version sweep's job, and a live sweep at a gate happens only when explicitly requested (`/hora-accept`, "What is in scope").
 
 **Everything about what is reviewed and what fails lives in `/hora-accept` and the skills it delegates to.** Do not restate any of it here.
 

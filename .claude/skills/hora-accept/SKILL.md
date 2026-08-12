@@ -1,11 +1,11 @@
 ---
 name: hora-accept
-description: Run acceptance over every feature implemented so far — an acceptance review against the running application plus the unit suites — and record what passed and what did not. Runs at the root of the hora repository (myproject-app). Invoked as checkpoint 18 of /hora-build, as the whole-version sweep, or directly as /hora-accept.
+description: Run acceptance and record what passed and what did not — the full unit suites every time, plus an acceptance review whose reach follows the invocation, scoped to the feature at the gate (checkpoint 18) or covering every feature implemented so far (the whole-version sweep, or on explicit request). Runs at the root of the hora repository (myproject-app). Invoked as checkpoint 18 of /hora-build, as the whole-version sweep, or directly as /hora-accept.
 ---
 
 # hora-accept
 
-**Acceptance.** Take the set of features that are actually implemented, run acceptance over all of them, and record the result.
+**Acceptance.** Run the unit suites in full, run the acceptance review at the reach this invocation calls for, and record the result — including what that reach was.
 
 Read `../hora/references/structure.md` first. **This skill is strictly read-only on `specs/`, and it never fixes code.** It finds and records; fixing is a checkpoint's job, in `/hora-build`.
 
@@ -42,28 +42,20 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 
 ## What is in scope
 
-**Every feature implemented so far — not the one that just finished.**
+**Two invocations, two reaches — and the unit suites are the one thing that never shrinks.**
 
-```
-1. Read .hora/tasks/*/. For every version, in ascending order, take every
-   feature whose entry in _plan.md is [x]
-2. Add the feature currently at checkpoint 18, if this run was invoked from
-   /hora-build
-3. That set is the scope
-```
+| Invoked as | Unit suites (step 2) | Review scope (steps 3–5) | Written to |
+|---|---|---|---|
+| checkpoint 18 of `/hora-build` — the feature gate | every repository, in full | **the feature at the gate.** The live, browser-driven part of the review is **skipped unless explicitly requested** | `.hora/acceptance/<version>/<feature-id>.md` |
+| the whole-version sweep (`_plan.md`'s `## Acceptance` entry), or an explicitly requested full run | every repository, in full | **every done feature** — for every version in ascending order, every feature whose entry in `_plan.md` is `[x]`, plus the one at the gate if any — live sweep always on | `.hora/acceptance/<version>/_sweep.md` |
+
+**"Explicitly requested" means a person asked for it, or the version's `_plan.md` acceptance entry declares it.** Nothing in this skill upgrades a gate run to a full one on its own judgment, and nothing downgrades the sweep.
 
 **A feature that was implemented before Hora Kit was adopted is in scope like any other.** Its checkpoints are marked not-applicable up to the acceptance gate, never through it — so the first sweep after adoption is the run that says what the existing product actually does. Expect findings there, and expect them to be the reason adopting the kit was worth doing.
 
 **Where the plan collapsed an all-`built:` version to a single sweep** (`../hora-plan/SKILL.md`, "collapses to one sweep"), that adoption sweep is one invocation with every adopted feature in scope, and it stands in for each one's checkpoint 18. It runs the same five steps as any sweep — nothing about the work shrinks, only the number of times it is repeated. Its findings route to checkpoints per feature, exactly as always, and a feature a finding reopens gets its checkpoints back for real.
 
-**Cumulative scope is the whole point of running acceptance per feature.** A feature that breaks an earlier one fails here, in the run that broke it, while the change is one commit old — instead of at the end of the version, where it arrives alongside twenty other changes and nobody can say which caused it.
-
-Two invocations differ only in scope and in what is written:
-
-| Invoked as | Scope | Written to |
-|---|---|---|
-| checkpoint 18 of `/hora-build` | every done feature, plus the one at the gate | `.hora/acceptance/<version>/<feature-id>.md` |
-| the whole-version sweep (`_plan.md`'s `## Acceptance` entry) | every done feature in the version | `.hora/acceptance/<version>/_sweep.md` |
+**The regression net at a feature gate is the unit suites plus the review's own static checks, and it is cumulative by construction.** The suites run whole repositories, so a feature that breaks an earlier one still fails here, in the run that broke it, while the change is one commit old — and a unit failure is far cheaper to localize than the same defect found through a browser. What a gate run gives up is driving every earlier feature's screens end to end; that is the sweep's job, and the record says which reach its verdict was reached at (below), so a scoped pass is never read later as a clean bill of health for the whole version.
 
 ---
 
@@ -72,7 +64,7 @@ Two invocations differ only in scope and in what is written:
 **Each step below states the work, not a name.** Match it against the equipped skills' descriptions first, then run it, and write the names you matched into the record's `Delegate` column.
 
 ```
-1. Confirm the environment
+1. Confirm the environment — when the live sweep is going to run
      the skills covering the local end-to-end container stack
      The application must run together with every service behind it, each
      role must be able to sign in, and there must be reviewable data or a
@@ -80,8 +72,11 @@ Two invocations differ only in scope and in what is written:
      Not satisfied -> stop. Report `lacked-environment` (blocking: yes).
                       Do not review a frontend served on its own, and do not
                       "work around" a missing service
+     A gate run whose live sweep is skipped neither requires the stack nor
+     brings it up — the review's own capability note then records that
+     nothing in its verdict rests on a driven browser
 
-2. Unit suites, per repository, from inside it
+2. Unit suites, per repository, from inside it — EVERY run, at EVERY reach
      the skills covering backend test placement and run order, how a unit
      test is written, and driving a failing suite to green
      cd <repository> && <that repository's own test command>
@@ -93,15 +88,17 @@ Two invocations differ only in scope and in what is written:
 
 4. The acceptance review itself
      the skills covering the acceptance review
-     Their own phases, their own criteria. Do not restate them, do not
-     abbreviate them, and do not stop early because the first phases passed
+     Their own phases, their own criteria, at the reach this invocation set —
+     their scoped mode at a feature gate, their full mode at the sweep. Do
+     not restate their phases, do not abbreviate the ones that run, and do
+     not stop early because the first phases passed
 
-5. UX findings
+5. UX findings — at the sweep, or on explicit request; a gate run skips this
      the skills covering the UI/UX audit, against the context the shared
      UI/UX context skills produced
 ```
 
-**Step 1 is a gate, not a warm-up.** The review drives the real application against real services — it signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a stub or a frontend with nothing behind it, and a review run that way reports a pass it has not earned.
+**Step 1 is a gate for any run that drives the product, not a warm-up.** A live review runs against real services — it signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a stub or a frontend with nothing behind it, and a review run that way reports a pass it has not earned. What a gate run does instead is not a weaker version of the same claim: its review keeps the static checks and gives up the driven-browser ones, and its own capability note is what bounds every claim it makes.
 
 **Step 2 comes before the review on purpose.** A unit suite is cheap and its failures are precise; finding the same defect through an end-to-end flow costs far more to localize.
 
@@ -113,7 +110,9 @@ Two invocations differ only in scope and in what is written:
 
 ```markdown
 # Acceptance — 1.0.0 — after #attendance
+<!-- reach: full | scoped -->
 <!-- scope: attendance, sign-up, sign-in -->
+<!-- live: yes | no (skipped at the gate) -->
 <!-- environment: e2e/docker, seeded 2026-08-10 -->
 
 ## Verdict
@@ -144,6 +143,8 @@ failed
 **Every finding names the checkpoint it sends the run back to, and in which feature.** A finding with no destination is a note; a finding with one is work. The destination may be a different feature than the one at the gate — that is the normal shape of a regression.
 
 **The record is written whether the run passed or failed.** A passing run is the evidence that a feature's gate was actually cleared, and the next run needs it to know what was already covered.
+
+**The record names its own reach — `reach` and `live` are not optional lines.** A scoped, live-skipped pass and a full sweep produce records that read alike otherwise, and the difference between them is exactly what the next reader needs: which claims rest on a driven browser and which do not. This is the same rule the review skills apply to their own reports, kept here so the acceptance record cannot lose it.
 
 ---
 
