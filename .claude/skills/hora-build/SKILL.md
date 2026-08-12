@@ -64,9 +64,11 @@ Report the decision in one line before starting work — "building #attendance, 
        -> hora-verifier, read-only, given the same
 6. Handle whatever the agent reported that is not code (below): a dependency,
    a conflict-proof change, a new identifier, a contract it wanted to change
-7. Lint: cd into this checkpoint's repository, then npx eslint on exactly the
-   files it touched
-     fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
+7. Lint: cd into this checkpoint's repository, then npx eslint --fix on
+   exactly the files it touched, then npx eslint on the same files for what
+   remains. --fix clears the mechanical violations (most of @stylistic/*)
+   without an agent round trip; only what it cannot fix is worth one
+     still fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
    that same repository, npx jest on exactly the files this checkpoint wrote,
    with the output written to a file and read from there (below)
