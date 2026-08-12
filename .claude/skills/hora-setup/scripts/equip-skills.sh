@@ -33,7 +33,18 @@ set -euo pipefail
 SOURCE_ROOT='node_modules/@openreachtech/ai-agent-skills/dist/skills'
 DEST_ROOT='.claude/skills'
 
+# Without this check, an unmatched glob below would loop once over the
+# literal '*', mkdir a directory named '*' under .claude/skills/, and die
+# on the cp with a message that names a glob instead of the real cause.
+if [ ! -d "$SOURCE_ROOT" ]; then
+  echo "error: $SOURCE_ROOT not found." >&2
+  echo "Run this from the repository root (myproject-app), after its own \`npm install\` has run." >&2
+  exit 1
+fi
+
 for skill_dir in "$SOURCE_ROOT"/*/; do
+  [ -d "$skill_dir" ] || continue
+
   skill_name=$(basename "$skill_dir")
   dest_dir="$DEST_ROOT/$skill_name"
 
