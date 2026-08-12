@@ -13,7 +13,7 @@ Read `../hora/references/structure.md` and `../hora-spec/references/principles.m
 
 **This stage is never not applicable.** A document that six stages wrote and nothing reviewed is a document nobody has read whole.
 
-**It reads one thing besides the document: `.hora/spec/<version>/_assets.md`.** Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other.
+**It reads two things besides the document: `.hora/spec/<version>/_assets.md` and `.hora/spec/<version>/_divergence.md`.** Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other. A `_divergence.md` row whose `Routed to` is still blank is the same kind of shortfall — a decision that got made by silence — and this is the last gate that can catch it.
 
 ---
 
@@ -24,6 +24,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 | | |
 |---|---|
 | a required section is missing | **stage that owns it** re-runs |
+| a `_divergence.md` row nobody routed | **the stage that owns its subject** fills in the `Routed to` |
 | a use case cannot be completed under the design | **stage 4**, or 5 |
 | an acceptance criterion is not observable | this stage rewrites it, with approval — it owns no section, but a criterion's wording is not a design change |
 | two statements contradict each other | whichever stage wrote the later one |
@@ -62,6 +63,10 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 7. The version in the document matches the directory name
 
 8. Nothing written into a past version's directory
+
+9. Every row of .hora/spec/<version>/_divergence.md names where it was
+     routed — a blank Routed to cell goes back to the stage that owns the
+     row's subject (stages.md, "What sends a run back into a stage")
 ```
 
 **Report the count, not just the findings.** "17 sections, 6 features, 0 missing blocks" is what says the pass actually ran.
