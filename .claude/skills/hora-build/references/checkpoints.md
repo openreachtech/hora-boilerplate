@@ -43,9 +43,11 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **Cycling here is the design working, not the design failing.** A run that never goes back has either an unusually complete spec or a verification gate that is not doing its job.
 
----
+### On a repository that is not empty, a checkpoint reconciles rather than creates
 
-## The gates
+**Every exit condition below reads the same against existing code; what changes is the work that satisfies it.** Checkpoint 3 against an empty repository writes migrations; against a `to-spec` feature's existing tables it **changes the existing migrations toward the spec's data model** — same condition, different verb. The same holds down the list: 5 fixes modules that exist before writing ones that do not, 6 brings existing resolvers to the contract, 15 brings existing screens to the design. What already matches the spec is left alone; the checkpoint's own tests still have to pass either way.
+
+**For a `to-spec` feature, running all seventeen gates against existing code is the work itself, never a formality.** The code is somebody's unfinished progress toward the spec, and each gate is where its part of the distance gets closed. The waste case is different and real: **a finished feature run through seventeen gates because nobody declared `Authority: as-built`** — nothing breaks, the time is spent confirming what a declaration and one sweep would have settled (`../../hora/references/spec-format.md`, "Existing assets"). Do not read that case as a reason to skip gates on unfinished code; the two look alike only from the outside.
 
 | Gate | Checkpoints | Repository written in | Merges when |
 |---|---|---|---|

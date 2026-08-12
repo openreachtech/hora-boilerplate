@@ -75,6 +75,10 @@ for each field:
     may it appear in a log, an error message, an export, a URL
 ```
 
+**Under `Authority: as-built`, the walk stays complete but the confirming batches** (`../hora/references/spec-format.md`, "Existing assets"). The auth filters and role checks were read at breadth by stage 0 and deeply here; for `as-built` features, "who may call each of these today" goes up **one check per endpoint** — a table of operations and their current callers, corrected rather than composed — instead of one exchange per operation. The declaration made today's configuration the intended one, so confirming it wholesale is confirming a decision somebody made, feature-count times cheaper.
+
+**The exception that never batches: anything reachable without authentication.** An operation callable before signing in, a screen that renders to nobody-in-particular, an allowlisted public operation — **each one is put up alone, by name, whatever the declaration says.** "Anyone can call this today" is a fact; "anyone may call this" is a decision, and it is the one decision `as-built` must not be allowed to make silently, because it is exactly how an unauthenticated `deleteAccount` survives adoption with a passing grade. This is the quietest way an `as-built` adoption goes wrong, and one question per exposed operation is the whole price of preventing it.
+
 **"Only their own" is the case most often wrong and least often stated.** An operation that correctly refuses a member of staff who is not signed in, and happily returns a colleague's month to one who is, passes every test anybody wrote for it.
 
 **Ask what a refusal looks like, not only that there is one.** "Not found" and "not allowed" leak different things, and which one is right is a decision, not a detail.

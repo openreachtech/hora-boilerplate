@@ -302,6 +302,20 @@ Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
 The `id` of the sections it depends on. Used to guarantee implementation order. State `<!-- depends: none -->` explicitly when there are none.
 
+### `authority`
+
+**Only ever written when adopting Hora Kit onto a project that already has code**, like `built` below. It overrides the document-level `Authority` line (`Existing assets`, below) for one feature.
+
+```markdown
+## Monthly aggregation
+<!-- id: attendance--monthly -->
+<!-- authority: to-spec -->        ← the document says as-built; this feature is still being finished
+```
+
+**A mixed adoption is the normal one.** Fifteen features are done and describe themselves; three are half-way toward a spec somebody wrote — the fifteen are `as-built`, the three are `to-spec`, and one document-level value cannot say that. Write the document's majority position in `Existing assets` and override the exceptions per feature.
+
+**`authority: to-spec` and `built:` on the same feature is a contradiction, and `/hora` stops on it.** `built:` says "this already is what it should be"; `to-spec` says "what it should be is the spec, and the code is not there yet". A feature cannot claim both.
+
 ### `built`
 
 **Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was already implemented before Hora Kit ever read the spec, so that working code is not rebuilt through checkpoints that describe how it would have been built.
@@ -330,9 +344,11 @@ The value is the gate the existing code already reaches.
 
 **`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
 
-**It is asked, one feature at a time, at stage 1 of `/hora-spec`** — but only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project every feature is correctly without it, and nobody is asked at all.
+**`Authority: as-built` is the one declaration that changes how it is stated** (`Existing assets`, above). For the features it reaches, the value is **derived from the evidence** — the last gate whose work exists in every repository the feature targets — and put up for correction in a batch, instead of being asked feature by feature. The person decided the direction once, in the declaration; deriving the gate is working that decision out, and the derived values are still shown and still correctable (`../../hora/references/asking.md`, "What is never asked"). **A `to-spec` feature never carries `built:` and is never asked** — its code is unfinished work, not evidence of completion.
 
-**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist for this feature — is laid out alongside the choice, with **no option recommended**, because laying out evidence is legwork and recommending an answer is the inference this rule forbids (`../../hora/references/asking.md`, "What is never asked").
+**It is asked at stage 1 of `/hora-spec`** — but only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project every feature is correctly without it, and nobody is asked at all. Under `as-built` the asking takes the inverted form: **"which of these are NOT finished?"**, once, with the derived gates confirmed in the same exchange.
+
+**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist for this feature — is laid out alongside the choice. Where no declaration exists, **no option is recommended**, because laying out evidence is legwork and recommending an answer is the inference this rule forbids (`../../hora/references/asking.md`, "What is never asked").
 
 **Absence has one meaning, and it is now unambiguous.** Before it was asked, an absent `built` could mean "new feature" or "nobody was ever asked"; those were indistinguishable, and the second silently planned working code from checkpoint 1. Stage 1 now settles it either way, and records in `.hora/spec/<version>/_stages.md` when the answer was "nothing is running here".
 
@@ -560,9 +576,23 @@ Write "for now" entries with what unblocks them (`<feature C> → planned for 1.
 ```markdown
 Current implementation: <none (new) / repository name or path>
 Treatment: <port it (read the logic and move it) / reference it (match the behavior only, rewrite the implementation)>
+Authority: <as-built (what runs is what this version is) / to-spec (the spec is; the code catches up)>
 ```
 
 **Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
+
+**`Authority` says which side wins when the spec and the code disagree, and it is a different axis from `Treatment`.** `Treatment` answers "may the old code be used as material for the new implementation"; `Authority` answers "when the two diverge, which one is the requirement". A rewrite can be `to-spec` while still porting logic; a frozen system can be `as-built` while nobody ports anything.
+
+| | `as-built` | `to-spec` |
+|---|---|---|
+| What this version's spec describes | **the product as it runs today** | the product as it should be |
+| A divergence between spec and code | the spec text gets corrected | **a task** — the code gets corrected |
+| Something the code does that no spec states | drafted into the spec, as a check | **reported, never resolved alone** (`undeclared-behavior`) |
+| New work | the next version, as a diff | this version |
+
+**`Authority` is required whenever `Current implementation` is not `none`, and never asked on a new project** — with nothing running, there is nothing for it to arbitrate. Where it is missing on an existing project, `/hora` stops (`existing-assets`, `blocking: yes`). **`Treatment` stays required alongside it in both cases**: even under `as-built`, whether the old code may be read as material is its own decision, and leaving the line out would make the section's shape depend on another line's value.
+
+**`as-built` reaches only the features that carry `built:` in the version that declared it.** A feature a later version adds is by definition not built yet, so nothing about it can be read off the running system — the declaration does not carry forward onto new work through the diff rule. Adopting another existing repository in a later version means that version restates `Existing assets` and declares again.
 
 ### 6. Terminology and domain concepts
 

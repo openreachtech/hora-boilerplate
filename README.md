@@ -14,7 +14,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 
 ## Getting started
 
-**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`docs/adopting.md`](./docs/adopting.md) — the steps differ from step 1 onward.
+**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`docs/adopting.md`](./docs/adopting.md) — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
 
 ### 0. What you need
 

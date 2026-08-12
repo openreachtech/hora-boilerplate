@@ -284,7 +284,8 @@ whether an extension point should be left in place.
 | `missing-authorization` | an operation, a screen or a spec that does not say who may reach it | yes |
 | `unmet-usecase` | a stated use case that the design as written cannot complete | yes |
 | `spec-proposal` | an improvement `/hora-spec` proposed and whoever decided declined or deferred it. **Recorded so it is not proposed again every run** | no |
-| `existing-assets` | whether existing code may be used | yes |
+| `existing-assets` | whether existing code may be used, and which side is authoritative when it and the spec disagree (`Authority:` missing on a project that has code) | yes |
+| `undeclared-behavior` | the code does something no spec states, under `to-spec` — a spec omission or a leftover, and no reading distinguishes them. Both readings offered, neither recommended | no |
 | `contradiction` | a contradiction in the text | yes |
 | `dependency-install` | a declared dependency failed to install, or a conflict-proof change failed to apply | yes |
 | `lacked-environment` | something failed for a reason no code change could fix — the middleware was not running, a network call reached nothing | yes |
@@ -403,6 +404,26 @@ Do not write a change log (git holds that).
 Look for the dependency inside the target version alone and it is not there. **Look back through past versions in `.hora/tasks/` and treat it as satisfied if it was finished there.**
 
 **Acceptance appears twice, and the two are different tasks.** Every feature carries its own acceptance as checkpoint 18, covering everything implemented so far; the `## Acceptance` entry above is the whole-version sweep that runs once, at the end, before the merge into main. Write both.
+
+### A version whose every feature carries `built:` collapses to one sweep
+
+**The normal shape of an `as-built` adoption is twenty features with checkpoints 1–17 not applicable and 18 open** — and run literally, that is twenty per-feature acceptance runs over an ever-growing cumulative scope, each finding mostly what the one before it found. The per-feature gate exists to catch a feature breaking its predecessors **while the change is one commit old**; here nothing is changing, so there is nothing for twenty runs to catch that one cannot.
+
+```markdown
+## Features — adopted as built
+
+1. [x] #attendance            built: frontend    ← 1–17 n/a, 18 covered by the sweep below
+...
+20. [x] #payroll              built: frontend
+
+## Acceptance
+
+- [ ] Sweep the whole version — the adoption sweep. Covers checkpoint 18 of every feature above
+```
+
+**Every feature file is still written, in full.** The n/a marks, the reasons and the spec digests are what a later version reopens a checkpoint against; collapsing the *runs* must not collapse the *records*.
+
+**The collapse holds only while every feature qualifies.** One feature without `built:` — a `to-spec` exception, a new feature riding along — keeps its own open checkpoints and its own gate-18 run, and the sweep entry stays as well. What the sweep finds comes back as findings routed to checkpoints, exactly as any sweep's do (`../hora-accept/SKILL.md`).
 
 ### One file per feature
 
