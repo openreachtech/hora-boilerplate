@@ -260,6 +260,9 @@ Q4  missing-authorization  blocking: yes
   spec/<version>/_assets.md     what stage 0 found in the existing repositories and the
                                 declared sources, and what tag it read it at. /hora-spec
                                 writes it. A cache and an audit trail, never a requirement
+  spec/<version>/_divergence.md where the documents and the code disagree, one row per
+                                divergence, each carrying where it was routed. /hora-spec
+                                writes it; stage 7 refuses to pass while a row is unrouted
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it

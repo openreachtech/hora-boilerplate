@@ -284,7 +284,8 @@ whether an extension point should be left in place.
 | `missing-authorization` | an operation, a screen or a spec that does not say who may reach it | yes |
 | `unmet-usecase` | a stated use case that the design as written cannot complete | yes |
 | `spec-proposal` | an improvement `/hora-spec` proposed and whoever decided declined or deferred it. **Recorded so it is not proposed again every run** | no |
-| `existing-assets` | whether existing code may be used | yes |
+| `existing-assets` | whether existing code may be used, and which side is authoritative when it and the spec disagree (`Authority:` missing on a project that has code) | yes |
+| `undeclared-behavior` | the code does something no spec states, under `to-spec` — a spec omission or a leftover, and no reading distinguishes them. Both readings offered, neither recommended | no |
 | `contradiction` | a contradiction in the text | yes |
 | `dependency-install` | a declared dependency failed to install, or a conflict-proof change failed to apply | yes |
 | `lacked-environment` | something failed for a reason no code change could fix — the middleware was not running, a network call reached nothing | yes |

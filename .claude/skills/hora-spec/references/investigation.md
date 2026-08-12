@@ -72,7 +72,8 @@ read it  ──>  draft the section  ──>  show it as a CHECK  ──>  confi
 6. Confirm the inventory, per section, not per feature
      "here is what I found and how I read it" — one check per area, batched
 
-7. Write .hora/spec/<version>/_assets.md
+7. Write .hora/spec/<version>/_assets.md — and, where documents and code
+   both exist, .hora/spec/<version>/_divergence.md (below)
 ```
 
 **Step 2 is the step that gets skipped.** The most useful document is regularly one nobody thought to mention, and a session cannot discover what is not on its disk. **Ask, with options** — a design doc, an API reference, screen mockups, a data dictionary, a ticket backlog, none of these.
@@ -219,12 +220,47 @@ What was read, where it was read from, and when. **A cache and an audit trail �
 
 ---
 
+## `.hora/spec/<version>/_divergence.md`
+
+**Written only where there is something to diverge — documents that state one thing and code that does another.** A new project has neither; a project with code and no documents has nothing to compare. It is stage 0's third file, separate from `_assets.md` because it has a different life: `_assets.md` is a cache that goes stale with the tree, while every row here is **work someone has to route**, and stage 7 refuses to pass while one is unrouted.
+
+```markdown
+# Divergence — 1.0.0
+
+## The spec says it; the code does not do it
+
+| What | Stated where | Routed to |
+|---|---|---|
+| CSV export of a month | `sources/requirements.md` §4.2 | proposed for "out of scope for now" — accepted |
+
+## The code does it; nothing states it
+
+| What | Read where | Routed to |
+|---|---|---|
+| `deleteAccount` is callable with no auth filter | `legacy-api` schema | Q7 `undeclared-behavior`, blocking: no |
+```
+
+**Which way a row is routed follows the `Authority` declaration** (`../../hora/references/spec-format.md`, "Existing assets"):
+
+| Divergence | Under `as-built` | Under `to-spec` |
+|---|---|---|
+| the spec states it; the code does not do it | **propose moving it out of scope** — stage 2 decides. The document was ahead of the product, and the product is the requirement | **a task.** The ordinary case of unfinished work |
+| the code does it; nothing states it | **draft it into the spec, as a check** — the product is the requirement, and the spec is catching up to it | **report it and stop there** (`undeclared-behavior`, `blocking: no`). It is either a spec omission or code that should never have survived, and no reading distinguishes those |
+
+**The bottom-right cell is the one this table exists for.** Under `to-spec` the spec is authoritative, but authoritative-and-silent is not the same as "delete it": the person may have forgotten to write it down, or the code may be a leftover. **Put both readings up, recommend neither, and wait** — raising a removal task on the kit's own judgment would delete somebody's forgotten requirement, and writing it into the spec on the kit's own judgment would canonize a leftover. Whichever they choose, the answer is recorded by editing `specs/`, like any other.
+
+**Every row carries its routing, and stage 7 checks that none is blank** (`stages.md`). A divergence nobody routed is a decision made by silence.
+
+---
+
 ## What stage 0 never does
 
 - **decide anything.** It reads, drafts and asks. Every answer is somebody else's
 - **write into `specs/` beyond `Sources` and `Annex`**, and those only once confirmed
 - **treat a request as settled requirements**, or promote one into `Sources`. It is the agenda; the stages are what turn it into a specification
 - **edit, tidy or annotate `request/`.** What was asked for stays as it was asked
+- **conclude the `Authority` declaration**, or route a divergence without one. The declaration is question 5's to ask, at stage 1
+- **resolve a `to-spec` divergence where the code does something no spec states.** Both readings go up, neither recommended (`_divergence.md`, above)
 - **go deep.** Each later stage reads its own section's evidence for itself
 - **conclude `built:`** from what it read. It offers the evidence and the choice (`../../hora/references/asking.md`)
 - **resolve a disagreement between a document and the code.** It reports both readings and asks which holds
