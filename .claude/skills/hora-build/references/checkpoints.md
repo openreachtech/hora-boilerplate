@@ -319,10 +319,12 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 
 | | |
 |---|---|
-| **Delegate to** | the skills covering the frontend's context patterns, and its GraphQL operation clients |
+| **Delegate to** | the skills covering the frontend's context patterns, its GraphQL operation clients, and how a frontend test is written and placed |
 | **Runs in** | an implementer agent |
-| **Exit condition** | the screen shows real data from the **actual** API, not the stub, and its loading and error paths are driven by real responses |
+| **Exit condition** | the screen shows real data from the **actual** API, not the stub, its loading and error paths are driven by real responses, and the unit tests covering this feature's frontend acceptance criteria pass |
 | **Not applicable when** | this feature's screen calls no API |
+
+**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6.
 
 **This is where the stub is left behind.** Because the stub and the real implementation share a class name and an interface (checkpoint 4), this is a change of which endpoint is being called, not a rewrite of the client.
 
