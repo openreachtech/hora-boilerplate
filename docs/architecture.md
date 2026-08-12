@@ -177,6 +177,8 @@ Every git operation happens in the main session — `/hora` itself, or a skill i
 
 **Not after acceptance** — acceptance (18) covers every feature so far, so waiting for it would hold this feature's branches open across other features' work. What acceptance turns up comes back as a `retake/` branch instead, which is already the name for "merged, then found lacking".
 
+**Checkpoint 17 is the one that falls outside the table.** The local end-to-end environment lives in the backend row, whose feature branch merged eight checkpoints earlier — so its changes go on their own `update/e2e-<what>-for-<feature-id>` branch, cut and merged like any other `update/` ([`commits.md`](../.claude/skills/hora/references/commits.md)).
+
 **Why a dependency gets its own branch:** `package-lock.json` is the file two changes cannot both edit cleanly. One change at a time, merged before the next starts, is how a human team avoids that conflict, and it is how this does too.
 
 ---
