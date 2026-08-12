@@ -247,6 +247,23 @@ One `<!-- usecases -->` block per feature section, or **once on a feature file's
 
 **A feature carrying `built:` still needs its use cases and its acceptance criteria.** Checkpoint 18 verifies against them, so a built feature with neither has nothing to be accepted against — and finding out what an existing product actually does is the entire reason the kit was adopted onto it.
 
+### Drafting use cases from the running system — under `as-built` only
+
+**The twenty use-case blocks are the real cost of adopting, not question 8.** A person asked to compose them from memory, in whole sentences, for twenty features that already work, is being asked to dictate — which is the failure stage 0 exists to remove. Under `Authority: as-built` they do not compose; **this stage drafts, and they correct.**
+
+| | |
+|---|---|
+| **Allowed for** | features covered by `as-built` — the declaration, or their own `<!-- authority: -->`. **Nothing else.** Where the declaration is absent, so is this section |
+| **Drafted from** | the screen-to-operation paths stage 0 read, the role checks on them, and what the existing tests exercise |
+| **Put up as** | **checks** — "these are the paths the system carries; is that what people do with it?" — three or four features per exchange, corrected rather than composed |
+| **Forbidden for** | **a `to-spec` feature, always.** There the code is unfinished work toward a spec, and a use case drafted from it canonizes exactly the state the spec exists to move past. Its use cases come from the conversation, like a new feature's |
+
+**Why a check and not a proposal, and why that is safe here and nowhere else:** the person who wrote `as-built` declared the running system to be the requirement (`../hora/references/structure.md`, invariant 2). After that, "this is what the system carries" and "this is what is wanted" are the same claim — which is precisely what makes the same draft a **proposal** everywhere else, where they are not.
+
+**A drafted use case still cannot say what a path is *for*.** Where the purpose is not legible from the path — the same screen serving two audiences, an export nobody could place — ask, as always. The declaration moved the boundary; it did not remove it.
+
+**Acceptance criteria draft from the existing tests, and only from tests that exist.** What a test asserts is observable by construction. **A feature with no tests gets no drafted criteria — ask instead**: "the tests pass" is not "it is right", and where nothing asserts anything, there is nothing to read a criterion off. Silence there must surface as a question, not as an invented criterion.
+
 ### Acceptance criteria, per feature
 
 One `<!-- acceptance -->` block per feature section, beside the use cases — the format requires both, and a missing block is `blocking: yes` (`../hora/references/spec-format.md`).
