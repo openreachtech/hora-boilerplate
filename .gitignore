@@ -1,7 +1,10 @@
 #### environment
 .env
 node_modules/
-.scratch/
+# Ignore the contents, not the directory itself — git cannot re-include a
+# path whose parent directory is excluded, so `.scratch/` here would make
+# the `!` line below dead and leave `.scratch/` absent from a fresh clone.
+.scratch/*
 !.scratch/directory-keeper
 
 #### implementation repositories, fetched or adopted by /hora-setup
