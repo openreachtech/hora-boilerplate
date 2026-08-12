@@ -11,7 +11,7 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 | | Owns | Example |
 |---|---|---|
 | **here** | **the question to ask, and what to weigh in answering it** — at the stage where no code exists yet | *"does this write have to have finished by the time the person sees a response?"* |
-| **the package's skills** | **how the answer is built, and what counts as done properly** | *"a job is a Manifest / Worker / Dispatcher triple under `app/jobs/`, enqueued from the resolver, with its own queue when it must scale alone"* |
+| **the package's skills** | **how the answer is built, and what counts as done properly** | *where a background job's classes live, how they are wired to the resolver, and when one gets a queue of its own* |
 
 **The test is the same one the whole kit uses: if a line here could be checked against the package and found to disagree, it does not belong here.** Nothing below states a column type, a naming rule, a directory, a nullability convention or a retry policy. Where the answer to a question is an implementation decision, this file names the skill that owns it and stops.
 
