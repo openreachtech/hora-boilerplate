@@ -68,7 +68,8 @@ Report the decision in one line before starting work — "building #attendance, 
    files it touched
      fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
-   that same repository, npx jest on exactly the files this checkpoint wrote
+   that same repository, npx jest on exactly the files this checkpoint wrote,
+   with the output written to a file and read from there (below)
      fails, from something code could fix -> fix it, retry
      fails, from something no code change could fix (the middleware is not
        running, a network call reached nothing, the database was altered
@@ -76,6 +77,10 @@ Report the decision in one line before starting work — "building #attendance, 
        retry limit. Retrying does not fix an environment, and "fixing" code
        that was never wrong only makes it worse. Report it as a
        `lacked-environment` question and stop the feature there
+     dies, leaving no result at all (the process was killed, the machine ran
+       out of memory) -> not a code failure either. Report it as a
+       `lacked-environment` question that names the configuration the run
+       died under (below), and stop the feature there
 9. Verify the exit condition actually holds — with hora-verifier for anything
    a reading of the code can settle, in conversation for the four gates that
    check against use cases
@@ -113,6 +118,12 @@ So the match is made here, once per checkpoint, against what is actually equippe
 **Record it even when nothing matched.** An empty list is the evidence that the gate ran without its conventions; no list at all is indistinguishable from a checkpoint nobody thought about. Report the gap by name in the closing report too.
 
 **Never let an agent do this matching.** An agent that picks its own would pick differently on a rerun, and nothing downstream could say which set the first run actually used.
+
+### Step 8 — output that survives the run, and the run that dies
+
+**Capture test output in a file, and read the file.** Output collected behind a pipe lives in memory until the run ends — and a suite can end by taking the whole machine down, at which point nothing has been written and zero bytes remain. The next invocation then cannot tell a run that died from a run that never started. Written to a file as it is produced, the output survives to exactly the line where the run stopped, which is also where the diagnosis starts.
+
+**A run that dies without a result is the third kind of failure, and it is an environment one.** The first two cases in step 8 both leave results to read; this one leaves nothing — the process was killed, or the machine ran out of memory under it. No code change fixes that, so it is recorded as a `lacked-environment` question, and what makes the record worth writing is the configuration it names: how many workers ran, what per-worker memory ceiling they were given, and what else was resident on the machine competing for it. A record without those is "it died"; the next run keeps the same settings and dies the same way. What the right values *are* is the package's knowledge — the skill matched at step 3 for running tests owns that — but naming what this run died under is this skill's job, because this skill is the one holding the evidence when it happens.
 
 ### Which checkpoints the main session must run itself
 
