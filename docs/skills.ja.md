@@ -62,6 +62,8 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 - **リポジトリの clone を待ちません。** `ai-agent-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
 - **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身のスキルを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
+**キットが読むパッケージは `ai-agent-skills` を含めて2つあります。** もう1つは **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
+
 ---
 
 ## hora のファイルは、これらのスキル名を書きません

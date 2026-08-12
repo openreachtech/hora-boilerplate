@@ -62,6 +62,8 @@ node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
 - **It does not wait for any repository to be cloned.** `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
+**`ai-agent-skills` is one of two packages the kit reads.** The other is **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
+
 ---
 
 ## No hora file names one of these skills
