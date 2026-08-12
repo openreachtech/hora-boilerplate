@@ -105,6 +105,7 @@
 
 Current implementation:
 Treatment:
+Authority:
 
 
 ## 6. Terminology and domain concepts
