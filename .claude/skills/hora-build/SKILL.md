@@ -133,8 +133,23 @@ So the match is made here, once per checkpoint, against what is actually equippe
 | `registrations` | records that an aggregation file could only be inserted into (below) |
 | `reinvention` | raises a `reinvention` question (`blocking: no`) |
 | `specIssues` | takes it to checkpoint 1's procedure, or raises a question |
+| `missingSkill` | records the gap against the checkpoint in the feature file, continues without it, and names it in the closing report. **Never substitutes a different skill** (`../hora/references/structure.md`, "How the match is made") |
 
 **A reported dependency or conflict-proof change pauses the checkpoint where it is.** A separate agent applies it on its own branch, it merges into `release/<version>`, and `feature/<feature-id>` rebases onto the new tip before work continues. Nothing else is running, so that rebase has no concurrent state to reconcile.
+
+### What the verifier's report drives
+
+`hora-verifier` returns a judgment, never a fix (`../../agents/hora-verifier.md`, "What to return"). This skill acts on what it returns:
+
+| It reports | This skill does |
+|---|---|
+| `met` | writes `[x]` and moves on |
+| `unmet`, with `sendBackTo` | clears the checkpoints from `sendBackTo` on and re-enters there — the same movement the four verification gates use. **`sendBackTo` is required whenever anything is unmet**; a report missing it goes back to the verifier, never into a guess |
+| `missingTests` / `weakenedTests` | the checkpoint is not passed — back to an implementer agent, with the shortfall named |
+| `findings` (checkpoint 8) | an implementer fixes them, then the audit runs again. An accepted finding is recorded as a question, never left as a silent pass |
+| `contractDrift` | raises a `contradiction` question (`blocking: yes`). **Never edits the contract** |
+| `specIssues` | takes it to checkpoint 1's procedure, or raises a question — the same as the implementer's |
+| `specAssumptions` | records each as a `spec-assumption` question (`blocking: no`), so the reading it assumed is visible to whoever edits `specs/` next |
 
 ---
 
