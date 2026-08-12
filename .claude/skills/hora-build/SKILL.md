@@ -7,7 +7,7 @@ description: Build one feature by taking it through the eighteen checkpoints —
 
 **Take one feature through the eighteen checkpoints, in order.**
 
-Read `../hora/references/structure.md` (the layout, the invariants, where a command runs) and `references/checkpoints.md` (the checkpoint list itself) before starting. **This skill is read-only on `specs/`, with the single exception checkpoint 1 names.**
+Read `../hora/references/structure.md` (the layout, the invariants, where a command runs) and `references/checkpoints.md` (the checkpoint list itself) before starting. **This skill is read-only on `specs/`; checkpoint 1 is where a problem found there is routed to the two skills that may write it** (`references/checkpoints.md`, checkpoint 1).
 
 ## One feature at a time, never two
 

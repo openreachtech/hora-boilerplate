@@ -159,6 +159,8 @@ These three must not be broken.
 
 **Every other skill — `/hora-setup`, `/hora-build`, `/hora-accept`, and every agent any of them starts — is strictly read-only on `specs/`.** On finding a problem there, they report it; they never fix it. A typo and a broken layout are treated the same. Allow "it is minor, I will just fix it" once and the rule is gone.
 
+**`/hora-build`'s checkpoint 1 is not an exception to this — it is where the routing happens.** What that checkpoint finds missing is fixed through the two writers above: a design hole through `/hora-spec`, at the stage that owns it, and a one-line hole through `/hora-plan`'s own propose-and-approve procedure (`../../hora-build/references/checkpoints.md`, checkpoint 1). Same writers, same per-edit approval — reached from a checkpoint instead of from a planning run.
+
 ### 2. The boundary of inference
 
 | | Example | Treatment |
