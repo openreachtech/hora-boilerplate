@@ -75,12 +75,12 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 |---|---|---|
 | **1, 2, 9, 11** | **the main session, in conversation** | they exist to settle something *with a person*. **A subagent cannot ask anyone anything**, so delegating one turns "settle this with the author" into "the agent decided" — which is inventing a requirement |
 | **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
-| **8** | `hora-verifier` | a security audit is read-only by design; the agent has no write tools at all |
+| **8** | `hora-verifier` | a security audit is read-only by design; the agent has no file-editing tools and fixes nothing |
 | **17, 18** | the main session | bringing up a container stack, and reviewing every feature so far, is not one checkpoint's file-scoped work |
 
 **Stage 0 and the seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
-**`hora-verifier` has no write tools, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It returns the fact that something is failing; it never fixes it.
+**`hora-verifier` never fixes anything, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It has no file-editing tools; it returns the fact that something is failing, and never fixes it.
 
 **`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint and reports everything else — a dependency it needs, a shared file it must not edit, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
 
