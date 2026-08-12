@@ -149,7 +149,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 
 ![Re-entrancy: every run decides where the project stands](./images/reentrancy.svg)
 
-**Step 2 runs even when the feature list already exists.** A spec keeps moving while implementation is under way; sections get added, changed and withdrawn. Reconciling every time is the only way those reach the plan.
+**Step 3 runs even when the feature list already exists.** A spec keeps moving while implementation is under way; sections get added, changed and withdrawn. Reconciling every time is the only way those reach the plan.
 
 ### Two different acts, on purpose
 
