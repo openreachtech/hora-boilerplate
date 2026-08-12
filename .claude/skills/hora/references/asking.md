@@ -96,6 +96,8 @@ A question that will not go into options is asked in prose, and it says what it 
 
 **What may be offered instead is the evidence, and the choice left open**: what was found, what it does not settle, and four options with none of them recommended. That is the difference between *deciding and asking for a rubber stamp* and *doing the legwork so somebody else can decide quickly*.
 
+**One declaration lifts this rule, for exactly what it covers: `Authority: as-built`** (`spec-format.md`, "Existing assets"). A person who wrote it has already decided that the running system is the requirement, so for the features it reaches, `built:` may be derived from the evidence and put up for correction, and use cases may be drafted from the screens and operations as checks — the deciding happened in the declaration, not in the drafting (`structure.md`, invariant 2). **For a `to-spec` feature, and everywhere no declaration exists, this section applies unchanged** — there the code is not the requirement, and reading it as one is precisely the inference this rule forbids.
+
 | | |
 |---|---|
 | **legitimate** | "The attendance resolvers, their tests and the two screens are present. Whether that is finished is not something the tree can say. Which is it?" |

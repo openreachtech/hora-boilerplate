@@ -302,6 +302,20 @@ Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
 The `id` of the sections it depends on. Used to guarantee implementation order. State `<!-- depends: none -->` explicitly when there are none.
 
+### `authority`
+
+**Only ever written when adopting Hora Kit onto a project that already has code**, like `built` below. It overrides the document-level `Authority` line (`Existing assets`, below) for one feature.
+
+```markdown
+## Monthly aggregation
+<!-- id: attendance--monthly -->
+<!-- authority: to-spec -->        ← the document says as-built; this feature is still being finished
+```
+
+**A mixed adoption is the normal one.** Fifteen features are done and describe themselves; three are half-way toward a spec somebody wrote — the fifteen are `as-built`, the three are `to-spec`, and one document-level value cannot say that. Write the document's majority position in `Existing assets` and override the exceptions per feature.
+
+**`authority: to-spec` and `built:` on the same feature is a contradiction, and `/hora` stops on it.** `built:` says "this already is what it should be"; `to-spec` says "what it should be is the spec, and the code is not there yet". A feature cannot claim both.
+
 ### `built`
 
 **Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was already implemented before Hora Kit ever read the spec, so that working code is not rebuilt through checkpoints that describe how it would have been built.
@@ -560,9 +574,23 @@ Write "for now" entries with what unblocks them (`<feature C> → planned for 1.
 ```markdown
 Current implementation: <none (new) / repository name or path>
 Treatment: <port it (read the logic and move it) / reference it (match the behavior only, rewrite the implementation)>
+Authority: <as-built (what runs is what this version is) / to-spec (the spec is; the code catches up)>
 ```
 
 **Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
+
+**`Authority` says which side wins when the spec and the code disagree, and it is a different axis from `Treatment`.** `Treatment` answers "may the old code be used as material for the new implementation"; `Authority` answers "when the two diverge, which one is the requirement". A rewrite can be `to-spec` while still porting logic; a frozen system can be `as-built` while nobody ports anything.
+
+| | `as-built` | `to-spec` |
+|---|---|---|
+| What this version's spec describes | **the product as it runs today** | the product as it should be |
+| A divergence between spec and code | the spec text gets corrected | **a task** — the code gets corrected |
+| Something the code does that no spec states | drafted into the spec, as a check | **reported, never resolved alone** (`undeclared-behavior`) |
+| New work | the next version, as a diff | this version |
+
+**`Authority` is required whenever `Current implementation` is not `none`, and never asked on a new project** — with nothing running, there is nothing for it to arbitrate. Where it is missing on an existing project, `/hora` stops (`existing-assets`, `blocking: yes`). **`Treatment` stays required alongside it in both cases**: even under `as-built`, whether the old code may be read as material is its own decision, and leaving the line out would make the section's shape depend on another line's value.
+
+**`as-built` reaches only the features that carry `built:` in the version that declared it.** A feature a later version adds is by definition not built yet, so nothing about it can be read off the running system — the declaration does not carry forward onto new work through the diff rule. Adopting another existing repository in a later version means that version restates `Existing assets` and declares again.
 
 ### 6. Terminology and domain concepts
 

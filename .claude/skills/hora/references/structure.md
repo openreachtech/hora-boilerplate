@@ -184,6 +184,8 @@ The middle step is the whole invariant. A skill that reads a repository and puts
 
 **What no amount of reading settles is intent.** Which operations exist is a fact. Who they are *for*, who *should* be allowed to call them, and how much of a feature counts as finished are not in the tree at all, and a half-built screen and a finished one look identical from a file listing. Those stay in the right-hand column above, whatever was read.
 
+**`Authority: as-built` is not an exception to this invariant — it is a human moving its reach, once, in writing** (`spec-format.md`, "Existing assets"). What the invariant forbids is the kit concluding intent; it has never forbidden a person deciding it in one declaration instead of twenty answers. Somebody who writes `as-built` has decided "what this system does is what I want it to do" for every feature the declaration covers — after that, drafting `built:` and use cases off the running system is working out the consequences of a stated decision, not inventing one. The declaration is explicit, it is in the spec where every later reader sees it, and checkpoint 18 still verifies everything it claimed. **Where no such line is written, this section applies in full, everywhere.**
+
 **Do not try to keep the number of questions down.** People who are asked start writing it down in advance. Asking is also the mechanism that trains whoever writes the spec — and `asking.md` is about making each question cheap to answer, never about asking fewer of them.
 
 ### 3. Pin things to stay reproducible
