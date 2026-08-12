@@ -36,9 +36,12 @@ git clone https://github.com/openreachtech/hora-boilerplate.git <myproject>-app
 cd <myproject>-app
 rm -rf .git
 git init
+npm install
 ```
 
 Do this before writing `specs/` — once the repository holds commits of its own, discarding `.git` would take those with it too.
+
+**Either way, run `npm install` in the new repository before `/hora`.** The packages the kit itself reads — `@openreachtech/ai-agent-skills` (the equipped skills) and `@openreachtech/hora-ecosystem` (the package catalog) — come from this repository's own devDependencies, and nothing else installs them.
 
 ### 2. Write the spec
 

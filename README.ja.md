@@ -36,9 +36,12 @@ git clone https://github.com/openreachtech/hora-boilerplate.git <myproject>-app
 cd <myproject>-app
 rm -rf .git
 git init
+npm install
 ```
 
 `specs/` を書く前に行ってください。リポジトリに自分のコミットができた後で `.git` を捨てると、それも一緒に失われます。
+
+**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。** キット自身が読むパッケージ — `@openreachtech/ai-agent-skills`（装備されるスキル群）と `@openreachtech/hora-ecosystem`（パッケージカタログ）— はこのリポジトリ自身の devDependencies から来ており、他の何もそれをインストールしません。
 
 ### 2. 仕様書を書く
 
