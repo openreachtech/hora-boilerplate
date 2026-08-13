@@ -35,7 +35,9 @@ Read `references/structure.md` before anything else — the repository layout, w
 
 **Re-entrancy is the center.** Specs are assumed to be plentiful, so a single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
 
-**Serial throughout.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several agents in sequence (an implementer, an agent for a reported dependency, a verifier) — one after another, never side by side.
+**Serial down to the checkpoint.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several stages in sequence (implementers, an agent for a reported dependency, a verifier) — one stage after another, never side by side.
+
+**Inside a checkpoint, its units do run together.** Four of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component — and each gets an implementer of its own, all at once. The checkpoint stays one gate with one exit condition, and everything the units share stays with the main session (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
 
 ---
 

@@ -34,6 +34,8 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **No checkpoint may be entered until every earlier one is `[x]`.** There is no exception, no fast path, and no "do them in parallel because they are independent" — several of them look independent and are not, and the ones that genuinely are still cost nothing by being ordered.
 
+**Inside one checkpoint, its units do run at once, and that is a different claim** (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). Four of the checkpoints below divide into units — a table, a module, an operation, a component — that write files of their own, and one agent takes each. The checkpoint remains one gate with one exit condition, entered and passed as a whole.
+
 ### Four checkpoints can send the run backwards
 
 2, 9, 11 and 18 are **verification** gates: they check the work against something outside it (the use cases, the spec, the product). When one fails, it does not fail forward — **it clears the checkpoints it invalidates and the run returns to the earliest one cleared.**
@@ -112,7 +114,7 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 | | |
 |---|---|
 | **Delegate to** | DB, in this order: the logical shape of a table → the migration → the model. API surface, by kind (below). Types and constants: declaration files, and the constant convention. A new endpoint: what an endpoint is and what its auth filter does |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per table, and per operation's API surface (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | the migration, the model, the declaration files and the API surface all exist and agree with `.hora/contracts/<version>/` |
 | **Not applicable when** | this feature adds no table and no operation (rare — usually a feature that only composes existing ones) |
 
@@ -147,7 +149,7 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 | | |
 |---|---|
 | **Delegate to** | first the catalog (below), then the skills covering whichever of these this feature needs: an external API client, a dispatch strategy, the shared resolver container, a named subquery, a seeder. For an AI feature: agent structure, agent loops, multi-LLM providers, light RAG, prompt document stores |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per module (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | **every module checkpoint 6 will import already exists and works on its own**, and nothing was written that the catalog already provides |
 | **Not applicable when** | checkpoint 6 needs nothing beyond the model and the schema. State that, do not assume it |
 
@@ -175,7 +177,7 @@ A seeder written here, or a test fixture written later, that carries an explicit
 | | |
 |---|---|
 | **Delegate to** | by kind (below), plus the skills covering resolver input validation |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per operation (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | the real implementation exists under the same class name and interface as its stub, its input is validated, and the unit tests covering this feature's acceptance criteria pass |
 | **Not applicable when** | this feature adds no API operation |
 
@@ -264,7 +266,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | | |
 |---|---|
 | **Delegate to** | the skills covering how a screen is made correct by construction; **every skill covering a component that already exists**; and the skills covering what must not be built in a component |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per component (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | each screen is broken into components, and every component either already exists in the app's own library or has a stated reason for being new |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
