@@ -52,16 +52,16 @@ One feature goes through its spec, its backend, its frontend and then acceptance
 
 ![One feature, eighteen checkpoints, four gates](./images/checkpoints.svg)
 
-**The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and a shortfall in the data model is by then twenty features deep, every one of them built on it.
+**The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and on a version holding, say, twenty features, a shortfall in the data model is by then twenty features deep, every one of them built on it. **That twenty is an example. How many features a version holds differs per project, and the rest of this section reuses the same one.**
 
 | | Layer by layer | Feature by feature |
 |---|---|---|
 | when a design flaw surfaces | at the end, in the test phase | at that feature's own acceptance gate |
 | how much is built on top of it by then | everything | nothing |
-| what a regression looks like | one of twenty changes did it | **the change you just made did it** |
+| what a regression looks like | one of those twenty changes did it | **the change you just made did it** |
 | cost | one environment bring-up | one per feature |
 
-The cost is real and it is accepted deliberately: bringing a container stack up per feature is cheap next to unwinding twenty features built on a wrong table.
+The cost is real and it is accepted deliberately: bringing a container stack up per feature is cheap next to unwinding those twenty features built on a wrong table.
 
 **The regression net is cumulative, which is what makes the middle row work.** At every gate, [`/hora-accept`](../.claude/skills/hora-accept/SKILL.md) runs the **unit suites across whole repositories** — so a feature that breaks an earlier one fails in the run that broke it. The expensive half, driving screens in a real browser, is scoped to the gate's own feature there; every feature is driven end to end once, at the whole-version sweep, or earlier on explicit request.
 
@@ -209,7 +209,7 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 **Leaving `specs/` as human-only territory would make the first step of every project the one step nobody would do twice.** A blank spec plus a format document is a writing assignment, and the format is exacting: use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change. Handed that, a person writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time, for as long as it takes.
 
-**And on a project that already runs, dictation is worse still.** Asked to describe twenty existing features from memory in that format, a person covers what they remember — and the silence around the rest reads exactly like "there is nothing there". **The system is the better witness for what it does, and no witness at all for what anybody wanted.** Stage 0 reads the first kind; the seven stages are still for the second.
+**And on a project that already runs, dictation is worse still.** Asked to describe every existing feature — say twenty of them — from memory in that format, a person covers what they remember — and the silence around the rest reads exactly like "there is nothing there". **The system is the better witness for what it does, and no witness at all for what anybody wanted.** Stage 0 reads the first kind; the seven stages are still for the second.
 
 **So `/hora-spec` writes it — and every mechanism in this half exists to keep that from becoming "the AI decided the requirements".** [`hora-spec/SKILL.md`](../.claude/skills/hora-spec/SKILL.md) is the authority on the skill; [`stages.md`](../.claude/skills/hora-spec/references/stages.md) on the stages; [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) on what stage 0 may read; [`asking.md`](../.claude/skills/hora/references/asking.md) on how anything is put to a person; [`principles.md`](../.claude/skills/hora-spec/references/principles.md) on the thinking they apply.
 
@@ -278,7 +278,7 @@ read the code and write the requirement it implies                     forbidden
 
 | Granularity | Why not |
 |---|---|
-| per line | twenty approvals for one section is a burden nobody carries twice, and a spec that never gets written is the result |
+| per line | the number of approvals one section takes is a burden nobody carries twice, and a spec that never gets written is the result |
 | **per section** | **what this skill uses.** A section is the smallest unit that means anything on its own |
 | per document | a whole spec approved with one "yes" is a spec nobody read. That is worse than no approval, because the record says otherwise |
 
