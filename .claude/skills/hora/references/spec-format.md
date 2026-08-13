@@ -354,6 +354,60 @@ The value is the gate the existing code already reaches.
 
 **It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
+### `baseline`
+
+**Only ever written when adopting Hora Kit onto a project that already has code**, like `built` above, and only where the document declared `Baseline: inventoried` (`Existing assets`, below). It says this feature is **listed: not specified, and not accepted.** The kit knows it exists, and claims nothing else about it.
+
+```markdown
+## Payroll
+<!-- id: payroll -->
+<!-- target: backend, frontend-admin -->
+<!-- depends: attendance -->
+<!-- built: frontend -->
+<!-- baseline: inventoried -->
+
+Monthly payroll calculation and payslip export, running in `admin-console`.
+```
+
+**A heading, the annotations, and one line of prose. Nothing else.** No `<!-- usecases -->`, no `<!-- acceptance -->`, no screen section, no data-model table — a listed section carrying any of them is a stop, because that emptiness is exactly what leaves the stages and the checkpoints with nothing to apply. **What the running code still owes the document is three things, and all three are justified by the feature's name in place of a use case**: a row in the data model, a row in the operation list, and **one line in the screens section of the repository each screen belongs to** (`../../hora-spec-frontend/SKILL.md`). **None of the three is the screen section the listed section may not carry** — they sit in the version's own data-model, operation and screens sections, beside every other feature's, and it is the listed section itself that stays a heading and one line. Leave the rows out and the spec stops describing the database that actually exists; leave the lines out and it stops describing the frontend people are opening today — the next version reads a screen list with no payslip screen in it, and checkpoint 12 builds a second page for what a running page already does.
+
+**`built:` is required on a listed feature, and it is recorded rather than acted on.** Required, because "this code exists" has to be a checkable declaration and not prose. Recorded, because **no checkpoint of a listed feature is ever marked** — not `[x]`, not not-applicable. The version that later specifies the feature restates the value and has it confirmed, and only then does the mapping above apply.
+
+| | `built:` alone | `built:` with `baseline: inventoried` |
+|---|---|---|
+| Checkpoints 1–17 | not applicable, mechanically, with the reason | **nothing is marked** |
+| Checkpoint 18 | `[ ]`, and the acceptance sweep runs it | `[ ]`, and no run has it in scope |
+| What the spec says about the feature | its use cases and its acceptance criteria | its name and one line |
+
+**Which is why the listing itself needs no not-applicable reason.** Checkpoint 18 never applies-not (`../../hora-build/references/checkpoints.md`), and a bare `n/a` "is a skipped checkpoint wearing the mark of a cleared one" (`done-criteria.md`). A listed feature marks 18 as nothing at all — it is absent from the count instead, which is the shape `## Withdrawn` already uses for a feature that counts neither way (`../../hora-plan/SKILL.md`) — so 18's own "when it does not apply" line is never read and never strained.
+
+**Paying the debt is where a reason does get added, and it lands on other features, never on this one.** The payment re-schedules every transitive dependent, whose checkpoints 1 to 17 passed in a released version and are not being redone, and those marks carry `accepted in <earlier version>` — the second reason that does not come from a checkpoint's own line, authorized and conditioned in `done-criteria.md`, "Not applicable is a state, and it needs a reason", which is its authority (`../../hora-plan/SKILL.md`, "Paying a listed feature's debt"). **The two sides are worth keeping apart:** the feature the annotation was written on marks nothing, ever; the features that rested on it mark seventeen, each against a version and a task file somebody can open.
+
+**Exactly two blocking checks are suspended, and nothing else is.** `missing-usecase` and `missing-acceptance` are not raised for a listed section — the one thing that lowers that floor ("Required sections", below). Every operation the feature exposes still states its kind, its caller and its refusal, and anything reachable without authentication is still asked about one operation at a time, whatever the declaration says (`../../hora-spec-security/SKILL.md`).
+
+**It is never inferred, and never recommended.** Whether a feature is accepted or merely listed is intent, and no reading of a repository settles it. **`Authority: as-built` lifts nothing here**: deriving *how far* existing code reaches works out a decision somebody already made, while deciding *that nobody will verify this at all* is a decision of its own. It is asked per feature, batched at most four at a time, with the evidence laid out and no option recommended (`asking.md`, "What is never asked"; `../../hora-spec-usecases/SKILL.md`).
+
+**Contradictions `/hora` stops on:**
+
+| | Why |
+|---|---|
+| `baseline: inventoried` under `Baseline: verified` | the permission was never granted |
+| `baseline: inventoried` with no `built:` | nothing makes "this code exists" checkable. The section could be a feature nobody ever built — uncounted, unswept, and with no removal task, which is worse than `kicked` |
+| `baseline: inventoried` with `authority: to-spec` | `to-spec` runs every checkpoint against the existing code; listing says none of them runs |
+| `baseline: inventoried` on a section a later version adds | new work is not inherited code |
+| `baseline: inventoried` on a feature whose acceptance record holds a passing block, in any version (`.hora/acceptance/`) | **an accepted feature un-accepted by an annotation.** It drops out of every later sweep's scope, and no run ever says so — an entry with no checkbox is out of scope at this version and at every one after it (`../../hora-accept/SKILL.md`, "What is in scope"). **The in-version stop cannot see this one**: it fires on an `[x]` recording a checkpoint that actually ran, and for a feature accepted in 1.0.0 those marks are in `.hora/tasks/1.0.0/<id>.md`, a released version's file reconciliation never opens (`../../hora-plan/SKILL.md`, "Reconcile on re-entry"). The one-line body the annotation arrives with has meanwhile replaced the carried-over blocks that would have tripped "specified and listed at once" ("From the second version on, write a diff") |
+| a listed feature with `[x]` on any checkpoint, a checkbox on its plan entry, or an acceptance verdict reading a bare `passed` | a record claiming a pass nothing earned |
+
+**Paying it is a version's ordinary work, not a special path.** The version that next changes the feature writes its use cases and its acceptance criteria, flips the annotation to `<!-- baseline: verified -->`, and restates `built:` for confirmation — or declares `authority: to-spec` and lets every checkpoint run against the existing code. **That feature's first acceptance ever runs at full live reach**, whatever the invocation form, and **every feature that depended on it has its checkpoint 18 cleared, transitively** (`../../hora-plan/SKILL.md`; `../../hora-accept/SKILL.md`).
+
+**A feature may depend on a listed one.** New work on an adopted product almost always sits on inherited behavior, so refusing the dependency would make the declaration close to useless — but the dependent records what it rests on, and its own acceptance is re-earned when the debt is paid. A pass resting on unstated behavior is allowed to exist; a pass that hides what it rests on is not.
+
+**The annotation carries forward, and that is what makes the debt a debt.** Like every annotation it lives in the resolved document, so a listing written in 1.0.0 still stands in 1.1.0 and in 1.4.0 — a version that says nothing about the feature leaves it listed. **It stops only when a version writes `<!-- baseline: verified -->` in its own diff**, which is the version that pays. Read it as expiring with the version that wrote it and every later `## Not accepted` comes out empty, every `not-accepted:` line reads `none`, and a verdict may read a bare `passed` over a feature nobody ever accepted.
+
+**That is a different question from what the `Baseline:` line reaches** (`Existing assets`, below). The declaration reaches only inherited code, and never new work in a later version; the annotation, once written on a feature, stays on it until somebody takes it off.
+
+**It is not `kicked`, and it is not `built`.** `kicked` withdraws a feature that should not exist. `built` records how far one that does exist was implemented. `baseline: inventoried` records that nobody has yet said what one that does exist is *for*.
+
 ### `kicked`
 
 **To withdraw a feature, add this instead of deleting the section.**
@@ -380,7 +434,7 @@ Deleting it leaves `/hora` unable to tell "absent" from "deleted", since under t
 
 ### The two blocks every feature carries
 
-Besides the annotations, a feature section carries two marked subsections. **Both are required, and they are not the same thing.**
+Besides the annotations, a feature section carries two marked subsections. **Both are required, and they are not the same thing.** The one exception is a section listed under `Baseline: inventoried`, which carries neither, and carries a name and one line instead (`baseline`, above).
 
 ```markdown
 ### Use cases
@@ -428,7 +482,7 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | **Repository layout** | `none` | **declares which repositories and servers to create, and where an already-existing one sits. Written in the entry point. `/hora` stops without it** | **No — write it directly in `spec.md`** |
 | **Actors and roles** | `none` | **who uses this product, and how each of them is identified. Every permission and every screen is written against this table, so `/hora` stops without it** | Yes |
 | Implementation scope | `none` | declares what to build this time and what is out of scope | Yes |
-| Existing assets | `none` | port existing code, or build new | Yes |
+| Existing assets | `none` | port existing code, or build new | Yes — **except its `Baseline` line** |
 | Manual verification | `none` | the middleware needed, and its version | Yes |
 | Terminology | `none` | the source of `glossary.md` | Yes |
 | Implementation plan | `none` | the order of tasks | Yes |
@@ -439,9 +493,13 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 
 **Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states **the kind of every operation and who may call it** (below). None of the four may be inferred, and each is `blocking: yes` when missing.
 
+**One declaration lowers that floor, and only for the first two of the four.** A section carrying `<!-- baseline: inventoried -->` raises neither `missing-usecase` nor `missing-acceptance` (`baseline`, above) — it is listed rather than specified, and nothing about it is built or accepted, so there is nothing for either block to be checked against. **The operation's kind and its caller are not lifted for it**, because those describe code that is already running and already reachable.
+
 **This table is checked against the resolved document, never against one version's file.** A section the first version declared satisfies it for every version after it, so a diff that writes nothing but one new feature is complete. **A feature section this version adds is the exception**: it is new, nothing carries over into it, and it needs its own use cases and acceptance criteria like any other.
 
-**Two roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name and the repository layout.** Both are decisions, not facts to locate. A Source might contain evidence for either (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs both before it has any reason to read a Source deeply. Getting either wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
+**Three roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name, the repository layout, and `Existing assets`' `Baseline` line.** All three are decisions, not facts to locate. A Source might contain evidence for one (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs the first two before it has any reason to read a Source deeply. Getting either of those wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
+
+**`Baseline` is carved out for a different reason, and it is the reason the carve-out exists at all.** It decides how much of an inherited product gets verified before the tag, and a declaration that leaves features unaccepted is legitimate only because every later reader of the spec sees it (`structure.md`, invariant 2). Reached through a link instead, it would move that decision outside the document anybody approved — and it would change between versions with nothing in `spec.md` recording that it had. **`Authority` stays satisfiable by a Source**: it arbitrates which side is the requirement, and every consequence of getting it wrong still arrives through a checkpoint or a finding.
 
 **Every other required role may be satisfied either by `spec.md`'s own text or by a declared Source — `/hora` looks in both, not only the former.** The same role-recognition that already applies to `spec.md`'s own required sections applies to a declared Source's sections too: a heading in `00-overview.md` that is recognizably "the implementation scope" satisfies that role, whether or not `spec.md` also repeats it. Only when a role is found in neither place is it missing.
 
@@ -577,6 +635,7 @@ Write "for now" entries with what unblocks them (`<feature C> → planned for 1.
 Current implementation: <none (new) / repository name or path>
 Treatment: <port it (read the logic and move it) / reference it (match the behavior only, rewrite the implementation)>
 Authority: <as-built (what runs is what this version is) / to-spec (the spec is; the code catches up)>
+Baseline: <verified (every existing feature is specified and accepted before the tag) / inventoried (a feature may be listed unaccepted, one at a time, by its own annotation)>
 ```
 
 **Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
@@ -593,6 +652,23 @@ Authority: <as-built (what runs is what this version is) / to-spec (the spec is;
 **`Authority` is required whenever `Current implementation` is not `none`, and never asked on a new project** — with nothing running, there is nothing for it to arbitrate. Where it is missing on an existing project, `/hora` stops (`existing-assets`, `blocking: yes`). **`Treatment` stays required alongside it in both cases**: even under `as-built`, whether the old code may be read as material is its own decision, and leaving the line out would make the section's shape depend on another line's value.
 
 **`as-built` reaches only the features that carry `built:` in the version that declared it.** A feature a later version adds is by definition not built yet, so nothing about it can be read off the running system — the declaration does not carry forward onto new work through the diff rule. Adopting another existing repository in a later version means that version restates `Existing assets` and declares again.
+
+**`Baseline` says what this version's tag claims about the code it inherited, and it is a third axis again.** `Treatment` answers "may the old code be used as material"; `Authority` answers "when the two diverge, which is the requirement"; `Baseline` answers **"how much of what already runs is actually accepted before this version is tagged"**. Adoption has always answered `verified` — the sweep is what makes a fixed baseline a verified one rather than a claimed one — and writing it down is what turns that from an unstated default into a decision somebody made.
+
+| | `verified` | `inventoried` |
+|---|---|---|
+| What every inherited feature owes | its use cases and its acceptance criteria, like any other feature | **either that, or a name and one line** (`baseline`, above) |
+| What the tag claims | a verified baseline | **what was accepted, and no more — the rest is named** |
+| What acceptance covers | every feature | **the accepted ones.** A listed feature has no checkbox to be in scope by |
+| What a verdict may read | `passed` | **`passed over 17 of 20 features; 3 not accepted` — never a bare `passed`** |
+
+**Required whenever `Current implementation` is not `none`, and never asked on a new project** — the same rule and the same stop as `Authority` (`existing-assets`, `blocking: yes`). With nothing running, there is no inherited code for a tag to claim anything about.
+
+**`Baseline: inventoried` is a permission, and by itself it marks nothing.** It grants what `<!-- baseline: inventoried -->` may then say about one feature at a time; a version that declares it and lists no feature behaves exactly like `verified`. **Approval is per section and never blanket** (`structure.md`), so the line is approved on its own, before any feature is listed against it.
+
+**`Baseline` reaches only the features that carry `<!-- baseline: -->` in the version that declared it, and it does not carry forward onto new work through the diff rule.** A feature a later version adds is not inherited code, so nothing about it may be listed instead of specified. A later version that inventories another existing repository restates `Existing assets` and declares again. **The reach has to be stated because omission is how the diff scheme propagates** — an unstated one would leave every later feature listed by silence, which is the worst failure available to this declaration.
+
+**It must be written directly in `spec.md`.** With the project name and the repository layout, it is one of the three roles a declared `Source` may not satisfy ("Required sections", above). A declaration that leaves features unaccepted is legitimate only because every later reader of the spec sees it (`structure.md`, invariant 2) — reached through a link, it would decide how much of the product gets verified from outside the document anybody approves.
 
 ### 6. Terminology and domain concepts
 

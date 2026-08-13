@@ -51,6 +51,16 @@
   what it found — under `Authority: as-built` with the derived gate as the
   default to select; a `to-spec` feature never carries it at all. A new
   project writes it nowhere.
+
+  Section 5's `Baseline:` line is required whenever `Current implementation:`
+  is not `none`, and a new project leaves it blank like everything else. It
+  says how much of the inherited code this version's tag actually claims:
+  `verified`, every existing feature specified and accepted like any other, or
+  `inventoried`, which permits a feature to carry
+  `<!-- baseline: inventoried -->` and be listed instead — a heading, its
+  annotations and one line of prose, built but neither specified nor accepted.
+  Write it in this file; a declared Source may not satisfy it. See
+  spec-format.md, "5. Existing assets".
 -->
 
 # <project name> design document
@@ -108,6 +118,7 @@
 Current implementation:
 Treatment:
 Authority:
+Baseline:
 
 
 ## 6. Terminology and domain concepts
