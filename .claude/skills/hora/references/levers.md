@@ -82,7 +82,7 @@
 | a not-applicable mark cleared the moment its reason stops holding | `../../hora-build/references/checkpoints.md` |
 | the verifier skipped where a passing suite already proves the exit condition | `../../hora-build/SKILL.md`, "Step 9 — when the suite is the verification (checkpoints 6 and 16)" |
 | `eslint --fix` before an agent round trip, and the fix loop's limit | `../../hora-build/SKILL.md`, "Running one checkpoint" |
-| a retry abandoned on a failure no retry can fix | `../../hora-build/SKILL.md`, "What the verifier's report drives" |
+| a retry abandoned on a failure no retry can fix | `../../hora-build/SKILL.md`, "Running one checkpoint", step 8 |
 | `blocking: no` — the run continues with the question open | `../../hora-plan/SKILL.md`, "Categories" |
 | `missingSkill` — a step ran without the skill that owns it | `../../hora-build/SKILL.md`, "Step 3 — matching a checkpoint to the skills that cover it"; `../../hora-accept/SKILL.md`, "No name appears above, and none may" |
 | `target` / `depends` inferred rather than asked | `structure.md`, invariant 2 |
@@ -102,7 +102,7 @@
 | the environment confirmation, required only where something is driven | `../../hora-accept/SKILL.md`, "The order to run in" |
 | the UX audit, skipped at a gate | `../../hora-accept/SKILL.md`, "The order to run in" |
 | a person widening a run — and nothing narrowing it | `../../hora-accept/SKILL.md`, "What is in scope" |
-| a feature's first acceptance, which is never browser-less | `../../hora-accept/SKILL.md`, "What is in scope" |
+| a listed feature's deferred acceptance — the run that pays it is never browser-less | `../../hora-accept/SKILL.md`, "What is in scope" |
 | a finding the project decides to live with | `../../hora-accept/SKILL.md`, "What a failure does" |
 | a proposal declined or deferred | `asking.md` |
 | a sub-command invoked directly instead of `/hora` | `../SKILL.md`, "The shape of a run" |

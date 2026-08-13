@@ -24,7 +24,9 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **One reason does not come from a checkpoint's own line: `built before Hora Kit was adopted`.** A spec section may declare `<!-- built: spec | backend | frontend -->` when the code already existed before the kit was ever run against it, and `/hora-plan` marks that many checkpoints not-applicable, mechanically. **Checkpoint 18 is never among them** — acceptance is exactly what adoption is for.
 
-**A second does not come from a checkpoint's own line either: `accepted in <earlier version>`.** It is written only on a feature re-scheduled because a listed feature it rested on had its debt paid, and its condition lives in `../../hora/references/done-criteria.md`, "Not applicable is a state, and it needs a reason", which is its authority. **There are no others.**
+**A second does not come from a checkpoint's own line either: `accepted in <earlier version>`.** It is written only on a feature re-scheduled because a listed feature it rested on had its debt paid, and its condition lives in `../../hora/references/done-criteria.md`, "Not applicable is a state, and it needs a reason", which is its authority.
+
+**A third comes from the feature's `target` line: `target names no <frontend | backend> row`.** It is what a whole skipped gate writes into each of its own checkpoints (the gate table below), and its authority is `../../hora/references/spec-format.md`, "`target`". **There are no others.**
 
 **A not-applicable mark is cleared the moment its reason stops holding.** When checkpoint 18 sends the run back into a stretch marked `built before Hora Kit was adopted`, that code is now being changed, so it was not simply inherited after all: reopen from the earliest checkpoint affected and run it for real.
 

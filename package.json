@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "l": "npm run lint",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",
+    "lint:references": "node scripts/check-references.mjs"
   },
   "dependencies": {
   },

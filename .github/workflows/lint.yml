@@ -23,6 +23,10 @@ jobs:
     steps:
       - name: 📮 Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # The ja/en pair check diffs against the PR's base branch, and a
+          # shallow checkout cannot resolve a merge base for that.
+          fetch-depth: 0
 
       - name: 🏗 Setup Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -34,3 +38,9 @@ jobs:
 
       - name: 🧵 Run ESLint
         run: npm run lint
+
+      - name: 🧭 Check levers.md references
+        run: npm run lint:references
+
+      - name: 🌐 Check ja/en doc pairs
+        run: npm run lint:docs-pairs

@@ -99,9 +99,9 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
                       "work around" a missing service
      A gate run whose live sweep is skipped neither requires the stack nor
      brings it up — the review's own capability note then records that
-     nothing in its verdict rests on a driven browser. A gate run that is a
-     feature's first acceptance is not one of those: it drives, so it needs
-     the stack like any sweep
+     nothing in its verdict rests on a driven browser. A gate run paying a
+     listed feature's deferred acceptance is not one of those ("What is in
+     scope", the two facts): it drives, so it needs the stack like any sweep
 
 2. Unit suites, per repository, from inside it — EVERY run, at EVERY reach
      the skills covering backend test placement and run order, how a unit
