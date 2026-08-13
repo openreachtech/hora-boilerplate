@@ -392,11 +392,16 @@ Do not write a change log (git holds that).
 
 1. [ ] #attendance            backend, frontend-employee
 2. [ ] #attendance--monthly   backend, frontend-employee   depends: attendance
-3. [ ] #payroll               backend, frontend-admin      depends: attendance--monthly
+3. [ ] #payroll               backend, frontend-admin      depends: attendance--monthly, billing
+       Rests on: #billing (not accepted)
 
 ## Acceptance
 
 - [ ] Sweep the whole version, once every feature above is done
+
+## Not accepted
+
+- #billing    listed since 1.0.0, runs in `admin-console`   built: frontend — recorded, not acted on
 
 ## Withdrawn
 
@@ -416,25 +421,82 @@ Look for the dependency inside the target version alone and it is not there. **L
 
 **Acceptance appears twice, and the two are different tasks.** Every feature carries its own acceptance as checkpoint 18, covering everything implemented so far; the `## Acceptance` entry above is the whole-version sweep that runs once, at the end, before the merge into main. Write both.
 
-### A version whose every feature carries `built:` collapses to one sweep
+**`## Not accepted` is `## Withdrawn`'s shape applied to the opposite case.** `## Withdrawn` holds a feature that should not exist and was dropped; this holds one that exists, runs, and has never been specified or accepted — every feature carrying `<!-- baseline: inventoried -->` (`../hora/references/spec-format.md`, "`baseline`"). One line each, and the line says three things: **where it runs**, **which version has been listing it**, and its **`built:` value, marked as recorded and not acted on.**
+
+**No checkbox, for the same reason `## Withdrawn` has none.** A listed feature is never selected for building and never counted — not toward the version being done, and not against it (`../hora/references/done-criteria.md`, "When a version is done"). A checkbox would have to mean something, and both meanings are wrong: `[ ]` puts a feature nobody intends to build in front of `/hora-build`, and `[x]` claims a pass over eighteen checkpoints not one of which was ever marked.
+
+**`built:` is written on the line and acted on nowhere.** It is the record of a declaration, not an instruction to mark seventeen checkpoints not applicable — the version that pays the debt restates the value and has it confirmed first (section 6). Writing it here and nothing else is what keeps "the code is there" checkable without letting it mark anything.
+
+**A feature may depend on a listed one, and its entry says what that costs.** New work on an adopted product almost always sits on inherited behavior, so refusing the dependency would make the declaration close to useless. The dependent keeps its ordinary `depends` and adds `Rests on: #<id> (not accepted)`; its own feature file carries the same line (below), and the acceptance record repeats it beside the id in its scope line (`../hora-accept/SKILL.md`, "Recording the result"). **A pass resting on unstated behavior is allowed to exist; a pass that hides what it rests on is not.**
+
+**That kind of `depends` is satisfied by the running code, never by a checkbox.** A listed entry has none, and it never acquires one, so a planner waiting for `#billing` to go `[x]` before starting `#payroll` waits forever — nothing is scheduled ahead of a listed feature and nothing is blocked behind one. `Rests on:` is what keeps the dependency from becoming invisible once the order stops carrying it.
+
+**`Rests on:` is derived from more than `depends`, because `depends` is a line the kit is allowed to infer.** An unstated one is inferred from content and reported (`inferred-annotation`, `blocking: no`), and an inference reading prose misses what a table states plainly: a feature whose data model reads a table stage 4 justified by a listed feature's name in place of a use case rests on that listing whether or not anybody wrote `depends: payroll` (`../hora-spec-backend/SKILL.md`). **So read both — every `depends` edge, and every data-model or operation row a listed feature justifies by name that this feature's own tables or operations sit on — and write `Rests on:` from the union.** Where that second reading finds one the annotation does not name, the omitted `depends` is not the ordinary `blocking: no` but a stop (`existing-assets`, `blocking: yes`, section 2): a feature left out of the union gets no `Rests on:` line and sits outside the transitive set when the debt is paid, so its pass rests on unstated behavior and hides that it does.
+
+**Derive the section again on every run, from the resolved document's annotations. Never carry it over.** Each version writes its own `_plan.md`, and `baseline` is an annotation, so it is excluded from the digest (below): a feature that gained `inventoried` — or lost it — changes no digest at all, and reconciliation watching only digests would never see one move between `## Features` and here. Re-reading the annotation off the resolved document is the only thing that catches it.
+
+**Nothing in the section is declared. All of it follows from two lines in `specs/`** — `Baseline: inventoried` in `Existing assets`, and the per-feature annotation (`../hora/references/structure.md`, "Where a lever lives"). Delete the section and the next run rebuilds it identically; hand-edit it and the next run overwrites it. A permission that lived here instead would be a decision this skill found waiting for it in the file this skill writes itself, which is no decision at all.
+
+### A version whose every specified feature carries `built:` collapses to one sweep
 
 **The normal shape of an `as-built` adoption is twenty features with checkpoints 1–17 not applicable and 18 open** — and run literally, that is twenty per-feature acceptance runs over an ever-growing cumulative scope, each finding mostly what the one before it found. The per-feature gate exists to catch a feature breaking its predecessors **while the change is one commit old**; here nothing is changing, so there is nothing for twenty runs to catch that one cannot.
+
+**The qualifying test is specified and built, never built alone.** Three states arrive in one adoption, and only the first of them collapses:
+
+| The feature | What it gets |
+|---|---|
+| **specified, and `built:` up to some gate** | **collapses.** Its entry goes under the heading below with a `[ ]` box, and the adoption sweep is the run that closes it |
+| **listed — `built:` and `<!-- baseline: inventoried -->`** | **does not qualify, and never had a gate.** It keeps its `## Not accepted` entry, its absent checkbox and its eighteen `[ ]`, and the collapse runs over the rest |
+| **specified, with no `built:`** — a `to-spec` exception, a new feature riding along | **does not qualify.** It keeps its own open checkpoints and its own gate-18 run, and the sweep entry stays as well |
+
+**The gate could not be keyed on `built:` alone, because a listed feature carries it by requirement** (`../hora/references/spec-format.md`, "`baseline`"). That test cannot tell the two states apart — and it lets the listed one through at the exact point where the mistake becomes a pass, because **the adoption sweep is the one lever that deliberately overrides the box-state rule**: it takes every entry under a collapsed version's feature section whatever its box reads (`../hora-accept/SKILL.md`, "What is in scope"). Write a listed feature in there and it goes to the review skills with no use cases and no acceptance criteria, which "can only report that nothing failed" — and that report then ticks eighteen checkpoints not one of which was ever marked. The same run's reconciliation puts the same section under `## Not accepted` with no checkbox (section 6), so a gate keyed on `built:` has one run writing two contradictory states for one id.
+
+Twenty sections carry `built:` and three of them are listed, so seventeen entries stand under the heading and three sit below it with no box:
 
 ```markdown
 ## Features — adopted as built
 
-1. [x] #attendance            built: frontend    ← 1–17 n/a, 18 covered by the sweep below
+1. [ ] #attendance            built: frontend    ← 1–17 n/a, 18 open until the sweep below passes
 ...
-20. [x] #payroll              built: frontend
+17. [ ] #payroll              built: frontend
 
 ## Acceptance
 
-- [ ] Sweep the whole version — the adoption sweep. Covers checkpoint 18 of every feature above
+- [ ] Sweep the whole version — the adoption sweep. Covers checkpoint 18 of every entry above
+
+## Not accepted
+
+- #billing    listed since 1.0.0, runs in `admin-console`   built: frontend — recorded, not acted on
 ```
+
+**Every entry under that heading stays `[ ]` until the adoption sweep passes, and then they are set together.** An entry is `[x]` only once every checkpoint of that feature is (`../hora-build/SKILL.md`, "When a feature finishes"; `../hora/references/done-criteria.md`, "When a feature is done"), and checkpoint 18 always stays `[ ]` here whatever `built:` says (below) — so an entry marked while planning reports an acceptance that has not run, over code nobody has driven yet, which is the one thing adopting the kit was supposed to find out. **`_plan.md` derives its checkboxes from the checkpoints; it does not announce results ahead of them** (`../hora/references/structure.md`, "Where a lever lives"). When the sweep passes, its own record is the evidence they are all set on — one run, named in `.hora/acceptance/<version>/_sweep.md`.
+
+**This skill is what sets them, and it is a reconciliation row like every other one in section 6.** The trigger is a state, not an invocation: `.hora/acceptance/<version>/_sweep.md` exists and its **newest block** reads a passing verdict (`../hora-accept/SKILL.md`, "Recording the result"), and entries under the collapsed heading still stand `[ ]`. On finding it, **set checkpoint 18 in each of those features' files and their entries in `_plan.md` in the same write, off that one record** — 18 first, so no entry ever claims more than its own file does.
+
+```markdown
+- [x] 18. Acceptance (E2E and unit both)  <!-- the adoption sweep: .hora/acceptance/1.0.0/_sweep.md -->
+```
+
+**The writer has to be named here, because neither skill a reader would expect can do it.** `/hora-accept` writes acceptance records and never `_plan.md` — it reports, and it is `/hora-build` that acts (`../hora-accept/SKILL.md`); and `/hora-build`'s own "set the feature's entry to `[x]`" step never fires here, because step 2 of its "Where to start" skips exactly the entries a sweep entry covers, which *is* the collapse (`../hora-build/SKILL.md`). So with no writer named, nothing sets them: twenty entries stand `[ ]` over a sweep that passed, `../hora/references/done-criteria.md`'s first condition — every entry in `_plan.md` is `[x]` — can never be met, and the one version that did all its work in a single run is the one version that can never be finished.
+
+**It stays a derivation, and that is why it waits for the record rather than for the run.** The verdict is the evidence and the marks are its consequence, read off a file that already exists; nothing is declared in `.hora/` and nothing is remembered from an earlier invocation (`../hora/references/structure.md`, "Where a lever lives"). A pass the record does not carry sets nothing, however certain the run that produced it was — and since `/hora` enters this skill on every invocation, before any box is read (`../hora/SKILL.md`, step 3), the record and the boxes are never more than one invocation out of step.
+
+**This is the rule `## Not accepted` follows from the other side: an entry may never claim more than a run gave it** — whether the run is still pending, as here, or was never in scope at all.
+
+**So those entries are `[ ]`, and the entry that closes them is the sweep's.** Write that on the sweep line, because two things now read those boxes and would otherwise draw opposite conclusions from them:
+
+| Reads the box | What an unticked entry under `## Features — adopted as built` means |
+|---|---|
+| whatever selects the next feature to build | **not a candidate.** Its checkpoint 18 is covered by the `## Acceptance` entry, so running its gate individually is the twenty runs this collapse exists to avoid (`../hora-build/SKILL.md`, "Where to start") |
+| the acceptance sweep, deciding its scope | **in scope.** A collapsed version's sweep covers every entry under `## Features — adopted as built`, whatever its box reads (`../hora-accept/SKILL.md`, "What is in scope") |
+
+**The heading keeps the suffix: a collapsed version's feature section is written `## Features — adopted as built`, here and in every other line of this file that names it.** The suffix is the only place in `_plan.md` where "this version's gates were collapsed into one sweep" is written down — a bare `## Features` says a version has features, which every version does — so whoever opens the file two years later reads the collapse off the heading or not at all. **And every reader takes the version's feature section whatever its heading reads**, the suffixed form included: a run matching the string `## Features` literally finds no section in a collapsed version, sweeps nothing, and reports that nothing failed — the twenty features that were the entire point of the sweep, passed by a run that opened none of them.
+
+**An unticked box and no box at all are different states, and the difference is the whole of both mechanisms.** `[ ]` says a run is going to close this and has not yet; no box says no run will. Read the first as the second and the adoption sweep reviews nothing; read the second as the first and a listed feature gets built from checkpoint 1 over code already serving users.
 
 **Every feature file is still written, in full.** The n/a marks, the reasons and the spec digests are what a later version reopens a checkpoint against; collapsing the *runs* must not collapse the *records*.
 
-**The collapse holds only while every feature qualifies.** One feature without `built:` — a `to-spec` exception, a new feature riding along — keeps its own open checkpoints and its own gate-18 run, and the sweep entry stays as well. What the sweep finds comes back as findings routed to checkpoints, exactly as any sweep's do (`../hora-accept/SKILL.md`).
+**The collapse reaches the features that qualify and stops at each one that does not — both kinds, and for opposite reasons.** A specified feature without `built:` keeps its own open checkpoints and its own gate-18 run alongside the sweep entry, because there is work here for a gate to close; a listed feature is not written into the section at all, because there is none, and its eighteen `[ ]` are what say so. **A collapsed version is therefore an ordinary version with fewer acceptance runs in it, never one where the sweep stands in for everything** — and what the sweep finds comes back as findings routed to checkpoints, exactly as any sweep's do (`../hora-accept/SKILL.md`).
 
 ### One file per feature
 
