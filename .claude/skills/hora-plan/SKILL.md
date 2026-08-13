@@ -295,7 +295,7 @@ whether an extension point should be left in place.
 | `missing-authorization` | an operation, a screen or a spec that does not say who may reach it | yes |
 | `unmet-usecase` | a stated use case that the design as written cannot complete | yes |
 | `spec-proposal` | an improvement `/hora-spec` proposed and whoever decided declined or deferred it. **Recorded so it is not proposed again every run** | no |
-| `existing-assets` | whether existing code may be used, and which side is authoritative when it and the spec disagree (`Authority:` missing on a project that has code) | yes |
+| `existing-assets` | whether existing code may be used, which side is authoritative when it and the spec disagree, and how much of the inherited product this version's tag claims (`Authority:` or `Baseline:` missing on a project that has code) | yes |
 | `undeclared-behavior` | the code does something no spec states, under `to-spec` — a spec omission or a leftover, and no reading distinguishes them. Both readings offered, neither recommended | no |
 | `contradiction` | a contradiction in the text | yes |
 | `dependency-install` | a declared dependency failed to install, or a conflict-proof change failed to apply | yes |
@@ -631,10 +631,13 @@ Reconcile the set of sections in the resolved document against the feature files
 
 | State | Action |
 |---|---|
-| a section with no feature file | create one. **Append it to `_plan.md`'s end** (do not disturb the existing order) |
+| a section with no feature file | create one. **Append it to `_plan.md`'s end** (do not disturb the existing order). **One carrying `<!-- baseline: inventoried -->` is appended to `## Not accepted` instead, with no checkbox**, and its file gets the provenance header and all eighteen `[ ]` (section 5) |
 | a section whose digest does not match | **clear the checkpoints its change invalidates, and say which** (below) |
 | a section that gained `kicked: yes` | move its entry to `_plan.md`'s `## Withdrawn`. **Raise a removal task** if it was implemented |
+| a section that gained `baseline: inventoried` | move its entry to `_plan.md`'s `## Not accepted`, and **bring every checkpoint back to `[ ]`** — an `[x]` reading `<!-- n/a: built before Hora Kit was adopted -->` is cleared; an `[x]` recording a checkpoint that actually ran is a stop (below) |
+| a section that **lost** `baseline: inventoried` | **the debt is being paid** (below). Do not plan it for building until `built:` has been restated and confirmed, or `authority: to-spec` declared. Then mark from the confirmed value, move its entry into `## Features`, and clear checkpoint 18 of every transitive dependent **in this version's own plan and task files** (below) |
 | a section that vanished with no annotation | **do not delete anything.** The intent is unknown, so ask (`blocking: no`) |
+| a collapsed version whose `.hora/acceptance/<version>/_sweep.md` has a newest block reading a pass, over entries still standing `[ ]` | **set checkpoint 18 in each of those features' files and their entries under `## Features — adopted as built`, off that one block** (section 5). Nothing else sets them, and until they are set the version cannot be read as done |
 
 A digest only detects changes to sections an existing feature points at. **A new section has no feature pointing at it, so this reconciliation is the only way to detect one.**
 
@@ -656,6 +659,38 @@ A digest only detects changes to sections an existing feature points at. **A new
 
 **The easiest thing to get wrong about deletion is that removing a task does not remove the code.** The model, the resolver, the tests and the migration all stay.
 
+**A section that gains `baseline: inventoried` almost always arrives with checkpoints already marked — up to seventeen of them — and every one of those comes off.** An inherited feature's ordinary state is checkpoints 1–17 written `[x] <!-- n/a: built before Hora Kit was adopted -->`, or 1–9, or 1–2, from whatever `built:` said (section 5) — a not-applicable mark, never a claim that anything ran — and **a not-applicable mark is cleared the moment its reason stops holding** (`../hora-build/references/checkpoints.md`). The reason here was `built:` expanded into marks; listing makes `built:` a value recorded and acted on nowhere (`../hora/references/spec-format.md`, "`baseline`"), so the reason is gone and the marks go with it. Read those seventeen as the stop instead and the row fires on every ordinary adoption, leaving a choice between stopping forever and leaving seventeen `[x]` standing on a listed feature — the pass nothing earned, in the file that exists to deny it.
+
+**The stop is an `[x]` recording a checkpoint that actually ran, and that mark is the one never unmarked here.** A run did that work and the file is its only record of it, so a section claiming both states is a contradiction between the annotation and the file: the annotation says nothing about this feature has ever been verified, and the checkpoint says something was. Ask (`blocking: yes`) — either the annotation is wrong or the version means to throw away a verified checkpoint, and choosing between those two is a decision, not a derivation.
+
+### Paying a listed feature's debt
+
+**Paying it is a version's ordinary work — and it is the one reconciliation that refuses to act on what the document already says.** The annotation is gone, both blocks are there, and the section now reads like any other feature. But the single fact the listing recorded, `built:`, was recorded precisely so that nothing would act on it, and acting on it now would mark up to seventeen checkpoints not applicable on the strength of a value nobody has confirmed since the day it was written — against code that has had every version since to drift. So restate the value, have it confirmed (`built:` per feature, through the question tool, with the evidence laid out — `../hora/references/asking.md`), and only then expand it into not-applicable marks, from wherever the confirmed value puts them.
+
+**Or that version declares `authority: to-spec` for the feature, and all eighteen run against the existing code.** That is the other complete answer, and it needs no confirmation of `built:` because it carries none — the two never appear on one feature (`../hora/references/spec-format.md`, "`authority`").
+
+**Inside the paid feature there is nothing to clear.** No checkpoint of it was ever marked, so the clearing table above has nothing to act on there, however much of the section is new. And its checkpoint 18, when it comes, is that feature's first acceptance ever: `/hora-accept` decides that run's reach itself, from the absence of any prior record for the id, and this skill neither narrows it nor has to ask for it (`../hora-accept/SKILL.md`, "What is in scope").
+
+**What the payment clears lands on other features: checkpoint 18 of every feature that reaches the paid one transitively — through the same union `Rests on:` was derived from, never through `depends` alone** (section 5). Each of them passed acceptance while resting on behavior nobody had stated — which is exactly what its `Rests on:` line records — and stating that behavior changes what the pass was measured against. It is the rule for a not-applicable mark cleared the moment its reason stops holding (`../hora-build/references/checkpoints.md`), applied to a reason that lived in another feature's annotation: "nothing about #billing is specified" has stopped being true.
+
+**A dependent that is itself listed is not in that set, and the exclusion belongs here, where the set is defined.** A listed feature may carry `depends`, and it owes the version's data model and operation list a row each justified by its name (section 2) — so on the reading above it falls inside the union like any other dependent. Re-schedule it and it gets a fresh `## Features` entry with a `[ ]` box, seventeen not-applicable marks and a scheduled acceptance over a feature with no use cases and no acceptance criteria: every state the listing denies, produced by the mechanism that exists to protect what the listing protects. **The justification does not reach it either** — it did not pass acceptance while resting on unstated behavior, because it never passed anything, and it carries no `Rests on:` line recording that it did. **Its checkpoint 18 was never marked, so there is nothing to clear and nothing to re-earn**: it keeps its `## Not accepted` entry, its absent checkbox and its eighteen `[ ]` until its own debt is paid, in whichever version next changes it.
+
+**Nothing else of theirs is cleared.** Checkpoints 1 to 17 stay as they were, because their code did not change — only what they were accepted against did.
+
+**Where that clearing lands is the paying version's own plan, and nowhere else.** A dependent finished in 1.1.0 has its checkpoint 18 in `.hora/tasks/1.1.0/<id>.md` — a file this reconciliation never reads (it runs against the version being planned), belonging to a released version whose done-ness must not be revoked retroactively, and which `/hora` never revisits. Untick a box there and nothing ever executes against it: the sentence above would name a dozen features and fire on none of them. So each transitive dependent gets **a fresh entry in the paying version's `_plan.md`, under `## Features` with a `[ ]` box, and its own file in `.hora/tasks/<paying version>/<id>.md`** — checkpoints 1–17 marked not applicable against a stated reason, 18 left `[ ]`, and its `Rests on:` line carried across.
+
+```markdown
+- [x] 1. Draft or confirm the specification  <!-- n/a: accepted in 1.1.0; re-accepted because #billing's debt was paid -->
+                                    ← and 2 through 17 the same, each with the reason
+- [ ] 18. Acceptance (E2E and unit both)
+```
+
+**The box is `[ ]` rather than absent because a run is going to close it** — that entry is what `/hora-build` picks up, and with only 18 unmarked, closing it is the whole of what the entry asks for (`../hora-build/SKILL.md`, "Where to start"). The reason line is what stops 1–17 being run again over code nothing touched, and it names the earlier version so the second acceptance can be read against the first.
+
+**No released version's task files or `_plan.md` are ever rewritten** (section 1, "Files of past versions are never rewritten"). 1.1.0 keeps its entry, its marks and its acceptance record, so what it claimed at its tag stays what it claimed; **the version that caused the re-earning is the version that schedules it**, which is also the version whose closing report somebody is actually going to read.
+
+**One payment can reopen a dozen acceptances, and that has to be visible before it happens.** `depends` is followed transitively, so a feature three hops away is reopened as surely as a direct dependent, and a version that pays two debts at once can reopen most of what it inherited. **Name every feature the clearing will reach, and what each one now owes, before clearing anything** — then clear. Where the count comes as a surprise, that is the price of the listing having been paid late; it is not a reason to stop at the first hop.
+
 ---
 
 ## When this skill finishes
@@ -668,11 +703,17 @@ how many findings were raised, and how many were resolved in conversation
 every question written to the question file — its Q<n> id, its category, its
   blocking value, one line of what it is, and a link to the file
   (../hora/references/structure.md, "Citing a question in a report")
-how many features are in the plan, and how many are already done
+how many features are in the plan to build, and how many are already done
+every feature in ## Not accepted, BY NAME — where it runs, and which features
+  rest on it
 what /hora will start on next
 ```
 
 **Findings resolved in conversation may be counted. Questions may not.** A resolved finding is over — the edit is in `specs/` and the question file records it after the fact. An open question is work somebody still has to do, and a number is not something anybody can act on.
+
+**A listed feature may not be counted either, for the same reason.** "3 not accepted" says that this version claims nothing about part of the product and not which part, and the person reading the report is the one who could still decide to pay one of those debts now (`../hora/references/structure.md`, "Citing a question in a report"). **They are also outside the feature count** — a plan of twenty with three listed is seventeen to build, and a report that says twenty has promised three features nobody is going to build.
+
+**Seventeen here and twenty in the acceptance record are not a discrepancy, and neither number is the other one written wrong.** This report counts what there is to build; the sweep's verdict counts what the tag claims about the product, so it keeps all twenty in its denominator and reads `passed over 17 of 20 features; 3 not accepted` (`../hora-accept/SKILL.md`, "Recording the result"). Two questions, two numbers — fold them into one figure and either this report promises three features nobody is going to build, or the verdict shrinks the product it claims about down to the part that passed.
 
 When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section needs what added, and a link to `.hora/questions/<version>/open.md`.
 
