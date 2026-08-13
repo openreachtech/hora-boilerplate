@@ -201,6 +201,7 @@ Reserving `--` for separation alone makes the reverse lookup from `id` to path u
 | `depends` | the `id` of the sections it depends on. State `none` explicitly when there are none |
 | `kicked` | `yes` means withdrawn. **Shown in an annotation rather than by deleting the section** |
 | `built` | how far this feature was implemented **before Hora Kit was adopted** — `spec` / `backend` / `frontend`. Absent for anything built under the kit. **Never inferred** |
+| `baseline` | `inventoried` says this feature is **listed: not specified, and not accepted.** Admissible only where `Existing assets` declared `Baseline: inventoried`. It **requires `built:`**, which is then recorded and acted on nowhere — no checkpoint of a listed feature is marked at all, in either direction. **Never inferred, and never recommended** |
 
 Subsections inherit from their parent. State it to override.
 
@@ -220,14 +221,20 @@ Work through the resolved document and check every one of these. **The first thr
 
 | Check | Missing means | blocking |
 |---|---|---|
-| **Use cases per feature** | checkpoints 2, 9 and 11 have nothing to verify against | **yes** |
-| **Acceptance criteria per feature** | "what counts as done" would have to be invented | **yes** |
+| **Use cases per feature** — except a section carrying `<!-- baseline: inventoried -->` | checkpoints 2, 9 and 11 have nothing to verify against | **yes** |
+| **Acceptance criteria per feature** — the same exception, and only those two | "what counts as done" would have to be invented | **yes** |
 | **The kind of each API operation** — query / mutation / subscription / REST renderer | checkpoints 3, 6 and 14 cannot choose which convention to follow | **yes** |
 | **A stated caller per operation**, and an actors table to state it against | the operation gets whatever filter its neighbours had, and nothing says nobody decided | **yes** |
+| **A listed section carrying a usecases block, an acceptance block, a screen section or a data-model table of its own** | it is specified and listed at once, and nothing decides which half the checkpoints run against | **yes** |
 | The implementation scope, split into "for now" and "permanently" | the design cannot tell an extension point from a dead abstraction | yes |
 | Whether existing assets may be used | "reimplement" is implied, but whether the code is visible is unknown | yes |
 | Unknown fields in an SDL or a REST payload | it would mean inventing the shape of an API | yes |
 | A contradiction in the text | there is no way to choose between them | yes |
+| `baseline: inventoried` under `Baseline: verified` | the permission was never granted, and it is the declaration that makes a listed feature legible to every later reader | yes |
+| `baseline: inventoried` with no `built:` | nothing makes "this code exists" checkable. The section could be a feature nobody ever built — uncounted, unswept, and with no removal task | yes |
+| `baseline: inventoried` with `authority: to-spec` | `to-spec` runs every checkpoint against the existing code; listing says none of them runs | yes |
+| `baseline: inventoried` on a section added after the version that declared `Baseline: inventoried` | new work is not inherited code, so there is nothing already running to list (`../hora/references/spec-format.md`, "`baseline`") | yes |
+| **A `depends` naming the listed section**, where a feature's own tables or operations sit on those of a section carrying `<!-- baseline: inventoried -->` | the dependent gets no `Rests on:` line and stays outside the transitive set when the debt is paid — a pass resting on unstated behavior, hiding what it rests on | **yes** |
 | A missing `target` / `depends` | it classifies content, so it can be derived | no |
 | A missing `id` on a `##` | it ties to the H1's `id`, so references hold | no |
 | An orphaned file | notice that something will not be read | no |
@@ -240,6 +247,10 @@ Work through the resolved document and check every one of these. **The first thr
 | an **acceptance criterion** | an observable behavior that is either present or absent | the tests written alongside the code, and checkpoint 18 |
 
 A feature with acceptance criteria but no use cases builds a set of operations that are each correct and together unreachable — every API returns what it should, and no screen strings them into anything a person can do. **That failure surfaces at acceptance, at the far end of eighteen checkpoints, which is the most expensive place to find it.** This is exactly what the acceptance review looks for, and this gate is what stops it from being found only there.
+
+**A section carrying `<!-- baseline: inventoried -->` is the one exception to the first two rows, and it suspends exactly those two.** `missing-usecase` and `missing-acceptance` are not raised for it: it is listed rather than specified, nothing about it is built or accepted, and there is therefore nothing for either block to be checked against (`../hora/references/spec-format.md`, "`baseline`"). **Nothing else is lifted.** `undefined-api-kind` and `missing-authorization` are raised over the rows a listed feature's operations occupy exactly as over any other feature's, because those rows describe code that is already running and already reachable — an operation whose caller nobody ever stated is reachable today, by whoever the neighbouring filter let in, and a declaration about how much gets verified changes nothing about that.
+
+**The emptiness is checked in the other direction too.** A listed section is a heading, its annotations and one line of prose; one that also carries a usecases block, an acceptance block, a screen section or a data-model table of its own is claiming both states at once, and whichever half gets ignored is the half somebody wrote on purpose. Stop with `contradiction` (`blocking: yes`) rather than pick. **What the feature still owes is a row, not a section**: the tables and operations its running code already has are a row each in the version's data model and operation list, justified by the feature's name in place of a use case — leave those out and the spec stops describing the database that actually exists.
 
 ### Resolving what was found
 
