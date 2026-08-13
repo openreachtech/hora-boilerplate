@@ -133,18 +133,39 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 
 ## Recording the result
 
-```markdown
-# Acceptance — 1.0.0 — after #attendance
-<!-- reach: full | scoped -->
-<!-- scope: attendance, sign-up, sign-in -->
-<!-- live: yes | no (skipped at the gate) -->
-<!-- environment: e2e/docker, seeded 2026-08-10 -->
+**The file says what was accepted. A block inside it says what one run found.** Two things vary independently — which subject an acceptance run is about, and how far that run reached — and the record keeps them apart: the **path** carries the subject, and never anything else; the **block** carries the reach, the scope and the verdict.
 
-## Verdict
+| The subject | The path |
+|---|---|
+| one feature, at its checkpoint 18 — **whatever reach that run took** | `.hora/acceptance/<version>/<feature-id>.md` |
+| the version itself, at its `## Acceptance` sweep entry | `.hora/acceptance/<version>/_sweep.md` |
+
+**A widening never moves the file.** A person may ask for the sweep's reach at a feature's gate ("What is in scope", above), and that run still accepts *that feature* — its scope and its `reach:` line say how much was looked at on the way. Send it to `_sweep.md` instead and two things go wrong at once: the feature never gets the per-feature evidence the next run reads to know what was already covered (below), and `_sweep.md`'s newest block stops being an attempt to accept the whole version — which is exactly what `/hora`'s steps 6 and 7 and `../hora/references/done-criteria.md`'s condition for a done version read it as. **The reach is a property of a run; the path is a statement about what is being accepted, and only the second belongs in a filename.**
+
+**Which is also why `_sweep.md` has exactly one writer.** `/hora`'s steps 6 and 7 and `../hora/references/done-criteria.md`'s condition for a done version both read its newest block for a `reach: full` pass, and they are entitled to assume every block in it was an attempt to accept the whole version (`../hora/SKILL.md`, "Deciding where you are").
+
+### One block per run, appended, newest last
+
+**A subject is accepted more than once, and every one of those runs is kept.** A retake after a finding, a sweep re-run after a failed one, a dependent whose acceptance was cleared and earned again — each appends a block. **Nothing is ever overwritten**, and no run's findings, verdict or requester disappears because a later run reached the same subject.
+
+**Every reader takes the newest block.** That is the current verdict for that subject; the blocks above it are how it got there.
+
+```markdown
+# Acceptance — 1.0.0 — #attendance
+
+## Run 1
+<!-- reach: full | scoped -->
+<!-- scope: attendance (rests on #payroll, not accepted), sign-up, sign-in -->
+<!-- live: yes | no (skipped at the gate) -->
+<!-- not-accepted: payroll, legacy-import | none -->
+<!-- environment: e2e/docker, seeded 2026-08-10 -->
+<!-- asked for by: <a person's name, where they widened this run> -->
+
+### Verdict
 
 failed
 
-## What ran
+### What ran
 
 | Step | Delegate | Result |
 |---|---|---|
