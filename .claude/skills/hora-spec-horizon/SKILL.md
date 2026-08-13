@@ -50,6 +50,8 @@ which use case is impossible without this?
 | "it would be nice to have" | it is deferred. Ask what would make it necessary |
 | a use case nobody stated | **go back to stage 1.** Either the use case is real and belongs there, or the feature has no reason |
 
+**A section carrying `<!-- baseline: inventoried -->` states no use case by declaration, and is not sent back to stage 1 for it** (`../hora/references/spec-format.md`, "`baseline`"). Its silence is somebody's decision, not a hole — read as "a use case nobody stated", it would go to stage 1, which would list it again and return it here, and the two stages would trade one feature forever with nothing in either conversation saying why.
+
 **Then say the number out loud.** "This release has eleven features and four of them serve one use case each" is a sentence nobody says to themselves. Propose the split — which four go now, which seven follow, and which use case each group completes.
 
 **If the answer is still "all of it", record it and carry on.** State it once, propose the narrowing, and if the decision stands, write a `scope` question naming what was proposed and who declined it. **The decision belongs to whoever asked for the product; saying nothing does not.**

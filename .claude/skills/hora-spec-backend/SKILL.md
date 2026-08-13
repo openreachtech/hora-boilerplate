@@ -19,6 +19,8 @@ Read `../hora/references/structure.md` and `../hora-spec/references/principles.m
 
 **The whole existing data model and operation list goes out as checks, batched per area** — one for the tables, one for the operations, one for what runs outside the request. Not per table and not per operation: a person confirming the fourteenth table in a row has stopped reading (`../hora-spec/references/investigation.md`).
 
+**A feature listed under `Baseline: inventoried` still owes its tables and its operations a row each here.** The section itself carries a name and one line and nothing else (`../hora/references/spec-format.md`, "`baseline`") — but the tables it already has are in the database everything designed here has to fit around, and the operations it already exposes sit on a server stage 6 has to state a caller for. Leave them out and the spec stops describing the database that actually exists: the next version reads a data model with no `payslips` in it, and generates a migration for a table that is already there. **It costs almost no exchanges**, because the whole existing model and operation list are already going out as the batched checks above, and a listed feature's rows sit inside those same batches.
+
 | Read it, put it up as a **check** | Ask, or **propose** |
 |---|---|
 | which tables exist, and what columns they hold | why the model came out that way, and what it rules out |
@@ -131,7 +133,7 @@ What belongs in the spec is the logical shape:
 | `finished_at` | datetime | NULL until they clock out | |
 ```
 
-- **Every table names which use cases it serves.** A table no use case needs is a table nobody has explained
+- **Every table names which use cases it serves.** A table no use case needs is a table nobody has explained — **except a table belonging to a feature listed under `Baseline: inventoried`, which names that feature instead of a use case**, since a listed section states none at all (`../hora/references/spec-format.md`, "`baseline`")
 - **Stage 3's numbers are inputs here.** Whether a monthly total is a stored column or a query is decided by the volume, and the decision is recorded with the number that produced it
 - **A deferred feature's seam is honored here** — stage 2 named it, and this is where it is left open
 - **Do not name the model class or the migration.** `/hora-plan` decides identifiers against the lint rules
@@ -197,7 +199,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 | a state the model cannot represent | the data model is wrong, not the use case |
 | a step that needs data from two places that are not connected | a relation is missing |
 | a use case that completes but takes minutes in the request | step 5 was not applied to it |
-| an operation no use case needs | either a use case is missing (stage 1) or the operation is |
+| an operation no use case needs | either a use case is missing (stage 1) or the operation is — **unless it belongs to a listed feature, which justifies it by name** |
 
 **Where a walk fails, fix the design here and say what changed.** A failed walk is why this stage precedes stage 5 — a screen built on an operation list that cannot serve a use case is a screen that will be rebuilt.
 

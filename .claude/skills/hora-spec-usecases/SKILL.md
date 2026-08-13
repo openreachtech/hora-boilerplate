@@ -1,6 +1,6 @@
 ---
 name: hora-spec-usecases
-description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Where something already runs, starts from what stage 0 read and asks each feature how far it is actually built. Writes the document information, the project name, the actors and roles, the terminology, the existing assets, and every feature's use-case block, drafted acceptance criteria and built annotation. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 1 of /hora-spec. Fix who uses the product and what each of them completes end to end, breaking a feature request down into use cases and proposing the ones nobody thought of. Where something already runs, starts from what stage 0 read and asks each feature how far it is actually built, and — where the document permits it — whether it is specified this version or only listed. Writes the document information, the project name, the actors and roles, the terminology, the existing assets, and every feature's use-case block, drafted acceptance criteria, built annotation and baseline annotation. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-usecases
@@ -19,7 +19,7 @@ what each of them comes here to complete, start to finish
 which of those this release will serve at all
 what the product is called
 what the words mean
-what already exists, and whether it may be used
+what already exists, whether it may be used, and how much of it this version accepts
 ```
 
 ## What it must not decide
@@ -63,11 +63,17 @@ what already exists, and whether it may be used
 5. What do they do today, without this? Is there code, and may it be used?
    And where there is code: when it and the spec disagree, which one is right —
    as-built (what runs is what this version is) or to-spec (the spec is; the
-   code catches up)?
+   code catches up)? And how much of what already runs does this version's tag
+   claim — verified (every inherited feature specified and accepted before it)
+   or inventoried (a feature may be listed unaccepted, one at a time)?
 
 6. What must never happen?
 
 7. What is the product called?
+
+then, before 8, and only where Baseline: inventoried was declared: which
+features are listed rather than specified? Per feature, four at a time, and
+never an option inside 8 (below)
 
 8. Only where something is already running: how far is each feature actually
    built? Under as-built the derived table goes up whole, then each feature
@@ -86,11 +92,49 @@ what already exists, and whether it may be used
 
 **Question 4 is not small talk.** Frequency decides what a screen puts first at stage 5, and the once-a-month operation that touches everything is usually the heaviest one stage 3 is about to ask for.
 
-**Question 5 has three parts wherever code exists, and two on a new project.** What exists; whether it may be read ("reimplement it" with the code invisible is a different job from "reimplement it" with the code in front of you, and **which one it is may never be inferred** — `../hora/references/structure.md`, invariant 2); and **which side is authoritative when the code and the spec disagree** — `as-built` or `to-spec` (`../hora/references/spec-format.md`, "Existing assets"). The third part is asked before question 8, never after: it decides how question 8 is asked at all. One question, two options, overridable per feature (`<!-- authority: -->`) when the honest answer is "fifteen are done, three are not".
+**Question 5 has four parts wherever code exists, and two on a new project.** What exists; whether it may be read ("reimplement it" with the code invisible is a different job from "reimplement it" with the code in front of you, and **which one it is may never be inferred** — `../hora/references/structure.md`, invariant 2); **which side is authoritative when the code and the spec disagree** — `as-built` or `to-spec`; and **how much of what already runs this version's tag actually claims** — `Baseline: verified` or `inventoried` (`../hora/references/spec-format.md`, "Existing assets"). One question each, two options each, and `Authority` is overridable per feature (`<!-- authority: -->`) when the honest answer is "fifteen are done, three are not".
+
+**The last two are both asked before question 8, never after, and for the same reason: each of them decides how question 8 is asked at all.** `Authority` decides its shape — a derived table to confirm, or an open question per feature. `Baseline` decides whether the listing question below is asked at all, and what a `built:` answer then does for the features it reaches: acted on, or merely recorded (below). Asked afterwards, both would mean re-asking twenty features something already answered in a different frame.
+
+**`verified` is required wherever code exists, and it is what adoption has always done.** The up-front sweep is what makes a fixed baseline a verified one rather than a claimed one — writing the line down is what turns it from an unstated default into a choice somebody made, and `inventoried` is that choice going the other way.
+
+**Both lines are approved in prose, on their own, and neither is ever folded into an option.** A declaration is the section's own text, and what an approval protects is that somebody read the exact words (`../hora/references/asking.md`, "What goes in it, and what does not"). **`Baseline` carries one rule beyond that**: it is one of the three roles a declared `Source` may never satisfy, so it goes into `spec.md` itself — a declaration that leaves features unaccepted is legitimate only while every later reader of the spec sees it (`../hora/references/spec-format.md`, "Required sections").
 
 **Question 6 becomes two things**: an acceptance criterion in the owning feature's `<!-- acceptance -->` block — this stage drafts and writes it ("What it writes", below) — and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
 
 **Question 7's answer becomes the prefix of every repository name.** Ask for it explicitly and confirm the spelling — it is expensive to change, because changing it renames every repository (`../hora/references/structure.md`).
+
+---
+
+## The listing question — asked before question 8, and never inside it
+
+**Asked only where `Baseline: inventoried` was declared.** Under `verified` there is nothing to ask: every inherited feature owes its use cases and its acceptance criteria like any other, and a question with one possible answer is an interrogation, not a conversation. Where the permission exists, each feature gets one of two answers — **specified this version**, or **listed: not specified, and not accepted** (`../hora/references/spec-format.md`, "`baseline`").
+
+**It is never an option inside question 8, and that is a rule about form rather than about tidiness.** Under `as-built`, question 8's options are **checks** on a value derived from the tree — the person is judging whether a reading is right. "This feature will not be verified" is a reading of nothing; it is a decision. Put beside three derived gates it becomes a proposal wearing a check's clothing, and afterwards nothing distinguishes the decision from the reading — the record shows a person answering `listed` in the same breath as they confirmed `frontend`, with no way to tell which job they thought they were doing (`../hora/references/asking.md`, "What is never asked").
+
+**Lay out the evidence, batch at most four features per exchange, and recommend nothing.** `Authority: as-built` lifts nothing here: it decided that the running system is the requirement, not that some of it goes unverified.
+
+```
+"Baseline: inventoried lets a feature be listed rather than specified. For
+ #payroll stage 0 found 6 resolvers, 2 migrations, 4 screens and no tests.
+
+   specified   its use cases and its acceptance criteria get written this
+               version, and acceptance covers it
+   listed      a name and one line. No checkpoint of it is ever marked, no
+               acceptance run has it in scope, and the version that next
+               changes it writes both blocks then"
+```
+
+**One yes over a table of seventeen features is not an answer, and it is forbidden by name** (`../hora/references/structure.md`, invariant 1, "Approval is never blanket"). It is also the blanket approval that would cost the most: seventeen features left unaccepted in a version whose verdict a later reader takes for a pass. Four per exchange, each one selected.
+
+**Question 8 still runs for a listed feature, and its answer lands differently.**
+
+| A feature answered | What question 8 then does with it |
+|---|---|
+| **specified** | writes `built:` at the confirmed gate, and the mapping applies — the checkpoints that gate covers go not applicable, 18 stays open |
+| **listed** | still asks, and `built:` is still **required** — but the value is **recorded, not acted on.** Nothing is marked, and the version that pays the debt restates it and has it confirmed |
+
+**Record every listing decision in `.hora/spec/<version>/_stages.md`, with the name of whoever made it.** The annotation says a feature is unaccepted; nothing in `specs/` says who chose that, or against what evidence — and paying the debt later begins by asking exactly that of somebody who may no longer be here.
 
 ---
 
@@ -138,7 +182,7 @@ A feature answered `not finished` becomes `<!-- authority: to-spec -->` — no `
    not built  none of it counts as done"
 ```
 
-**This is the one thing in this stage asked per feature rather than per section.** Every other reading of an existing product is confirmed per area, because a person answering the twentieth identical check has stopped reading (`../hora-spec/references/investigation.md`). Without a declaration, `built:` cannot be batched that way: it is a different answer per feature, and getting one wrong changes which seventeen gates run.
+**This and the listing question are the only two things in this stage asked per feature rather than per area.** Every other reading of an existing product is confirmed per area, because a person answering the twentieth identical check has stopped reading (`../hora-spec/references/investigation.md`). Neither of these two can be batched that way: each is a different answer per feature, and getting one wrong changes which seventeen gates run — or whether any of them runs at all.
 
 **Use the question tool**, four features per exchange, with `not built` always present as an option.
 
@@ -248,7 +292,9 @@ One `<!-- usecases -->` block per feature section, or **once on a feature file's
 
 **Absent is a valid and common state** — it is what every feature on a new project carries, and it means "nothing exists yet". Write the annotation only where somebody answered one of the three values.
 
-**A feature carrying `built:` still needs its use cases and its acceptance criteria.** Checkpoint 18 verifies against them, so a built feature with neither has nothing to be accepted against — and finding out what an existing product actually does is the entire reason the kit was adopted onto it.
+**A listed feature carries `<!-- baseline: inventoried -->` beside its `built:` value**, written from the listing question's answer and from nowhere else. **`built:` is not optional there**: without it the section could as easily be a feature nobody ever built — uncounted, unswept, and with no removal task — so "this code exists" is written as a checkable value rather than left to the one line of prose (`../hora/references/spec-format.md`, "`baseline`").
+
+**A feature carrying `built:` still needs its use cases and its acceptance criteria — unless it is listed**, in which case it carries a name, one line of prose, its rows in the data model and the operation list, and one line in the screens section of the repository each of its screens belongs to (`../hora/references/spec-format.md`, "`baseline`"; `../hora-spec-frontend/SKILL.md`). Checkpoint 18 verifies against those two blocks, so a built feature with neither has nothing to be accepted against — and finding out what an existing product actually does is the entire reason the kit was adopted onto it. **A listed feature is the exception because nothing accepts it either**: no run has it in scope, so there is nothing left for either block to be checked against. Leave the two out for any other reason and the feature goes into the sweep with nothing to fail.
 
 ### Drafting use cases from the running system — under `as-built` only
 
@@ -260,12 +306,15 @@ One `<!-- usecases -->` block per feature section, or **once on a feature file's
 | **Drafted from** | the screen-to-operation paths stage 0 read, the role checks on them, and what the existing tests exercise |
 | **Put up as** | **checks** — "these are the paths the system carries; is that what people do with it?" — three or four features per exchange, corrected rather than composed |
 | **Forbidden for** | **a `to-spec` feature, always.** There the code is unfinished work toward a spec, and a use case drafted from it canonizes exactly the state the spec exists to move past. Its use cases come from the conversation, like a new feature's |
+| **Forbidden for** | **a listed feature, always — nothing is drafted for it at all.** Not a use case, not a criterion: a criterion derived for a feature nothing will ever verify is the one thing this declaration must not produce, because it reads exactly like a criterion somebody accepted and nothing downstream ever tests it. Its one line of prose says what the feature is, and that is a reading, put up as a check like any other |
 
 **Why a check and not a proposal, and why that is safe here and nowhere else:** the person who wrote `as-built` declared the running system to be the requirement (`../hora/references/structure.md`, invariant 2). After that, "this is what the system carries" and "this is what is wanted" are the same claim — which is precisely what makes the same draft a **proposal** everywhere else, where they are not.
 
 **A drafted use case still cannot say what a path is *for*.** Where the purpose is not legible from the path — the same screen serving two audiences, an export nobody could place — ask, as always. The declaration moved the boundary; it did not remove it.
 
 **Acceptance criteria draft from the existing tests, and only from tests that exist.** What a test asserts is observable by construction. **A feature with no tests gets no drafted criteria — ask instead**: "the tests pass" is not "it is right", and where nothing asserts anything, there is nothing to read a criterion off. Silence there must surface as a question, not as an invented criterion.
+
+**That unbatchable question is the cost listing actually removes**, and it is worth saying plainly, because it is what lets somebody decline the setting. An untested feature's criteria have to be composed in conversation, one feature at a time, with nothing to correct — twelve untested features is twelve of those exchanges, and it is where the adoption conversation runs out of patience. Listing them costs a name and a line each. **So listing pays for itself in proportion to how untested the inherited product is, and buys close to nothing on a well-tested one** — where the tests already carry the criteria, `verified` costs a few batches of checks and delivers a baseline somebody actually accepted.
 
 ### Acceptance criteria, per feature
 
@@ -291,9 +340,10 @@ One `<!-- acceptance -->` block per feature section, beside the use cases — th
 Current implementation: `acme-attendance` (visible, read-only access granted)
 Treatment: reference it — match the behavior, rewrite the implementation
 Authority: as-built — what runs is what this version is
+Baseline: verified — every inherited feature is specified and accepted before the tag
 ```
 
-**The `Authority` line is required whenever `Current implementation` is not `none`** — leaving it out is an `existing-assets` stop (`blocking: yes`) at `/hora-plan` (`../hora/references/spec-format.md`, "Existing assets").
+**The `Authority` line is required whenever `Current implementation` is not `none`** — leaving it out is an `existing-assets` stop (`blocking: yes`) at `/hora-plan` (`../hora/references/spec-format.md`, "Existing assets"). **The `Baseline` line is required under the same rule and stops the same way**, and it is the one line of this section a declared `Source` may never satisfy: how much of the product goes unverified is a decision every later reader of the spec has to be able to see without following a link.
 
 **Terms only. No identifiers.** `/hora-plan` decides the class and table names, against the lint rules, and a name written here that lint rejects is a name somebody has to unpick later.
 
@@ -301,7 +351,9 @@ Authority: as-built — what runs is what this version is
 
 ## Exit condition
 
-Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one, and an `<!-- acceptance -->` block this stage drafted and got approved; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built. `../hora-spec/references/stages.md` is the authority.
+Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one, and an `<!-- acceptance -->` block this stage drafted and got approved; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built.
+
+**A section carrying `<!-- baseline: inventoried -->` is excepted from the use-case and acceptance halves of that, and from nothing else**: it exits with a name, one line of prose and its `built:` value, and neither block. **What it owes instead is a recorded decision per listed feature** — in `.hora/spec/<version>/_stages.md`, naming whoever decided it, because the stage cannot be over while the only record of a feature going unaccepted is an annotation nobody signed. `../hora-spec/references/stages.md` is the authority.
 
 **Where an actor or a use case cannot be settled because the person who knows is not here**, record it (`undefined-detail`, or `missing-authorization` where it is an actor's identification that is missing) and carry on. Do not invent one to keep the stage moving.
 
