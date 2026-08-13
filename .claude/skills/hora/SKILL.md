@@ -160,6 +160,8 @@ every open question — its Q<n> id, its category, its blocking value, one line
   of what it is, and a link to the file it is in (references/structure.md,
   "Citing a question in a report"). Never a bare count
 the last acceptance verdict, and what it sent back
+every feature this version listed rather than accepted — by id, never a count,
+  and with what rests on each one
 git status for every repository, including the branch (state it explicitly if
   anything is uncommitted, or if a branch is not release/<version>)
 what the next run of /hora will start from
@@ -172,6 +174,10 @@ what the next run of /hora will start from
 When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section to add what to, and the link, at the top rather than buried in a tally.
 
 **Every `eslint-exception` question gets its own, separate line, by name, with its link — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
+
+**Every feature the version listed rather than accepted is named by id too, and never counted.** "3 features not accepted" is the same non-report as "two questions remain" — it says something went unverified and nothing about *which running code nobody checked*. Name each one, and name what rests on it: a dependent records `Rests on: #x (not accepted)` in its own feature file, and that line is what turns one unaccepted feature into the list of passes leaning on it (`../hora-plan/SKILL.md`, "One file per feature").
+
+**This report is where such a debt is most easily lost.** The record already carries it — a `not-accepted:` line in the acceptance record, and a verdict that may never read a bare `passed` (`../hora-accept/SKILL.md`, "Recording the result") — but the verdict and the findings are the two things everybody reads, and a closing report that ends at "passed" is the sentence somebody remembers a month later, when they build on the one feature nobody ever verified.
 
 ### When a version cannot proceed, lay out the choices
 
@@ -187,6 +193,8 @@ Remaining: #payroll #bonus #year-end
   drop it         → mark the section kicked: yes in specs/1.0.0/spec.md
   defer it        → kicked: yes in 1.0.0, kicked: no on the specs/1.1.0/ side
 ```
+
+**A listed feature is never one of the remaining ones, and it is never offered these three ways out.** It is not unfinished work waiting on a decision — it is running code nobody has specified yet, and the way out of it is a later version writing its two blocks (`references/spec-format.md`, "`baseline`"). Offer `kicked: yes` for one and the report is proposing that somebody withdraw a feature already serving users.
 
 **`/hora` only lays out the choices; it does not decide.** Deciding the scope is on the side that must not be inferred.
 
