@@ -168,9 +168,9 @@ The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repo
 - **The spec overrides this.** When `specs/` states a particular way to implement something — a specific algorithm, an explicit exclusion of a package — follow that and implement it fresh
 - When something looks close but there is no confidence, record it as `reinvention` (`blocking: no`) and proceed with your own implementation
 
-### Explicit row ids go through `bank-id`
+### Explicit row ids come from this feature's `bank-id` prefix
 
-A seeder written here, or a test fixture written later, that carries an explicit `id` **calls the `bank-id` skill first**, with this feature's `id` as the requester, and builds every id it writes from the prefix it returns. Never derive an id any other way, and never read or reason about another requester's rows.
+A seeder written here, or a test fixture written later, that carries an explicit `id` **builds it from the prefix `/hora-build` allocated for this feature** (`../SKILL.md`, "Where to start"), in any table. That prefix is allocated once, before this feature's first implementing checkpoint, and handed to every agent — so the units of one checkpoint draw from one slice instead of queueing behind each other for the lock. Derive an id from that prefix alone, and leave another requester's rows unread.
 
 ## 6. Actual API
 

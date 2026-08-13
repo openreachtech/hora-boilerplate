@@ -160,6 +160,8 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 **Record the version alongside the names.** A checkpoint that says which skills it ran against, and which text of them, is one somebody can re-derive; the same checkpoint without the version is one whose conventions nobody can recover after the next package update.
 
+**A verifier at step 9 is handed the same digests its implementer had.** Judging a checkpoint against a fuller text than the one the implementer was given fails work for a convention nobody handed it — so both read the same thing, and the record names the version they both used.
+
 **Checkpoint 8's audit skills are invoked in full, and a digest has no part in it.** A digest serves an agent writing to a convention, where the skill is one tool call away the moment a question opens. An audit is a check list whose whole value is its completeness, and a summary of a check list is a shorter check list — so the audit runs from the skill itself, every check in it (`../../agents/hora-verifier.md`, "Checkpoint 8 is a whole skill, not a reading").
 
 ### Step 5 — splitting a checkpoint into units
