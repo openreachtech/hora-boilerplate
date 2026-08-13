@@ -547,11 +547,50 @@ Conflict: appends to scalars/index.js. Two other features carry the same mark
 
 **Checkpoint 18 always stays `[ ]`.** No value of `built` reaches it, and no reading of an existing repository can stand in for an acceptance review — that is the whole reason the annotation stops one short of the end.
 
+**A listed feature gets the same file, and not one line of it is dropped.** What changes is the header and the marks: two non-checkbox lines say what the listing recorded, and all eighteen checkpoints stay `[ ]`.
+
+```markdown
+# #billing  Invoicing and payment collection
+<!-- spec: billing @ sha256:def456... -->
+<!-- repositories: backend, frontend-admin -->
+
+Listed, not specified: carries `baseline: inventoried`, listed since 1.0.0, and
+                       sits in _plan.md's `## Not accepted`. Runs in
+                       `admin-console`. Nothing below has been marked
+
+Built (recorded, not acted on): frontend. The version that specifies this
+                       feature restates the value and has it confirmed, and
+                       only then does anything below get marked (section 6)
+
+## Spec gate
+- [ ] 1. Draft or confirm the specification
+- [ ] 2. Verify the use cases can be met
+                                    ← and the remaining sixteen, written out in
+                                      full and verbatim, every one of them [ ]
+```
+
+**Eighteen `[ ]`, and not one of them marked not applicable.** Not `[x]`, and not `n/a` either — a listed feature's checkpoints are marked as *nothing at all* (`../hora/references/spec-format.md`, "`baseline`"). This is why `built:` sits in a header line here instead of expanding through the table above: those marks are a claim that some gate's work already exists, and no such claim has been confirmed for this feature.
+
+**The header is what stops eighteen empty boxes being read as "never started".** Whoever opens this file next sees the checkboxes before anything else, and a feature sitting at checkpoint 1 with a screen already in production invites exactly one action: build it. Two models, a resolver and a screen later, somebody notices that it was already there. The header says the code exists, says nothing about it has been verified, and says which version listed it — so the next move is to specify the feature, not to write it again.
+
+**That file is written into every version's `.hora/tasks/<version>/` for as long as the feature stays listed.** The annotation carries forward under the diff rule, so a listing written in 1.0.0 still stands in 1.4.0 (`../hora/references/spec-format.md`, "`baseline`"), and reconciliation creates a file for any section that has none (section 6). Leave the file out on the grounds that nothing is being built and that row fires on entry to the next version — appending the section under `## Features` with a checkbox, and handing code already serving users to `/hora-build` from checkpoint 1.
+
+**A dependent's file carries `Rests on:` beside its constraints.**
+
+```markdown
+Rests on: #billing (not accepted). Its behavior is listed, never specified — a
+          pass here claims nothing about it
+```
+
+**It is not a constraint, and it does not come off when the dependent passes.** A `Constraint:` line tells an implementer what to leave room for; `Rests on:` tells whoever reads an acceptance record what that pass did not cover. It stays until the debt is paid and the dependent's own checkpoint 18 has been re-earned (section 6).
+
 **Do not infer `built` from the repository.** A feature nobody declared is planned from checkpoint 1, however finished its code looks; a half-built screen and a finished one are indistinguishable from a file listing, and guessing wrong here silently skips the gates that would have caught it.
 
 **Write every checkpoint, including the ones that will obviously not apply.** `/hora-build` marks one not applicable with a written reason; a checkpoint this skill leaves out instead is indistinguishable from one that was forgotten. `../hora-build/references/checkpoints.md` is the authority on the list and its wording — copy it from there, do not paraphrase it.
 
-**Digests are taken per section**, and **annotation comments (`id` / `target` / `depends`) are excluded from the digest** (fixing a `target` does not make an implementation stale). A section runs "from its heading to the next heading at the same level or above". Where a spec is built around a table of individually-identified requirements, the row is the unit, and the digest is taken per row.
+**Digests are taken per section**, and **annotation comments are excluded from the digest** — `id`, `target`, `depends` and every other one (fixing a `target` does not make an implementation stale). A section runs "from its heading to the next heading at the same level or above". Where a spec is built around a table of individually-identified requirements, the row is the unit, and the digest is taken per row.
+
+**So a change to `built:` or `baseline:` is invisible to a digest, and is caught by re-reading the resolved document instead** (section 6). Both change what runs rather than what is built, which is exactly why they are excluded — and exactly why reconciliation may never rely on a digest to notice that one of them moved.
 
 ### Mark what overlaps
 
