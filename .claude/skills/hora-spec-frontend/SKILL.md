@@ -26,6 +26,12 @@ Read `../hora/references/structure.md` and `../hora-spec/references/principles.m
 
 **Never state the second as though the screen already had it.** That is the mixing this whole design exists to stop (`../hora/references/asking.md`), and this stage is where it is most tempting — a screen that "should obviously" show something when there is nothing reads, in prose, exactly like one that does.
 
+**A feature listed under `Baseline: inventoried` contributes no screen section and no use-case mapping, and its existing screens are recorded all the same.** It states no use case by declaration (`../hora/references/spec-format.md`, "`baseline`"), so there is nothing for the mapping to map it to — **that is not a hole in the mapping; it is a section the mapping does not reach.** But the screens themselves are in the running product and people are opening them today, so they are recorded as inherited, the way stage 4 records that feature's tables and operations (`../hora-spec-backend/SKILL.md`): one line each, justified by the feature's name in place of a use case. Leave them out and the screens section stops describing the frontend anybody is actually using — the next version reads a screen list with no payslip screen in it, designs one for the first use case that touches a payslip, and checkpoint 12 builds a second page for what a running page already does, leaving the navigation with two entries for one job and only one of them in any spec. It also drops those screens out of the one stage that is never not applicable: stage 6 walks every screen this stage wrote to say who may open it and what everybody else sees (`../hora-spec-security/SKILL.md`), and a screen nothing names is a screen nobody states a refusal for.
+
+**Nothing is drafted for a listed feature, and this is the stage where drafting is most tempting.** Under `Authority: as-built` the running product is legitimate material for a draft put up as a check — a `Calls` table read off the routes, an empty state read off the component. For a listed feature it is not: **a drafted screen state for a feature nothing will ever verify is the claim the whole declaration avoids making**, and once it is in the document it reads exactly like a state somebody designed and approved, while no checkpoint will ever open the screen to find out.
+
+**The empty, failed, waiting and forbidden states this stage exists to pin down are not asked for it either, and the reason is written rather than left as an omission** — a state nobody asked about is otherwise indistinguishable from the state nobody handled, which is the one thing this stage is here to catch. Each of the four goes out as a proposal (above), a proposal is an invitation to build something, and no run will build this one: accepted, it lands as a design nothing implements, and asking at all spends precisely the conversation the declaration was chosen to save. The version that pays the debt designs the screens properly, four states and all, and asks then.
+
 ---
 
 ## What this stage decides
@@ -63,6 +69,8 @@ what each screen shows when there is nothing, when it is waiting, when it
 | **an operation no screen calls** | either a missing screen, or a feature nobody wants. Ask which |
 
 **The acceptance review looks for exactly these two**, at the far end of eighteen checkpoints. Finding one here costs a sentence.
+
+**A listed feature sits outside both directions, which are read over what this version specifies.** Its screens are recorded as inherited lines with no `Calls` table, and its operations are justified by the feature's name (`../hora-spec-backend/SKILL.md`) — so read as ordinary rows, every one of those operations is reachable from no screen: twelve false defects on a twelve-operation feature, and the run then either sends stage 4 back to design a screen for an operation that has been serving one for a year, or learns to discount whatever this rule reports. The running product already connects the two, and neither side has to restate the connection here for it to stay true.
 
 ---
 
@@ -156,11 +164,13 @@ For: a member of staff. Reached from the top navigation, and after clocking in.
 
 **The `Calls` table is what makes the mapping checkable.** Checkpoint 11 reads it, the end-to-end test specification derives scenarios that pass through it, and the acceptance review uses it to find the operation nothing reaches.
 
+**An inherited screen is one line, and never a section of its own.** A screen belonging to a feature listed under `Baseline: inventoried` is written in the screens section that targets its repository as a single line — the screen's name, who reaches it, and the feature it belongs to where a use case would be — with no `Calls` table, no state list and neither block. **Who reaches it is on the line and what it calls is not**, because stage 6 has to state what everybody else sees on that screen and nothing else in the document names its actor, while the `Calls` mapping exists for checkpoint 11 to verify a build against — and no checkpoint 11 ever runs for a listed feature. That is the whole record, and it is the whole record on purpose: the listed section itself carrying a screen section is a stop (`../hora/references/spec-format.md`, "`baseline`"), and a screen written out in full for it here is the same claim moved somewhere the stop does not look.
+
 ---
 
 ## Exit condition
 
-Every use case naming its screens in order; every screen naming its operations; nothing unreachable in either direction; every screen's empty, loading, failed and forbidden states written. `../hora-spec/references/stages.md` is the authority.
+Every use case naming its screens in order; every screen naming its operations; nothing unreachable in either direction; every screen's empty, loading, failed and forbidden states written — **every one of those read over the screens this version specifies, a feature listed under `Baseline: inventoried` excepted, which exits with its inherited screens as one line each and nothing else** (above). `../hora-spec/references/stages.md` is the authority.
 
 ---
 

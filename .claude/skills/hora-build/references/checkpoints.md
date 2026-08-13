@@ -24,6 +24,8 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **One reason does not come from a checkpoint's own line: `built before Hora Kit was adopted`.** A spec section may declare `<!-- built: spec | backend | frontend -->` when the code already existed before the kit was ever run against it, and `/hora-plan` marks that many checkpoints not-applicable, mechanically. **Checkpoint 18 is never among them** — acceptance is exactly what adoption is for.
 
+**A second does not come from a checkpoint's own line either: `accepted in <earlier version>`.** It is written only on a feature re-scheduled because a listed feature it rested on had its debt paid, and its condition lives in `../../hora/references/done-criteria.md`, "Not applicable is a state, and it needs a reason", which is its authority. **There are no others.**
+
 **A not-applicable mark is cleared the moment its reason stops holding.** When checkpoint 18 sends the run back into a stretch marked `built before Hora Kit was adopted`, that code is now being changed, so it was not simply inherited after all: reopen from the earliest checkpoint affected and run it for real.
 
 ### The order is a rule
@@ -333,7 +335,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Exit condition** | the application runs locally **together with every service behind it**, each role can sign in, and there is reviewable data or a command that produces it |
 | **Not applicable when** | one already exists and this feature added no service, no role and no seed data it needs |
 
-**This is the live acceptance run's prerequisite, which is why it sits here and not inside checkpoint 18.** A live review drives the real application against real services, signs in as each role, and stops dependencies on purpose to watch what the screen says. None of that is possible against a frontend served on its own. The runs that need it are the whole-version sweep and any gate run whose live sweep was explicitly requested — a gate run that skips the live sweep does not exercise this environment, but the sweep always will, so the environment is still built here, while the feature that changed it is fresh.
+**This is the live acceptance run's prerequisite, which is why it sits here and not inside checkpoint 18.** A live review drives the real application against real services, signs in as each role, and stops dependencies on purpose to watch what the screen says. None of that is possible against a frontend served on its own. The runs that need it are three: the whole-version sweep, any gate run whose live sweep was explicitly requested, and any gate run paying a listed feature's deferred acceptance, which drives at full live reach whatever the invocation form (`../../hora-accept/SKILL.md`, "What is in scope") — a gate run that skips the live sweep does not exercise this environment, but the sweep always will, so the environment is still built here, while the feature that changed it is fresh.
 
 **A feature that adds a service, a role or a fixture updates the environment here**, even when the environment as a whole already exists. That is the common case, and it is why the not-applicable condition names all three.
 
@@ -352,7 +354,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Exit condition** | `/hora-accept`, in its feature-gate form, reports a pass — the unit suites across **every repository in full**, and the acceptance review scoped to this feature |
 | **Not applicable when** | never |
 
-**The gate is scoped; the regression net is not.** The unit suites run whole repositories every time, so a feature that broke an earlier one still fails here, in the run that broke it, rather than at the end of the version. What a gate run does not do by default is drive earlier features' screens end to end — that is the whole-version sweep's job, and a live sweep at a gate happens only when explicitly requested (`/hora-accept`, "What is in scope").
+**The gate is scoped; the regression net is not.** The unit suites run whole repositories every time, so a feature that broke an earlier one still fails here, in the run that broke it, rather than at the end of the version. What a gate run does not do by default is drive earlier features' screens end to end — that is the whole-version sweep's job, and a live sweep at a gate happens when explicitly requested, and when the run is paying a listed feature's deferred acceptance (`/hora-accept`, "What is in scope").
 
 **Everything about what is reviewed and what fails lives in `/hora-accept` and the skills it delegates to.** Do not restate any of it here.
 

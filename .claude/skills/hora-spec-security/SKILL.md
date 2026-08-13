@@ -79,6 +79,8 @@ for each field:
 
 **The exception that never batches: anything reachable without authentication.** An operation callable before signing in, a screen that renders to nobody-in-particular, an allowlisted public operation — **each one is put up alone, by name, whatever the declaration says.** "Anyone can call this today" is a fact; "anyone may call this" is a decision, and it is the one decision `as-built` must not be allowed to make silently, because it is exactly how an unauthenticated `deleteAccount` survives adoption with a passing grade. This is the quietest way an `as-built` adoption goes wrong, and one question per exposed operation is the whole price of preventing it.
 
+**`Baseline: inventoried` reaches nothing in this stage.** All it lowers is that a listed feature owes no use cases and no acceptance criteria (`../hora/references/spec-format.md`, "`baseline`"), and neither block ever answered any of the four questions above — so every operation a listed feature exposes still names its caller and its refusal, batched one check per endpoint under `as-built` like any other, and any operation of its own that is reachable without authentication is still put up alone, by name, whatever the declaration says. An inherited `deleteAccount` anybody can call is exactly as deployed and exactly as dangerous whether the feature around it was specified or merely listed. **The refusal goes in the operation's own row** rather than in an `<!-- acceptance -->` block, because a listed section has none — and writing one would put a criterion nothing will ever run into a document that reads as though something will, which is exactly the pass nobody earned that this declaration is shaped to avoid.
+
 **"Only their own" is the case most often wrong and least often stated.** An operation that correctly refuses a member of staff who is not signed in, and happily returns a colleague's month to one who is, passes every test anybody wrote for it.
 
 **Ask what a refusal looks like, not only that there is one.** "Not found" and "not allowed" leak different things, and which one is right is a decision, not a detail.
@@ -150,7 +152,7 @@ Turn each kind into a question about the spec rather than about code:
 
 ### The acceptance criteria this stage adds
 
-**A refusal is a behavior, so it is testable, so it belongs in `<!-- acceptance -->`.** Add one per operation whose refusal matters:
+**A refusal is a behavior, so it is testable, so it belongs in `<!-- acceptance -->`.** Add one per operation whose refusal matters — **except on a listed section, where it stays in the operation's own row and nowhere else** ("The pass", above):
 
 ```markdown
 - `closeMonth` called by a member of staff is refused with `not-allowed`

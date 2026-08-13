@@ -106,7 +106,8 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
   contracts/<version>/          one file per server whose consumer is elsewhere
   questions/<version>/open.md   append-only. Answered by editing specs/
   acceptance/<version>/
-    <feature-id>.md             one acceptance run, at one feature's gate
+    <feature-id>.md             every acceptance run for one feature, one
+                                appended block each
     _sweep.md                   the whole-version sweep
   glossary.md                   append-only, not split per version
 ```

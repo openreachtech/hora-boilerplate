@@ -166,7 +166,7 @@ These three must not be broken.
 | | Example | Treatment |
 |---|---|---|
 | Classifying | `target` / `depends` | **May be inferred.** It only attaches a label, it adds no information |
-| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / **how far a feature was already built (`built`)** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
+| Filling in content | requirements / use cases / acceptance criteria / implementation scope / **which kind an API operation is** / **how far a feature was already built (`built`)** / **whether a feature is verified in this version or merely listed (`baseline`)** / how existing assets are used | **Must not be inferred.** It would mean inventing what the spec does not say |
 | **A permanent identifier** | **`id`** | **Must not be invented.** Derive it only where it can be derived (`/hora-plan`) |
 
 **`id` is not `target`.** Getting `target` wrong only changes which checkpoints apply, but `id` is the reference key from `.hora/tasks/` and is permanent — once given, it never changes. Inferred from heading text, the next run after someone edits the heading produces a different `id`, and recorded references come loose in silence.
@@ -186,6 +186,8 @@ The middle step is the whole invariant. A skill that reads a repository and puts
 
 **`Authority: as-built` is not an exception to this invariant — it is a human moving its reach, once, in writing** (`spec-format.md`, "Existing assets"). What the invariant forbids is the kit concluding intent; it has never forbidden a person deciding it in one declaration instead of twenty answers. Somebody who writes `as-built` has decided "what this system does is what I want it to do" for every feature the declaration covers — after that, drafting `built:` and use cases off the running system is working out the consequences of a stated decision, not inventing one. The declaration is explicit, it is in the spec where every later reader sees it, and checkpoint 18 still verifies everything it claimed. **Where no such line is written, this section applies in full, everywhere.**
 
+**`Baseline: inventoried` is the second such declaration, and it moves nothing about inference at all.** It admits that a feature may be *listed* rather than specified — and a listed feature is admissible precisely because **nothing is drafted for it and nothing is claimed about it**: no use cases read off its screens, no criteria read off its tests, no checkpoint marked, no verdict. The one fact it records, that the code is there, is confirmed in writing before any checkpoint ever acts on it. So where `as-built` widens what may be *derived* and leans on checkpoint 18 to verify the result, `inventoried` derives nothing and reaches no verdict to be wrong about. **Whether a feature is verified or listed is itself intent, and it is never derived, never batched as one answer over a whole document, and never recommended** (`asking.md`).
+
 **Do not try to keep the number of questions down.** People who are asked start writing it down in advance. Asking is also the mechanism that trains whoever writes the spec — and `asking.md` is about making each question cheap to answer, never about asking fewer of them.
 
 ### 3. Pin things to stay reproducible
@@ -195,6 +197,47 @@ Follow upstream only on purpose. Never drift to the newest thing by itself.
 - Boilerplates come from `--branch <newest tag>` (not the HEAD of `main`)
 - Supporting material referenced from a version's `spec.md` is closed inside that version. It is not shared across versions
 - Do not bump versions in `package-lock.json` by yourself (`npm update` is a human's action)
+
+---
+
+## Where a lever lives
+
+**A lever is anything that reduces how much work happens** — a declaration, an annotation, a section left out, a step a run gives up. The kit has many, and they are not free to sit wherever they were convenient to write. **This section is the rule that places them. It names no lever**, because an example here is a copy of a rule owned elsewhere, wearing a softer label ("The division of labor", above). Which lever sits in which home is `levers.md`; what any one of them means belongs to the file that owns it.
+
+**A lever is homed by exactly one property: the subject of its sentence — what it is a statement *about*.** Not how much work it saves, not which skill noticed it, not where it is easiest to write. Ask the three questions in this order; the first match is the home.
+
+```
+1. Is it about THE PRODUCT?
+     what must exist, who may use it, which side is the requirement when the
+     spec and the code disagree, how much of something counts as finished or
+     accepted
+     -> intent (invariant 2's right-hand column). Only a person states it, and
+        only in specs/, through show-the-text-and-wait, one unit at a time.
+        Its SUBJECT'S REACH then picks the home:
+          the whole project, needed before anything is read deeply, expensive
+          to undo                        -> spec.md's own text
+          this version's whole position  -> a required section of the resolved
+                                            document
+          one feature, as an exception   -> an annotation under its heading
+
+2. Is it about ONE RUN?
+     how much this invocation does, asserting nothing that outlives it
+     -> the invocation form, and that run's own record. The kit narrows only
+        against a written condition; a person may only widen
+
+3. Does it merely FOLLOW from something already written under 1 or 2?
+     -> a derivation. A skill writes it into .hora/, mechanically, checked
+        against a written condition. NOTHING IS EVER DECLARED THERE, because
+        humans read .hora/ and do not write it (invariant 1)
+```
+
+**Two clauses bind every home.**
+
+**(a) A lever may reduce work. It may never reduce verification, and it may never reduce what is recorded.** Collapsing the runs must not collapse the records, and a run that gave up a step pays for it **in the record, never in the verdict's wording**. A lever whose effect is that something reads as verified when it was not is not a lever; it is the failure this whole design is built against.
+
+**(b) A lever states its own reach where it is declared** — whether it carries forward under the diff rule. **Omission is how `specs/` propagates**, so a reach nobody wrote down is a silent permanent grant: the version that says nothing keeps it, and no later reader can tell that anybody chose it.
+
+**What follows from the rule, and is worth stating because it is the mistake that gets made:** a lever that is a person's decision may never live in `.hora/`, however convenient it is to read it from there. A skill that finds a decision waiting for it in the file that skill itself writes has not been given a decision — it has made one.
 
 ---
 
@@ -271,7 +314,8 @@ Q4  missing-authorization  blocking: yes
   contracts/<version>/          one file per server whose consumer is elsewhere
   questions/<version>/open.md   append-only. Answered by editing specs/
   acceptance/<version>/
-    <feature-id>.md             one acceptance run, for one feature's gate
+    <feature-id>.md             every acceptance run for one feature, one
+                                appended block each
     _sweep.md                   the whole-version sweep
   glossary.md                   append-only, not split per version
 ```

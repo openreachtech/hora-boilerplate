@@ -13,7 +13,7 @@ Read `../hora/references/structure.md` and `../hora-spec/references/principles.m
 
 **This stage is never not applicable.** A document that six stages wrote and nothing reviewed is a document nobody has read whole.
 
-**It reads two things besides the document: `.hora/spec/<version>/_assets.md` and `.hora/spec/<version>/_divergence.md`.** Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other. A `_divergence.md` row whose `Routed to` is still blank is the same kind of shortfall — a decision that got made by silence — and this is the last gate that can catch it.
+**Besides the document it reads `.hora/spec/<version>/_assets.md` and `.hora/spec/<version>/_divergence.md`** — and, only where the version has already been planned, `.hora/tasks/<version>/_plan.md`'s `## Not accepted`, to compare against a count this stage takes for itself (the mechanical pass, below). Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other. A `_divergence.md` row whose `Routed to` is still blank is the same kind of shortfall — a decision that got made by silence — and this is the last gate that can catch it.
 
 ---
 
@@ -49,6 +49,11 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      a <!-- usecases --> block, or one on its feature file's H1
      an <!-- acceptance --> block
      id, target, depends — and target naming a repository the layout declares
+     — a section carrying <!-- baseline: inventoried --> owes neither block:
+       missing-usecase and missing-acceptance are not raised for it, and
+       nothing else is suspended. Checks 4 and 5 below apply to it in full,
+       and a use case, an acceptance criterion, a screen section or a
+       data-model table INSIDE it is itself a finding, blocking: yes
 
 3. Every id unique across the version. No `--` in any file or folder name
 
@@ -69,7 +74,11 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      row's subject (stages.md, "What sends a run back into a stage")
 ```
 
-**Report the count, not just the findings.** "17 sections, 6 features, 0 missing blocks" is what says the pass actually ran.
+**A listed section carrying any of those four is itself the finding, and it goes back to the stage that wrote the offending block** — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing — no use case read off its screens, no criterion read off its tests (`../hora/references/structure.md`, invariant 2) — so a criterion sitting inside it is a pass waiting to be claimed by whoever reads the document next, and a half-written use-case block is a feature somebody started specifying and abandoned, with two suspended checks covering for it. Either way the emptiness that justified suspending them is gone. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick** — the section claims both states at once, and whichever half gets dropped is the one somebody wrote on purpose.
+
+**Report the count, not just the findings.** "17 sections, 6 features, 3 listed, 0 missing blocks" is what says the pass actually ran.
+
+**Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong they both are — so the whole value of the number is that it came from somewhere else. Read `_plan.md`'s `## Not accepted` afterwards, where the version has been planned at all, compare the two, and **report a mismatch as a finding naming both numbers**: three listed in the document and two in the ledger means a version listed a feature that nothing is tracking, and that is precisely the state in which somebody rebuilds running code. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1) — `/hora-plan` reconciles it on its next entry, against the finding.
 
 ---
 

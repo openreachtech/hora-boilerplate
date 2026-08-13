@@ -73,6 +73,7 @@ a question   "This is not decided anywhere. What is it?"
 | a proposal with distinguishable options | a question whose real answer is a story — a use case, a domain explanation |
 | a value from a known set — availability, security level, question language | a design argument that four options would distort |
 | `built:` per feature — `spec` / `backend` / `frontend` / none | |
+| `baseline:` per feature — verified, or listed unaccepted | **the `Baseline` line itself.** It is a section's own declaration, so it is approved in prose like any other |
 
 **Never fold a section approval into an option.** What the approval protects is that the person read the exact words (`structure.md`, invariant 1), and an option labelled "approve" is exactly the thing that lets them not read them.
 
@@ -97,6 +98,8 @@ A question that will not go into options is asked in prose, and it says what it 
 **What may be offered instead is the evidence, and the choice left open**: what was found, what it does not settle, and four options with none of them recommended. That is the difference between *deciding and asking for a rubber stamp* and *doing the legwork so somebody else can decide quickly*.
 
 **One declaration lifts this rule, for exactly what it covers: `Authority: as-built`** (`spec-format.md`, "Existing assets"). A person who wrote it has already decided that the running system is the requirement, so for the features it reaches, `built:` may be derived from the evidence and put up for correction, and use cases may be drafted from the screens and operations as checks — the deciding happened in the declaration, not in the drafting (`structure.md`, invariant 2). **For a `to-spec` feature, and everywhere no declaration exists, this section applies unchanged** — there the code is not the requirement, and reading it as one is precisely the inference this rule forbids.
+
+**`Baseline: inventoried` is the other declaration in that section, and it lifts nothing here** (`spec-format.md`, "Existing assets"). It permits a feature to be *listed* rather than specified, and which features those are is asked per feature, with the evidence laid out and **no option recommended** — because "nobody will verify this one" is a decision of its own, not a consequence of the one already made. It is also **never offered inside `built:`'s own option list**: under `as-built` those options are checks on a derived value, and folding a decision into them is a proposal wearing a check's clothing. Ask it first, separately, batched up to four features like anything else.
 
 | | |
 |---|---|

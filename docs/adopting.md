@@ -12,7 +12,7 @@ Hora Kit is usually met as a template you start from. This is the other case: a 
 
 Not "the kit will build the rest for you" — that is what it does afterwards. **The first thing it does is tell you what the product currently does.**
 
-A feature declared as already built skips the seventeen checkpoints that describe how it would have been built, and **still enters the acceptance run**. So the first sweep after adopting is an acceptance review of the whole existing product against its own stated use cases: what is reachable, what is complete, what tells the truth when it fails.
+A feature declared as already built skips the seventeen checkpoints that describe how it would have been built, and **still enters the acceptance run**. So the first sweep after adopting is an acceptance review of the whole existing product against its own stated use cases: what is reachable, what is complete, what tells the truth when it fails. **This is what happens under `Baseline: verified`**, and leaving a feature inventoried instead — named, and never accepted — is the other option (below).
 
 **Expect findings, and expect them to be the reason this was worth doing.**
 
@@ -32,11 +32,26 @@ After that, new features go through the full eighteen, one at a time.
 | Questions you get asked | **the minimum**: the declaration, per-feature confirmations of a derived `built:` table (select, don't compose), batched confirmations of what was read, and one question per operation reachable without signing in | the ordinary seven-stage conversation |
 | Use cases and acceptance criteria | **drafted from the running system**, corrected rather than composed | from the conversation — unfinished code is not evidence of what should exist |
 | The plan | every feature `built:`, **one adoption sweep** closes checkpoint 18 for all of them | each unfinished feature runs its checkpoints, which **reconcile** existing code toward the spec rather than starting over |
-| Then | sweep passes → merge → **tag `1.0.0` — the current state is now the fixed baseline.** New work arrives as `1.1.0`, a diff, drafted from a note in `specs/1.1.0/request/` | the version finishes when the code reaches the spec, and is accepted like any other |
+| Then | sweep passes → merge → **tag `1.0.0` — under `Baseline: verified`, the current state is now the fixed and verified baseline.** New work arrives as `1.1.0`, a diff, drafted from a note in `specs/1.1.0/request/` | the version finishes when the code reaches the spec, and is accepted like any other |
 
 **Mixing them is normal, and it is declared per feature.** Fifteen features are done and three are half-way: write `Authority: as-built` in `Existing assets` and put `<!-- authority: to-spec -->` on the three ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "`authority`"). Answering `not finished` on those three during stage 1's per-feature confirmation produces exactly this shape without you editing anything by hand.
 
 **What `as-built` does not buy:** checkpoint 18 still runs — the adoption sweep is what makes the fixed baseline a verified one, not a claimed one. Anything reachable without authentication is still asked about one operation at a time, whatever the declaration says. And the declaration reaches only the features built when it was made — a feature added in `1.1.0` is specified in conversation like any other new feature.
+
+**There is a second declaration, and it decides how much is accepted before the tag.** It is the `Baseline:` line of the same `Existing assets` section, and it has two values ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Existing assets").
+
+| | `verified` | `inventoried` |
+|---|---|---|
+| What every existing feature owes | its use cases and its acceptance criteria, like any other feature | **either that, or a name and one line** — chosen per feature with `<!-- baseline: inventoried -->` |
+| What the adoption sweep reviews | every feature | **only the ones not listed** |
+| What the tag claims | a verified baseline | **what was accepted, and no more — the rest is named** |
+| What a verdict may read | `passed` | **`passed over 17 of 20 features; 3 not accepted`** — a bare `passed` is not available |
+
+**What `inventoried` buys:** starting the next piece of work without first specifying and accepting twenty features. A listed feature stays named in `_plan.md`'s `## Not accepted` and on every acceptance record's `not-accepted:` line, and **the version that next changes it writes the spec then, and accepts it at full live reach.**
+
+**What it does not buy:** any confirmation that the feature works. Its inherited tests passing is the whole of the guarantee, and nothing beyond that is claimed.
+
+**Whether it pays for itself is proportional to how untested the product is.** The cost it removes is the exchange-per-feature needed to settle acceptance criteria for a feature with no tests to draft them from — where the tests are good, criteria are drafted and confirmed three or four features at a time. **On a well-tested product the declaration and the per-feature choices cost more than they save, and `verified` is the right answer.**
 
 ---
 
@@ -235,7 +250,7 @@ This is the annotation that makes adoption possible.
 | `backend` | the backend gate's work is already there | 1–9 |
 | `frontend` | the frontend gate's work is already there too | 1–17 |
 
-**Checkpoint 18 is never covered by any value.** It stays `[ ]`, whatever you write. That is the whole design: **adopting does not rebuild what works, but it does find out what actually works.**
+**Checkpoint 18 is never covered by any value.** It stays `[ ]`, whatever you write. That is the whole design: **adopting does not rebuild what works, but it does find out what actually works.** (A feature listed under `Baseline: inventoried` is the exception: checkpoint 18 does not run for it either — instead its name stays on the record as **not accepted**.)
 
 **`/hora-spec` derives it and confirms it with you, one feature at a time.** A half-finished screen and a finished one are indistinguishable from a file listing, so the kit lays out the evidence — the resolvers, the migration, the tests, the screens — and prepares the answer for you to select rather than compose. The `Authority` declaration decides what that looks like:
 
@@ -252,6 +267,8 @@ two screens that call them)
 **Writing it by hand still works** — the annotation is the same either way. What is not an option is the kit guessing: a feature nobody declares is planned from checkpoint 1, however finished its code looks.
 
 **Still write the feature's use cases and acceptance criteria**, even for something already built. Checkpoint 18 verifies against them, and a `built:` feature with neither has nothing to be accepted against.
+
+**The one exception is a feature you listed, where writing them is what breaks it.** A feature listed under `Baseline: inventoried` carries a name, one line, and its rows in the data model and the operation list, and nothing else. No checkpoint of it ever runs, so there is nothing for either block to be verified against — and **a listed section carrying them claims to be specified and listed at once, which `/hora` stops on.**
 
 ### 3.3 Existing assets
 
