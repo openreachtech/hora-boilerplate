@@ -162,7 +162,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 **A verifier at step 9 is handed the same digests its implementer had.** Judging a checkpoint against a fuller text than the one the implementer was given fails work for a convention nobody handed it — so both read the same thing, and the record names the version they both used.
 
-**Checkpoint 8's audit skills are invoked in full, and a digest has no part in it.** A digest serves an agent writing to a convention, where the skill is one tool call away the moment a question opens. An audit is a check list whose whole value is its completeness, and a summary of a check list is a shorter check list — so the audit runs from the skill itself, every check in it (`../../agents/hora-verifier.md`, "Checkpoint 8 is a whole skill, not a reading").
+**Checkpoint 8's audit skills are invoked in full, and a digest has no part in it.** This is the general boundary applied here, rather than a rule of this checkpoint's own: a digest reaches a step that writes to a convention, and a step whose skill *is* the criteria runs that skill whole ("How the match is made", `../hora/references/structure.md`). An audit has no moment where the short form announces its own gap, because the missing check is the one nobody thinks to ask about (`../../agents/hora-verifier.md`, "Checkpoint 8 is a whole skill, not a reading").
 
 ### Step 5 — splitting a checkpoint into units
 
@@ -185,7 +185,9 @@ So the match is made here, once per checkpoint, against what is actually equippe
 | this feature's `bank-id` prefix | allocated once, with the feature's `id` as the requester, and handed to every unit working in the backend row |
 | lint, and the tests | steps 7 and 8, run once over every file the units touched together |
 
-**The exit condition stays whole.** A unit is a slice of the work, never a slice of the gate: step 9 verifies the checkpoint's own condition once, across everything the units produced together, and one checkbox covers all of them.
+**Each unit is handed the slice of step 3's match its own work needs.** At 12 the matched set is a family — one skill per component the library already has — so handing all of it to every unit puts twenty-odd digests in each context to settle one question about one component. **Record the full set against the checkpoint as always, and name which unit received which subset**: the checkpoint stays re-derivable, and a unit that turns out to have been given too little is visible instead of assumed.
+
+**The exit condition stays whole.** A unit is a slice of the work, never a slice of the gate: step 9 verifies the checkpoint's own condition once, across everything the units produced together, and one checkbox covers all of them. **Where the condition asks for something no single unit can see** — checkpoint 5's confirmation that every module checkpoint 6 imports now resolves — the main session gathers it at step 6 (`references/checkpoints.md`, checkpoint 5).
 
 **A checkpoint holding one table, one module, one operation or one component runs as a single agent** — the ordinary case, and the shape it always had.
 

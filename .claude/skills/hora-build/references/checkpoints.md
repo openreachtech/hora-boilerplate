@@ -129,6 +129,8 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 
 **Type interfaces and constants belong here, not with the modules at checkpoint 5.** A `.d.ts` under `types/resolvers/` and an enum-like constant are the schema expressed as types — the stub at checkpoint 4 already needs both. What checkpoint 5 gathers is the *material the real implementation runs on*, which the stub does not need at all.
 
+**A constant file two operations both add to is this checkpoint's shared file, and it belongs to one unit.** Declaration files usually follow their own operation, so they divide cleanly; a single enum-like file that several operations extend does not, and the rule for it is the general one — give it to the unit that owns it, or run this checkpoint whole (`../SKILL.md`, "Step 5 — splitting a checkpoint into units").
+
 **If the spec does not state an operation's kind, stop.** `/hora-plan` should have caught it (`undefined-api-kind`, `blocking: yes`); if one slipped through, raise it now rather than picking a kind.
 
 ## 4. Stub API
@@ -149,15 +151,19 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 | | |
 |---|---|
 | **Delegate to** | first the catalog (below), then the skills covering whichever of these this feature needs: an external API client, a dispatch strategy, the shared resolver container, a named subquery, a seeder. For an AI feature: agent structure, agent loops, multi-LLM providers, light RAG, prompt document stores |
-| **Runs in** | one implementer agent per module (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
+| **Runs in** | the catalog check first, once for the whole checkpoint, then one implementer agent per module (below; `../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | **every module checkpoint 6 will import already exists and works on its own**, and nothing was written that the catalog already provides |
 | **Not applicable when** | checkpoint 6 needs nothing beyond the model and the schema. State that, do not assume it |
 
 **The exit condition is "they are there", not "some were written".** Before leaving this checkpoint, list what checkpoint 6 is going to import and confirm each one resolves. A resolver that turns out mid-implementation to need an external client, a dispatch strategy or a subquery it does not have is exactly the interruption this checkpoint exists to remove.
 
+**That list is gathered by the main session, from every unit together.** A unit sees the module it wrote and none of its siblings', so a per-unit report is never the confirmation this condition asks for.
+
 ### Check the catalog before writing anything
 
 **There are more than 40 in-house packages, and the utility layer is never named in a spec, which makes it the most reinvented.** This checkpoint is where that check happens, once, for the whole feature.
+
+**"Once" is what makes the delegate order a rule here, the way checkpoint 7's placement decision is.** One agent searches the catalog for everything this checkpoint is about to write and returns what to reuse, and the module units start after it with that answer in hand. **Left to the units, the search runs once per module and can return a different verdict on the same package each time** — and the whole point of the check is that the answer is one answer, arrived at once, for the feature.
 
 The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repository itself, resolved under its own `node_modules/`. **How the catalog is laid out — where the tracked-package list lives, where each package's docs sit, how an import name is spelled — is that package's own to change: read its README at run time, never a layout restated here** (`../../hora/references/structure.md`, "The division of labor").
 

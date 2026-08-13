@@ -603,6 +603,8 @@ Rests on: #billing (not accepted). Its behavior is listed, never specified — a
 
 Features are built one at a time, so the mark is a signal to re-read the real file before writing, not a lock. If several features add columns to the same table, there is an order — where `depends` is not written, infer it and report through `inferred-annotation`.
 
+**A mark here is about two features, and the concurrent case lives elsewhere.** Inside one checkpoint, several units do run at once, and a file two of them would both write is assigned to one of them there rather than marked here (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units"). This table's reason for being a signal rather than a lock holds for the feature-to-feature case it describes.
+
 ### Carry both kinds of "out of scope" as design constraints
 
 **Confusing them wrecks the design.**
