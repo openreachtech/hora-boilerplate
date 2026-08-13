@@ -105,7 +105,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
   contracts/<version>/          消費者が他所にいるサーバー1つにつき1ファイル
   questions/<version>/open.md   追記のみ。specs/ を編集して答える
   acceptance/<version>/
-    <feature-id>.md             ある機能の関所での検収1回ぶん
+    <feature-id>.md             ある機能の検収実行すべて。1実行 = 1ブロック追記
     _sweep.md                   版全体の掃引
   glossary.md                   追記のみ。版で分けない
 ```
