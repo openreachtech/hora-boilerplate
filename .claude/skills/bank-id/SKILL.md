@@ -34,7 +34,7 @@ Every explicit id is an 8-digit integer, split into two parts.
 
 Whatever uniquely names the caller, chosen by the caller:
 
-- an agent under `/hora-build` passes the feature's own `id` (the same value as `<!-- spec: <id> -->` in `.hora/tasks/`)
+- **`/hora-build`'s own main session** passes the feature's `id` (the same value as `<!-- spec: <id> -->` in `.hora/tasks/`), once per feature, and hands the prefix it gets back to every agent working in that repository. **The agents themselves never call this skill** — several units of one checkpoint run at once, and each asking for itself would queue them behind one another's `mkdir` for no gain, since the answer is the same prefix every time
 - a human working by hand picks their own name (`alice`), or a per-feature name if they want more than one slice
 
 The same requester id always gets back the same prefix. Asking twice, or retrying after a crash, is always safe.
@@ -73,7 +73,7 @@ Both live directly under the backend repository's own root — never under the o
 
 Reaching the retry limit in step 2 means another writer is either still working or died mid-update without releasing the lock — from outside, these look identical, so **never remove the lock yourself to force through**. Report the failure instead and let the caller decide:
 
-- **`/hora` stops the whole session** and states plainly: "the lock `bank-id` uses did not clear, so this session is ending. Running `/hora` again will clear it automatically and continue." (see "Clearing a stale lock"). Reaching this point should be rare — only one agent ever holds the lock at a time, for the few seconds one allocation takes — but a subagent call dying between `mkdir` and `rmdir` will do it
+- **`/hora` stops the whole session** and states plainly: "the lock `bank-id` uses did not clear, so this session is ending. Running `/hora` again will clear it automatically and continue." (see "Clearing a stale lock"). Reaching this point should be rare — under `/hora-build` the lock is taken once per feature, by the main session, for the few seconds one allocation takes — but a call dying between `mkdir` and `rmdir` will do it
 - **A human running this by hand** sees the same failure and may simply wait and retry, or run the clearing step below themselves.
 
 ## Clearing a stale lock
