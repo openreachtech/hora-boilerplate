@@ -15,6 +15,14 @@
  * language's sense while both files are touched is review's job, not this
  * script's.
  *
+ * Repairing a divergence touches one side by design — the wrong half is
+ * brought to the right one, and the right one has nothing to edit. That is
+ * mechanically indistinguishable from forgetting the twin, so it is declared
+ * rather than detected: a `Pair-exception: <path> — <reason>` trailer in any
+ * commit message in the range turns that path's failure into a warning that
+ * names the reason. The exception is loud by construction, and it expires
+ * with the range that carried it.
+ *
  * Usage: `node scripts/check-docs-pairs.mjs [--base <git ref>]` — the diff
  * base defaults to `origin/$GITHUB_BASE_REF` on CI and `origin/main`
  * elsewhere. When no merge base is resolvable, the same-change check is
@@ -153,12 +161,48 @@ function extractHeadings (filePath) {
 }
 
 /**
+ * Collect the declared pair exceptions in a commit range.
+ *
+ * A `Pair-exception: <path> — <reason>` trailer in any commit message in the
+ * range declares that this path was changed on one side deliberately.
+ *
+ * @param {object} params - Parameters.
+ * @param {string} params.mergeBase - The commit hash diffed against.
+ * @returns {Map<string, string>} Reasons, by declared path.
+ */
+function collectPairExceptions ({
+  mergeBase,
+}) {
+  const messages = git([
+    'log',
+    '--format=%B',
+    `${mergeBase}..HEAD`,
+  ]) ?? ''
+
+  return new Map(
+    [...messages.matchAll(/^Pair-exception:\s*(?<filePath>\S+)\s*(?:[-—–:]\s*(?<reason>.*))?$/gmu)]
+      .map(match => {
+        const reason = match.groups.reason
+          ?.trim() ?? ''
+
+        return [
+          match.groups.filePath,
+          reason === ''
+            ? 'no reason given'
+            : reason,
+        ]
+      })
+  )
+}
+
+/**
  * Classify one changed document for the same-change check.
  *
  * @param {object} params - Parameters.
  * @param {Array<string>} params.changedDocs - Every changed doc path.
  * @param {string} params.filePath - The changed doc to classify.
  * @param {string} params.mergeBase - The commit hash diffed against.
+ * @param {Map<string, string>} params.exceptions - Declared exceptions.
  * @returns {{
  *   kind: string,
  *   message: string,
@@ -168,6 +212,7 @@ function classifyChangedDoc ({
   changedDocs,
   filePath,
   mergeBase,
+  exceptions,
 }) {
   const twinPath = twinOf(filePath)
 
@@ -175,10 +220,17 @@ function classifyChangedDoc ({
     return null
   }
 
+  if (exceptions.has(filePath)) {
+    return {
+      kind: 'warning',
+      message: `${filePath} changed without its twin ${twinPath}, declared: ${exceptions.get(filePath)}`,
+    }
+  }
+
   if (fs.existsSync(twinPath)) {
     return {
       kind: 'failure',
-      message: `${filePath} changed without its twin ${twinPath}`,
+      message: `${filePath} changed without its twin ${twinPath} (declare a Pair-exception trailer if this repairs a divergence)`,
     }
   }
 
@@ -212,11 +264,16 @@ function collectSameChangeFindings ({
     .split('\n')
     .filter(filePath => /^docs\/[^/]+\.md$/u.test(filePath))
 
+  const exceptions = collectPairExceptions({
+    mergeBase,
+  })
+
   return changedDocs
     .map(filePath => classifyChangedDoc({
       changedDocs,
       filePath,
       mergeBase,
+      exceptions,
     }))
     .filter(finding => finding !== null)
 }
