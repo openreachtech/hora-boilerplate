@@ -39,7 +39,25 @@ Report the decision in one line before starting work — "building #attendance, 
 
 **A feature whose only open checkpoint is 18 writes no code, and cuts no branch.** That is what a section declaring `<!-- built: frontend -->` looks like on adoption: everything up to the acceptance gate is marked not-applicable, so this skill goes straight to `/hora-accept`. Cutting a `feature/` branch for it would open one with nothing to put on it.
 
+**Unless the plan collapsed the version to one adoption sweep, in which case none of them is taken at all.** Where every specified feature carries `built:`, `/hora-plan` writes those entries `[ ]` under `## Features — adopted as built` and puts one sweep entry beneath them that covers checkpoint 18 of all of them (`../hora-plan/SKILL.md`, "collapses to one sweep"). **Step 2 skips an entry whose checkpoint 18 is covered by that sweep entry** — taking it anyway would run the twenty individual gates the collapse exists to replace, each one re-reviewing what the last had just reviewed. The sweep is the run; these entries are what it closes.
+
+**A listed feature is never entered, and it has nothing to resume from.** A section carrying `<!-- baseline: inventoried -->` is listed rather than specified — built, but with no use cases and no acceptance criteria to build anything against (`../hora/references/spec-format.md`, "`baseline`"). So all eighteen of its checkpoints stand `[ ]`: none passed, none marked not-applicable, and none of them work this version was asked for. Step 2 skips it with no special case of its own, because its entry carries no checkbox that could be `[ ]`.
+
+**Eighteen empty boxes mean two different things, and it is the record, not the boxes, that says which.**
+
+| | a new feature | a feature listed under `Baseline: inventoried` |
+|---|---|---|
+| its entry in `_plan.md` | `[ ]`, in the feature order | **no checkbox at all, under `## Not accepted`** (`../hora-plan/SKILL.md`, "`_plan.md` — the order") |
+| its feature file's provenance header | which spec section the file was created from | **that the feature was listed — not specified, not accepted** (`../hora-plan/SKILL.md`, "One file per feature") |
+| what this skill does with it | takes it from checkpoint 1 | **never opens it** |
+
+Read the checkboxes alone and the two are indistinguishable, and the mistake runs in the expensive direction: eighteen empty checkpoints get taken for a feature nobody ever started, and the run rebuilds from checkpoint 1 code that is already serving users.
+
 **If no feature is ready and some are unfinished, that is a dependency cycle or a reference to an `id` that does not exist.** Raise it as a `contradiction` question (`blocking: yes`) and stop; it cannot proceed until the spec is fixed.
+
+**A listed feature is not one of the unfinished ones.** It carries no checkbox, so it is neither ready nor waiting on anything, and a version with nothing left but listed entries is finished rather than deadlocked (`../hora/SKILL.md`, "Deciding where you are"). Count one as unfinished and this stops with a `contradiction` against a spec that holds no contradiction at all.
+
+**A `depends` naming a listed feature is satisfied by the running code, never by a checkbox.** A listed entry has no box and never acquires one, so a dependency read as "wait until that entry is `[x]`" waits forever — and the cheapest way anybody clears that stop by hand is to give the listed entry a checkbox and tick it, which is the pass nothing earned. What the dependent carries instead is `Rests on: #<id> (not accepted)`, so the dependency stays visible once the build order has stopped expressing it (`../hora-plan/SKILL.md`, "`_plan.md` — the order").
 
 ---
 
@@ -331,6 +349,8 @@ Checkpoint 18 passing is what finishes a feature. Then:
 **Name and link every question, never count them** (`../hora/references/structure.md`, "Citing a question in a report"). A feature's run can raise a `reinvention`, a `spec-assumption` and an `eslint-exception` without ever stopping, and all three are decisions taken by default that somebody would want to look at while the work is one commit old.
 
 **Never set `[x]` while any checkpoint in that feature is still `[ ]`.** A missed checkbox is picked up on the next run; one set by mistake is never revisited by anyone.
+
+**That same rule is why a listed feature's entry carries no checkbox at all rather than a set one** — all eighteen of its checkpoints are `[ ]`, so `[x]` would claim a pass nothing earned, and `[ ]` would put it in the queue "Where to start"'s step 2 takes its next feature from. An entry with no box claims neither (`../hora-plan/SKILL.md`, "`_plan.md` — the order").
 
 ---
 
