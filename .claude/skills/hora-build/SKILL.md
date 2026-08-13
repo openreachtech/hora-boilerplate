@@ -166,7 +166,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 ### Step 5 — splitting a checkpoint into units
 
-**Four checkpoints divide into units whose files are exclusive, and each unit gets its own implementer, all started together in one message.** One agent writing six resolvers carries a context that grows across all six and pays for the whole of it on every later turn; six agents each carry one.
+**Five checkpoints divide into units whose files are exclusive, and each unit gets its own implementer, all started together in one message.** One agent writing six resolvers carries a context that grows across all six and pays for the whole of it on every later turn; six agents each carry one.
 
 | Checkpoint | One unit is |
 |---|---|
@@ -174,6 +174,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 | 5 | one module |
 | 6 | one operation |
 | 12 | one component |
+| 15 | one screen |
 
 **Exclusive files are what make this safe, so a file two units would both write belongs to one of them.** Give it to the unit that owns it, or run the checkpoint whole.
 

@@ -34,7 +34,7 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **No checkpoint may be entered until every earlier one is `[x]`.** There is no exception, no fast path, and no "do them in parallel because they are independent" — several of them look independent and are not, and the ones that genuinely are still cost nothing by being ordered.
 
-**Inside one checkpoint, its units do run at once, and that is a different claim** (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). Four of the checkpoints below divide into units — a table, a module, an operation, a component — that write files of their own, and one agent takes each. The checkpoint remains one gate with one exit condition, entered and passed as a whole.
+**Inside one checkpoint, its units do run at once, and that is a different claim** (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). Five of the checkpoints below divide into units — a table, a module, an operation, a component, a screen — that write files of their own, and one agent takes each. The checkpoint remains one gate with one exit condition, entered and passed as a whole.
 
 ### Four checkpoints can send the run backwards
 
@@ -315,11 +315,13 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | | |
 |---|---|
 | **Delegate to** | the skills covering how a screen is made correct by construction, and **every skill covering this project's CSS conventions** — writing style, layers, units, prohibitions, custom-property naming and prohibitions, property order within a selector, line height, `z-index`, spacing and margins, animation |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per screen (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | every screen this feature needs is built, accessible, responsive, and in its loading, empty and error states as well as its filled one |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
-**The three states other than "filled" are the ones that get skipped and the ones acceptance fails on.** A screen that only exists in its happy state has no way to tell a user that something is loading, that there is nothing yet, or that something went wrong.
+**The three states other than "filled" are the ones that get skipped and the ones acceptance fails on.** A screen that only exists in its happy state has no way to tell a user that something is loading, that there is nothing yet, or that something went wrong. **Each of the four states belongs to its screen's own unit** — splitting a screen's states across agents would give one screen four authors and no single one of them the whole of this condition.
+
+**What the screens here share is styling, and it goes to one unit.** A custom-property declaration every screen draws on, a layer or global stylesheet, and the place a screen's labels are written are each one already-existing file that several screens would extend — so the general rule applies: give it to the unit that owns it, or run this checkpoint whole (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). **The CSS conventions themselves are a shared *reading*, never a shared file**, so every unit follows the same ones without any of them writing where another does.
 
 ## 16. Wire the data-fetching logic in
 

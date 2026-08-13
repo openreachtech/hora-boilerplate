@@ -74,7 +74,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | Checkpoints | Runs in | Why there |
 |---|---|---|
 | **1, 2, 9, 11** | **the main session, in conversation** | they exist to settle something *with a person*. **A subagent cannot ask anyone anything**, so delegating one turns "settle this with the author" into "the agent decided" — which is inventing a requirement |
-| **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files — or, at 3, 5, 6 and 12, to one unit's, with one agent per table, module, operation or component |
+| **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files — or, at 3, 5, 6, 12 and 15, to one unit's, with one agent per table, module, operation, component or screen |
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no file-editing tools and fixes nothing |
 | **17, 18** | the main session | bringing up a container stack, and an acceptance gate whose unit suites span every repository, is not one checkpoint's file-scoped work |
 | **the conventions any of them follows** | `hora-digester` | a matched skill runs to thousands of lines and stays resident for every turn its reader takes. This agent reads one skill and writes the digest an implementer reads instead, pinned to the package version it came from |
@@ -98,6 +98,8 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 ```
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
+  digests/<skill-name>.md       one equipped skill's conventions in short form, and the
+                                ai-agent-skills version they came from
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
   spec/<version>/_divergence.md where the documents and the code disagree — one row
@@ -192,7 +194,7 @@ Every git operation happens in the main session — `/hora` itself, or a skill i
 
 ## Why it is serial
 
-**Two features never run alongside each other, and neither do two checkpoints.** Inside a single checkpoint, its units do — one agent per table, per module, per operation, per component — and the distance between those two claims is what this section is about.
+**Two features never run alongside each other, and neither do two checkpoints.** Inside a single checkpoint, its units do — one agent per table, per module, per operation, per component, per screen — and the distance between those two claims is what this section is about.
 
 **Running features or checkpoints in parallel is not an optimization waiting to be switched on. It is blocked on an unsolved problem**, and that problem is written down here because without it, somebody who reads the serial design as an improvement nobody got around to will eventually build parallel execution — and hit the same problem described below. **A design whose "why serial" was never recorded looks, to the next person, like laziness.**
 

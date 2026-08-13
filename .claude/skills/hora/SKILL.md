@@ -37,7 +37,7 @@ Read `references/structure.md` before anything else — the repository layout, w
 
 **Serial down to the checkpoint.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several stages in sequence (implementers, an agent for a reported dependency, a verifier) — one stage after another, never side by side.
 
-**Inside a checkpoint, its units do run together.** Four of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component — and each gets an implementer of its own, all at once. The checkpoint stays one gate with one exit condition, and everything the units share stays with the main session (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
+**Inside a checkpoint, its units do run together.** Five of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component, a screen — and each gets an implementer of its own, all at once. The checkpoint stays one gate with one exit condition, and everything the units share stays with the main session (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
 
 ---
 
