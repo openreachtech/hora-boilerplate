@@ -102,7 +102,7 @@
 | the environment confirmation, required only where something is driven | `../../hora-accept/SKILL.md`, "The order to run in" |
 | the UX audit, skipped at a gate | `../../hora-accept/SKILL.md`, "The order to run in" |
 | a person widening a run — and nothing narrowing it | `../../hora-accept/SKILL.md`, "What is in scope" |
-| a feature's first acceptance, which is never browser-less | `../../hora-accept/SKILL.md`, "What is in scope" |
+| a listed feature's deferred acceptance — the run that pays it is never browser-less | `../../hora-accept/SKILL.md`, "What is in scope" |
 | a finding the project decides to live with | `../../hora-accept/SKILL.md`, "What a failure does" |
 | a proposal declined or deferred | `asking.md` |
 | a sub-command invoked directly instead of `/hora` | `../SKILL.md`, "The shape of a run" |
