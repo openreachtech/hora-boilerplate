@@ -268,6 +268,8 @@ two screens that call them)
 
 **Still write the feature's use cases and acceptance criteria**, even for something already built. Checkpoint 18 verifies against them, and a `built:` feature with neither has nothing to be accepted against.
 
+**Keep each feature's criteria to what that feature's own gate can check, and put the flows that cross features in the version's own criteria.** On an adopted product this is where the criteria drafted from existing tests need watching: an integration test spanning four features reads exactly like a criterion for whichever feature you started from, and written into that feature's block it becomes a forward reference the gate can never meet. The version's `Version acceptance criteria` section is the right home for it — **and `none` is a valid answer**, so a version that has no cross-feature flow to state writes that and moves on.
+
 **The one exception is a feature you listed, where writing them is what breaks it.** A feature listed under `Baseline: inventoried` carries a name, one line, and its rows in the data model and the operation list, and nothing else. No checkpoint of it ever runs, so there is nothing for either block to be verified against — and **a listed section carrying them claims to be specified and listed at once, which `/hora` stops on.**
 
 ### 3.3 Existing assets

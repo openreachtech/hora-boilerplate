@@ -52,18 +52,20 @@ One feature goes through its spec, its backend, its frontend and then acceptance
 
 ![One feature, eighteen checkpoints, four gates](./images/checkpoints.svg)
 
-**The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and a shortfall in the data model is by then twenty features deep, every one of them built on it.
+**The alternative is worth stating, because it is the ordinary way to do it.** Build every backend task, then every frontend task, then test: under that order, the first time anyone finds out whether a feature *works* is after all of them are written — and on a version holding, say, twenty features, a shortfall in the data model is by then twenty features deep, every one of them built on it. **That twenty is an example. How many features a version holds differs per project, and the rest of this section reuses the same one.**
 
 | | Layer by layer | Feature by feature |
 |---|---|---|
 | when a design flaw surfaces | at the end, in the test phase | at that feature's own acceptance gate |
 | how much is built on top of it by then | everything | nothing |
-| what a regression looks like | one of twenty changes did it | **the change you just made did it** |
+| what a regression looks like | one of those twenty changes did it | **the change you just made did it** |
 | cost | one environment bring-up | one per feature |
 
-The cost is real and it is accepted deliberately: bringing a container stack up per feature is cheap next to unwinding twenty features built on a wrong table.
+The cost is real and it is accepted deliberately: bringing a container stack up per feature is cheap next to unwinding those twenty features built on a wrong table.
 
 **The regression net is cumulative, which is what makes the middle row work.** At every gate, [`/hora-accept`](../.claude/skills/hora-accept/SKILL.md) runs the **unit suites across whole repositories** — so a feature that breaks an earlier one fails in the run that broke it. The expensive half, driving screens in a real browser, is scoped to the gate's own feature there; every feature is driven end to end once, at the whole-version sweep, or earlier on explicit request.
+
+**Building in this order puts one requirement on the spec, and it is easy to miss: a feature's acceptance criteria have to be meetable at that feature's own gate.** A criterion naming a feature built later cannot be met at any gate that reads it — and four runs act on one anyway, because checkpoint 1 builds from the criteria, 6 and 16 write a test for each of them, and 18 fails the feature and sends the run into somebody else's checkpoint. **So acceptance criteria come in two tiers.** A feature's own are checked against a product in which that feature and its `depends` are built and nothing later is; a behavior spanning several features goes to the spec's `Version acceptance criteria` section, which no gate reads and the whole-version sweep checks. A criterion in the wrong tier is a `forward-reference` stop at [`/hora-plan`](../.claude/skills/hora-plan/SKILL.md), fixed by reordering the features or by moving the behavior up a tier — and the same check catches the other half of it, a written order that contradicts a `depends`.
 
 ---
 
@@ -74,15 +76,18 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 | Checkpoints | Runs in | Why there |
 |---|---|---|
 | **1, 2, 9, 11** | **the main session, in conversation** | they exist to settle something *with a person*. **A subagent cannot ask anyone anything**, so delegating one turns "settle this with the author" into "the agent decided" — which is inventing a requirement |
-| **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files |
+| **3–7, 10, 12–16** | `hora-implementer` | ordinary implementation, scoped to one checkpoint's files — or, at 3, 5, 6, 12 and 15, to one unit's, with one agent per table, module, operation, component or screen |
 | **8** | `hora-verifier` | a security audit is read-only by design; the agent has no file-editing tools and fixes nothing |
 | **17, 18** | the main session | bringing up a container stack, and an acceptance gate whose unit suites span every repository, is not one checkpoint's file-scoped work |
+| **the conventions any of them follows** | `hora-digester` | a matched skill runs to thousands of lines and stays resident for every turn its reader takes. This agent reads one skill and writes the digest an implementer reads instead, pinned to the package version it came from |
 
 **Stage 0 and the seven spec stages run in the main session too, for the same reason as 1, 2, 9 and 11** — [Part 2](#why-every-stage-is-a-conversation) holds that, and the one narrow exception to it.
 
 **`hora-verifier` never fixes anything, and that is the point.** Letting the same agent implement and verify opens a path to loosening a failing test until it passes. It has no file-editing tools; it returns the fact that something is failing, and never fixes it.
 
-**`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint and reports everything else — a dependency it needs, a shared file it must not edit, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
+**`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint — or for one unit of one — and reports everything else: a dependency it needs, a shared file it must not edit, the folder whose aggregation file the main session should regenerate, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
+
+**`hora-digester` writes one file and reads everything else.** Its output is `.hora/digests/<skill-name>.md`, and the header names the `ai-agent-skills` version it was derived from — so a digest is used only while it matches what is installed, and a package update leaves each one to be rewritten before it is read again. The skill itself stays the authority: an implementer opens it the moment its digest leaves a question open.
 
 **Why the agents are so tightly bounded:** every one of those prohibitions removes a way for two writers to collide, or for a decision to be made where nobody can see it.
 
@@ -95,6 +100,8 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 ```
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
+  digests/<skill-name>.md       one equipped skill's conventions in short form, and the
+                                ai-agent-skills version they came from
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
   spec/<version>/_divergence.md where the documents and the code disagree — one row
@@ -119,8 +126,8 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 | Directory | Written by | Everyone else |
 |---|---|---|
 | `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
-| `.hora/` | the skill whose work it records | humans read only |
-| the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's code and tests, and the main session for every git operation | — |
+| `.hora/` | the skill whose work it records, and `hora-digester` for the one digest it derives | humans read only |
+| the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's — or one unit's — code and tests, and the main session for every git operation and every aggregation file | — |
 
 **What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.
 
@@ -189,7 +196,7 @@ Every git operation happens in the main session — `/hora` itself, or a skill i
 
 ## Why it is serial
 
-**Nothing runs alongside anything.** Not two features, not two checkpoints, not two agents.
+**Two features never run alongside each other, and neither do two checkpoints.** Inside a single checkpoint, its units do — one agent per table, per module, per operation, per component, per screen — and the distance between those two claims is what this section is about.
 
 **Running features or checkpoints in parallel is not an optimization waiting to be switched on. It is blocked on an unsolved problem**, and that problem is written down here because without it, somebody who reads the serial design as an improvement nobody got around to will eventually build parallel execution — and hit the same problem described below. **A design whose "why serial" was never recorded looks, to the next person, like laziness.**
 
@@ -203,13 +210,17 @@ Giving each parallel task its own branch would fix it — except **a single work
 
 **The order also makes parallelism worth much less than it sounds.** The unit is not a small task; it is a feature that ends at an acceptance run over the whole product. There is not much left to overlap.
 
+**A checkpoint's units clear both halves of that problem, which is why they are the one thing that does run at once** ([`hora-build/SKILL.md`](../.claude/skills/hora-build/SKILL.md)). A unit is smaller than a commit: every unit of checkpoint 6 lands in the gate's single commit, so there is no earlier commit for a later unit's work to leak into. And the folder they share is regenerated by the main session once they have all finished, so no unit writes the aggregation file at all. The dependency case keeps its serial answer — a unit that needs one reports it, and `/hora-build` installs it on its own branch before the work continues.
+
+**The saving is in what each agent carries, more than in the wall clock.** One agent writing six resolvers holds a context that grows across all six and pays for the whole of it on every later turn; six agents each hold one. On the measured run, the single heaviest agent was checkpoint 6's, at 308 turns against the largest resident context in the build.
+
 ---
 
 # Part 2 — /hora-spec: deciding what gets built
 
 **Leaving `specs/` as human-only territory would make the first step of every project the one step nobody would do twice.** A blank spec plus a format document is a writing assignment, and the format is exacting: use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change. Handed that, a person writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time, for as long as it takes.
 
-**And on a project that already runs, dictation is worse still.** Asked to describe twenty existing features from memory in that format, a person covers what they remember — and the silence around the rest reads exactly like "there is nothing there". **The system is the better witness for what it does, and no witness at all for what anybody wanted.** Stage 0 reads the first kind; the seven stages are still for the second.
+**And on a project that already runs, dictation is worse still.** Asked to describe every existing feature — say twenty of them — from memory in that format, a person covers what they remember — and the silence around the rest reads exactly like "there is nothing there". **The system is the better witness for what it does, and no witness at all for what anybody wanted.** Stage 0 reads the first kind; the seven stages are still for the second.
 
 **So `/hora-spec` writes it — and every mechanism in this half exists to keep that from becoming "the AI decided the requirements".** [`hora-spec/SKILL.md`](../.claude/skills/hora-spec/SKILL.md) is the authority on the skill; [`stages.md`](../.claude/skills/hora-spec/references/stages.md) on the stages; [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) on what stage 0 may read; [`asking.md`](../.claude/skills/hora/references/asking.md) on how anything is put to a person; [`principles.md`](../.claude/skills/hora-spec/references/principles.md) on the thinking they apply.
 
@@ -278,7 +289,7 @@ read the code and write the requirement it implies                     forbidden
 
 | Granularity | Why not |
 |---|---|
-| per line | twenty approvals for one section is a burden nobody carries twice, and a spec that never gets written is the result |
+| per line | the number of approvals one section takes is a burden nobody carries twice, and a spec that never gets written is the result |
 | **per section** | **what this skill uses.** A section is the smallest unit that means anything on its own |
 | per document | a whole spec approved with one "yes" is a spec nobody read. That is worse than no approval, because the record says otherwise |
 

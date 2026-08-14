@@ -30,6 +30,7 @@ what already exists, whether it may be used, and how much of it this version acc
 | which operation serves a use case | stage 4 |
 | which screen a use case passes through | stage 5 |
 | whether a use case is in this release or the next | **stage 2** — this stage collects them all, including the ones that will be deferred |
+| where a behavior that spans several features is checked | **stage 2**, which holds the order. This stage hands it over rather than placing it (below) |
 | what a role may and may not do, operation by operation | stage 6 |
 | a class name, a table name, an identifier | **`/hora-plan`.** A term and its description are all that belongs here |
 
@@ -100,7 +101,7 @@ never an option inside 8 (below)
 
 **Both lines are approved in prose, on their own, and neither is ever folded into an option.** A declaration is the section's own text, and what an approval protects is that somebody read the exact words (`../hora/references/asking.md`, "What goes in it, and what does not"). **`Baseline` carries one rule beyond that**: it is one of the three roles a declared `Source` may never satisfy, so it goes into `spec.md` itself — a declaration that leaves features unaccepted is legitimate only while every later reader of the spec sees it (`../hora/references/spec-format.md`, "Required sections").
 
-**Question 6 becomes two things**: an acceptance criterion in the owning feature's `<!-- acceptance -->` block — this stage drafts and writes it ("What it writes", below) — and a permission at stage 6. Write the answer down where it is given; do not decide yet which it becomes.
+**Question 6 becomes one of three things**: an acceptance criterion in the owning feature's `<!-- acceptance -->` block — this stage drafts and writes it ("What it writes", below) — a permission at stage 6, or, where the answer is about the product rather than about one feature, a criterion handed to stage 2 for the version's own block. Write the answer down where it is given; do not decide yet which it becomes.
 
 **Question 7's answer becomes the prefix of every repository name.** Ask for it explicitly and confirm the spelling — it is expensive to change, because changing it renames every repository (`../hora/references/structure.md`).
 
@@ -330,6 +331,24 @@ One `<!-- acceptance -->` block per feature section, beside the use cases — th
 - a manager's approval locks the month: no clock-in for it succeeds afterwards
 ```
 
+**A criterion written here is checked at this feature's own gate, so it may only reach what that feature adds and what its `depends` already provide** (`../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). The same holds for a use case, which three checkpoints walk at the same gate.
+
+**A behavior that reaches further is written down and handed to stage 2, never placed here and never dropped.** This stage has no order to place it against — the order is stage 2's, and where a behavior lands depends on it: reordering two features can turn what looked like a cross-feature behavior into an ordinary criterion.
+
+```markdown
+Held for stage 2 — reaches past its own feature
+
+| Drafted for | The behavior | Reaches |
+|---|---|---|
+| #sign-up | a signed-up user appears in the admin's list | #user-admin |
+```
+
+**Write that list into `.hora/spec/<version>/_stages.md`, and name it in the closing report.** A criterion nobody wrote down because it did not fit the block it was drafted for is the requirement this stage was supposed to catch, lost at the one moment somebody was looking straight at it.
+
+**Say which it is when the draft goes out.** A criterion put up as a proposal and a behavior being handed to the next stage are two different things to approve, and folding them together gets the second one approved as though it were going into this feature.
+
+**The drafting routes are where these appear most, and each for its own reason.** Under `as-built` the criteria are read off existing tests (above), and an integration test spanning four features reads exactly like a criterion for whichever feature the reader started from. Question 6's "what must never happen" is the other one: an answer like "a deleted employee must never appear anywhere" is a statement about the whole product, and it belongs to the version rather than to the first feature it was mentioned beside.
+
 ### Terminology, and existing assets
 
 ```markdown
@@ -351,7 +370,7 @@ Baseline: verified — every inherited feature is specified and accepted before 
 
 ## Exit condition
 
-Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one, and an `<!-- acceptance -->` block this stage drafted and got approved; the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built.
+Every actor named with how they are identified; every use case a whole sentence somebody could follow; every feature this release may build carrying at least one, and an `<!-- acceptance -->` block this stage drafted and got approved — **each block holding only what that feature's own gate can check, with everything that reaches further recorded and handed to stage 2** (above); the project name written; and — **where stage 0 found something running** — every feature carrying either a `built:` value somebody chose or a stated answer that it is not built.
 
 **A section carrying `<!-- baseline: inventoried -->` is excepted from the use-case and acceptance halves of that, and from nothing else**: it exits with a name, one line of prose and its `built:` value, and neither block. **What it owes instead is a recorded decision per listed feature** — in `.hora/spec/<version>/_stages.md`, naming whoever decided it, because the stage cannot be over while the only record of a feature going unaccepted is an annotation nobody signed. `../hora-spec/references/stages.md` is the authority.
 

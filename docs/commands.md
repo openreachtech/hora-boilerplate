@@ -252,10 +252,14 @@ Changes that appear in no contract (wording, an internal refactor) are patch; so
 | **acceptance criteria**, per feature | "what counts as done" would have to be invented |
 | **the kind of each API operation** — query / mutation / subscription / REST | checkpoints 3, 6 and 14 cannot choose which convention to follow |
 | the implementation scope, split into "for now" and "permanently" | the design cannot tell an extension point from a dead abstraction |
+| **the version's own acceptance criteria** — or `none` | the whole-version sweep has nothing to judge the product against |
+| **a criterion reaching a feature built later**, or an order that contradicts a `depends` | four runs act on it — checkpoint 1 builds from it, 6 and 16 write a test for it, 18 fails it |
 
 For each finding it **states it, proposes the exact edit, waits for you to approve that edit, and writes it.** Approval is per edit. Anything you cannot answer on the spot is written to `.hora/questions/<version>/open.md` instead, and answered later by editing `specs/`.
 
 **Use cases and acceptance criteria are not the same thing.** A feature with criteria but no use cases produces a set of operations that are each correct and together unreachable — every API returns what it should, and no screen strings them into anything a person can do. That failure otherwise surfaces at acceptance, at the far end of eighteen checkpoints.
+
+**Acceptance criteria come in two tiers, and the split is what keeps a feature's gate meetable.** A feature's own criteria are checked at its checkpoint 18, against a product in which that feature and its `depends` are built and nothing later is — so they may lean on a predecessor and may never name a feature built afterwards. **A behavior that spans several features goes to the spec's `Version acceptance criteria` section instead**, which no gate reads and the whole-version sweep checks. A criterion in the wrong tier is a `forward-reference` stop, fixed at `/hora-spec` stage 2 by reordering the features or by moving the behavior up a tier — never by the planner quietly reordering the plan.
 
 ### The plan it writes
 
@@ -269,11 +273,14 @@ Feature-level, never implementation-level. *"Build the attendance feature"* is a
 
 ## Acceptance
 - [ ] Sweep the whole version, once every feature above is done
+      Version criteria: 4 (#version-acceptance-1-0-0), 1 resting on #billing
 ```
+
+The sweep entry carries the version's own criteria — how many, the section's `id`, and how many rest on a feature nobody accepted — re-derived on every run.
 
 ### On re-entry
 
-**It runs every time `/hora` runs**, and reconciles. A section added to `specs/` after the plan was settled reaches the plan only here. A section whose digest changed has its checkpoints cleared — **and how far back depends on what changed**: a use case clears from checkpoint 2, an API's shape from 3, an acceptance criterion only from 18. When it cannot be told apart, it clears from 2, because rebuilding more than necessary costs time and leaving a checkpoint marked passed against a spec it no longer satisfies costs correctness.
+**It runs every time `/hora` runs**, and reconciles. A section added to `specs/` after the plan was settled reaches the plan only here. A section whose digest changed has its checkpoints cleared — **and how far back depends on what changed**: a use case clears from checkpoint 2, an API's shape from 3, an acceptance criterion only from 18, **and the version's own criteria clear the sweep entry alone, never a feature's 18** — no gate ever read them, so no feature's pass has gone stale. When it cannot be told apart, it clears from 2, because rebuilding more than necessary costs time and leaving a checkpoint marked passed against a spec it no longer satisfies costs correctness.
 
 ---
 
@@ -346,6 +353,8 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 **Each step names the work, not a skill.** No hora file writes down a package skill's name — the match is made at run time against the equipped skills' own descriptions, and the names that were matched go into the run's record. [`skills.md`](./skills.md) has the reasoning.
 
 **It contains no criteria of its own.** What a review looks at and what it fails on lives in those skills; this command decides only which features are in scope, what order the delegates run in, and where the result is recorded.
+
+**The version's own acceptance criteria are the sweep's, and no gate run reads them — not even one a person widened.** They span several features, so judged at a gate they would fail against a product holding one of them. Every record says which it was: `version-criteria: 4 of 4` at a sweep, `not in scope (gate)` at a gate, `none declared` where the version declared none. **A sweep that checked fewer than the version declared has not passed**, and the version cannot be done on it.
 
 **Step 1 is a gate, not a warm-up.** The review signs in as each role, completes flows to their success condition, and stops dependencies on purpose to watch what the screen says. None of that means anything against a frontend served on its own, and a review run that way reports a pass it has not earned.
 

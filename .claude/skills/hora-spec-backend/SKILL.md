@@ -227,7 +227,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## Exit condition
 
-The layout and server table declared; every table, operation and job written with its kind and its reason; every stage-1 use case walked without a gap. `../hora-spec/references/stages.md` is the authority.
+The layout and server table declared; every table, operation and job written with its kind and its reason; every stage-1 use case walked without a gap; **every `<!-- acceptance -->` block this stage wrote checkable at its own feature's gate**, with anything reaching further handed to stage 2 (`../hora-spec/references/stages.md`, "Acceptance criteria are drafted by the stage that writes the section"). `../hora-spec/references/stages.md` is the authority.
 
 ---
 

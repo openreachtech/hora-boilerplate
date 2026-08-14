@@ -34,6 +34,8 @@ A checkpoint is **a gate with one exit condition**. It is not a task list, and p
 
 **No checkpoint may be entered until every earlier one is `[x]`.** There is no exception, no fast path, and no "do them in parallel because they are independent" — several of them look independent and are not, and the ones that genuinely are still cost nothing by being ordered.
 
+**Inside one checkpoint, its units do run at once, and that is a different claim** (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). Five of the checkpoints below divide into units — a table, a module, an operation, a component, a screen — that write files of their own, and one agent takes each. The checkpoint remains one gate with one exit condition, entered and passed as a whole.
+
 ### Four checkpoints can send the run backwards
 
 2, 9, 11 and 18 are **verification** gates: they check the work against something outside it (the use cases, the spec, the product). When one fails, it does not fail forward — **it clears the checkpoints it invalidates and the run returns to the earliest one cleared.**
@@ -72,10 +74,14 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 |---|---|
 | **Delegate to** | the skills covering how a rough request becomes stated requirements with observable criteria. **Anything that has to change goes to `/hora-spec`** (`../../hora-spec/references/stages.md`) |
 | **Runs in** | the main session, in conversation |
-| **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable |
+| **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable, and **each one checkable against a product in which this feature and its `depends` are built and nothing later is** |
 | **Not applicable when** | never. Every feature passes this |
 
 `/hora-plan` has already verified that these exist. **This checkpoint is where they are read closely enough to build from** — the planner checks that a spec is buildable at all; this checks that *this one feature's* corner of it is.
+
+**Reading them closely is what catches the criterion that reaches forward.** A criterion naming a feature built after this one cannot be met at any gate that reads it, and it costs the most at 6 and 16, where a test gets written for each criterion — an implementer handed one either builds the other feature or loosens the test until the suite passes (`../../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). `/hora-plan` stops on it (`forward-reference`, `blocking: yes`); one that arrives here anyway goes back the same way, to `/hora-spec` at stage 2, and **this checkpoint does not pass while it stands.**
+
+**The version's own acceptance criteria are not this feature's, and nothing here reads them.** A behavior spanning several features lives in the spec's `Version acceptance criteria` section, and the whole-version sweep is the only run that checks it (`/hora-accept`, "What is in scope"). Read them into a feature's gate and the forward reference is back, one level up.
 
 **What is found missing here is fixed where the fix belongs**, and this is the only checkpoint that reaches `specs/` at all:
 
@@ -112,7 +118,7 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 | | |
 |---|---|
 | **Delegate to** | DB, in this order: the logical shape of a table → the migration → the model. API surface, by kind (below). Types and constants: declaration files, and the constant convention. A new endpoint: what an endpoint is and what its auth filter does |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per table, and per operation's API surface (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | the migration, the model, the declaration files and the API surface all exist and agree with `.hora/contracts/<version>/` |
 | **Not applicable when** | this feature adds no table and no operation (rare — usually a feature that only composes existing ones) |
 
@@ -126,6 +132,8 @@ Walk each use case end to end, on paper, against the spec. **Look for the case t
 | REST | the renderer's route and version |
 
 **Type interfaces and constants belong here, not with the modules at checkpoint 5.** A `.d.ts` under `types/resolvers/` and an enum-like constant are the schema expressed as types — the stub at checkpoint 4 already needs both. What checkpoint 5 gathers is the *material the real implementation runs on*, which the stub does not need at all.
+
+**A constant file two operations both add to is this checkpoint's shared file, and it belongs to one unit.** Declaration files usually follow their own operation, so they divide cleanly; a single enum-like file that several operations extend does not, and the rule for it is the general one — give it to the unit that owns it, or run this checkpoint whole (`../SKILL.md`, "Step 5 — splitting a checkpoint into units").
 
 **If the spec does not state an operation's kind, stop.** `/hora-plan` should have caught it (`undefined-api-kind`, `blocking: yes`); if one slipped through, raise it now rather than picking a kind.
 
@@ -147,15 +155,19 @@ A stub lives beside the real resolver under a `stub/` folder, with the **same cl
 | | |
 |---|---|
 | **Delegate to** | first the catalog (below), then the skills covering whichever of these this feature needs: an external API client, a dispatch strategy, the shared resolver container, a named subquery, a seeder. For an AI feature: agent structure, agent loops, multi-LLM providers, light RAG, prompt document stores |
-| **Runs in** | an implementer agent |
+| **Runs in** | the catalog check first, once for the whole checkpoint, then one implementer agent per module (below; `../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | **every module checkpoint 6 will import already exists and works on its own**, and nothing was written that the catalog already provides |
 | **Not applicable when** | checkpoint 6 needs nothing beyond the model and the schema. State that, do not assume it |
 
 **The exit condition is "they are there", not "some were written".** Before leaving this checkpoint, list what checkpoint 6 is going to import and confirm each one resolves. A resolver that turns out mid-implementation to need an external client, a dispatch strategy or a subquery it does not have is exactly the interruption this checkpoint exists to remove.
 
+**That list is gathered by the main session, from every unit together.** A unit sees the module it wrote and none of its siblings', so a per-unit report is never the confirmation this condition asks for.
+
 ### Check the catalog before writing anything
 
 **There are more than 40 in-house packages, and the utility layer is never named in a spec, which makes it the most reinvented.** This checkpoint is where that check happens, once, for the whole feature.
+
+**"Once" is what makes the delegate order a rule here, the way checkpoint 7's placement decision is.** One agent searches the catalog for everything this checkpoint is about to write and returns what to reuse, and the module units start after it with that answer in hand. **Left to the units, the search runs once per module and can return a different verdict on the same package each time** — and the whole point of the check is that the answer is one answer, arrived at once, for the feature.
 
 The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repository itself, resolved under its own `node_modules/`. **How the catalog is laid out — where the tracked-package list lives, where each package's docs sit, how an import name is spelled — is that package's own to change: read its README at run time, never a layout restated here** (`../../hora/references/structure.md`, "The division of labor").
 
@@ -166,16 +178,16 @@ The catalog is `@openreachtech/hora-ecosystem`, a devDependency of the hora repo
 - **The spec overrides this.** When `specs/` states a particular way to implement something — a specific algorithm, an explicit exclusion of a package — follow that and implement it fresh
 - When something looks close but there is no confidence, record it as `reinvention` (`blocking: no`) and proceed with your own implementation
 
-### Explicit row ids go through `bank-id`
+### Explicit row ids come from this feature's `bank-id` prefix
 
-A seeder written here, or a test fixture written later, that carries an explicit `id` **calls the `bank-id` skill first**, with this feature's `id` as the requester, and builds every id it writes from the prefix it returns. Never derive an id any other way, and never read or reason about another requester's rows.
+A seeder written here, or a test fixture written later, that carries an explicit `id` **builds it from the prefix `/hora-build` allocated for this feature** (`../SKILL.md`, "Where to start"), in any table. That prefix is allocated once, before this feature's first implementing checkpoint, and handed to every agent — so the units of one checkpoint draw from one slice instead of queueing behind each other for the lock. Derive an id from that prefix alone, and leave another requester's rows unread.
 
 ## 6. Actual API
 
 | | |
 |---|---|
 | **Delegate to** | by kind (below), plus the skills covering resolver input validation |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per operation (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | the real implementation exists under the same class name and interface as its stub, its input is validated, and the unit tests covering this feature's acceptance criteria pass |
 | **Not applicable when** | this feature adds no API operation |
 
@@ -187,6 +199,8 @@ A seeder written here, or a test fixture written later, that carries an explicit
 | REST | the renderer itself |
 
 **Write a test for each acceptance criterion, and run it.** Where a backend test lives, how it is named and how its run order is guaranteed, how one is written, and how a failing suite is driven to green without weakening it are all the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint** — the exit condition is the criteria being backed, not the command exiting 0.
+
+**"Each acceptance criterion" means this feature's own, and only those.** A behavior spanning several features is written in the spec's `Version acceptance criteria` section, which no gate reads and the whole-version sweep checks (`../../hora/references/spec-format.md`, "15. Version acceptance criteria"). **A test written here for one of those is a test for a feature that does not exist yet** — it fails, and the only two ways to make it pass are building somebody else's feature or weakening the test.
 
 **Leave the stub in place.** It is what the frontend is still building against until checkpoint 16.
 
@@ -264,7 +278,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | | |
 |---|---|
 | **Delegate to** | the skills covering how a screen is made correct by construction; **every skill covering a component that already exists**; and the skills covering what must not be built in a component |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per component (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | each screen is broken into components, and every component either already exists in the app's own library or has a stated reason for being new |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
@@ -307,11 +321,13 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | | |
 |---|---|
 | **Delegate to** | the skills covering how a screen is made correct by construction, and **every skill covering this project's CSS conventions** — writing style, layers, units, prohibitions, custom-property naming and prohibitions, property order within a selector, line height, `z-index`, spacing and margins, animation |
-| **Runs in** | an implementer agent |
+| **Runs in** | one implementer agent per screen (`../SKILL.md`, "Step 5 — splitting a checkpoint into units") |
 | **Exit condition** | every screen this feature needs is built, accessible, responsive, and in its loading, empty and error states as well as its filled one |
 | **Not applicable when** | this feature's `target` names no frontend row |
 
-**The three states other than "filled" are the ones that get skipped and the ones acceptance fails on.** A screen that only exists in its happy state has no way to tell a user that something is loading, that there is nothing yet, or that something went wrong.
+**The three states other than "filled" are the ones that get skipped and the ones acceptance fails on.** A screen that only exists in its happy state has no way to tell a user that something is loading, that there is nothing yet, or that something went wrong. **Each of the four states belongs to its screen's own unit** — splitting a screen's states across agents would give one screen four authors and no single one of them the whole of this condition.
+
+**What the screens here share is styling, and it goes to one unit.** A custom-property declaration every screen draws on, a layer or global stylesheet, and the place a screen's labels are written are each one already-existing file that several screens would extend — so the general rule applies: give it to the unit that owns it, or run this checkpoint whole (`../SKILL.md`, "Step 5 — splitting a checkpoint into units"). **The CSS conventions themselves are a shared *reading*, never a shared file**, so every unit follows the same ones without any of them writing where another does.
 
 ## 16. Wire the data-fetching logic in
 
@@ -322,7 +338,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Exit condition** | the screen shows real data from the **actual** API, not the stub, its loading and error paths are driven by real responses, and the unit tests covering this feature's frontend acceptance criteria pass |
 | **Not applicable when** | this feature's screen calls no API |
 
-**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6.
+**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6 — and, the same as there, **the criteria are this feature's own**, never the version's (`../../hora/references/spec-format.md`, "15. Version acceptance criteria").
 
 **This is where the stub is left behind.** Because the stub and the real implementation share a class name and an interface (checkpoint 4), this is a change of which endpoint is being called, not a rewrite of the client.
 
@@ -357,6 +373,8 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Not applicable when** | never |
 
 **The gate is scoped; the regression net is not.** The unit suites run whole repositories every time, so a feature that broke an earlier one still fails here, in the run that broke it, rather than at the end of the version. What a gate run does not do by default is drive earlier features' screens end to end — that is the whole-version sweep's job, and a live sweep at a gate happens when explicitly requested, and when the run is paying a listed feature's deferred acceptance (`/hora-accept`, "What is in scope").
+
+**What this gate judges is this feature's own acceptance criteria. The version's own are the sweep's, at every reach.** A criterion spanning several features cannot be watched until they are all built, so reading one here would fail a feature for behavior nothing built yet could produce — which is the forward reference the format forbids, arriving through the gate instead of through the block (`../../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). **The sweep's record is where those are answered**, and it says how many it checked (`/hora-accept`, "Recording the result").
 
 **Everything about what is reviewed and what fails lives in `/hora-accept` and the skills it delegates to.** Do not restate any of it here.
 

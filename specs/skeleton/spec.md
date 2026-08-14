@@ -25,6 +25,13 @@
   Delete the ones this project has no use for, add the ones it needs, and
   renumber freely — /hora reads `id`, never a section number.
 
+  Section 15 is required, and `none` is a valid body for it. A feature's own
+  acceptance criteria stop at that feature's gate, so a behavior that spans
+  several features is written there instead — one `###` per version, each with
+  its own `id`, and every criterion naming the features it spans. See
+  spec-format.md, "A criterion is checked at its own feature's gate" and
+  "15. Version acceptance criteria".
+
   Have documents already? Drop them into specs/<version>/sources/ (things
   that ARE the spec — requirements, an API reference) or annex/ (things that
   EXPLAIN it — mockups, diagrams, an old design doc). Both ship empty.
@@ -253,7 +260,15 @@ For:
 -
 
 
-## 15. Key file map
+## 15. Version acceptance criteria
+
+### <version>
+<!-- id: version-acceptance-<version> -->
+
+-
+
+
+## 16. Key file map
 
 | Path | Role |
 |---|---|

@@ -62,6 +62,8 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 
 **Draft them; never demand them blank.** Whoever wants the product can say when a feature is done in their own words, but rarely arrives with observable criteria — so the stage derives them from the use cases and from what the conversation decided, keeps each one observable, and puts the draft out **as a proposal** (`../../hora/references/asking.md`). A criterion that goes in silently is an invented requirement; a person handed an empty block to fill writes none, and the missing block is `blocking: yes` at stage 7 (`spec-format.md`).
 
+**A block holds only what its own feature's gate can check, and what reaches further belongs to stage 2.** A criterion is verified at that feature's checkpoint 18, against a product in which that feature and its `depends` are built and nothing later is, so one naming a feature built afterwards fails there by construction — and fails at checkpoints 6 and 16 first, where a test gets written for it (`../../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). **The stage that drafted it records it and hands it over; it never places it and never drops it**, because placing it needs the order, and the order is stage 2's. **This binds every stage that writes a block** — 1, 4 and 5 alike, and stage 6's appended refusals, which are self-contained by nature since a refusal is that operation's own.
+
 ---
 
 ## What sends a run back into a stage
@@ -71,6 +73,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 | a document or a repository nobody declared, turning up mid-run | **0** |
 | a use case nobody stated, or one that turns out to be wrong | **1** |
 | a feature that belongs in a later release, or one that has to come forward | **2** |
+| a criterion or a use case that reaches a feature built after it, or an order that contradicts a `depends` | **2** |
 | a number that makes the design wrong (ten times the users, a heavier operation) | **3** |
 | a use case the data model cannot represent, or that no operation can complete | **4** |
 | a use case with no screen path, or a screen with nothing behind it | **5** |
@@ -109,7 +112,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 |---|---|
 | **Skill** | `/hora-spec-usecases` |
 | **Delegate to** | the skills covering how a rough request becomes stated requirements, observable criteria and an out-of-scope list; and the skills covering the shared UI/UX project context both UI skills later read (app type, users, scope) |
-| **Exit condition** | every actor is named, with how they are identified; every use case is one person completing one thing end to end; every feature this release will build carries at least one use case; and the project name is written — **a section carrying `<!-- baseline: inventoried -->` excepted, which exits with a name, one line of prose and its `built:` value, and neither block, plus one recorded listing decision naming whoever made it** (`../../hora/references/spec-format.md`, "`baseline`") |
+| **Exit condition** | every actor is named, with how they are identified; every use case is one person completing one thing end to end; every feature this release will build carries at least one use case; **every block it wrote holds only what that feature's own gate can check, with whatever reached further recorded for stage 2** (above); and the project name is written — **a section carrying `<!-- baseline: inventoried -->` excepted, which exits with a name, one line of prose and its `built:` value, and neither block, plus one recorded listing decision naming whoever made it** (`../../hora/references/spec-format.md`, "`baseline`") |
 | **Not applicable when** | never |
 | **Carried over when** | **the actors are unchanged and this version adds no feature** — a version that only changes a number or a wording. Otherwise it runs **on what this version adds alone**: the features already in the resolved document are not re-agreed to, and their use cases are not restated. **A new actor or a new role is never a carry-over**, whatever it was added for |
 | **Writes** | `Document information` and the project name, `Actors and roles`, `Terminology and domain concepts`, `Existing assets` — its `Authority` and `Baseline` lines included — and each feature section's `<!-- usecases -->` and `<!-- acceptance -->` blocks, its `<!-- built: -->` annotation, and its `<!-- baseline: -->` annotation where the document declared `inventoried` ("Acceptance criteria are drafted by the stage that writes the section", above) |
@@ -125,11 +128,11 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 |---|---|
 | **Skill** | `/hora-spec-horizon` |
 | **Delegate to** | the skills covering the out-of-scope list, and what makes a requirement decided rather than assumed |
-| **Exit condition** | three separate lists exist — built this time, out of scope for now, permanently out of scope — every "for now" entry names what unblocks it, and every one that needs the design kept open names the seam to keep replaceable |
+| **Exit condition** | three separate lists exist — built this time, out of scope for now, permanently out of scope — every "for now" entry names what unblocks it, and every one that needs the design kept open names the seam to keep replaceable; **the build order puts every feature after the features it depends on**; and **the version's own acceptance criteria are written, `none` where there are none, every criterion carrying `spans:`** |
 | **Not applicable when** | never |
 | **Carried over when** | **effectively never on a version that adds anything.** Adding a feature *is* a change of horizon — something left "for now" is now being built, or something nobody had listed has appeared — and both lists have to say so. **"Built this time" always names this version's own contents**, never the previous version's carried over |
-| **Writes** | `Implementation scope`, in three parts, and `Implementation plan` |
-| **Reads** | nothing new. What exists is stage 1's finding; **what to build next is a decision, and no repository holds one** |
+| **Writes** | `Implementation scope`, in three parts, `Implementation plan`, and **`Version acceptance criteria`** — the behavior no single feature's gate can check ("Acceptance criteria are drafted by the stage that writes the section", above) |
+| **Reads** | nothing new. What exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** The one thing it reads is what stage 1 held back: the criteria that reached past the feature they were drafted for |
 
 **The two kinds of out-of-scope are not a formality.** "For now" makes `/hora` leave an extension point; "permanently" makes it exclude the thing from the design. Read the first as the second and the structure cannot take it later; read the second as the first and an abstraction layer gets built that nobody uses.
 
@@ -219,7 +222,7 @@ A stage is **a gate with one exit condition**, exactly like a checkpoint. Passin
 |---|---|
 | **Skill** | `/hora-spec-review` |
 | **Delegate to** | the skills covering whether a criterion is observable; the skills covering end-to-end test specification (**not run here** — but the acceptance criteria this stage settles are what they later derive scenarios from); and the skills covering how the document itself is written |
-| **Exit condition** | every required section is present; every feature carries use cases and acceptance criteria, each one observable — **a section carrying `<!-- baseline: inventoried -->` excepted, which carries a name and one line and neither block, and every one of those is counted and named**; every use case is satisfiable by what stages 4 to 6 designed; the two out-of-scope lists still match the design; every `id` is unique; no two statements in the document contradict each other; and **every row of `_divergence.md` names where it was routed** — a section, a scope entry, a task, or an open question. A divergence still blank here is a decision that got made by silence, and this is the last gate that can catch it |
+| **Exit condition** | every required section is present; every feature carries use cases and acceptance criteria, each one observable — **a section carrying `<!-- baseline: inventoried -->` excepted, which carries a name and one line and neither block, and every one of those is counted and named**; every use case is satisfiable by what stages 4 to 6 designed; **no feature's block reaches a feature built after it, and the version's own acceptance criteria are present — `none` or every criterion carrying `spans:`, and every one that reaches a listed feature carrying `rests on:`**; the two out-of-scope lists still match the design; every `id` is unique; no two statements in the document contradict each other; and **every row of `_divergence.md` names where it was routed** — a section, a scope entry, a task, or an open question. A divergence still blank here is a decision that got made by silence, and this is the last gate that can catch it |
 | **Not applicable when** | never. **This is the stage that makes the other six mean anything** |
 | **Carried over when** | **never, and on a diff version it reads the RESOLVED document rather than the diff.** A new operation that contradicts something 1.0.0 wrote is invisible in a diff and plain in the resolution, and a diff reviewed against itself is a document that agrees with its own two pages. **A carry-over any earlier stage claimed is checked here**, against what this version actually added |
 | **Writes** | whatever the review changes, in the section that owns it, through the stage that owns it |

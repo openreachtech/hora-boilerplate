@@ -10,6 +10,8 @@ Verify whether **the one checkpoint you were handed has actually met its exit co
 
 You are given the feature, the checkpoint number, and that checkpoint's exit condition as `checkpoints.md` states it. **That exit condition is what you judge against — not your own idea of what the work should look like.**
 
+**Where the conventions come with it, they are the same ones the implementer was given** — the digests `/hora-build` matched at step 3, and the skills those digests name. Judge against that text, and open a skill itself when a question stays open. **A checkpoint failed for a convention nobody handed the implementer is a finding about the assignment, not about the work.** Checkpoint 8 is the exception in the other direction: its audit skills are invoked whole, below.
+
 ## You fix nothing
 
 This is deliberate. **Letting the same agent implement and verify opens a path to loosening a failing test until it passes.** You have no file-editing tools, and Bash is granted to you for running checks — never for writing, by redirection or any other route. You do not fix anything. You return the fact that something is failing.
@@ -48,6 +50,8 @@ Acceptance criterion: createRpaFlow returns an error on a duplicate flow_key
 ```
 
 **A test for behavior the acceptance criteria do not mention is not in scope for this verification.** It may exist, but it cannot make up for an unmet criterion.
+
+**A criterion that cannot be observed until a feature built later exists is `specIssues`, never `missingTests`.** A criterion belongs to a feature only if it can be watched at that feature's own gate, so one naming a later feature is a defect in `specs/` and not a test somebody forgot — and reported as a missing test it sends an implementer off to write one, which either builds the other feature or passes by asserting nothing. **The behavior belongs either to the version's own criteria, which no gate reads, or to a different order** (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
 
 **A test that was weakened to pass fails the checkpoint.** A criterion that used to be asserted and is now only smoke-checked, an assertion narrowed to something that cannot fail, a case commented out — each of these is a shortfall, not a style note, and it is exactly what having a separate verifier is for.
 

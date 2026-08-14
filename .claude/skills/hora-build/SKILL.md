@@ -25,6 +25,8 @@ Read `../hora/references/structure.md` (the layout, the invariants, where a comm
 
 **If a backend row is declared, clear its `bank-id` lock unconditionally before touching any checkpoint** (`.claude/skills/bank-id/SKILL.md`, "Clearing a stale lock"). Nothing holds that lock across separate invocations, so one still standing at the very start of a run is always leftover from an earlier one that ended abnormally — never something still in use.
 
+**Then allocate this feature's id prefix once, before its first implementing checkpoint, and hand that same prefix to every agent that works in the backend row.** `bank-id` returns the same prefix for the same requester however often it is asked, so allocating here costs one call and leaves the lock free for the rest of the run — where several units of one checkpoint run at once, asking for themselves would put them in a queue behind each other's `mkdir` ("Step 5 — splitting a checkpoint into units", below).
+
 ```
 1. Read .hora/tasks/<version>/_plan.md
 2. Take the first feature whose entry is [ ] and whose depends are all satisfied
@@ -58,23 +60,28 @@ Report the decision in one line before starting work — "building #attendance, 
    condition, the work it delegates, and when it does not apply
 2. Decide whether it applies. If it does not, write the reason and mark it
    [x] with the n/a comment. Move on
-3. Match that work against the equipped skills, and record what you picked
-   (below). This is the main session's step, never an agent's
+3. Match that work against the equipped skills, take a digest of each, and
+   record both (below). This is the main session's step, never an agent's
 4. Cut this repository's feature/<feature-id> branch, if this is the first
    checkpoint in this gate (see ../hora/references/commits.md)
 5. Run it:
      an interactive checkpoint (1, 2, 9, 11, 17, 18)
        -> the main session runs it. Never an agent
      an implementing checkpoint (3-7, 10, 12-16)
-       -> hora-implementer, one agent per checkpoint, given that checkpoint's
-          exit condition and the skill names from step 3
+       -> hora-implementer, one agent per unit of this checkpoint's work,
+          started together (below), each given that checkpoint's exit
+          condition, the skill names and digest paths from step 3, and this
+          feature's bank-id prefix
      an auditing checkpoint (8)
-       -> hora-verifier, read-only, given the same
-6. Handle whatever the agent reported that is not code (below): a dependency,
-   a conflict-proof change, a new identifier, a contract it wanted to change
+       -> hora-verifier, read-only, given the skill names to invoke in full
+          (below)
+6. Gather the units: regenerate every aggregation file their registrations
+   name, then handle whatever else they reported that is not code (below) —
+   a dependency, a conflict-proof change, a new identifier, a contract one
+   wanted to change
 7. Lint: cd into this checkpoint's repository, then npx eslint --fix on
-   exactly the files it touched, then npx eslint on the same files for what
-   remains. --fix clears the mechanical violations (most of @stylistic/*)
+   exactly the files it touched, every unit's together, then npx eslint on
+   the same files for what remains. --fix clears the mechanical violations (most of @stylistic/*)
    without an agent round trip; only what it cannot fix is worth one
      still fails -> fix it, retry (up to five attempts; see "A lint rule contradiction")
 8. Test, where the checkpoint's exit condition names tests (6, 16, 18): from
@@ -113,12 +120,14 @@ So the match is made here, once per checkpoint, against what is actually equippe
 2. Read the descriptions of the skills equipped under .claude/skills/
 3. Pick every one whose description covers that work, on the surface this
    checkpoint's repository requires (hb- backend, hf- frontend, hc- either)
-4. Write them into the feature file, against this checkpoint
-5. Hand the names to the agent, in its assignment
+4. Take a digest of each one (below)
+5. Write the names, and the version those digests were derived from, into
+   the feature file against this checkpoint
+6. Hand the names and the digest paths to the agent, in its assignment
 ```
 
 ```markdown
-- [x] 15. UI  <!-- skills: <every name you matched, comma-separated> -->
+- [x] 15. UI  <!-- skills: <every name you matched, comma-separated>; digests: <package version> -->
 ```
 
 **The example above carries no real name on purpose.** This file is a hora file, so the rule it is stating applies to it too.
@@ -131,6 +140,60 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 **Never let an agent do this matching.** An agent that picks its own would pick differently on a rerun, and nothing downstream could say which set the first run actually used.
 
+### Step 3 — the digest each matched skill is read through
+
+**A matched skill can run to thousands of lines, and it stays resident in the agent's context for every turn that agent takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so reading the same conventions in short form reduces every turn at once. `.hora/digests/<skill-name>.md` is that short form.
+
+```
+1. Read the installed version from
+   node_modules/@openreachtech/ai-agent-skills/package.json
+2. For each skill matched above, use .hora/digests/<skill-name>.md while its
+   header names that version
+3. For the rest, start hora-digester — one agent per skill, all in one
+   message — and use the files they write
+4. Hand those paths to the agent, alongside the skill names
+```
+
+**The version in the header is what keeps a digest honest.** A digest is derived text, and derived text goes stale in silence — so it holds only while it names the version it came from, and a package update leaves every digest to be rewritten before it is read again ("The division of labor", `../hora/references/structure.md`). This is the treatment `.hora/tree/<repository>.md` already gets from its boilerplate tag.
+
+**A digest names the skill it came from, and the agent reads that skill whenever a question stays open** (`../../agents/hora-digester.md`). So a convention a digest states too thinly costs one read, and holds either way.
+
+**Record the version alongside the names.** A checkpoint that says which skills it ran against, and which text of them, is one somebody can re-derive; the same checkpoint without the version is one whose conventions nobody can recover after the next package update.
+
+**A verifier at step 9 is handed the same digests its implementer had.** Judging a checkpoint against a fuller text than the one the implementer was given fails work for a convention nobody handed it — so both read the same thing, and the record names the version they both used.
+
+**Checkpoint 8's audit skills are invoked in full, and a digest has no part in it.** This is the general boundary applied here, rather than a rule of this checkpoint's own: a digest reaches a step that writes to a convention, and a step whose skill *is* the criteria runs that skill whole ("How the match is made", `../hora/references/structure.md`). An audit has no moment where the short form announces its own gap, because the missing check is the one nobody thinks to ask about (`../../agents/hora-verifier.md`, "Checkpoint 8 is a whole skill, not a reading").
+
+### Step 5 — splitting a checkpoint into units
+
+**Five checkpoints divide into units whose files are exclusive, and each unit gets its own implementer, all started together in one message.** One agent writing six resolvers carries a context that grows across all six and pays for the whole of it on every later turn; six agents each carry one.
+
+| Checkpoint | One unit is |
+|---|---|
+| 3 | one table, and one operation's API surface |
+| 5 | one module |
+| 6 | one operation |
+| 12 | one component |
+| 15 | one screen |
+
+**Exclusive files are what make this safe, so a file two units would both write belongs to one of them.** Give it to the unit that owns it, or run the checkpoint whole.
+
+**Everything shared stays with the main session:**
+
+| | |
+|---|---|
+| an aggregation file | regenerated once at step 6, from the folder scan and the units' `registrations` (below) |
+| this feature's `bank-id` prefix | allocated once, with the feature's `id` as the requester, and handed to every unit working in the backend row |
+| lint, and the tests | steps 7 and 8, run once over every file the units touched together |
+
+**Each unit is handed the slice of step 3's match its own work needs.** At 12 the matched set is a family — one skill per component the library already has — so handing all of it to every unit puts twenty-odd digests in each context to settle one question about one component. **Record the full set against the checkpoint as always, and name which unit received which subset**: the checkpoint stays re-derivable, and a unit that turns out to have been given too little is visible instead of assumed.
+
+**The exit condition stays whole.** A unit is a slice of the work, never a slice of the gate: step 9 verifies the checkpoint's own condition once, across everything the units produced together, and one checkbox covers all of them. **Where the condition asks for something no single unit can see** — checkpoint 5's confirmation that every module checkpoint 6 imports now resolves — the main session gathers it at step 6 (`references/checkpoints.md`, checkpoint 5).
+
+**A checkpoint holding one table, one module, one operation or one component runs as a single agent** — the ordinary case, and the shape it always had.
+
+**Why this parallelism holds where feature-level and checkpoint-level parallelism do not.** Two tasks running at once in one working tree each need their own commit, and an aggregation file rewritten by the later one lands in the earlier one's commit. Units of a checkpoint share one commit — the gate's — and the aggregation file belongs to the main session, so both halves of that problem are gone. **Two features, and two checkpoints, still never run alongside each other.**
+
 ### Step 8 — output that survives the run, and the run that dies
 
 **Capture test output in a file, and read the file.** Output collected behind a pipe lives in memory until the run ends — and a suite can end by taking the whole machine down, at which point nothing has been written and zero bytes remain. The next invocation then cannot tell a run that died from a run that never started. Written to a file as it is produced, the output survives to exactly the line where the run stopped, which is also where the diagnosis starts.
@@ -142,10 +205,12 @@ So the match is made here, once per checkpoint, against what is actually equippe
 **At 6 and 16 the exit condition names tests, and step 8 just ran them — a passing suite already proves most of what a verifier would re-derive.** What a verifier really adds at these two gates is catching a test that is missing or was weakened, and both are cheaper to check directly:
 
 ```
-1. Map the implementer's testsWritten against the acceptance criteria this
-   checkpoint covers. Every criterion carries a test file that exists and ran
-   in step 8's suite. A criterion with none -> back to an implementer, with
-   the shortfall named. This is the main session's own read, never an agent's
+1. Map every unit's testsWritten, together, against the acceptance criteria
+   this checkpoint covers. Every criterion carries a test file that exists and
+   ran in step 8's suite. A criterion with none -> back to an implementer,
+   with the shortfall named. This is the main session's own read, never an
+   agent's — and where the checkpoint was split, the union of the units is
+   what the criteria are read against, since each one saw only its own slice
 2. Did step 8's fix loop touch any test file?
      no  -> the checkpoint is verified; write [x]. The implementer never runs
             the tests (its own file forbids it), so a suite that passed
@@ -165,7 +230,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 
 ### What an implementer agent may not do
 
-`hora-implementer` writes code and tests, for **one checkpoint**, and nothing else. It never touches git, never writes `.hora/`, never writes `specs/`, never installs a dependency, and never edits a file outside its own checkpoint's scope. Everything else it finds, it reports — and this skill acts on the report.
+`hora-implementer` writes code and tests, for **the one checkpoint — or the one unit of it — that it was handed**, and nothing else. It never touches git, never writes `.hora/`, never writes `specs/`, never installs a dependency, and never edits a file outside its own scope. Everything else it finds, it reports — and this skill acts on the report.
 
 | It reports | This skill does |
 |---|---|
@@ -173,7 +238,7 @@ So the match is made here, once per checkpoint, against what is actually equippe
 | `conflictProof` | applies it on an `update/` branch, merges, rebases, continues |
 | `newIdentifiers` | appends them to `.hora/glossary.md`, with any workaround name and why |
 | `contractDrift` | raises a `contradiction` question (`blocking: yes`). **Never edits the contract** |
-| `registrations` | records that an aggregation file could only be inserted into (below) |
+| `registrations` | regenerates that aggregation file from its folder, and records where insertion was the only option (below) |
 | `reinvention` | raises a `reinvention` question (`blocking: no`) |
 | `specIssues` | takes it to checkpoint 1's procedure, or raises a question |
 | `missingSkill` | records the gap against the checkpoint in the feature file, continues without it, and names it in the closing report. **Never substitutes a different skill** (`../hora/references/structure.md`, "How the match is made") |
@@ -217,6 +282,8 @@ For each server, the contract in `.hora/contracts/<version>/` is authoritative f
 ### Aggregation files are regenerated
 
 An aggregation file that bundles classes for export (`index.js` and the like) is **derived.** When a class is finished, **scan its folder and rewrite the whole file. Do not insert one line.**
+
+**This skill is what rewrites it, at step 6, once the checkpoint's units have finished** — the folder is the one thing several units share, so keeping its file here is what lets them run at once ("Step 5 — splitting a checkpoint into units", above). An implementer drops its own class into the folder and names it under `registrations`.
 
 **Every regeneration starts with this banner, unchanged.** It is the only thing that never comes from the folder scan — write it first, every time, then the export lines below it.
 
@@ -352,5 +419,6 @@ Checkpoint 18 passing is what finishes a feature. Then:
 | `../hora/references/structure.md` | the layout, the invariants, where a command runs, the division of labor |
 | `../hora/references/commits.md` | branches, commit granularity, merging, hotfix catch-up |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |
-| `../../agents/hora-implementer.md` | writes code and tests for one checkpoint |
+| `../../agents/hora-implementer.md` | writes code and tests for one checkpoint, or for one unit of one |
 | `../../agents/hora-verifier.md` | adversarially checks one checkpoint's exit condition. Read-only |
+| `../../agents/hora-digester.md` | writes one equipped skill's digest into `.hora/digests/` |

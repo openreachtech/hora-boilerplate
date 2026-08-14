@@ -37,7 +37,7 @@ So the rule is the same one the procedures follow, applied to the names themselv
 
 **This applies to every hora file without exception** — `checkpoints.md`, `stages.md`, an agent definition, a `docs/` page. A name written "just as an example" is the same copy with a softer label on it.
 
-**Skills Hora Kit itself ships may be named freely** — `/hora-spec`, `/hora-plan`, `/hora-build`, `/hora-accept`, `bank-id`, `hora-implementer`, `hora-verifier`. Those live in this repository, so a rename here is a rename everywhere, in the same commit.
+**Skills Hora Kit itself ships may be named freely** — `/hora-spec`, `/hora-plan`, `/hora-build`, `/hora-accept`, `bank-id`, `hora-implementer`, `hora-verifier`, `hora-digester`. Those live in this repository, so a rename here is a rename everywhere, in the same commit.
 
 ### How the match is made
 
@@ -49,8 +49,14 @@ So the rule is the same one the procedures follow, applied to the names themselv
    .claude/skills/, and picks the ones that cover that work, on the surface
    the row being worked in requires
 3. It records which it picked, against the checkpoint, in .hora/
-4. It hands those names to the agent that runs the work
+4. It hands those names to the agent that runs the work, each with a digest
+   of that skill (../../hora-build/SKILL.md, "Step 3 — the digest each
+   matched skill is read through")
 ```
+
+**A digest is a copy, and it is the one copy this rule admits.** What "The division of labor" forbids is a copy that outlives its original in silence — a procedure written into a hora file still reads as authoritative after the package has changed, and nothing announces it. A digest carries the version it was derived from, so it stops being read the moment that version moves; it names its source, so the skill itself settles anything the digest states thinly. It reduces what an agent holds resident, and it decides nothing.
+
+**Step 4's digest reaches a step that writes to a convention, and a step whose skill *is* the criteria invokes that skill in full.** The difference is what happens when the short form falls short: an agent writing code opens the skill the moment a question surfaces, so a thin digest costs one read. A skill that supplies the checks — a security audit, an acceptance review — has no such moment, because the missing check is exactly the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** So a security audit and an acceptance review run from the skill itself, every check in it.
 
 **Step 2 is the main session's, never an agent's.** The main session is handed the equipped skills' descriptions as part of its own context, so the match is made once, in one place, where it can be recorded. An agent that picked its own would make a different choice on a rerun, and nothing would say which one the first run used.
 
@@ -298,8 +304,10 @@ Q4  missing-authorization  blocking: yes
 ```
 .hora/
   spec/<version>/_stages.md     the spec stages (0 to 7), what was decided in conversation
-                                and is not visible in spec.md, and the proposals
-                                that were declined. /hora-spec writes it
+                                and is not visible in spec.md, the proposals that were
+                                declined, and what one stage handed to a later one — a
+                                criterion that reached past the feature it was drafted
+                                for, waiting for stage 2 to place it. /hora-spec writes it
   spec/<version>/_assets.md     what stage 0 found in the existing repositories and the
                                 declared sources, and what tag it read it at. /hora-spec
                                 writes it. A cache and an audit trail, never a requirement
@@ -307,6 +315,10 @@ Q4  missing-authorization  blocking: yes
                                 divergence, each carrying where it was routed. /hora-spec
                                 writes it; stage 7 refuses to pass while a row is unrouted
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
+  digests/<skill-name>.md       one equipped skill's conventions in short form, and the
+                                ai-agent-skills version they were derived from.
+                                hora-digester writes it, /hora-build hands it to an agent.
+                                A cache; the skill itself stays the authority
   tasks/<version>/
     _plan.md                    the feature order, and the acceptance tasks. /hora-plan writes it
     <feature-id>.md             one feature. /hora-plan creates it, checklist and all;

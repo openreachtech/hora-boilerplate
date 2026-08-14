@@ -13,8 +13,8 @@ Do not conflate them.
 | Unit | Condition to be done | Recorded in |
 |---|---|---|
 | **a checkpoint** | its exit condition holds, as `../../hora-build/references/checkpoints.md` states it | its checkbox in `.hora/tasks/<version>/<feature-id>.md` |
-| **a feature** | all eighteen of its checkpoints are `[x]` — including 18, acceptance | its entry in `.hora/tasks/<version>/_plan.md` |
-| **a version** | every feature is done, the sweep passed **over the whole version**, and no blocking question is left | every entry in `_plan.md` is `[x]`, and **the newest block of** `.hora/acceptance/<version>/_sweep.md` reads `reach: full` with a verdict that counts as a pass (below) |
+| **a feature** | all eighteen of its checkpoints are `[x]` — including 18, acceptance, judged against **that feature's own** acceptance criteria | its entry in `.hora/tasks/<version>/_plan.md` |
+| **a version** | every feature is done, the sweep passed **over the whole version** and against **the version's own acceptance criteria**, and no blocking question is left | every entry in `_plan.md` is `[x]`, and **the newest block of** `.hora/acceptance/<version>/_sweep.md` reads `reach: full` and `version-criteria: <n> of <n>` with a verdict that counts as a pass (below) |
 | **a session** | `git status` was checked and reported for every repository | the report |
 
 **A session being done does not mean the version is done.** A single session is not expected to run to completion, so "how far this run got" and "whether the version is done" are reported separately.
@@ -104,6 +104,8 @@ Where tests live, how they are named, how their order is guaranteed and which he
 
 **A checkpoint whose spec has no acceptance criteria must not be marked done.** It should already have been raised as `missing-acceptance` (`blocking: yes`) by `/hora-plan`, so this is never reached.
 
+**The criteria a checkpoint is judged against are its own feature's, and the version's own are never among them.** A criterion spanning several features is checked by the sweep alone (`spec-format.md`, "15. Version acceptance criteria"), so a test written for one at checkpoint 6 or 16 is a test for a feature that does not exist yet — and the two ways to make it pass are building somebody else's feature or weakening the test, which is the failure this rule exists to prevent.
+
 ---
 
 ## When a feature is done
@@ -132,7 +134,8 @@ Where tests live, how they are named, how their order is guaranteed and which he
    (## Withdrawn is not counted, and neither is ## Not accepted)
 2. .hora/questions/<version>/open.md has no unresolved blocking: yes
 3. the newest block of the whole-version sweep's record reads `reach: full`,
-   and that block's verdict reads `passed`, or
+   its `version-criteria:` line accounts for every criterion the version
+   declared, and that block's verdict reads `passed`, or
    `passed over <n> of <m> features; <k> not accepted`
    (.hora/acceptance/<version>/_sweep.md)
 4. lint and test pass in every declared repository and in app
@@ -148,6 +151,8 @@ Where tests live, how they are named, how their order is guaranteed and which he
 **Point 3 names the verdict strings rather than the word `passed`, because a check that reads for one word cannot tell the two apart.** Grep a sweep record for `passed` and `passed over 17 of 20 features; 3 not accepted` matches — as does an older block's verdict, which is the second reason the check reads the newest block and then distinguishes the two strings — the declared reduction laundered into a clean bill of health by whoever wrote the check, not by whoever wrote the record. The grammar itself is `../../hora-accept/SKILL.md`'s ("Recording the result"), which is also where a bare `passed` is forbidden unless `not-accepted: none` and `reach: full` both hold; what this condition adds is that both strings clear the version, and that a downstream file has to distinguish them to say why.
 
 **It reads `reach:` alongside the verdict, because a counted verdict is honest about its own scope and still not a statement about the version.** The version's own sweep may be invoked before every feature is done, and one run that way covers the features finished by then: it writes `reach: scoped` over eight of twenty and a truthful `passed over 8 of 20 features; 0 not accepted`, which is one of the strings above. Read the verdict alone and the version is done on a run that never drove twelve of its features — and the line that said so was sitting in the same file. **`reach: full` is the only line that claims the run reached everything acceptance could reach**, and it is what makes the two accepted strings mean "this version" rather than "as much of it as somebody asked for".
+
+**It reads `version-criteria:` for the same reason it reads `reach:`, one level up.** `reach: full` says the run reached every feature acceptance could reach; it says nothing about the behavior that belongs to no single feature. **Those criteria reach no gate at all** — a feature's checkpoint 18 is judged against that feature's own criteria (`spec-format.md`, "15. Version acceptance criteria") — so the sweep is the only run that ever checks them, and a sweep that checked eight of eleven has left three statements about the product unverified with every entry in `_plan.md` sitting at `[x]`. **A version whose spec declared `none` is done on `none declared`**, which is the same line read the other way: the question was asked and the answer was nothing.
 
 **A listed feature does not cost the sweep its `reach: full`, and it must not.** Nothing can reach a feature with no checkbox and no acceptance criteria (`../../hora-accept/SKILL.md`, "What is in scope"), so a reach that counted it would leave a version holding one impossible to finish — the same dead end point 1 avoids by not counting the entry. `reach:` answers how much of what was reachable this run reached; `<k>` and the record's `not-accepted:` line answer what nothing reached. **A version is done with a named debt on a full sweep and a counted verdict**, and that pair is what the tag means.
 

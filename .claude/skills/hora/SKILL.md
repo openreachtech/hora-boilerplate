@@ -35,7 +35,9 @@ Read `references/structure.md` before anything else — the repository layout, w
 
 **Re-entrancy is the center.** Specs are assumed to be plentiful, so a single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
 
-**Serial throughout.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several agents in sequence (an implementer, an agent for a reported dependency, a verifier) — one after another, never side by side.
+**Serial down to the checkpoint.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several stages in sequence (implementers, an agent for a reported dependency, a verifier) — one stage after another, never side by side.
+
+**Inside a checkpoint, its units do run together.** Five of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component, a screen — and each gets an implementer of its own, all at once. The checkpoint stays one gate with one exit condition, and everything the units share stays with the main session (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
 
 ---
 
@@ -71,7 +73,8 @@ Do this first, every time — a fresh start and a restart alike.
 
 6. No [ ] entry remains that the ## Acceptance sweep entry does not close, and
    _sweep.md's newest block does not read reach: full with a passing verdict
-                                              → /hora-accept, whole-version
+   and a version-criteria: line accounting for every criterion the version
+   declared                                   → /hora-accept, whole-version
 
 6a. It does, and entries that sweep closes still stand [ ]
                                               → /hora-plan again, to set them
@@ -80,8 +83,10 @@ Do this first, every time — a fresh start and a restart alike.
                                                 SKILL.md, "collapses to one
                                                 sweep")
 
-7. _sweep.md's newest block reads reach: full with a passing verdict, and
-   every entry in _plan.md is [x]             → merge (references/commits.md,
+7. _sweep.md's newest block reads reach: full with a passing verdict and a
+   version-criteria: line accounting for every criterion the version
+   declared, and every entry in _plan.md is [x]
+                                              → merge (references/commits.md,
                                                 "Merge order into main";
                                                 references/done-criteria.md,
                                                 "When a version is done",
@@ -104,7 +109,9 @@ Do this first, every time — a fresh start and a restart alike.
 
 **Steps 6 and 7 read the newest block's own `reach:`, never whether `_sweep.md` exists.** `_sweep.md` has exactly one writer, the version's own sweep (`../hora-accept/SKILL.md`, "What is in scope") — but that sweep may be invoked before every feature is done, and every run appends a block, so the file's presence says only that it ran at least once, at whatever reach it actually reached. A sweep invoked at the eighth of twenty gates writes a truthful `reach: scoped` with `passed over 8 of 20 features`, and **a step 6 keyed on "the sweep has not run" then skips the whole-version sweep entirely and step 7 merges a version twelve of whose features nobody ever drove.** So step 6 fires unless `_sweep.md`'s newest block reads `reach: full` with a passing verdict, and step 7 merges on that same pair — condition 3 of `references/done-criteria.md`, "When a version is done", which is where that rule lives and here is where it is acted on.
 
-**Keyed that way the two steps leave no gap between them.** Whatever fails step 7's test — no record at all, `reach: scoped`, a `failed` verdict — satisfies step 6's predicate, so the run goes back to `/hora-accept` rather than stopping on a version that is neither done nor advancing.
+**They read `version-criteria:` beside `reach:`, for the same reason one level up.** `reach: full` says the run reached every feature acceptance could reach; the version's own acceptance criteria reach no feature's gate at all, so nothing else in the record says whether the behavior that spans several features was ever checked (`references/spec-format.md`, "15. Version acceptance criteria"). A sweep that drove every feature and checked eight of eleven such criteria writes a truthful `reach: full` — and read on that alone, three statements this version makes about its own product go unverified with every box in `_plan.md` at `[x]`.
+
+**Keyed that way the two steps leave no gap between them.** Whatever fails step 7's test — no record at all, `reach: scoped`, a `failed` verdict, a `version-criteria:` line short of what the version declared — satisfies step 6's predicate, so the run goes back to `/hora-accept` rather than stopping on a version that is neither done nor advancing.
 
 **Step 6a exists because the run that earns a collapsed version's checkboxes is the run that must also set them.** `/hora-accept` records and never writes `_plan.md`; `/hora-build` never opens those entries, which is the collapse; so `/hora-plan` is the writer, off the sweep's own record (`../hora-plan/SKILL.md`, "collapses to one sweep"). **Leave it to the next invocation's step 3 and the merge happens first** — the tag would be cut over twenty `[ ]` entries and twenty unmarked acceptance checkpoints, failing condition 1 while condition 3 held. Worse, the version is released by then, and a released version's plan is never rewritten (`../hora-plan/SKILL.md`, "Resolve the diffs first"), so the boxes could never legitimately be set at all: `/hora-plan` would keep choosing that version as the target for holding unfinished features, and every later run would report twenty unfinished features that are in fact built, swept and shipped.
 

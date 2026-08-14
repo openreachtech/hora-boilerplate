@@ -1,6 +1,6 @@
 ---
 name: hora-spec-review
-description: Stage 7 of /hora-spec. Read the whole spec against itself — every required section present, every feature carrying observable acceptance criteria, every use case satisfiable by the design, the two out-of-scope lists still matching it, no contradiction — and send each shortfall back to the stage that owns it. The stage that makes the other six mean anything. Runs at the root of the hora repository (myproject-app). Invoked by /hora-spec, or directly.
+description: Stage 7 of /hora-spec. Read the whole spec against itself — every required section present, every feature carrying observable acceptance criteria its own gate can check, nothing reaching forward into a feature built later, every use case satisfiable by the design, the two out-of-scope lists still matching it, no contradiction — and send each shortfall back to the stage that owns it. The stage that makes the other six mean anything. Runs at the root of the hora repository (myproject-app). Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-review
@@ -27,6 +27,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 | a `_divergence.md` row nobody routed | **the stage that owns its subject** fills in the `Routed to` |
 | a use case cannot be completed under the design | **stage 4**, or 5 |
 | an acceptance criterion is not observable | this stage rewrites it, with approval — it owns no section, but a criterion's wording is not a design change |
+| a criterion or a use case reaches a feature built after it, or the order contradicts a `depends` | **stage 2** — which of the two readings holds is a horizon decision, never a rewording |
 | two statements contradict each other | whichever stage wrote the later one |
 
 **A shortfall is never patched in place.** Writing a missing use case here means writing one that no stage ever walked against a data model — which is exactly the failure the seven stages exist to prevent, reintroduced at the last possible moment.
@@ -42,7 +43,8 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      the project name, written directly in spec.md
      the repository layout, written directly in spec.md
      actors and roles / implementation scope / existing assets / terminology /
-     non-functional requirements / manual verification / implementation plan
+     non-functional requirements / manual verification / implementation plan /
+     version acceptance criteria (check 10 below)
      — each in spec.md's own text or in a declared Source
 
 2. Every feature section:
@@ -72,11 +74,39 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 9. Every row of .hora/spec/<version>/_divergence.md names where it was
      routed — a blank Routed to cell goes back to the stage that owns the
      row's subject (stages.md, "What sends a run back into a stage")
+
+10. The version's own acceptance criteria are there — the section present,
+     `none` or every criterion carrying `spans:`, every named id a feature
+     the document holds, and `rests on:` on every criterion that reaches a
+     listed one
+
+11. No feature's block reaches forward (below). Walk the implementation
+     plan's order once, and check each feature's use cases and acceptance
+     criteria against what is built by then
 ```
 
 **A listed section carrying any of those four is itself the finding, and it goes back to the stage that wrote the offending block** — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing — no use case read off its screens, no criterion read off its tests (`../hora/references/structure.md`, invariant 2) — so a criterion sitting inside it is a pass waiting to be claimed by whoever reads the document next, and a half-written use-case block is a feature somebody started specifying and abandoned, with two suspended checks covering for it. Either way the emptiness that justified suspending them is gone. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick** — the section claims both states at once, and whichever half gets dropped is the one somebody wrote on purpose.
 
-**Report the count, not just the findings.** "17 sections, 6 features, 3 listed, 0 missing blocks" is what says the pass actually ran.
+**Report the count, not just the findings.** "17 sections, 6 features, 3 listed, 0 missing blocks, 4 version criteria" is what says the pass actually ran.
+
+**Check 11 is the one mechanical check that needs two sections at once**, so it is worth stating how it runs and not only what it finds:
+
+```
+1. Take the implementation plan's order, and check it against `depends`
+     first: every feature after the features it depends on. An edge
+     pointing forward makes the rest of this check meaningless, because
+     "what is built by then" is not what the order says
+2. Walk the features in that order, carrying the set built so far
+3. For each feature, read its two blocks against that set plus the feature
+     itself. A criterion or a use case naming anything outside it is a
+     forward reference
+4. A `depends` on a listed feature is satisfied by the running code and
+     orders nothing — treat it as already in the set
+```
+
+**Both findings go back to stage 2, which owns the order and the version's own criteria** (`../hora-spec-horizon/SKILL.md`). It is the one stage that can settle either reading: reorder the features, or move the behavior to the version's block. **Do not pick between them here** — the difference is whether the dependency was real, and only the person who wanted the product knows.
+
+**Report how many criteria ended up in the version's own block, beside the section counts.** A version whose features hold three criteria each and whose own block holds nine has not split a document — it has moved most of its verification to the far end of the version, which is the failure the feature-at-a-time design exists to avoid (`../hora-build/SKILL.md`, "One feature at a time, never two"). The number is the only thing that makes that visible while it is still cheap to reorder.
 
 **Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong they both are — so the whole value of the number is that it came from somewhere else. Read `_plan.md`'s `## Not accepted` afterwards, where the version has been planned at all, compare the two, and **report a mismatch as a finding naming both numbers**: three listed in the document and two in the ledger means a version listed a feature that nothing is tracking, and that is precisely the state in which somebody rebuilds running code. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1) — `/hora-plan` reconciles it on its next entry, against the finding.
 
@@ -111,6 +141,10 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 **Do not write a criterion common to every feature.** That `npm run lint && npm test` passes is true of all of them, so it is written for none.
 
 **Criteria and use cases are checked as a pair.** A feature with criteria and no use cases produces operations that are each correct and together unreachable; a feature with use cases and no criteria leaves the implementer grading their own work.
+
+**Observable is not the same as observable *there*, and the mechanical pass only catches the crude case.** Check 11 above finds a criterion that names a later feature; what it cannot find is one whose wording names nothing and still cannot be watched until something later exists — "the total matches what payroll pays out" reads as one feature's criterion and is not. **Read each criterion asking where somebody would stand to watch it hold**, and where that place only exists after a later feature, it goes back to stage 2 like any other forward reference.
+
+**The version's own criteria are read the same way, at their own reach.** Each one is watched once the version is built, so the question is whether somebody could follow it end to end across the features it names — and whether `spans:` names every feature it actually passes through, rather than only the ones the wording mentions.
 
 ### 3. Do the three scope lists still match the design?
 

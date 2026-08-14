@@ -1,6 +1,6 @@
 ---
 name: hora-spec-horizon
-description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases somebody actually needs, and split everything else into what is deferred with a seam kept open and what is never built. Writes the implementation scope in three parts, and the implementation plan. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases somebody actually needs, and split everything else into what is deferred with a seam kept open and what is never built. Writes the implementation scope in three parts, the implementation plan — every feature after the features it depends on — and the version's own acceptance criteria, where a behavior no single feature owns is written. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-horizon
@@ -9,7 +9,7 @@ description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases s
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
 
-**This stage reads nothing new.** What already exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** Every question here is a question or a proposal — there is nothing to put up as a check.
+**This stage reads nothing new, and one thing stage 1 wrote down for it.** What already exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** Every question here is a question or a proposal — there is nothing to put up as a check. **The one thing to read is `.hora/spec/<version>/_stages.md`**, where stage 1 recorded the criteria that reached past the feature they were drafted for ("The version's own acceptance criteria", below).
 
 ---
 
@@ -21,6 +21,7 @@ which are deferred, and what unblocks each one
 which are never built
 which seams the deferred ones need kept replaceable
 in what order the release builds what it builds
+which behaviors belong to the version rather than to any one feature
 ```
 
 ## What it must not decide
@@ -147,11 +148,48 @@ If nothing equipped covers it, say so by the work it names, carry on, and record
 
 **Check that "fine to leave for later" and "out of scope for now" agree.** Where they do not clearly correspond, `/hora-plan` stops and asks, so settle it here.
 
+### The order has to agree with `depends`, and this is the stage that owns both
+
+**Every feature comes after every feature it depends on.** The order written here is what `/hora-plan` extracts, so an order that contradicts a `depends` edge is settled here or nowhere.
+
+**Nothing downstream reports the contradiction, which is why it is checked at the source.** `/hora-build` takes "the first feature whose entry is `[ ]` and whose `depends` are all satisfied", so a plan listing `#payroll` before the `#attendance` it depends on does not fail — the run silently builds them in a different order than the document states, and the milestone somebody planned around is quietly not the milestone that happened (`../hora-build/SKILL.md`, "Where to start"). Only a cycle stops anything.
+
+**Walk it once, in order, and check each feature's `depends` against what is already above it.** An edge pointing forward is one of two things, and they are settled differently:
+
+| What it turns out to be | What happens |
+|---|---|
+| the order is wrong | reorder here, and say which two moved |
+| the dependency is wrong | it belongs to whichever stage stated it — a `depends` that describes the design goes back to **stage 4** |
+
+**A `depends` naming a listed feature is satisfied by the running code and orders nothing** (`../hora/references/spec-format.md`, "`baseline`"). Nothing is scheduled ahead of a listed feature and nothing waits behind one, so it is skipped in this walk rather than treated as an unsatisfiable edge.
+
+### The version's own acceptance criteria
+
+**A feature's criteria stop at that feature's gate. This section holds the behavior that does not fit inside any one of them** (`../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"), and it is this stage's because it is the stage that already holds the order — deciding that a behavior spans three features rather than reordering two of them is a horizon decision, not a use-case one.
+
+```markdown
+## 15. Version acceptance criteria
+
+### 1.0.0
+<!-- id: version-acceptance-1-0-0 -->
+
+- a newly hired member of staff signs up, clocks in, and appears in the admin's list
+  spans: #sign-up, #attendance, #user-admin
+```
+
+**What arrives here is stage 1's held-back list, in `.hora/spec/<version>/_stages.md`**, plus whatever the walk above turned up: stage 1 drafts a feature's criteria, writes the ones that reach past that feature into that file, and hands them over without placing them, because at stage 1 there is no order to place them against (`../hora-spec-usecases/SKILL.md`). **Read it before this section is written** — a criterion stage 1 wrote down and this stage never opened is the requirement both stages were watching, lost between them.
+
+**Take each one and try the three destinations in order** — reorder, a section of its own, or this section (`../hora/references/spec-format.md`). **The third is last, and this stage is where the discipline actually holds**: a criterion here is checked once, at the end of the version, instead of at a gate that runs while the code is one commit old, so a stage that sends everything here has quietly given up the feature-at-a-time design (`../hora-spec/references/principles.md`). Say the number out loud, the way the narrowing above does — "eleven features, and nine criteria that nobody's feature owns" is a sentence that gets a spec reordered.
+
+**Every criterion carries `spans:`, and `none` is written where the version has none.** Both are the format's requirements, and both are the difference between a sweep that can route a finding and one that cannot.
+
+**A criterion that reaches a feature the spec only listed carries `rests on: #<id> (not accepted)`.** That line is what keeps a pass from hiding what it rested on, and it is approved as part of the section's text like everything else (`../hora/references/spec-format.md`, "`baseline`").
+
 ---
 
 ## Exit condition
 
-Three separate lists; every "for now" entry naming what unblocks it and the seam it needs kept open; the build order written. `../hora-spec/references/stages.md` is the authority.
+Three separate lists; every "for now" entry naming what unblocks it and the seam it needs kept open; the build order written, **with every feature after every feature it depends on**; and the version's own acceptance criteria written — **`none` where the version has none, and every criterion carrying `spans:`**. `../hora-spec/references/stages.md` is the authority.
 
 ---
 
@@ -161,6 +199,8 @@ Three separate lists; every "for now" entry naming what unblocks it and the seam
 |---|---|
 | a use case nobody stated at stage 1 | **stage 1** |
 | an actor who only exists for a deferred feature | stage 1, to have the actor's own release stated |
+| a `depends` edge that describes the design wrongly, not just the order | **stage 4** |
+| a criterion stage 1 held back that turns out to need a use case nobody stated | **stage 1** |
 
 ---
 
@@ -172,5 +212,5 @@ Three separate lists; every "for now" entry naming what unblocks it and the seam
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | "A release carrying too much is the normal failure", and "Build for now. Design for what was named" |
-| `../hora/references/spec-format.md` | "Implementation scope", and the two kinds of out-of-scope |
-| `../hora-plan/SKILL.md` | how both kinds become a feature file's `Constraint:` |
+| `../hora/references/spec-format.md` | "Implementation scope", the two kinds of out-of-scope, **"A criterion is checked at its own feature's gate"** and **"15. Version acceptance criteria"** |
+| `../hora-plan/SKILL.md` | how both kinds become a feature file's `Constraint:`, and how a forward reference is stopped |

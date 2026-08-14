@@ -19,7 +19,7 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 | Fine to be sloppy about | Must be written |
 |---|---|
 | forgetting an annotation | the implementation scope (what to build this time, what is out of scope) |
-| how sections are numbered | **the use cases** and **the acceptance criteria** of every feature |
+| how sections are numbered | **the use cases** and **the acceptance criteria** of every feature, and **the version's own acceptance criteria** (`none` where it has none) |
 | the order chapters appear in | **which kind each API operation is** (query / mutation / subscription / REST) |
 | the wording of a heading | **who may call each API operation**, and what happens when somebody else does |
 | typos (raised as a question, but not blocking) | how existing assets are handled, and links to supporting material |
@@ -139,9 +139,11 @@ What stays in the entry point is **only what applies to the whole version.**
 ```
 repository layout / actors and roles / implementation scope / terminology /
 non-functional requirements / implementation plan / existing assets /
-manual verification
+manual verification / version acceptance criteria
 + links to the feature files
 ```
+
+**The version's acceptance criteria stay in the entry point however far the document is split.** Each one spans several features by definition, so a copy in one feature's file would be a statement about the others made in a place none of them reads — and the sweep, which is the only run that checks them, reads one section rather than hunting through every feature file for criteria that were nobody's.
 
 **A feature file writes `target` on its H1** (as above). It shows which repository the feature is implemented in, right at the top of the file.
 
@@ -397,10 +399,24 @@ Monthly payroll calculation and payslip export, running in `admin-console`.
 | `baseline: inventoried` on a section a later version adds | new work is not inherited code |
 | `baseline: inventoried` on a feature whose acceptance record holds a passing block, in any version (`.hora/acceptance/`) | **an accepted feature un-accepted by an annotation.** It drops out of every later sweep's scope, and no run ever says so — an entry with no checkbox is out of scope at this version and at every one after it (`../../hora-accept/SKILL.md`, "What is in scope"). **The in-version stop cannot see this one**: it fires on an `[x]` recording a checkpoint that actually ran, and for a feature accepted in 1.0.0 those marks are in `.hora/tasks/1.0.0/<id>.md`, a released version's file reconciliation never opens (`../../hora-plan/SKILL.md`, "Reconcile on re-entry"). The one-line body the annotation arrives with has meanwhile replaced the carried-over blocks that would have tripped "specified and listed at once" ("From the second version on, write a diff") |
 | a listed feature with `[x]` on any checkpoint, a checkbox on its plan entry, or an acceptance verdict reading a bare `passed` | a record claiming a pass nothing earned |
+| **a version acceptance criterion that reaches a listed feature with no `rests on:` line** | the same claim with nothing saying so. The sweep passes it, the verdict counts it, and the one thing a later reader needed — that part of this criterion runs through code nobody ever specified — is the part nobody wrote down |
 
 **Paying it is a version's ordinary work, not a special path.** The version that next changes the feature writes its use cases and its acceptance criteria, flips the annotation to `<!-- baseline: verified -->`, and restates `built:` for confirmation — or declares `authority: to-spec` and lets every checkpoint run against the existing code. **That feature's first acceptance ever runs at full live reach**, whatever the invocation form, and **every feature that depended on it has its checkpoint 18 cleared, transitively** (`../../hora-plan/SKILL.md`; `../../hora-accept/SKILL.md`).
 
 **A feature may depend on a listed one.** New work on an adopted product almost always sits on inherited behavior, so refusing the dependency would make the declaration close to useless — but the dependent records what it rests on, and its own acceptance is re-earned when the debt is paid. A pass resting on unstated behavior is allowed to exist; a pass that hides what it rests on is not.
+
+**A version acceptance criterion may reach one too, on the same terms and with three of them written down** ("15. Version acceptance criteria", below). A cross-feature behavior on an adopted product runs through inherited code as readily as a feature does, so the criterion is admissible — and what keeps it from claiming a pass nothing earned is that all of the following hold at once:
+
+| | |
+|---|---|
+| **the criterion carries `rests on: #<id> (not accepted)`** | in the section itself, approved like any other text. **A criterion that reaches a listed feature without it is the stop** (below) — the hidden version of exactly the pass this annotation exists to deny |
+| **the listed feature is still not in scope** | what the sweep verifies is the criterion, not the feature. The listed part is a precondition the run passes through, and a pass says the criterion held and nothing whatever about that feature |
+| **the verdict is already counted** | a version holding any listed feature can never write a bare `passed` — `not-accepted:` is non-empty, so the verdict reads `passed over <n> of <m> features; <k> not accepted` (`../../hora-accept/SKILL.md`, "Recording the result"). **No grammar is added for this case, because the honest wording is already the only one available** |
+| **a finding in the rested-on part goes to the debt, not to a checkpoint** | no checkpoint of a listed feature is ever marked, so there is none to send a run back into. The run fails the criterion and names the debt as the destination: pay it this version, or change the criterion through `/hora-spec`. Both readings recorded, neither recommended (`../../hora-accept/SKILL.md`, "What a failure does") |
+
+**The dependent's `Rests on:` line is not what does this work, and the difference is worth stating.** That line records what one feature's own pass rests on (`../../hora-plan/SKILL.md`, "One file per feature"). A version criterion is not about one feature — it is the version's claim about the product — so the mark belongs beside the criterion, in the spec, where the person approving the claim reads it.
+
+**The mark is read against the resolved document and against the version being recorded, never against a frozen one.** A criterion written in 1.0.0 keeps its `rests on:` line for as long as the file exists, because no past version is ever rewritten; when a later version pays the debt, that feature leaves the later version's `## Not accepted`, and the mark is simply no longer in force. **A stale mark is not a mismatch to fix** — it is 1.0.0 still saying what 1.0.0 rested on, which is what a past version's text is for.
 
 **The annotation carries forward, and that is what makes the debt a debt.** Like every annotation it lives in the resolved document, so a listing written in 1.0.0 still stands in 1.1.0 and in 1.4.0 — a version that says nothing about the feature leaves it listed. **It stops only when a version writes `<!-- baseline: verified -->` in its own diff**, which is the version that pays. Read it as expiring with the version that wrote it and every later `## Not accepted` comes out empty, every `not-accepted:` line reads `none`, and a verdict may read a bare `passed` over a feature nobody ever accepted.
 
@@ -486,6 +502,7 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | Manual verification | `none` | the middleware needed, and its version | Yes |
 | Terminology | `none` | the source of `glossary.md` | Yes |
 | Implementation plan | `none` | the order of tasks | Yes |
+| **Version acceptance criteria** | `none` | **what the product must do across features once this version is built. The whole-version sweep is the only run that checks it** | Yes |
 | Non-functional requirements | `none` | constraints that apply to every task | Yes |
 | Sources (optional) | `none` | lists files, by any name, that act as feature files without being named `spec.md` | — |
 | Annex (optional) | `none` | gathers relative links to supporting material in one place. Unlike `Sources`, a file listed here never becomes a feature file and produces no task | — |
@@ -750,7 +767,41 @@ Writing the SDL directly is the most reliable option.
 
 **Check that "fine to leave for later" matches up with the scope section's "out of scope for now".** `/hora` stops with a question if the two do not clearly correspond.
 
-### 15. Key file map
+### 15. Version acceptance criteria
+
+**Every feature's own criteria stop at that feature's gate ("A criterion is checked at its own feature's gate", below). This section is where the behavior that spans several of them is written**, and the whole-version sweep is the only run that checks it (`../../hora-accept/SKILL.md`, "What is in scope").
+
+```markdown
+## 15. Version acceptance criteria
+
+### 1.0.0
+<!-- id: version-acceptance-1-0-0 -->
+
+- a newly hired member of staff signs up, clocks in, and appears in the admin's list
+  spans: #sign-up, #attendance, #user-admin
+- an approved month refuses a clock-in from every screen that offers one
+  spans: #attendance, #approval
+```
+
+**`spans:` is required on every criterion, and it is not decoration.** An acceptance run's every finding names the checkpoint it sends the run back to, and in which feature (`../../hora-accept/SKILL.md`) — a criterion that names no feature leaves a sweep with a real failure and nowhere to send it. **Where a finding could land in more than one of them, it goes to the feature whose checkpoint is earliest**, because that is the one whose change the later ones are built on.
+
+**Written `none` where the version has none.** A version whose features share no behavior is ordinary, and `none` is the answer on many of them — which is exactly why the line has to be there on the one where it is not. **A section left out is indistinguishable from a version in which nobody considered the question**, the same rule an acceptance record's `not-accepted:` line already follows.
+
+**One `###` per version, each with its own `id`.** The version that adds a cross-feature behavior writes its own subsection and leaves every earlier one alone — the diff rule keys on `id`, so a subsection nobody rewrote carries over untouched ("From the second version on, write a diff"). Written as one `##` body instead, a version adding a single criterion would have to restate every criterion the product has ever had, because prose cannot be patched.
+
+**So these criteria accumulate, and every later sweep checks all of them.** That is the intended shape: a behavior that spanned three features in 1.0.0 is still supposed to hold in 1.4.0, and the sweep is the run that would notice it had stopped holding. The per-version subsections are what say which version added which.
+
+**A criterion may reach a feature the spec only listed, and it says so where it is written** (`baseline`, above).
+
+```markdown
+- a month's approved total reaches the payslip export unchanged
+  spans: #attendance, #approval
+  rests on: #payroll (not accepted)
+```
+
+**This section states behavior, never a number or a limit.** How fast, how many at once and how long anything is kept belong to the non-functional requirements, and the middleware a person checks by hand belongs to the manual verification table. A criterion here is observable in the same sense a feature's is: somebody with no access to the code can watch it hold or fail.
+
+### 16. Key file map
 
 Write this where you can. `/hora` decides placement together with the real tree `/hora-setup` reads.
 
@@ -797,6 +848,8 @@ Both optional, both covered above under "Directory layout". `Sources` promotes f
 
 The three fail in different ways, and each failure is cheaper to fix at its own gate than at the next one.
 
+**All three run at this feature's own gate, so a use case may not reach forward into a feature built after it** ("A criterion is checked at its own feature's gate", below). A use case whose steps pass through a screen or an operation a later feature adds cannot be completed at checkpoint 11 however correct it is — the screen does not exist yet — so it goes where the same rule sends a criterion: the order changes, or the journey becomes the version's own.
+
 **Without use cases, `/hora-plan` stops with `missing-usecase`** (`blocking: yes`). Inferring them would mean inventing what the product is for.
 
 ---
@@ -818,9 +871,42 @@ The three fail in different ways, and each failure is cheaper to fix at its own 
 
 **A use case is not an acceptance criterion, and neither substitutes for the other.** The use case above ("a member of staff clocks in on arrival…") does not say what happens on a second clock-in; the criterion ("a second clock-in on the same day is rejected") does not say why anyone would clock in at all. A section needs both.
 
+### A criterion is checked at its own feature's gate, so it may not reach forward
+
+**One question decides whether a criterion belongs to a feature:**
+
+> **At that feature's checkpoint 18 — against a product in which that feature and its `depends` are built, and nothing later is — can this be observed?**
+
+**What the criterion may lean on is everything already built: what this feature adds, and what its `depends` already provide.** A criterion resting on a predecessor is the ordinary case and is not a defect — `depends` is precisely the statement that the predecessor is there first, and a rule against it would forbid "a signed-in member of staff…" on every feature but the first.
+
+**What it may not do is name something built after it.** That is a forward reference, and it is a defect wherever it appears.
+
+```markdown
+❌  a user who signed up appears in the admin user list
+      #sign-up's criterion, and the list is #user-admin, built later
+✅  a second sign-up with the same email is refused, and changes nothing
+      observable against what #sign-up itself adds
+```
+
+**A forward reference is not a small mistake, because four separate places act on it.** Checkpoint 1 reads the criteria to build from; checkpoints 6 and 16 **write a test for each one and run it**, so the implementer is handed a test for a feature that does not exist — and either builds it, or loosens the test until the suite passes; `hora-verifier` reports a criterion with no test as `missingTests`, so the checkpoint can never pass; and checkpoint 18's gate is scoped to this feature, so the criterion fails there by construction and sends the run back into somebody else's checkpoint (`../../hora-build/references/checkpoints.md`). **Every one of those is a run doing the wrong work confidently**, which is why this is a `blocking: yes` stop at `/hora-plan` (`forward-reference`) rather than a note.
+
+**Three places take a behavior that reaches forward, and they are tried in this order:**
+
+| | Where the behavior goes | When this is the answer |
+|---|---|---|
+| **1** | **the order changes** — the features are reordered, or a `depends` is added | the dependency is real and the two features simply run in the wrong order. The cheapest fix, and the one that keeps the criterion where somebody will read it |
+| **2** | **its own section, depending on both** (below) | the behavior is closed inside two features and adds no code of its own |
+| **3** | **the version's own acceptance criteria** ("15. Version acceptance criteria", above) | the behavior genuinely spans three or more features, or the product as a whole |
+
+**The order is a rule, and 3 is last for a reason.** A criterion moved to the version gate is verified once, at the end of the version, instead of at a gate that runs while the code is one commit old — so a version that pushes everything there has restored the failure mode `/hora`'s whole feature-at-a-time design exists to avoid ("One feature at a time, never two", `../../hora-build/SKILL.md`). It is the right home for a behavior that is nobody's alone, and a bad home for one that could have been ordered.
+
+**Where a criterion cannot be placed by anyone present, it is a question and not a guess.** Both readings — the order is wrong, or the criterion belongs to the version — go out with neither recommended.
+
 ### A behavior that only exists once two sections cooperate
 
 **Write it as its own section, depending on both.** "A user who just signed up can sign in with the same credentials" needs `#sign-up` and `#sign-in` to both already exist — it belongs to neither one alone. `/hora` never splits this out on its own (that would mean inventing a requirement the spec never stated), so a scenario left unwritten simply never becomes a feature.
+
+**This is destination 2 above, and it stays the right one for a two-feature behavior.** The section is ordered after both, so its own checkpoint 18 is the first gate at which the behavior is observable at all — which is what makes it a section rather than a criterion inside either feature.
 
 ```markdown
 ## Signing in right after signing up
