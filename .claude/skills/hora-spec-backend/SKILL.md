@@ -7,28 +7,26 @@ description: Stage 4 of /hora-spec. Declare the repositories and servers, then d
 
 **Stage 4 of `/hora-spec`.** Design what holds the data, what operates on it, and what runs outside the request — and prove, use case by use case, that the result can serve them.
 
-Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition**, and `../hora/references/spec-format.md` on the format of every table written here.
+Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. `../hora-spec/references/stages.md` is the authority on this stage's exit condition, `../hora/references/spec-format.md` on the format of every table written here, and `../hora/references/asking.md` on how anything is put to a person.
 
-**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
-
-**This stage holds no design rule of its own.** How a table is shaped, how an SDL is named, where a job belongs and how a queue is tuned all live in `@openreachtech/ai-agent-skills`. **Invoke the skills the delegates table names and read them** — do not work from memory, and never restate one of their rules here.
+**This stage holds no design rule of its own.** How a table is shaped, how an SDL is named, where a job belongs and how a queue is tuned all live in `@openreachtech/ai-agent-skills`. Invoke the skills the delegates table names and read them — never restate one of their rules here.
 
 ## What this stage reads
 
-**This is the stage that reads the backend properly.** Stage 0 established what exists; this one reads the migrations, the models, the SDL, the REST routes, the job definitions and the entry points, at depth.
+This is the stage that reads the backend properly: the migrations, the models, the SDL, the REST routes, the job definitions and the entry points, at depth.
 
-**The whole existing data model and operation list goes out as checks, batched per area** — one for the tables, one for the operations, one for what runs outside the request. Not per table and not per operation: a person confirming the fourteenth table in a row has stopped reading (`../hora-spec/references/investigation.md`).
+**The whole existing data model and operation list goes out as checks, batched per area** — one for the tables, one for the operations, one for what runs outside the request. A person confirming the fourteenth table in a row has stopped reading (`../hora-spec/references/investigation.md`).
 
-**A feature listed under `Baseline: inventoried` still owes its tables and its operations a row each here.** The section itself carries a name and one line and nothing else (`../hora/references/spec-format.md`, "`baseline`") — but its tables are in the database everything designed here has to fit around, and its operations sit on a server stage 6 has to state a caller for. **It costs almost no exchanges**, since a listed feature's rows sit inside the batched checks above.
+**A feature listed under `Baseline: inventoried` still owes its tables and its operations a row each here.** The section itself carries a name and one line (`../hora/references/spec-format.md`, "`baseline`") — but its tables are in the database everything designed here has to fit around, and its operations sit on a server stage 6 has to state a caller for. It costs almost no exchanges, since those rows sit inside the batched checks above.
 
-| Read it, put it up as a **check** | Ask, or **propose** |
+| Read it, put it up as a check | Ask, or propose |
 |---|---|
 | which tables exist, and what columns they hold | why the model came out that way, and what it rules out |
 | which operations exist, and what each returns | who each operation is *for* |
 | which work already runs outside the request path | whether work that runs in the request still belongs there |
 | what the existing tests assert | whether what they assert is what anybody wanted |
 
-**A shortfall found while reading is a proposal, never a check.** "There is no index on this foreign key" states a fact; "add one" is this stage's own thinking, and it goes out labelled as such. Stating the second in the first's voice writes a design decision into `specs/` as an existing fact.
+**A shortfall found while reading is a proposal, never a check.** "There is no index on this foreign key" states a fact; "add one" is this stage's own thinking.
 
 ---
 
@@ -92,12 +90,12 @@ which processing does not run inside a request, and why not
 ```
 
 - **Exactly one backend.** One DB system = one repository. Zero, or two, stops the run
-- **Frontends are zero or more.** An API-only release for a phone app declares none, and stage 5 is then not applicable
+- **Frontends are zero or more.** An API-only release declares none, and stage 5 is then not applicable
 - **Names read `<myproject>-<role>-<purpose>`**, from stage 1's project name
-- **The server table is the unit contracts are cut from**, so it is always written. `consumer` is what decides whether a contract exists at all
+- **The server table is the unit contracts are cut from**, so it is always written. `consumer` decides whether a contract exists at all
 - **A repository that already existed** gets the optional `Directory` column, and `/hora-setup` then never clones it
 
-Everything else about this table — the `Directory` column's effect on the exclusion lists, what a missing row does — is in `../hora/references/spec-format.md`.
+Everything else about this table is in `../hora/references/spec-format.md`.
 
 ## 2. Roles on one endpoint, or endpoints of their own
 
@@ -111,13 +109,13 @@ Everything else about this table — the `Directory` column's effect on the excl
 
 **Decide it from stage 1's actor table, not from the feature list.** Two actors who share a login are roles; two who do not are entities.
 
-**Write the reason down.** Stage 6 checks that it is there, and the next version's new role is decided against that reason or against nothing. It goes in `.hora/spec/<version>/_stages.md` under "Decided in conversation".
+**Write the reason down**, in `.hora/spec/<version>/_stages.md` under "Decided in conversation". Stage 6 checks that it is there, and the next version's new role is decided against that reason or against nothing.
 
-**The package owns what an endpoint is and how its auth filter is wired.** What belongs here is how many there are and who each is for.
+The package owns what an endpoint is and how its auth filter is wired. What belongs here is how many there are and who each is for.
 
 ## 3. The data model
 
-**Delegate to the skills covering the logical shape of a table.** They own whether to normalize, how to hold a status or a category, which type to pick, how to store a time, how to version a master table, how to keep a history, and how to scale reads as data grows. **Invoke them and design against what they say.**
+Delegate to the skills covering the logical shape of a table. They own whether to normalize, how to hold a status or a category, which type to pick, how to store a time, how to version a master table, how to keep a history, and how to scale reads. Invoke them and design against what they say.
 
 What belongs in the spec is the logical shape:
 
@@ -133,14 +131,14 @@ What belongs in the spec is the logical shape:
 | `finished_at` | datetime | NULL until they clock out | |
 ```
 
-- **Every table names which use cases it serves.** A table no use case needs is a table nobody has explained — **except a table belonging to a feature listed under `Baseline: inventoried`, which names that feature instead of a use case**, since a listed section states none at all (`../hora/references/spec-format.md`, "`baseline`")
+- **Every table names which use cases it serves** — **except a table belonging to a listed feature, which names that feature instead**, since a listed section states no use case (`../hora/references/spec-format.md`, "`baseline`")
 - **Stage 3's numbers are inputs here.** Whether a monthly total is a stored column or a query is decided by the volume, and the decision is recorded with the number that produced it
 - **A deferred feature's seam is honored here** — stage 2 named it, and this is where it is left open
 - **Do not name the model class or the migration.** `/hora-plan` decides identifiers against the lint rules
 
 ## 4. The operations
 
-**GraphQL is the default; REST needs a stated reason** (`../hora-spec/references/principles.md`). Delegate the GraphQL surface to the skills covering SDL, and a REST one to the skills covering a renderer's route and version.
+**GraphQL is the default; REST needs a stated reason** (`../hora-spec/references/principles.md`).
 
 ```markdown
 | schema | input | result | kind |
@@ -150,7 +148,7 @@ What belongs in the spec is the logical shape:
 | `closeMonth` | `CloseMonthInput` | `CloseMonthResult` | mutation |
 ```
 
-**Every operation states its kind, and the kind is never inferred.** Query, mutation, subscription and REST renderer are four different conventions on both sides of the wire, and `/hora-build` branches on the value at three separate checkpoints. **Ask, and write what was said.**
+**Every operation states its kind, and the kind is never inferred.** `/hora-build` branches on the value at three separate checkpoints. Ask, and write what was said.
 
 **An input whose fields nobody has decided stops the run.** Writing it anyway means inventing the shape of an API.
 
@@ -173,7 +171,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## 5. What runs outside the request
 
-**Ask one question of every write: does it have to have finished before the person sees a response?** Delegate the decision's implementation to the skills covering execution placement, the job to those covering queues and schedules, and a side effect after the response to those covering post-workers.
+**Ask one question of every write: does it have to have finished before the person sees a response?**
 
 ```markdown
 ## 12. Background jobs
@@ -185,7 +183,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 ```
 
 - **"Why not in the request path" is a required column.** A job with no reason is a job somebody will move back into the request later
-- **A job that must scale alone gets its own queue.** That is the entire mechanism by which one heavy thing is scaled without scaling everything, and stage 3 already named which thing it is
+- **A job that must scale alone gets its own queue.** Stage 3 already named which thing it is
 - **Anything that leaves the process is worth naming here.** An external call in the request path makes somebody else's outage your error page
 - **Redis must be in stage 3's middleware table** if this section has any row at all. Go back and add it
 
@@ -201,7 +199,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 | a use case that completes but takes minutes in the request | step 5 was not applied to it |
 | an operation no use case needs | either a use case is missing (stage 1) or the operation is — **unless it belongs to a listed feature, which justifies it by name** |
 
-**Where a walk fails, fix the design here and say what changed.** A failed walk is why this stage precedes stage 5 — a screen built on an operation list that cannot serve a use case is a screen that will be rebuilt.
+**Where a walk fails, fix the design here and say what changed.** A screen built on an operation list that cannot serve a use case is a screen that will be rebuilt.
 
 **Where the fix needs somebody who is not here**, record `unmet-usecase` (`blocking: yes`), naming the use case and the step that fails, and carry on.
 
@@ -209,7 +207,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## Delegates
 
-**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions when you reach it (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
 | What is needed |
 |---|
@@ -227,7 +225,7 @@ Writing the SDL directly is the most reliable option, and a spec may do that ins
 
 ## Exit condition
 
-The layout and server table declared; every table, operation and job written with its kind and its reason; every stage-1 use case walked without a gap; **every `<!-- acceptance -->` block this stage wrote checkable at its own feature's gate**, with anything reaching further handed to stage 2 (`../hora-spec/references/stages.md`, "Acceptance criteria are drafted by the stage that writes the section"). `../hora-spec/references/stages.md` is the authority.
+The layout and server table declared; every table, operation and job written with its kind and its reason; every stage-1 use case walked without a gap; every `<!-- acceptance -->` block this stage wrote checkable at its own feature's gate, with anything reaching further handed to stage 2. `../hora-spec/references/stages.md` is the authority.
 
 ---
 
@@ -245,7 +243,7 @@ The layout and server table declared; every table, operation and job written wit
 
 | File | Content |
 |---|---|
-| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
+| `../hora/references/asking.md` | a check, a proposal or a question — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | roles or endpoints, GraphQL or REST, synchronous or a job, scale as a number |

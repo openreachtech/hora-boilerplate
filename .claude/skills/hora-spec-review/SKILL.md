@@ -7,13 +7,11 @@ description: Stage 7 of /hora-spec. Read the whole spec against itself — requi
 
 **Stage 7 of `/hora-spec`.** Every earlier stage wrote a section that agreed with its own conversation. This is the only stage that asks whether they agree with each other.
 
-Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition**, and `../hora/references/spec-format.md` on every rule the mechanical pass below checks.
-
-**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
+Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. `../hora-spec/references/stages.md` is the authority on this stage's exit condition, `../hora/references/spec-format.md` on every rule the mechanical pass checks, and `../hora/references/asking.md` on how anything is put to a person.
 
 **This stage is never not applicable.** A document that six stages wrote and nothing reviewed is a document nobody has read whole.
 
-**Besides the document it reads `.hora/spec/<version>/_assets.md` and `.hora/spec/<version>/_divergence.md`** — and, only where the version has already been planned, `.hora/tasks/<version>/_plan.md`'s `## Not accepted`, to compare against a count this stage takes for itself (the mechanical pass, below). Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here, and it is sent back to the stage that owns it like any other. A `_divergence.md` row whose `Routed to` is still blank is the same kind of shortfall — a decision that got made by silence — and this is the last gate that can catch it.
+**Besides the document it reads `_assets.md` and `_divergence.md`** — and, only where the version has already been planned, `.hora/tasks/<version>/_plan.md`'s `## Not accepted`, to compare against a count this stage takes for itself. Anything stage 0 recorded under "read but not settled here" that no stage ever settled is a shortfall found here. A `_divergence.md` row whose `Routed to` is still blank is the same kind of shortfall, and this is the last gate that can catch it.
 
 ---
 
@@ -23,20 +21,20 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 | | |
 |---|---|
-| a required section is missing | **stage that owns it** re-runs |
+| a required section is missing | **the stage that owns it** re-runs |
 | a `_divergence.md` row nobody routed | **the stage that owns its subject** fills in the `Routed to` |
 | a use case cannot be completed under the design | **stage 4**, or 5 |
 | an acceptance criterion is not observable | this stage rewrites it, with approval — it owns no section, but a criterion's wording is not a design change |
-| a criterion or a use case reaches a feature built after it, or the order contradicts a `depends` | **stage 2** — which of the two readings holds is a horizon decision, never a rewording |
+| a criterion or a use case reaches a feature built after it, or the order contradicts a `depends` | **stage 2** — which reading holds is a horizon decision, never a rewording |
 | two statements contradict each other | whichever stage wrote the later one |
 
-**A shortfall is never patched in place.** Writing a missing use case here means writing one that no stage ever walked against a data model — which is exactly the failure the seven stages exist to prevent, reintroduced at the last possible moment.
+**A shortfall is never patched in place.** Writing a missing use case here means writing one that no stage ever walked against a data model.
 
 ---
 
 ## Run the mechanical pass first
 
-**Cheap, precise, and worth clearing before anybody reads prose.** Every rule below belongs to `../hora/references/spec-format.md`; this is the list of what to check, not a restatement of why.
+Cheap, precise, and worth clearing before anybody reads prose. Every rule below belongs to `../hora/references/spec-format.md`.
 
 ```
 1. Every required section present:
@@ -85,11 +83,11 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      criteria against what is built by then
 ```
 
-**A listed section carrying any of those four is itself the finding, and it goes back to the stage that wrote the offending block** — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing, and a criterion sitting inside it is a pass waiting to be claimed. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick.**
+**A listed section carrying any of those four is itself the finding**, and it goes back to the stage that wrote the offending block — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing, and a criterion sitting inside it is a pass waiting to be claimed. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick.**
 
 **Report the count, not just the findings.** "17 sections, 6 features, 3 listed, 0 missing blocks, 4 version criteria" is what says the pass actually ran.
 
-**Check 11 is the one mechanical check that needs two sections at once**, so it is worth stating how it runs and not only what it finds:
+**Check 11 needs two sections at once, so it is worth stating how it runs:**
 
 ```
 1. Take the implementation plan's order, and check it against `depends`
@@ -104,11 +102,11 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      orders nothing — treat it as already in the set
 ```
 
-**Both findings go back to stage 2, which owns the order and the version's own criteria** (`../hora-spec-horizon/SKILL.md`). It is the one stage that can settle either reading: reorder the features, or move the behavior to the version's block. **Do not pick between them here** — the difference is whether the dependency was real, and only the person who wanted the product knows.
+**Both findings go back to stage 2, which owns the order and the version's own criteria.** It is the one stage that can settle either reading: reorder the features, or move the behavior to the version's block. **Do not pick between them here** — the difference is whether the dependency was real.
 
-**Report how many criteria ended up in the version's own block, beside the section counts.** A version whose features hold three criteria each and whose own block holds nine has not split a document — it has moved most of its verification to the far end of the version, which is the failure the feature-at-a-time design exists to avoid (`../hora-build/SKILL.md`, "One feature at a time, never two"). The number is the only thing that makes that visible while it is still cheap to reorder.
+**Report how many criteria ended up in the version's own block, beside the section counts.** A version whose features hold three criteria each and whose own block holds nine has moved most of its verification to the far end of the version (`../hora-build/SKILL.md`, "One feature at a time, never two"). The number is the only thing that makes that visible while it is still cheap to reorder.
 
-**Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong both are. Read `_plan.md`'s `## Not accepted` afterwards, where the version has been planned at all, and **report a mismatch as a finding naming both numbers** — three listed in the document and two in the ledger means a version listed a feature that nothing is tracking. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1); `/hora-plan` reconciles it on its next entry.
+**Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong both are. Read `_plan.md`'s `## Not accepted` afterwards, and **report a mismatch as a finding naming both numbers** — three listed in the document and two in the ledger means a version listed a feature that nothing is tracking. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1); `/hora-plan` reconciles it on its next entry.
 
 ---
 
@@ -127,11 +125,11 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 | a state nothing can represent | stage 4 |
 | a use case that completes, but only if somebody does something the spec never mentions | stage 1 |
 
-**This is the same walk checkpoints 2, 9 and 11 make, three times over, and then the acceptance review makes for real.** Each of those costs more than this one.
+This is the same walk checkpoints 2, 9 and 11 make, and then the acceptance review makes for real. Each of those costs more than this one.
 
 ### 2. Is every acceptance criterion observable?
 
-**Delegate to the skills covering requirement definition** — they own what makes a criterion observable rather than an intention.
+Delegate to the skills covering requirement definition — they own what makes a criterion observable rather than an intention.
 
 ```
 ✅  clocking in twice on one day is refused, and the screen says why
@@ -142,9 +140,9 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 **Criteria and use cases are checked as a pair.** A feature with criteria and no use cases produces operations that are each correct and together unreachable; a feature with use cases and no criteria leaves the implementer grading their own work.
 
-**Observable is not the same as observable *there*, and the mechanical pass only catches the crude case.** Check 11 above finds a criterion that names a later feature; what it cannot find is one whose wording names nothing and still cannot be watched until something later exists — "the total matches what payroll pays out" reads as one feature's criterion and is not. **Read each criterion asking where somebody would stand to watch it hold**, and where that place only exists after a later feature, it goes back to stage 2 like any other forward reference.
+**Observable is not the same as observable *there*, and the mechanical pass only catches the crude case.** Check 11 finds a criterion that names a later feature; what it cannot find is one whose wording names nothing and still cannot be watched until something later exists — "the total matches what payroll pays out" reads as one feature's criterion and is not. **Read each criterion asking where somebody would stand to watch it hold**, and where that place only exists after a later feature, it goes back to stage 2.
 
-**The version's own criteria are read the same way, at their own reach.** Each one is watched once the version is built, so the question is whether somebody could follow it end to end across the features it names — and whether `spans:` names every feature it actually passes through, rather than only the ones the wording mentions.
+**The version's own criteria are read the same way, at their own reach**: whether somebody could follow each one end to end across the features it names, and whether `spans:` names every feature it actually passes through.
 
 ### 3. Do the three scope lists still match the design?
 
@@ -157,7 +155,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 ### 4. Does anything contradict anything?
 
-**The pairs worth checking, because these are the ones that actually happen:**
+The pairs worth checking, because these are the ones that actually happen:
 
 ```
 a retention period against a permanent lock
@@ -172,13 +170,13 @@ a term used in two sections with two meanings
 
 ### 5. Would somebody who was not in the room understand it?
 
-**The last reading, and the one that catches what fluent prose hides.** An abbreviation nobody expanded, a screen named two ways, a step that assumes a habit only the requester has. Delegate the document's own conventions to the skills covering how a document is written.
+The last reading, and the one that catches what fluent prose hides. An abbreviation nobody expanded, a screen named two ways, a step that assumes a habit only the requester has.
 
 ---
 
 ## Delegates
 
-**This table lists work, not names.** Match each row against the equipped skills' own descriptions under `.claude/skills/` when you reach it — no name is written here, because a name belongs to the package and a renamed skill stops matching without saying so (`../hora/references/structure.md`, "No hora file ever names one of those skills").
+**This table lists work, not names.** Match each row against the equipped skills' own descriptions when you reach it (`../hora/references/structure.md`, "No hora file ever names one of those skills").
 
 | What is needed |
 |---|
@@ -192,7 +190,7 @@ If nothing equipped covers a row, say so by the work it names, carry on, and rec
 
 ## What it writes
 
-**Its own findings, in `.hora/spec/<version>/_stages.md`**, and whatever the re-run stages then write into `specs/`.
+Its own findings, in `.hora/spec/<version>/_stages.md`, and whatever the re-run stages then write into `specs/`.
 
 ```markdown
 ## Stage 7 — review
@@ -213,7 +211,7 @@ If nothing equipped covers a row, say so by the work it names, carry on, and rec
 
 The mechanical pass clean; all five readings done; every finding either fixed by the stage that owns it or recorded as a question. `../hora-spec/references/stages.md` is the authority.
 
-**A `blocking: yes` question does not stop this stage from finishing.** It stops `/hora-build`. Finish the review, record the hole, and say so in the closing report — one unanswerable question must not cost the whole document.
+**A `blocking: yes` question does not stop this stage from finishing.** It stops `/hora-build`. Finish the review, record the hole, and say so in the closing report.
 
 **Re-run this stage after any stage it sent the run back into.** A fix at stage 4 can contradict something stage 6 wrote, and the only thing that would notice is this pass, run again.
 
@@ -223,7 +221,7 @@ The mechanical pass clean; all five readings done; every finding either fixed by
 
 | File | Content |
 |---|---|
-| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
+| `../hora/references/asking.md` | a check, a proposal or a question — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition, and the table of what sends a run back where |
 | `../hora/references/spec-format.md` | **every rule the mechanical pass checks** |

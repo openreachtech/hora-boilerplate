@@ -7,22 +7,20 @@ description: Stage 6 of /hora-spec. Give every operation and every screen a stat
 
 **Stage 6 of `/hora-spec`.** Answer two questions about everything stages 4 and 5 designed: **who may reach this, and what happens when somebody else tries.**
 
-Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
+Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. `../hora-spec/references/stages.md` is the authority on this stage's exit condition, and `../hora/references/asking.md` on how anything is put to a person.
 
-**`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default.
-
-**This stage is never not applicable.** A release with no authentication at all still has to say so, and why. An unstated caller is not an open question — **it is an operation that will be implemented with whatever filter its neighbours had, and nothing in the resulting code says that nobody ever decided.**
+**This stage is never not applicable.** A release with no authentication at all still has to say so, and why. An unstated caller is an operation that will be implemented with whatever filter its neighbours had, and nothing in the resulting code says that nobody ever decided.
 
 ## What this stage reads, and the one distinction that decides everything
 
-**This is the stage that reads the auth filters, the role checks and the public-operation allowlists** — enough to say, for every operation, **who may call it today.**
+This is the stage that reads the auth filters, the role checks and the public-operation allowlists — enough to say, for every operation, who may call it today.
 
 | | |
 |---|---|
 | **who may call it today** | **a fact.** Read it and put it up as a check |
 | **who should be able to call it** | **a decision nobody has made.** Ask it |
 
-**Those two are one word apart in English and are not the same claim at all.** "Anyone with a session token can call `deleteAccount`" is something the code says. "Anyone with a session token should be able to call `deleteAccount`" is something no code can say, and on a product that already runs it is usually something nobody ever said either.
+Those two are one word apart in English and are not the same claim. "Anyone with a session token can call `deleteAccount`" is something the code says; the same sentence with *should* is something no code can say, and on a product that already runs it is usually something nobody ever said either.
 
 **That gap is this stage's entire yield on an adopted project.** Read the current answer, put it in front of somebody, and watch which ones surprise them — every surprise is an authorization nobody decided, already deployed.
 
@@ -46,11 +44,9 @@ what has to be true before this is exposed to the internet at all
 |---|---|
 | a new operation, or a new table | stage 4 |
 | a new screen | stage 5 |
-| how an auth filter is wired, or how a public operation is allowed through | **the package's skills covering the server engine** |
-| whether the built code has a defect | **the package's audit skills**, at checkpoint 8. They audit code; this stage writes what that audit will have something to check against |
+| how an auth filter is wired, or how a public operation is allowed through | the package's skills covering the server engine |
+| whether the built code has a defect | **the package's audit skills**, at checkpoint 8. They audit code; this stage writes what that audit checks against |
 | a token lifetime, a hashing algorithm, a header | the package's own skills, at checkpoint 6 |
-
-**This stage produces the statements the later gates check.** Checkpoint 8's audit, checkpoint 18's review and `/security-review` all compare code against something, and this is where that something is written.
 
 ---
 
@@ -75,21 +71,21 @@ for each field:
     may it appear in a log, an error message, an export, a URL
 ```
 
-**Under `Authority: as-built`, the walk stays complete but the confirming batches** (`../hora/references/spec-format.md`, "Existing assets"). The auth filters and role checks were read at breadth by stage 0 and deeply here; for `as-built` features, "who may call each of these today" goes up **one check per endpoint** — a table of operations and their current callers, corrected rather than composed — instead of one exchange per operation. The declaration made today's configuration the intended one, so confirming it wholesale is confirming a decision somebody made, feature-count times cheaper.
+**Under `Authority: as-built` the walk stays complete but the confirming batches.** For those features, "who may call each of these today" goes up one check per endpoint — a table of operations and their current callers, corrected rather than composed — instead of one exchange per operation. The declaration made today's configuration the intended one.
 
 **The exception that never batches: anything reachable without authentication.** An operation callable before signing in, a screen that renders to nobody-in-particular, an allowlisted public operation — **each one is put up alone, by name, whatever the declaration says.** "Anyone can call this today" is a fact; "anyone may call this" is a decision, and it is the one decision `as-built` must not make silently.
 
-**`Baseline: inventoried` reaches nothing in this stage.** All it lowers is that a listed feature owes no use cases and no acceptance criteria (`../hora/references/spec-format.md`, "`baseline`"), and neither block ever answered any of the four questions above. Every operation a listed feature exposes still names its caller and its refusal, and any of its operations reachable without authentication is still put up alone, by name. **The refusal goes in the operation's own row** rather than in an `<!-- acceptance -->` block, because a listed section has none — and writing one would put a criterion nothing will ever run into a document that reads as though something will.
+**`Baseline: inventoried` reaches nothing in this stage.** All it lowers is that a listed feature owes no use cases and no acceptance criteria, and neither block ever answered any of the four questions above. Every operation a listed feature exposes still names its caller and its refusal, and any of its operations reachable without authentication is still put up alone, by name. **The refusal goes in the operation's own row** rather than in an `<!-- acceptance -->` block, because a listed section has none.
 
 **"Only their own" is the case most often wrong and least often stated.** An operation that correctly refuses a member of staff who is not signed in, and happily returns a colleague's month to one who is, passes every test anybody wrote for it.
 
-**Ask what a refusal looks like, not only that there is one.** "Not found" and "not allowed" leak different things, and which one is right is a decision, not a detail.
+**Ask what a refusal looks like, not only that there is one.** "Not found" and "not allowed" leak different things.
 
 ---
 
 ## The endpoint split gets its reason written down
 
-**`../hora-spec/references/principles.md` holds what to weigh; this stage records which way it went and why.** Stage 4 made the choice; the exit condition here is that the reason exists in writing.
+Stage 4 made the choice; the exit condition here is that the reason exists in writing.
 
 | What was chosen | What has to be written |
 |---|---|
@@ -97,13 +93,13 @@ for each field:
 | endpoints of their own | that these are different entities — a different login, a different lifecycle — and that the two authentications are separate |
 | endpoints per role, one identity model | **the reason this was worth multiplying the schema for**: the security level, or the permission tangle it removes |
 
-**The next version's new role is decided against that reason or against nothing.** It goes in `.hora/spec/<version>/_stages.md`, under "Decided in conversation, and not visible in `spec.md`".
+The next version's new role is decided against that reason or against nothing. It goes in `.hora/spec/<version>/_stages.md`, under "Decided in conversation, and not visible in `spec.md`".
 
 ---
 
 ## The kinds of defect to ask about
 
-**The package's audit skills are the authority on what kinds exist** — match them against the equipped descriptions, invoke them, and read the list. They audit code, not documents, so **what is borrowed is the list of kinds; never a verdict.**
+**The package's audit skills are the authority on what kinds exist** — match them against the equipped descriptions, invoke them, and read the list. They audit code, not documents, so what is borrowed is the list of kinds, never a verdict.
 
 Turn each kind into a question about the spec rather than about code:
 
@@ -134,7 +130,7 @@ Turn each kind into a question about the spec rather than about code:
 | `closeMonth` | `CloseMonthInput` | `CloseMonthResult` | mutation | a manager, own team only |
 ```
 
-**And the rest as non-functional requirements**, since they constrain every feature:
+And the rest as non-functional requirements, since they constrain every feature:
 
 ```markdown
 | Item | Requirement |
@@ -152,7 +148,7 @@ Turn each kind into a question about the spec rather than about code:
 
 ### The acceptance criteria this stage adds
 
-**A refusal is a behavior, so it is testable, so it belongs in `<!-- acceptance -->`.** Add one per operation whose refusal matters — **except on a listed section, where it stays in the operation's own row and nowhere else** ("The pass", above):
+**A refusal is a behavior, so it is testable, so it belongs in `<!-- acceptance -->`.** Add one per operation whose refusal matters — **except on a listed section, where it stays in the operation's own row** ("The pass", above):
 
 ```markdown
 - `closeMonth` called by a member of staff is refused with `not-allowed`
@@ -186,7 +182,7 @@ Every operation naming its caller and its refusal; every screen naming its actor
 
 | File | Content |
 |---|---|
-| `../hora/references/asking.md` | **a check, a proposal or a question** — and the question tool this stage defaults to |
+| `../hora/references/asking.md` | a check, a proposal or a question — and the question tool this stage defaults to |
 | `../hora-spec/SKILL.md` | the approval rule, the state file, the closing report |
 | `../hora-spec/references/stages.md` | this stage's exit condition |
 | `../hora-spec/references/principles.md` | "Authorization is the thing left unsaid", and the roles-or-endpoints table |
