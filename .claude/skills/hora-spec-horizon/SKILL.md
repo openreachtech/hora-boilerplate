@@ -1,6 +1,6 @@
 ---
 name: hora-spec-horizon
-description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases somebody actually needs, and split everything else into what is deferred with a seam kept open and what is never built. Writes the implementation scope in three parts, the implementation plan — every feature after the features it depends on — and the version's own acceptance criteria, where a behavior no single feature owns is written. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases somebody needs, and split the rest into deferred-with-a-seam and never-built. Writes the implementation scope, the build order, and the version's own acceptance criteria. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-horizon
@@ -51,7 +51,7 @@ which use case is impossible without this?
 | "it would be nice to have" | it is deferred. Ask what would make it necessary |
 | a use case nobody stated | **go back to stage 1.** Either the use case is real and belongs there, or the feature has no reason |
 
-**A section carrying `<!-- baseline: inventoried -->` states no use case by declaration, and is not sent back to stage 1 for it** (`../hora/references/spec-format.md`, "`baseline`"). Its silence is somebody's decision, not a hole — read as "a use case nobody stated", it would go to stage 1, which would list it again and return it here, and the two stages would trade one feature forever with nothing in either conversation saying why.
+**A section carrying `<!-- baseline: inventoried -->` states no use case by declaration, and is not sent back to stage 1 for it** (`../hora/references/spec-format.md`, "`baseline`"). Its silence is somebody's decision, not a hole.
 
 **Then say the number out loud.** "This release has eleven features and four of them serve one use case each" is a sentence nobody says to themselves. Propose the split — which four go now, which seven follow, and which use case each group completes.
 
@@ -152,7 +152,7 @@ If nothing equipped covers it, say so by the work it names, carry on, and record
 
 **Every feature comes after every feature it depends on.** The order written here is what `/hora-plan` extracts, so an order that contradicts a `depends` edge is settled here or nowhere.
 
-**Nothing downstream reports the contradiction, which is why it is checked at the source.** `/hora-build` takes "the first feature whose entry is `[ ]` and whose `depends` are all satisfied", so a plan listing `#payroll` before the `#attendance` it depends on does not fail — the run silently builds them in a different order than the document states, and the milestone somebody planned around is quietly not the milestone that happened (`../hora-build/SKILL.md`, "Where to start"). Only a cycle stops anything.
+**Nothing downstream reports the contradiction, which is why it is checked at the source.** `/hora-build` takes the first feature whose `depends` are satisfied, so a plan listing `#payroll` before the `#attendance` it depends on does not fail — the run silently builds them in a different order than the document states. Only a cycle stops anything.
 
 **Walk it once, in order, and check each feature's `depends` against what is already above it.** An edge pointing forward is one of two things, and they are settled differently:
 
@@ -177,9 +177,9 @@ If nothing equipped covers it, say so by the work it names, carry on, and record
   spans: #sign-up, #attendance, #user-admin
 ```
 
-**What arrives here is stage 1's held-back list, in `.hora/spec/<version>/_stages.md`**, plus whatever the walk above turned up: stage 1 drafts a feature's criteria, writes the ones that reach past that feature into that file, and hands them over without placing them, because at stage 1 there is no order to place them against (`../hora-spec-usecases/SKILL.md`). **Read it before this section is written** — a criterion stage 1 wrote down and this stage never opened is the requirement both stages were watching, lost between them.
+**What arrives here is stage 1's held-back list, in `.hora/spec/<version>/_stages.md`**, plus whatever the walk above turned up (`../hora-spec-usecases/SKILL.md`). **Read it before this section is written.**
 
-**Take each one and try the three destinations in order** — reorder, a section of its own, or this section (`../hora/references/spec-format.md`). **The third is last, and this stage is where the discipline actually holds**: a criterion here is checked once, at the end of the version, instead of at a gate that runs while the code is one commit old, so a stage that sends everything here has quietly given up the feature-at-a-time design (`../hora-spec/references/principles.md`). Say the number out loud, the way the narrowing above does — "eleven features, and nine criteria that nobody's feature owns" is a sentence that gets a spec reordered.
+**Take each one and try the three destinations in order** — reorder, a section of its own, or this section (`../hora/references/spec-format.md`). **The third is last, and this stage is where the discipline actually holds**: a criterion here is checked once, at the end of the version, instead of at a gate that runs while the code is one commit old. Say the number out loud, the way the narrowing above does — "eleven features, and nine criteria that nobody's feature owns" is a sentence that gets a spec reordered.
 
 **Every criterion carries `spans:`, and `none` is written where the version has none.** Both are the format's requirements, and both are the difference between a sweep that can route a finding and one that cannot.
 

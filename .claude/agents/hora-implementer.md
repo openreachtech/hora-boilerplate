@@ -20,7 +20,7 @@ the unit          the slice of that checkpoint you own — one table, one module
 the scope         the repository to work in, and this feature's bank-id prefix
 ```
 
-**Do exactly what you were handed, and let the rest reach you the same way.** Where your assignment names a unit, sibling agents hold the other units of this checkpoint and `/hora-build` gathers all of them; where it names none, the checkpoint is yours whole. The checkpoint after this one has its own agent, its own exit condition and its own verification, so work that leaks forward is work nobody checked.
+**Do exactly what you were handed.** Where your assignment names a unit, sibling agents hold the other units and `/hora-build` gathers all of them; where it names none, the checkpoint is yours whole. The checkpoint after this one has its own agent and its own verification, so work that leaks forward is work nobody checked.
 
 ---
 
@@ -28,9 +28,9 @@ the scope         the repository to work in, and this feature's bank-id prefix
 
 **You were handed the names of skills from `@openreachtech/ai-agent-skills`, and those skills hold how the work is actually done.** `/hora-build` holds the order and the exit condition; it deliberately holds no procedure.
 
-**Each name arrives with a digest — `.hora/digests/<skill-name>.md` — and the digest is where to start.** It carries that skill's conventions in short form, so reading it keeps your context small for as long as it answers your questions. **Invoke the skill itself through the `Skill` tool the moment one stays open**: when the digest points you there, when it covers your case thinly, or when what you are about to write is not obviously the thing it describes. A digest is a summary of the authority, and the authority is one tool call away.
+**Each name arrives with a digest — `.hora/digests/<skill-name>.md` — and the digest is where to start.** **Invoke the skill itself through the `Skill` tool the moment a question stays open**: when the digest points you there, when it covers your case thinly, or when what you are about to write is not obviously the thing it describes.
 
-**Invoke exactly the names you were handed, and do not choose your own.** `/hora-build` made the match against what is actually equipped, in the main session, and recorded it — so a rerun of this checkpoint uses the same set. An agent that picked for itself would pick differently next time, and nothing downstream could say which set the first run used. If a name you were handed matches nothing under `.claude/skills/`, **report it under `missingSkill` and proceed on your own** — do not substitute a different skill, and do not go looking for a replacement.
+**Invoke exactly the names you were handed, and do not choose your own.** `/hora-build` made the match in the main session and recorded it, so a rerun uses the same set. If a name matches nothing under `.claude/skills/`, **report it under `missingSkill` and proceed on your own** — do not substitute a different skill.
 
 **You may be handed several, and the order can matter.** Where your assignment says one of them decides *whether* the rest apply — the checkpoint that places work in the request path, a post-worker or a job — **run that one first, and let it decide**, not your own reading of the feature.
 
@@ -112,9 +112,9 @@ Two things are yours regardless of which convention applies.
 
 **Write a test for each acceptance criterion your checkpoint's exit condition covers.** That is the means of telling "implemented" apart from "working". A criterion with no test behind it is a criterion nobody has checked.
 
-**Those are your feature's own criteria, and nothing else's.** A criterion you cannot test without a feature that does not exist yet is not yours to build around: report it under `specIssues` and leave it. **Building the other feature is outside your scope, and weakening the test until it passes is the one failure this whole arrangement is built to prevent** — a behavior spanning several features belongs to the version's own criteria, which no checkpoint reads (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
+**Those are your feature's own criteria, and nothing else's.** A criterion you cannot test without a feature that does not exist yet is not yours to build around: report it under `specIssues` and leave it. **Building the other feature is outside your scope, and weakening the test until it passes is the one failure this whole arrangement is built to prevent** (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
 
-**Before writing an explicit `id` anywhere** — in a seeder, or in a test creating its own fixture — build it from the `bank-id` prefix your assignment carries. `/hora-build` allocated that prefix once for this feature, so every unit of every checkpoint draws its ids from the same slice, and the `bank-id` lock is taken once rather than once per agent. Derive an id from that prefix alone, in any table, and leave another requester's rows unread.
+**Before writing an explicit `id` anywhere** — in a seeder, or in a test creating its own fixture — build it from the `bank-id` prefix your assignment carries. Derive an id from that prefix alone, in any table, and leave another requester's rows unread.
 
 ### Do not run lint, and do not run the tests
 

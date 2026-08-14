@@ -6,26 +6,26 @@
 
 ## The boundary this file sits on
 
-Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-agent-skills` already holds (`../../hora/references/structure.md`, "The division of labor"). That rule applies to this file too, and the line is drawn like this:
+Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-agent-skills` already holds (`../../hora/references/structure.md`, "The division of labor"). The line runs like this:
 
 | | Owns | Example |
 |---|---|---|
 | **here** | **the question to ask, and what to weigh in answering it** — at the stage where no code exists yet | *"does this write have to have finished by the time the person sees a response?"* |
 | **the package's skills** | **how the answer is built, and what counts as done properly** | *where a background job's classes live, how they are wired to the resolver, and when one gets a queue of its own* |
 
-**The test is the same one the whole kit uses: if a line here could be checked against the package and found to disagree, it does not belong here.** Nothing below states a column type, a naming rule, a directory, a nullability convention or a retry policy. Where the answer to a question is an implementation decision, this file names the skill that owns it and stops.
+**The test: if a line here could be checked against the package and found to disagree, it does not belong here.** Nothing below states a column type, a naming rule, a directory, a nullability convention or a retry policy.
 
-**Where a stage needs one of those rules in order to ask a sensible question, it invokes the skill and reads it.** A spec that names a column type has to name one the package would accept, and the way to know that is to read the package, not to remember it.
+**Where a stage needs one of those rules in order to ask a sensible question, it invokes the skill and reads it.**
 
 ---
 
 ## 1. Everything starts from a use case
 
-**Who, doing what, to get what done — and through what kind of interface.** Until that is fixed, nothing else can be: a data model has nothing to hold, an operation has nobody calling it, a screen has no reason to exist.
+**Who, doing what, to get what done — and through what kind of interface.** Until that is fixed, a data model has nothing to hold, an operation has nobody calling it, and a screen has no reason to exist.
 
-**Break down what was asked. Do not transcribe it.** A request arrives as a feature list, because that is how the person has been thinking about it. Turning "attendance management, approval, payroll" into the six things somebody actually completes is the work of stage 1, and it is where every later stage's raw material comes from.
+**Break down what was asked. Do not transcribe it.** A request arrives as a feature list, because that is how the person has been thinking about it. Turning "attendance management, approval, payroll" into the six things somebody actually completes is the work of stage 1.
 
-**Propose. A stage that only asks is doing half the job.** The gaps in a request are invisible from the inside of it — the case nobody thought of, the flow that is two screens longer than it needs to be, the role that turns out to be two roles. Offer the better shape, say plainly that it is a proposal, and let the person decide.
+**Propose. A stage that only asks is doing half the job.** The gaps in a request are invisible from the inside of it — the case nobody thought of, the flow that is two screens longer than it needs to be, the role that turns out to be two roles.
 
 **Never let a proposal in silently** (`../SKILL.md`, "The line this skill must not cross").
 
@@ -33,11 +33,11 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 
 ## 2. A release carrying too much is the normal failure
 
-**Not a risk to watch for — the default outcome, unless somebody actively narrows it.** Everyone wants everything in the first release, and nothing about the process resists it.
+**Not a risk to watch for — the default outcome, unless somebody actively narrows it.**
 
-**So narrow it, out loud, at stage 2.** The question that does the work is not "is this important?" — everything is important — but **"which use case is impossible without it?"** A feature that no stated use case needs is a feature nobody has yet explained the point of.
+**So narrow it, out loud, at stage 2.** The question that does the work is not "is this important?" — everything is important — but **"which use case is impossible without it?"**
 
-**The goal of a spec is not coverage. It is the fewest use cases somebody actually needs, served in the best form available.** Ten features half-served is worse than four served well, and it is also slower, because the four carry the ten's design compromises.
+**The goal of a spec is not coverage. It is the fewest use cases somebody actually needs, served in the best form available.** Ten features half-served is worse than four served well, and slower, because the four carry the ten's design compromises.
 
 **Say when a release is overloaded even after being told it is fine.** State it once, propose the split, and if the answer is still no, record it (`scope`) and carry on. **The decision belongs to whoever asked for the product; saying nothing does not.**
 
@@ -52,9 +52,9 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 | out of scope **for now** (to be built later) | leave a seam. Keep the thing behind it replaceable |
 | **permanently** out of scope | do not abstract it. Exclude it from the design entirely |
 
-**Read the first as the second and the structure cannot take it later; read the second as the first and an abstraction layer gets built that nobody uses.** This is why stage 2's three lists are three lists and not a paragraph.
+**Read the first as the second and the structure cannot take it later; read the second as the first and an abstraction layer gets built that nobody uses.**
 
-**Also name what nobody has planned but somebody can see coming.** A notification channel that is email today and will be something else, a search that is a `LIKE` today and a search platform later, a single tenant that becomes several. None of it is built now; all of it is a sentence in the "for now" list with what unblocks it, and a seam named. **A foreseen requirement with no seam named is a wish, not a design constraint.**
+**Also name what nobody has planned but somebody can see coming.** A notification channel that is email today, a search that is a `LIKE` today and a search platform later, a single tenant that becomes several. None of it is built now; all of it is a sentence in the "for now" list with what unblocks it. **A foreseen requirement with no seam named is a wish, not a design constraint.**
 
 ---
 
@@ -69,7 +69,7 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 - a transfer GraphQL is a poor fit for: a file download, a redirect, a raw payload
 - a public surface where a fixed URL shape is part of the contract
 
-**Both may exist in one backend, per server, and the server table is where that is declared.** The package's skills own the two shapes — the SDL one and the REST renderer one; what belongs to the spec is which servers exist, who consumes each, and why.
+**Both may exist in one backend, per server, and the server table is where that is declared.** What belongs to the spec is which servers exist, who consumes each, and why.
 
 ---
 
@@ -85,7 +85,7 @@ Hora Kit holds no procedure and no pass/fail criterion that `@openreachtech/ai-a
 
 **Say which one, and why, in the spec** (stage 6's exit condition). The next version's new role is decided against that reason or against nothing.
 
-**How an endpoint is wired, what its auth filter is, and how a public operation is allowed through all belong to the package's skills covering the server engine.** What belongs here is how many endpoints there are and who each one is for.
+**How an endpoint is wired, what its auth filter is, and how a public operation is allowed through all belong to the package's skills.** What belongs here is how many endpoints there are and who each one is for.
 
 ---
 
@@ -100,11 +100,11 @@ the heaviest single operation, and how much it touches
 how long data is kept, and what happens to it after
 ```
 
-**A number changes the design; an adjective does not.** Whether a total is stored or recalculated, whether a list is paginated from the first day, whether a report is a query or a job — each of those has a different answer at two hundred records and at two million, and no answer at all at "a lot".
+**A number changes the design; an adjective does not.** Whether a total is stored or recalculated, whether a list is paginated from the first day, whether a report is a query or a job — each has a different answer at two hundred records and at two million, and no answer at all at "a lot".
 
-**The heaviest single operation gets a seam of its own.** One expensive thing among many cheap ones is the normal shape of a system, and the cheap way to survive it is to keep that one thing separable — its own job, its own queue, its own server later — decided now, while it costs a sentence. Scaling everything because one thing is heavy is the alternative, and it is the expensive one.
+**The heaviest single operation gets a seam of its own.** Keeping that one thing separable — its own job, its own queue, its own server later — costs a sentence now. Scaling everything because one thing is heavy is the alternative.
 
-**Where nobody knows the number, write what was assumed, and record it** (`spec-assumption`). An assumed number that is written down gets corrected when it is wrong; an unwritten one gets designed against silently.
+**Where nobody knows the number, write what was assumed, and record it** (`spec-assumption`).
 
 ---
 
@@ -118,9 +118,9 @@ how long data is kept, and what happens to it after
 | yes for the caller, no for the side effect (a mail, an audit line, a cache) | a post-worker: the response goes first, the side effect follows |
 | no — it is long, it is retried, it is scheduled, it depends on something slow | a background job |
 
-**A job that must be able to scale alone gets its own queue.** That is the whole mechanism by which one heavy thing is scaled without scaling everything, and the decision is made here, at the spec, not discovered later.
+**A job that must be able to scale alone gets its own queue.** That decision is made here, at the spec, not discovered later.
 
-**The package owns all three: the decision's implementation, the job itself, and the side effect after a response.** What belongs to the spec is which processing is which, and why — recorded in the `Background jobs` table, with the reason it is not in the request path.
+**The package owns all three: the decision's implementation, the job itself, and the side effect after a response.** What belongs to the spec is which processing is which, and why — recorded in the `Background jobs` table.
 
 **An external call is the case worth naming explicitly.** Anything that leaves the process can be slow or down, and putting it in the request path makes somebody else's outage your error page.
 
@@ -132,9 +132,9 @@ how long data is kept, and what happens to it after
 
 **Ask it of the data too.** Which fields are personal, which are regulated, who may read them, and what a log file is allowed to contain.
 
-**An unstated caller is not an open question — it is an operation that will be implemented with whatever filter its neighbours had.** Nothing in the resulting code says that nobody ever decided, which is what makes this the one gate in this document that has no "not applicable" case.
+**An unstated caller is an operation that will be implemented with whatever filter its neighbours had.** That is what makes this the one gate in this document with no "not applicable" case.
 
-**The package's audit skills own what kinds of defect exist, and they audit code, not documents.** What belongs to the spec is the stated caller, the stated failure behavior, and the named sensitive field — the three things the audit later has something to check against.
+**The package's audit skills own what kinds of defect exist, and they audit code, not documents.** What belongs to the spec is the stated caller, the stated failure behavior, and the named sensitive field.
 
 ---
 

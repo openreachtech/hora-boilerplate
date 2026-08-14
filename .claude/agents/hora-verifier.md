@@ -51,7 +51,7 @@ Acceptance criterion: createRpaFlow returns an error on a duplicate flow_key
 
 **A test for behavior the acceptance criteria do not mention is not in scope for this verification.** It may exist, but it cannot make up for an unmet criterion.
 
-**A criterion that cannot be observed until a feature built later exists is `specIssues`, never `missingTests`.** A criterion belongs to a feature only if it can be watched at that feature's own gate, so one naming a later feature is a defect in `specs/` and not a test somebody forgot — and reported as a missing test it sends an implementer off to write one, which either builds the other feature or passes by asserting nothing. **The behavior belongs either to the version's own criteria, which no gate reads, or to a different order** (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
+**A criterion that cannot be observed until a feature built later exists is `specIssues`, never `missingTests`.** Reported as a missing test it sends an implementer off to write one, which either builds the other feature or passes by asserting nothing. **The behavior belongs either to the version's own criteria or to a different order** (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
 
 **A test that was weakened to pass fails the checkpoint.** A criterion that used to be asserted and is now only smoke-checked, an assertion narrowed to something that cannot fail, a case commented out — each of these is a shortfall, not a style note, and it is exactly what having a separate verifier is for.
 
@@ -67,7 +67,7 @@ Every feature's tests eventually run together, against the same database, in wha
 ✅ fetch the one row the test itself created, by that id, and assert its other fields
 ```
 
-**Flag this as unmet, not as a nitpick.** A test written this way cannot reliably back its acceptance criterion once run under the real condition, which is not hypothetical — it is what every acceptance run does. The same applies to a fixture: bring your own, query it by whatever you tagged it with, never by "everything currently in the table".
+**Flag this as unmet, not as a nitpick.** Running under that condition is what every acceptance run does. The same applies to a fixture: bring your own, query it by whatever you tagged it with, never by "everything currently in the table".
 
 ## What you do not verify
 

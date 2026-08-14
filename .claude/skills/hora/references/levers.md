@@ -4,9 +4,9 @@
 
 **Three things about every row.**
 
-- **A row is a pointer, never a rule.** There is deliberately no column for what a lever does, what it reduces, or how far it reaches. Those live in the owning file, and a second copy of them here would still read as authoritative after the original changed ("The division of labor", `structure.md`)
-- **A lever missing from this table is a defect in the table. It is never permission.** Nothing is authorized by appearing here and nothing is forbidden by being absent — the owning file decides, and a gap here means somebody added a lever without indexing it
-- **A row whose file or section no longer exists is reported as a question**, by whichever run noticed. Do not guess where it moved, and do not quietly delete the row. The section titles are written out so a moved section can be found by searching for its title
+- **A row is a pointer, never a rule.** There is deliberately no column for what a lever does or how far it reaches — that lives in the owning file
+- **A lever missing from this table is a defect in the table. It is never permission.** The owning file decides; a gap here means somebody added a lever without indexing it
+- **A row whose file or section no longer exists is reported as a question.** Do not guess where it moved, and do not delete the row. The section titles are written out so a moved section can be found by searching for its title
 
 ---
 
@@ -127,7 +127,7 @@
 
 | | Why |
 |---|---|
-| `docs/` | it explains levers to people and is read by no skill, and it comes in `ja`/`en` pairs. A rule stated there goes stale in silence, in two languages, while still reading as authoritative. **A pointer to this file is the most `docs/` may hold** |
-| a hora skill's own prose | a skill executes a lever; it does not own one. Where a skill's file is named above, it is named as the owner of a derivation, which is its own work |
+| `docs/` | it explains levers to people, is read by no skill, and comes in `ja`/`en` pairs. **A pointer to this file is the most `docs/` may hold** |
+| a hora skill's own prose | a skill executes a lever; it does not own one. Where a skill's file is named above, it is named as the owner of a derivation |
 | `specs/skeleton/spec.md` | written to by nobody, and not a version (`structure.md`, invariant 1). A lever pre-declared there would ship with every project that copies it |
-| a package skill's mode | no hora file may name one or copy a criterion out of it ("The division of labor", `structure.md`). A lever is expressed as scope, and as what the record says |
+| a package skill's mode | no hora file may name one or copy a criterion out of it ("The division of labor", `structure.md`) |

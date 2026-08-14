@@ -1,20 +1,18 @@
 # The design document format
 
-The authority on the format of `specs/<version>/spec.md`. **This file is the explanation; `specs/skeleton/spec.md` is the blank spec that gets filled in.**
+The authority on the format of `specs/<version>/spec.md`. **This file explains the format; `specs/skeleton/spec.md` is the blank spec that gets filled in.** The blank is copied once, for the first version only ("The blank spec is not copied into a diff version").
 
-**This file explains the format. It is not the thing that gets filled in** — `specs/skeleton/spec.md` is the blank spec, copied into `specs/1.0.0/spec.md`, which ships empty. **It is copied once, for the first version only** ("The blank spec is not copied into a diff version").
+**`/hora-spec` writes the document, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can.
 
-**`/hora-spec` writes it, in conversation, one approved section at a time**, and reads this file to know the format. Whoever prefers to write it by hand still can: the format is the same either way.
-
-**The first version's `spec.md` is a whole document; every one after it is a diff against the version before it** ("From the second version on, write a diff"). The format is the same; how much of it a version writes is not.
+**The first version's `spec.md` is a whole document; every one after it is a diff against the version before it** ("From the second version on, write a diff").
 
 ---
 
 ## The thinking behind the format
 
-**Make a format that someone a little sloppy can still write.** A missing `target` or `depends` is inferred from the content and filled in by `/hora`, which records that it inferred it as a question. **A missing `id` is the one annotation never inferred** — `/hora` ties that section's tasks to the H1's `id` and raises a question instead ("The folder name becomes the `id`", below; `structure.md`, invariant 2). Strict adherence to the format is not the goal.
+**Make a format that someone a little sloppy can still write.** A missing `target` or `depends` is inferred from the content and recorded as a question. **A missing `id` is the one annotation never inferred** — `/hora` ties that section's tasks to the H1's `id` instead ("The folder name becomes the `id`"; `structure.md`, invariant 2).
 
-**But "what to build" and "what counts as done" have to be written.** If `/hora` infers those, it ends up inventing what the spec does not say.
+**But "what to build" and "what counts as done" have to be written.** Inferring those means inventing what the spec does not say.
 
 | Fine to be sloppy about | Must be written |
 |---|---|
@@ -28,7 +26,7 @@ The authority on the format of `specs/<version>/spec.md`. **This file is the exp
 
 ## Directory layout
 
-**There is exactly one structural requirement: `spec.md` sits directly under the version directory.** Beyond that, file names, folder names, and how deep the nesting goes are all free — a project's own layout does not need to change to be read by `/hora`.
+**There is exactly one structural requirement: `spec.md` sits directly under the version directory.** File names, folder names and nesting depth are free.
 
 ```
 specs/
@@ -53,9 +51,9 @@ specs/
       00-overview.md          ← kept per version even if the content is the same
 ```
 
-**Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to — from `spec.md`, from a feature file, or transitively through either — is never read, and raises a question (`orphan`, `blocking: no`). This is the one thing that stays closed: not the shape of the directory, but the requirement that nothing depends on `/hora` noticing an unlinked file by luck.
+**Everything `/hora` reads is reached by following links from `spec.md`.** A file nothing links to is never read, and raises a question (`orphan`, `blocking: no`).
 
-**An empty directory, and a `.gitkeep` inside one, raise nothing.** They are placeholders for something that has not arrived, not orphans. **`request/` raises nothing either** (below): it is read before the document is written and is never linked from it, so the rule that catches a file nobody will read does not apply to it.
+**An empty directory, a `.gitkeep`, and `request/` raise nothing.** A placeholder is not an orphan, and `request/` is read before the document is written and is never linked from it.
 
 ### `sources/`, `annex/` and `request/` — a drop-off convention, and nothing more
 
@@ -67,9 +65,9 @@ specs/
 | `specs/<version>/annex/` | put a document here to say **it only explains the specification** |
 | `specs/<version>/request/` | put a document here to say **this is what I want this version to do.** Not specification text, and never becomes any |
 
-**The first two change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables are still the only thing that decides which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant — it reads them, puts the placement up as a check, and writes the tables (`../../hora-spec/references/investigation.md`).
+**The first two change nothing about how any file is read.** `/hora` still reads only what `spec.md` links to, and the `Sources` and `Annex` tables still decide which of the two a file is. What the directories do is tell **stage 0 of `/hora-spec`** where to look and what the person meant (`../../hora-spec/references/investigation.md`).
 
-**`request/` is the third answer to "what does putting a document here decide", and it is a different kind of answer.** A source is a statement somebody is held to; an annex explains one; **a request is neither — it is the agenda for this version**, in whatever words the person had, and `/hora-spec` turns it into sections through the ordinary route: a **proposal** for what it asks for, a question for what it leaves open, and an approval before anything is written.
+**`request/` is a different kind of answer: it is the agenda for this version**, in whatever words the person had. `/hora-spec` turns it into sections through the ordinary route — a **proposal** for what it asks for, a question for what it leaves open, and an approval before anything is written.
 
 | | `Sources` | `Annex` | `request/` |
 |---|---|---|---|
@@ -78,19 +76,19 @@ specs/
 | `/hora-plan` extracts tasks from it | yes | no | **never — `/hora-plan` does not read it at all** |
 | What it is after the stages have run | still the specification | still the explanation | **spent.** The sections it produced are the specification |
 
-**A request is never promoted to a `Source`, however precisely it is written.** The two say different things — a source says "this is what the product must do", a request says "this is what I want somebody to work out". Promoting one would put a wish list where `/hora-plan` extracts tasks from it, which is exactly the dictation the seven stages exist to replace.
+**A request is never promoted to a `Source`.** A source says "this is what the product must do"; a request says "this is what I want somebody to work out". Promoting one would put a wish list where `/hora-plan` extracts tasks from it.
 
-**Leave the file where it is once its version is written.** It costs nothing, and it is the record of what was actually asked for, against which the sections that came out of it can be read. **It is not carried into the next version** — a request belongs to the version that answered it (invariant 3).
+**Leave the file where it is once its version is written.** It is the record of what was actually asked for. **It is not carried into the next version** (invariant 3).
 
 **Recognized, never required**, in either direction:
 
 - a document placed anywhere else under `specs/<version>/` is found by stage 0 all the same, and asked about instead of checked
-- a project that brings its own layout across keeps it. `spec/` and `docs/` in the tree above are exactly as valid as they were
-- writing the tables by hand and using neither directory works, and produces the same document
+- a project that brings its own layout across keeps it
+- writing the tables by hand and using neither directory produces the same document
 
-**A document sitting in `sources/` that nobody confirmed is still not a source.** The directory expresses an intent; the table records a decision. Placement is evidence of what somebody meant, which is what makes it a *check* rather than a *question* — it is not a substitute for their answer.
+**A document sitting in `sources/` that nobody confirmed is still not a source.** The directory expresses an intent; the table records a decision.
 
-**A linked file is read one of two ways, decided by whether it is declared under a `Sources` section — not by where it sits or what it is named.**
+**A linked file is read one of two ways, decided by whether it is declared under a `Sources` section** — not by where it sits or what it is named.
 
 | | Declared under `Sources`, or is a `<feature>/spec.md` | Linked, but not declared |
 |---|---|---|
@@ -108,11 +106,11 @@ List a declared source by relative link, in a **Sources** section in the entry p
 | [10-requirements.md](./spec/10-requirements.md) | `FR-*`/`NFR-*`/`SEC-*` |
 ```
 
-`/hora` then reads each listed file exactly as it would read a `<feature>/spec.md` — the same extraction rules apply, including deriving `id`/`target` from the spec's own scheme and extracting at row granularity where those apply (see the annotations section below).
+`/hora` then reads each listed file exactly as it would read a `<feature>/spec.md` — the same extraction rules, including deriving `id`/`target` from the spec's own scheme.
 
-**Everything else linked but not declared is supporting material, read for interpretation only.** Reference it with a relative link from whichever file needs it.
+**Everything else linked but not declared is supporting material, read for interpretation only.**
 
-**Gather those links under an `Annex` section in the entry point, instead of scattering them across whichever section happens to need one.** `Annex` is `Sources` run in reverse: `Sources` promotes a list of files into feature files, `Annex` only gathers relative links in one place and changes nothing about how they are read. A file listed there is exactly as interpretation-only as a bare link in running prose would be — listing it in `Annex` rather than under `Sources` is what keeps it that way.
+**Gather those links under an `Annex` section in the entry point** rather than scattering them. `Annex` is `Sources` run in reverse: `Sources` promotes files into feature files; `Annex` only gathers relative links in one place.
 
 ```markdown
 ## Annex
@@ -122,17 +120,15 @@ List a declared source by relative link, in a **Sources** section in the entry p
 | [RPA_CORE_SPEC.md](./docs/RPA_CORE_SPEC.md) | <one line: what it helps interpret, and which section or requirement it relates to> |
 ```
 
-**This is a fixed part of `spec.md`'s format, unlike the files it lists.** The section is always named `Annex`, sits in the entry point, and needs no `<!-- target: -->`/`<!-- depends: -->` (below) — but which files exist under `specs/<version>/`, and what they are named, stays exactly as free as it always was. Where nothing is linked from a section's own prose and nothing warrants gathering in one place, `Annex` may be left out entirely.
+**The section is always named `Annex` and sits in the entry point**, and needs no `<!-- target: -->`/`<!-- depends: -->`. Where nothing warrants gathering, it may be left out entirely.
 
-**There is exactly one starting point: `spec.md`.** A file that cannot be reached from it is never read, regardless of its name or where it sits.
+**There is exactly one starting point: `spec.md`.**
 
 ### Split by feature once it grows
 
-While it fits in one file, there is no need to split it. Once it grows, make a subdirectory **per feature**, place a file named `spec.md` in it, and link it from the entry point.
+While it fits in one file, there is no need to split it. Once it grows, make a subdirectory **per feature**, place a `spec.md` in it, and link it from the entry point.
 
-**Splitting by repository is allowed, but only when a single contract document already pins the API down and every per-repository file only references it.** One feature usually spans several repositories (a table lives in the backend, a screen in a frontend, an API sits at the boundary between them). Split by repository without that single authority in place, and one feature's description tears into two files, and **the shape of an API ends up written independently in two places, which will disagree.** Since both are written by humans, `/hora` has no way to judge which is correct, and can only stop with a question.
-
-The contract (`.hora/contracts/`) exists precisely because "backend and frontend deriving a schema independently disagree". Splitting the spec by repository reopens that same disagreement at the spec stage — unless a single document already settles it and every per-repository file defers to it instead of writing its own shape.
+**Splitting by repository is allowed, but only when a single contract document already pins the API down and every per-repository file references it.** One feature usually spans several repositories. Split by repository without that authority and **the shape of an API ends up written independently in two places, which will disagree** — both written by humans, so `/hora` can only stop with a question.
 
 What stays in the entry point is **only what applies to the whole version.**
 
@@ -143,15 +139,15 @@ manual verification / version acceptance criteria
 + links to the feature files
 ```
 
-**The version's acceptance criteria stay in the entry point however far the document is split.** Each one spans several features by definition, so a copy in one feature's file would be a statement about the others made in a place none of them reads — and the sweep, which is the only run that checks them, reads one section rather than hunting through every feature file for criteria that were nobody's.
+**The version's acceptance criteria stay in the entry point however far the document is split.** Each one spans several features by definition, and the sweep reads one section rather than hunting through every feature file.
 
-**A feature file writes `target` on its H1** (as above). It shows which repository the feature is implemented in, right at the top of the file.
+**A feature file writes `target` on its H1.**
 
 ### The folder name becomes the `id`
 
-**Folder names are kebab-case.** They are not class definitions, so the name itself says so.
+**Folder names are kebab-case.**
 
-**The path relative to `specs/<version>/` becomes the feature file's H1 `id`, as is.** The path is unique, so the uniqueness of `id` is structurally guaranteed.
+**The path relative to `specs/<version>/` becomes the feature file's H1 `id`, as is.** The path is unique, so `id`'s uniqueness is structurally guaranteed.
 
 ```
 attendance/spec.md               →   id: attendance
@@ -164,9 +160,9 @@ attendance-monthly/spec.md       →   id: attendance-monthly
 | `--` | **separates folders.** Used for nothing else |
 | `-` | separates words (kebab-case) |
 
-**Never use `--` in a folder or file name.** Reserving it for separation alone makes the reverse lookup from `id` to path unique.
+**Never use `--` in a folder or file name.** Reserving it for separation makes the reverse lookup from `id` to path unique.
 
-**Nesting is allowed. There is no limit on depth.** Going deeper makes the `id` longer, which is itself a natural brake. If all that is wanted is to show grouping, giving headings to the entry point's feature list expresses it better (it can carry both order and explanation).
+**Nesting is allowed, with no limit on depth.** A deeper path makes a longer `id`, which is its own brake. To show grouping alone, give headings to the entry point's feature list instead.
 
 **A `##` section's `id` joins to its feature's `id` with a single `-`.**
 
@@ -175,17 +171,15 @@ attendance--monthly-data-model
 attendance--monthly-screen
 ```
 
-A task's reference is `<!-- spec: <id> -->` alone, with no namespace. Without a prefix, it would collide with another feature's `data-model`. **This is a rule, not a suggestion.**
+A task's reference is `<!-- spec: <id> -->` alone, with no namespace. Without a prefix it would collide with another feature's `data-model`. **This is a rule, not a suggestion.**
 
-When a `##`'s `id` is forgotten, `/hora` **does not invent one.** It ties that section's tasks to the H1's `id` and reports it as a question. Only the granularity of tasks gets coarser.
+When a `##`'s `id` is forgotten, `/hora` **does not invent one.** It ties that section's tasks to the H1's `id` and reports it. Only the granularity of tasks gets coarser.
 
-Splitting by feature naturally results in some file's section pointing at just one repository. **That is a result, not a rule of splitting by repository.**
-
-**Only the directory name is authoritative for the version.** If the text inside the document contradicts it, `/hora` raises a question. The first version is always `1.0.0`.
+**Only the directory name is authoritative for the version.** If the text inside contradicts it, `/hora` raises a question. The first version is always `1.0.0`.
 
 ### From the second version on, write a diff
 
-**Only the lowest version is full. Everything after it is a diff against the version right before it.** Only the sections that changed need to be written.
+**Only the lowest version is full. Everything after it is a diff against the version right before it.**
 
 ```
 1.0.0   full
@@ -193,22 +187,22 @@ Splitting by feature naturally results in some file's section pointing at just o
 1.1.0   a diff from 1.0.1      ← not a diff from 1.0.0
 ```
 
-`/hora` resolves it by overwriting keyed on `id`. **A section that was not written carries over as it was in the previous version.** To withdraw one, do not delete the section — add `kicked: yes` instead (below).
+`/hora` resolves it by overwriting keyed on `id`. **A section that was not written carries over as it was.** To withdraw one, add `kicked: yes` instead of deleting it.
 
 | What the diff wrote | Result |
 |---|---|
 | heading and annotations only | annotations are overwritten one by one. **The body carries over from the previous version** |
 | heading, annotations and body | the whole body is replaced |
 
-To change just one annotation, write only the heading and that annotation. There is no need to copy the body over.
+To change one annotation, write only the heading and that annotation.
 
-**Annex material is not diffed in parts.** Prose cannot be patched, so **the version that wants to change it places the whole text.** A version that does not change it need not hold a copy. It is the same overwrite rule as `spec.md`.
+**Annex material is not diffed in parts.** Prose cannot be patched, so **the version that wants to change it places the whole text.**
 
-**Past versions must not be rewritten.** Fixing 1.0.0's material for the sake of 1.1.0 changes the meaning of 1.0.0's spec retroactively, and what was actually built there can no longer be reproduced. To fix it, place the full text on the 1.1.0 side instead.
+**Past versions must not be rewritten.** Fixing 1.0.0's material for 1.1.0's sake changes what 1.0.0 meant retroactively. Place the full text on the 1.1.0 side instead.
 
 #### The blank spec is not copied into a diff version
 
-**`specs/skeleton/spec.md` is the first version's starting point and only the first version's.** Copied into `specs/1.1.0/spec.md`, it lands every required section as an empty heading — and under the rule above, a heading with no body means "the body carries over", so twenty sections would sit there saying nothing while appearing to have been written. Nobody reading the file afterwards can tell that from a version that deliberately restated them.
+**`specs/skeleton/spec.md` is the first version's starting point and only the first version's.** Copied into `specs/1.1.0/spec.md`, it lands every required section as an empty heading — and an empty heading means "the body carries over", so twenty sections would sit there saying nothing while appearing to have been written.
 
 **A diff version's `spec.md` holds two things:**
 
@@ -226,9 +220,9 @@ To change just one annotation, write only the heading and that annotation. There
 <!-- id: csv-export -->
 ```
 
-Everything else — the repository layout, the actors, the non-functional requirements, every feature 1.0.0 already carries — **is absent on purpose, and absent is how it carries over.** The required-sections table below is checked against the **resolved** document, not against the diff, so a section 1.0.0 declared satisfies it for every version after it.
+Everything else **is absent on purpose, and absent is how it carries over.** The required-sections table below is checked against the **resolved** document, so a section 1.0.0 declared satisfies it for every version after it.
 
-**Somebody who would rather not write even that can put a page of notes in `request/`** (above) and run `/hora-spec`, which drafts the sections from it and writes each one it gets approved.
+**Somebody who would rather not write even that can put a page of notes in `request/`** and run `/hora-spec`.
 
 ---
 
@@ -245,7 +239,7 @@ Written as an HTML comment **directly under** the heading. The annotation moves 
 
 Required at the `##` level. Optional at `###` and below (it inherits from the parent; state it to override).
 
-**A feature file must carry `target` on its H1.** It becomes the default for the whole file, which every `##` inherits. **It always shows, at the very start of the file, "which repository is this feature implemented in".**
+**A feature file must carry `target` on its H1.** It becomes the default for the whole file.
 
 ```markdown
 # Audit log
@@ -260,8 +254,6 @@ Required at the `##` level. Optional at `###` and below (it inherits from the pa
 <!-- id: audit-screen -->
 <!-- target: frontend-admin -->    ← stated explicitly, overriding it
 ```
-
-If the whole file belongs to one frontend, writing it once on the H1 covers every section. For a feature that spans repositories, write both on the H1 and narrow it just for the screen section.
 
 The entry point's `spec.md` is a document about the whole version, so its H1 needs no `target`.
 
@@ -278,7 +270,7 @@ Never use a section number as an identifier. Insert one section and every number
 
 A section number may stay on the heading for a human to read. `/hora` only looks at `id`.
 
-A reference from `.hora/tasks/` takes the form `<!-- spec: <id> -->`. **No file name, no version.** There is exactly one entry point per version, so the file name is always the same value, and the version is already carried by the path `.hora/tasks/<version>/` itself.
+A reference from `.hora/tasks/` takes the form `<!-- spec: <id> -->`. **No file name, no version** — there is one entry point per version, and the version is carried by the path `.hora/tasks/<version>/`.
 
 ### `target`
 
@@ -290,15 +282,15 @@ A reference from `.hora/tasks/` takes the form `<!-- spec: <id> -->`. **No file 
 | `app` | `<myproject>-app`. Something that spans several repositories |
 | `none` | no feature is generated from this section |
 
-**`target` decides which checkpoints a feature runs through.** A feature whose `target` is `backend` alone skips the frontend gate entirely; one that names a frontend row runs it. It no longer decides which file a task is written to — one feature is one file, whatever it touches — so getting it wrong changes what gets built, not just where a line is filed.
+**`target` decides which checkpoints a feature runs through.** A feature whose `target` is `backend` alone skips the frontend gate; one that names a frontend row runs it. One feature is one file whatever it touches, so getting `target` wrong changes what gets built, not where a line is filed.
 
-**Make it match the name written in the repository layout section's `Repository` column** — not its `Directory` column, if one is written. `/hora` stops with a question on a mismatch.
+**Make it match the `Repository` column** of the repository layout section — not its `Directory` column. `/hora` stops with a question on a mismatch.
 
 Several values are comma-separated (`<!-- target: backend, frontend-admin -->`).
 
-**It is not cut per server.** A repository is the unit of a write conflict and of a git branch, and that is what `target` names. Which server a feature is implemented for is shown by the server table and by the feature's own text.
+**It is not cut per server.** A repository is the unit of a write conflict and of a git branch, and that is what `target` names.
 
-**`none` does not mean "do not read".** Some sections produce no feature and `/hora` must still always read them (non-functional requirements, the implementation plan, terminology, future design constraints). All `target` controls is **which repositories a feature touches, and therefore which checkpoints it runs.**
+**`none` does not mean "do not read".** Some sections produce no feature and must still be read — non-functional requirements, the implementation plan, terminology, future design constraints.
 
 ### `depends`
 
@@ -306,7 +298,7 @@ The `id` of the sections it depends on. Used to guarantee implementation order. 
 
 ### `authority`
 
-**Only ever written when adopting Hora Kit onto a project that already has code**, like `built` below. It overrides the document-level `Authority` line (`Existing assets`, below) for one feature.
+**Only ever written when adopting Hora Kit onto a project that already has code.** It overrides the document-level `Authority` line (`Existing assets`, below) for one feature.
 
 ```markdown
 ## Monthly aggregation
@@ -314,13 +306,13 @@ The `id` of the sections it depends on. Used to guarantee implementation order. 
 <!-- authority: to-spec -->        ← the document says as-built; this feature is still being finished
 ```
 
-**A mixed adoption is the normal one.** Fifteen features are done and describe themselves; three are half-way toward a spec somebody wrote — the fifteen are `as-built`, the three are `to-spec`, and one document-level value cannot say that. Write the document's majority position in `Existing assets` and override the exceptions per feature.
+**A mixed adoption is the normal one.** Write the document's majority position in `Existing assets` and override the exceptions per feature.
 
-**`authority: to-spec` and `built:` on the same feature is a contradiction, and `/hora` stops on it.** `built:` says "this already is what it should be"; `to-spec` says "what it should be is the spec, and the code is not there yet". A feature cannot claim both.
+**`authority: to-spec` and `built:` on the same feature is a contradiction, and `/hora` stops on it.** `built:` says "this already is what it should be"; `to-spec` says "the spec is what it should be, and the code is not there yet".
 
 ### `built`
 
-**Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was already implemented before Hora Kit ever read the spec, so that working code is not rebuilt through checkpoints that describe how it would have been built.
+**Only ever written when adopting Hora Kit onto a project that already has code.** It says how far this feature was implemented before Hora Kit ever read the spec, so that working code is not rebuilt.
 
 ```markdown
 ## Attendance
@@ -338,27 +330,27 @@ The value is the gate the existing code already reaches.
 | `backend` | the backend gate's work is already there | 1–9 not applicable |
 | `frontend` | the frontend gate's work is already there too | 1–17 not applicable |
 
-`/hora-plan` marks each of those `[x]` with the reason `built before Hora Kit was adopted`, mechanically — the same not-applicable state any checkpoint uses, never a claim that the checkpoint ran.
+`/hora-plan` marks each of those `[x]` with the reason `built before Hora Kit was adopted`, mechanically — a not-applicable state, never a claim that the checkpoint ran.
 
-**Checkpoint 18, acceptance, can never be claimed by `built`.** It stays `[ ]` whatever the value is, and that is the entire point of the annotation: **adopting the kit does not rebuild what works, but it does find out what actually works.** A feature declared `built: frontend` goes straight into the acceptance sweep, against the running application, and whatever falls short comes back as findings.
+**Checkpoint 18, acceptance, can never be claimed by `built`.** It stays `[ ]` whatever the value is: **adopting the kit does not rebuild what works, but it does find out what actually works.**
 
-**When acceptance does send one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change, so the checkpoints from the earliest one affected are reopened and run for real.
+**When acceptance sends one back, the not-applicable marks it lands on are cleared.** "Built before Hora Kit was adopted" stops being true the moment that code has to change.
 
-**`built` must never be inferred.** Reading a repository and concluding a feature "looks implemented" is exactly the invention invariant 2 forbids — a half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
+**`built` must never be inferred.** A half-finished screen and a finished one look identical from a file listing. **Somebody states it and it is written down, or it is absent.**
 
-**`Authority: as-built` is the one declaration that changes how it is stated** (`Existing assets`, above). For the features it reaches, the value is **derived from the evidence** — the last gate whose work exists in every repository the feature targets — the table put up whole, then each feature confirmed by selection with the derived value as the default, instead of twenty open questions. The person decided the direction once, in the declaration; deriving the gate is working that decision out, and the derived values are still shown and still correctable (`../../hora/references/asking.md`, "What is never asked"). **A `to-spec` feature never carries `built:` and is never asked** — its code is unfinished work, not evidence of completion.
+**`Authority: as-built` is the one declaration that changes how it is stated** (`Existing assets`, below). For the features it reaches, the value is **derived from the evidence** — the last gate whose work exists in every repository the feature targets — put up as a table and confirmed per feature by selection. The person decided the direction once, in the declaration (`asking.md`, "What is never asked").
 
-**It is asked at stage 1 of `/hora-spec`** — but only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project every feature is correctly without it, and nobody is asked at all. Under `as-built` the derived table is presented whole and each feature then confirmed by selection — drafted defaults to correct, never open questions to compose, with `not finished (to-spec)` always among the options (`../../hora-spec-usecases/SKILL.md`).
+**It is asked at stage 1 of `/hora-spec`**, and only where stage 0 found something already running (`../../hora-spec-usecases/SKILL.md`). On a new project nobody is asked at all.
 
-**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist for this feature — is laid out alongside the choice. Where no declaration exists, **no option is recommended**, because laying out evidence is legwork and recommending an answer is the inference this rule forbids (`../../hora/references/asking.md`, "What is never asked").
+**Not inferring it does not mean asking blind.** The evidence — which resolvers, migrations, tests and screens exist — is laid out alongside the choice. Where no declaration exists, **no option is recommended**.
 
-**Absence has one meaning, and it is now unambiguous.** Before it was asked, an absent `built` could mean "new feature" or "nobody was ever asked"; those were indistinguishable, and the second silently planned working code from checkpoint 1. Stage 1 now settles it either way, and records in `.hora/spec/<version>/_stages.md` when the answer was "nothing is running here".
+**Absence has one meaning.** Stage 1 settles it either way, and records in `.hora/spec/<version>/_stages.md` when the answer was "nothing is running here".
 
-**It is not `kicked`, and the two never overlap.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
+**It is not `kicked`.** `kicked` withdraws a feature that should not exist; `built` records one that already does.
 
 ### `baseline`
 
-**Only ever written when adopting Hora Kit onto a project that already has code**, like `built` above, and only where the document declared `Baseline: inventoried` (`Existing assets`, below). It says this feature is **listed: not specified, and not accepted.** The kit knows it exists, and claims nothing else about it.
+**Only ever written when adopting Hora Kit onto a project that already has code**, and only where the document declared `Baseline: inventoried` (`Existing assets`, below). It says this feature is **listed: not specified, and not accepted.**
 
 ```markdown
 ## Payroll
@@ -371,9 +363,11 @@ The value is the gate the existing code already reaches.
 Monthly payroll calculation and payslip export, running in `admin-console`.
 ```
 
-**A heading, the annotations, and one line of prose. Nothing else.** No `<!-- usecases -->`, no `<!-- acceptance -->`, no screen section, no data-model table — a listed section carrying any of them is a stop, because that emptiness is exactly what leaves the stages and the checkpoints with nothing to apply. **What the running code still owes the document is three things, and all three are justified by the feature's name in place of a use case**: a row in the data model, a row in the operation list, and **one line in the screens section of the repository each screen belongs to** (`../../hora-spec-frontend/SKILL.md`). **None of the three is the screen section the listed section may not carry** — they sit in the version's own data-model, operation and screens sections, beside every other feature's, and it is the listed section itself that stays a heading and one line. Leave the rows out and the spec stops describing the database that actually exists; leave the lines out and it stops describing the frontend people are opening today — the next version reads a screen list with no payslip screen in it, and checkpoint 12 builds a second page for what a running page already does.
+**A heading, the annotations, and one line of prose. Nothing else.** No `<!-- usecases -->`, no `<!-- acceptance -->`, no screen section, no data-model table — a listed section carrying any of them is a stop.
 
-**`built:` is required on a listed feature, and it is recorded rather than acted on.** Required, because "this code exists" has to be a checkable declaration and not prose. Recorded, because **no checkpoint of a listed feature is ever marked** — not `[x]`, not not-applicable. The version that later specifies the feature restates the value and has it confirmed, and only then does the mapping above apply.
+**What the running code still owes the document is three rows, each justified by the feature's name in place of a use case**: a row in the data model, a row in the operation list, and **one line in the screens section of the repository each screen belongs to** (`../../hora-spec-frontend/SKILL.md`). **None of the three is the screen section the listed section may not carry** — they sit in the version's own sections, beside every other feature's. Leave them out and the spec stops describing the database and the frontend that actually exist.
+
+**`built:` is required on a listed feature, and it is recorded rather than acted on.** Required, because "this code exists" has to be a checkable declaration. Recorded, because **no checkpoint of a listed feature is ever marked** — not `[x]`, not not-applicable. The version that later specifies the feature restates the value and has it confirmed.
 
 | | `built:` alone | `built:` with `baseline: inventoried` |
 |---|---|---|
@@ -381,46 +375,46 @@ Monthly payroll calculation and payslip export, running in `admin-console`.
 | Checkpoint 18 | `[ ]`, and the acceptance sweep runs it | `[ ]`, and no run has it in scope |
 | What the spec says about the feature | its use cases and its acceptance criteria | its name and one line |
 
-**Which is why the listing itself needs no not-applicable reason.** Checkpoint 18 never applies-not (`../../hora-build/references/checkpoints.md`), and a bare `n/a` "is a skipped checkpoint wearing the mark of a cleared one" (`done-criteria.md`). A listed feature marks 18 as nothing at all — it is absent from the count instead, which is the shape `## Withdrawn` already uses for a feature that counts neither way (`../../hora-plan/SKILL.md`) — so 18's own "when it does not apply" line is never read and never strained.
+**The listing itself needs no not-applicable reason.** A listed feature marks 18 as nothing at all and is absent from the count instead — the shape `## Withdrawn` already uses (`../../hora-plan/SKILL.md`).
 
-**Paying the debt is where a reason does get added, and it lands on other features, never on this one.** The payment re-schedules every transitive dependent, whose checkpoints 1 to 17 passed in a released version and are not being redone, and those marks carry `accepted in <earlier version>` — the second reason that does not come from a checkpoint's own line, authorized and conditioned in `done-criteria.md`, "Not applicable is a state, and it needs a reason", which is its authority (`../../hora-plan/SKILL.md`, "Paying a listed feature's debt"). **The two sides are worth keeping apart:** the feature the annotation was written on marks nothing, ever; the features that rested on it mark seventeen, each against a version and a task file somebody can open.
+**Paying the debt is where a reason does get added, and it lands on other features, never on this one.** The payment re-schedules every transitive dependent, whose checkpoints 1 to 17 carry `accepted in <earlier version>` — the second reason that does not come from a checkpoint's own line (`done-criteria.md`, "Not applicable is a state, and it needs a reason").
 
-**Exactly two blocking checks are suspended, and nothing else is.** `missing-usecase` and `missing-acceptance` are not raised for a listed section — the one thing that lowers that floor ("Required sections", below). Every operation the feature exposes still states its kind, its caller and its refusal, and anything reachable without authentication is still asked about one operation at a time, whatever the declaration says (`../../hora-spec-security/SKILL.md`).
+**Exactly two blocking checks are suspended, and nothing else is.** `missing-usecase` and `missing-acceptance` are not raised for a listed section ("Required sections", below). Every operation the feature exposes still states its kind, its caller and its refusal (`../../hora-spec-security/SKILL.md`).
 
-**It is never inferred, and never recommended.** Whether a feature is accepted or merely listed is intent, and no reading of a repository settles it. **`Authority: as-built` lifts nothing here**: deriving *how far* existing code reaches works out a decision somebody already made, while deciding *that nobody will verify this at all* is a decision of its own. It is asked per feature, batched at most four at a time, with the evidence laid out and no option recommended (`asking.md`, "What is never asked"; `../../hora-spec-usecases/SKILL.md`).
+**It is never inferred, and never recommended.** **`Authority: as-built` lifts nothing here**: deriving *how far* existing code reaches works out a decision somebody already made, while deciding *that nobody will verify this at all* is a decision of its own. It is asked per feature, batched at most four at a time, with the evidence laid out and no option recommended (`asking.md`, "What is never asked").
 
 **Contradictions `/hora` stops on:**
 
 | | Why |
 |---|---|
 | `baseline: inventoried` under `Baseline: verified` | the permission was never granted |
-| `baseline: inventoried` with no `built:` | nothing makes "this code exists" checkable. The section could be a feature nobody ever built — uncounted, unswept, and with no removal task, which is worse than `kicked` |
+| `baseline: inventoried` with no `built:` | nothing makes "this code exists" checkable |
 | `baseline: inventoried` with `authority: to-spec` | `to-spec` runs every checkpoint against the existing code; listing says none of them runs |
 | `baseline: inventoried` on a section a later version adds | new work is not inherited code |
-| `baseline: inventoried` on a feature whose acceptance record holds a passing block, in any version (`.hora/acceptance/`) | **an accepted feature un-accepted by an annotation.** It drops out of every later sweep's scope, and no run ever says so — an entry with no checkbox is out of scope at this version and at every one after it (`../../hora-accept/SKILL.md`, "What is in scope"). **The in-version stop cannot see this one**: it fires on an `[x]` recording a checkpoint that actually ran, and for a feature accepted in 1.0.0 those marks are in `.hora/tasks/1.0.0/<id>.md`, a released version's file reconciliation never opens (`../../hora-plan/SKILL.md`, "Reconcile on re-entry"). The one-line body the annotation arrives with has meanwhile replaced the carried-over blocks that would have tripped "specified and listed at once" ("From the second version on, write a diff") |
+| `baseline: inventoried` on a feature whose acceptance record holds a passing block, in any version (`.hora/acceptance/`) | **an accepted feature un-accepted by an annotation.** It drops out of every later sweep's scope with nothing saying so. **The in-version stop cannot see this one**: that one fires on an `[x]` in the version being planned, and an accepted feature's marks sit in a released version's task file, which reconciliation never opens |
 | a listed feature with `[x]` on any checkpoint, a checkbox on its plan entry, or an acceptance verdict reading a bare `passed` | a record claiming a pass nothing earned |
-| **a version acceptance criterion that reaches a listed feature with no `rests on:` line** | the same claim with nothing saying so. The sweep passes it, the verdict counts it, and the one thing a later reader needed — that part of this criterion runs through code nobody ever specified — is the part nobody wrote down |
+| **a version acceptance criterion that reaches a listed feature with no `rests on:` line** | the same claim with nothing saying so |
 
-**Paying it is a version's ordinary work, not a special path.** The version that next changes the feature writes its use cases and its acceptance criteria, flips the annotation to `<!-- baseline: verified -->`, and restates `built:` for confirmation — or declares `authority: to-spec` and lets every checkpoint run against the existing code. **That feature's first acceptance ever runs at full live reach**, whatever the invocation form, and **every feature that depended on it has its checkpoint 18 cleared, transitively** (`../../hora-plan/SKILL.md`; `../../hora-accept/SKILL.md`).
+**Paying it is a version's ordinary work, not a special path.** The version that next changes the feature writes its use cases and acceptance criteria, flips the annotation to `<!-- baseline: verified -->`, and restates `built:` for confirmation — or declares `authority: to-spec` and lets every checkpoint run against the existing code. **That feature's first acceptance ever runs at full live reach**, and **every feature that depended on it has its checkpoint 18 cleared, transitively** (`../../hora-plan/SKILL.md`).
 
-**A feature may depend on a listed one.** New work on an adopted product almost always sits on inherited behavior, so refusing the dependency would make the declaration close to useless — but the dependent records what it rests on, and its own acceptance is re-earned when the debt is paid. A pass resting on unstated behavior is allowed to exist; a pass that hides what it rests on is not.
+**A feature may depend on a listed one.** New work on an adopted product almost always sits on inherited behavior. The dependent records what it rests on, and its own acceptance is re-earned when the debt is paid. **A pass resting on unstated behavior is allowed to exist; a pass that hides what it rests on is not.**
 
-**A version acceptance criterion may reach one too, on the same terms and with three of them written down** ("15. Version acceptance criteria", below). A cross-feature behavior on an adopted product runs through inherited code as readily as a feature does, so the criterion is admissible — and what keeps it from claiming a pass nothing earned is that all of the following hold at once:
+**A version acceptance criterion may reach one too, on the same terms**, provided all of the following hold at once ("15. Version acceptance criteria", below):
 
 | | |
 |---|---|
-| **the criterion carries `rests on: #<id> (not accepted)`** | in the section itself, approved like any other text. **A criterion that reaches a listed feature without it is the stop** (below) — the hidden version of exactly the pass this annotation exists to deny |
-| **the listed feature is still not in scope** | what the sweep verifies is the criterion, not the feature. The listed part is a precondition the run passes through, and a pass says the criterion held and nothing whatever about that feature |
-| **the verdict is already counted** | a version holding any listed feature can never write a bare `passed` — `not-accepted:` is non-empty, so the verdict reads `passed over <n> of <m> features; <k> not accepted` (`../../hora-accept/SKILL.md`, "Recording the result"). **No grammar is added for this case, because the honest wording is already the only one available** |
-| **a finding in the rested-on part goes to the debt, not to a checkpoint** | no checkpoint of a listed feature is ever marked, so there is none to send a run back into. The run fails the criterion and names the debt as the destination: pay it this version, or change the criterion through `/hora-spec`. Both readings recorded, neither recommended (`../../hora-accept/SKILL.md`, "What a failure does") |
+| **the criterion carries `rests on: #<id> (not accepted)`** | in the section itself, approved like any other text. **A criterion that reaches a listed feature without it is the stop** (above) |
+| **the listed feature is still not in scope** | what the sweep verifies is the criterion. The listed part is a precondition the run passes through |
+| **the verdict is already counted** | a version holding any listed feature can never write a bare `passed` (`../../hora-accept/SKILL.md`, "Recording the result"). **No grammar is added for this case** |
+| **a finding in the rested-on part goes to the debt, not to a checkpoint** | there is no checkpoint of a listed feature to send a run back into. Pay it this version, or change the criterion through `/hora-spec`. Both readings recorded, neither recommended |
 
-**The dependent's `Rests on:` line is not what does this work, and the difference is worth stating.** That line records what one feature's own pass rests on (`../../hora-plan/SKILL.md`, "One file per feature"). A version criterion is not about one feature — it is the version's claim about the product — so the mark belongs beside the criterion, in the spec, where the person approving the claim reads it.
+**The dependent's `Rests on:` line does different work.** That line records what one feature's own pass rests on (`../../hora-plan/SKILL.md`, "One file per feature"). A version criterion is the version's claim about the product, so its mark belongs beside the criterion, where the person approving the claim reads it.
 
-**The mark is read against the resolved document and against the version being recorded, never against a frozen one.** A criterion written in 1.0.0 keeps its `rests on:` line for as long as the file exists, because no past version is ever rewritten; when a later version pays the debt, that feature leaves the later version's `## Not accepted`, and the mark is simply no longer in force. **A stale mark is not a mismatch to fix** — it is 1.0.0 still saying what 1.0.0 rested on, which is what a past version's text is for.
+**The mark is read against the resolved document and against the version being recorded, never against a frozen one.** A criterion written in 1.0.0 keeps its `rests on:` line for as long as the file exists; when a later version pays the debt, the mark is simply no longer in force. **A stale mark is not a mismatch to fix.**
 
-**The annotation carries forward, and that is what makes the debt a debt.** Like every annotation it lives in the resolved document, so a listing written in 1.0.0 still stands in 1.1.0 and in 1.4.0 — a version that says nothing about the feature leaves it listed. **It stops only when a version writes `<!-- baseline: verified -->` in its own diff**, which is the version that pays. Read it as expiring with the version that wrote it and every later `## Not accepted` comes out empty, every `not-accepted:` line reads `none`, and a verdict may read a bare `passed` over a feature nobody ever accepted.
+**The annotation carries forward, and that is what makes the debt a debt.** A listing written in 1.0.0 still stands in 1.4.0 — a version that says nothing about the feature leaves it listed. **It stops only when a version writes `<!-- baseline: verified -->` in its own diff.**
 
-**That is a different question from what the `Baseline:` line reaches** (`Existing assets`, below). The declaration reaches only inherited code, and never new work in a later version; the annotation, once written on a feature, stays on it until somebody takes it off.
+**That is a different question from what the `Baseline:` line reaches** (`Existing assets`, below). The declaration reaches only inherited code; the annotation, once written on a feature, stays until somebody takes it off.
 
 **It is not `kicked`, and it is not `built`.** `kicked` withdraws a feature that should not exist. `built` records how far one that does exist was implemented. `baseline: inventoried` records that nobody has yet said what one that does exist is *for*.
 
@@ -435,22 +429,20 @@ Monthly payroll calculation and payslip export, running in `admin-console`.
 <!-- kicked: yes -->
 ```
 
-Deleting it leaves `/hora` unable to tell "absent" from "deleted", since under the diff scheme every section that was not changed is "absent".
+Deleting it leaves `/hora` unable to tell "absent" from "deleted", since under the diff scheme every unchanged section is absent.
 
-`/hora` reads `kicked: yes` and withdraws the task, **raising a removal task if it was already implemented.** Removing a task does not remove the code that was written, so without this, a feature that is not in the spec keeps living in the code.
+`/hora` reads `kicked: yes` and withdraws the task, **raising a removal task if it was already implemented.** Removing a task does not remove the code that was written.
 
-**Do not write the reason in the body.** Since writing the body replaces the whole body, the spec's own text would get replaced by a sentence explaining why, and what should carry over on revival would be lost. The place for the reason is the **implementation scope.**
+**Do not write the reason in the body.** Writing the body replaces the whole body, so the spec's own text would be lost on revival. The place for the reason is the **implementation scope.**
 
 ```markdown
 ### Out of scope for now (to be built later)
 - Payroll → planned for 1.1.0. Deferred because it needs the confirmed attendance totals
 ```
 
-`kicked` is a mechanical, per-section flag; the reason and the kind (to be built later / permanently out of scope) belong to the implementation scope.
-
 ### The two blocks every feature carries
 
-Besides the annotations, a feature section carries two marked subsections. **Both are required, and they are not the same thing.** The one exception is a section listed under `Baseline: inventoried`, which carries neither, and carries a name and one line instead (`baseline`, above).
+Besides the annotations, a feature section carries two marked subsections. **Both are required, and they are not the same thing.** The one exception is a section listed under `Baseline: inventoried`, which carries a name and one line instead (`baseline`, above).
 
 ```markdown
 ### Use cases
@@ -470,9 +462,9 @@ Besides the annotations, a feature section carries two marked subsections. **Bot
 | **use cases** | who does what, for what purpose, end to end | checkpoints 2, 9 and 11 of `/hora-build`, and the acceptance review |
 | **acceptance criteria** | an observable behavior that is either present or absent | the tests written alongside the code |
 
-**A feature with acceptance criteria but no use cases is the failure this exists to prevent.** Every operation returns what it should, no screen strings them into anything a person can do, and nobody finds out until acceptance — at the far end of eighteen checkpoints, which is the most expensive place to find it. `/hora-plan` stops with `missing-usecase` (`blocking: yes`) rather than let that happen.
+**A feature with acceptance criteria but no use cases builds operations that are each correct and together unreachable.** `/hora-plan` stops with `missing-usecase` (`blocking: yes`).
 
-**Where a feature is split across several `##` sections** (a data model here, an API there, a screen further down), write the use cases **once, on the feature's H1**, and let the sections inherit them. Acceptance criteria stay per section, since each one describes its own behavior.
+**Where a feature is split across several `##` sections**, write the use cases **once, on the feature's H1**, and let the sections inherit them. Acceptance criteria stay per section.
 
 ### Deferring and reviving
 
@@ -486,7 +478,7 @@ Write `kicked: yes` in that version, and `kicked: no` in the next one. **The fil
 <!-- kicked: no -->
 ```
 
-No `target`, no `depends`, no body. It all carries over from the previous version.
+No `target`, no `depends`, no body. It all carries over.
 
 ---
 
@@ -505,46 +497,46 @@ No `target`, no `depends`, no body. It all carries over from the previous versio
 | **Version acceptance criteria** | `none` | **what the product must do across features once this version is built. The whole-version sweep is the only run that checks it** | Yes |
 | Non-functional requirements | `none` | constraints that apply to every task | Yes |
 | Sources (optional) | `none` | lists files, by any name, that act as feature files without being named `spec.md` | — |
-| Annex (optional) | `none` | gathers relative links to supporting material in one place. Unlike `Sources`, a file listed here never becomes a feature file and produces no task | — |
+| Annex (optional) | `none` | gathers relative links to supporting material in one place. A file listed here never becomes a feature file | — |
 | (below this, one section per feature) | a repository name / `app` | what gets implemented | — |
 
-**Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks** (above), and an API's table states **the kind of every operation and who may call it** (below). None of the four may be inferred, and each is `blocking: yes` when missing.
+**Every feature section carries its own `<!-- usecases -->` and `<!-- acceptance -->` blocks**, and an API's table states **the kind of every operation and who may call it**. None of the four may be inferred, and each is `blocking: yes` when missing.
 
-**One declaration lowers that floor, and only for the first two of the four.** A section carrying `<!-- baseline: inventoried -->` raises neither `missing-usecase` nor `missing-acceptance` (`baseline`, above) — it is listed rather than specified, and nothing about it is built or accepted, so there is nothing for either block to be checked against. **The operation's kind and its caller are not lifted for it**, because those describe code that is already running and already reachable.
+**One declaration lowers that floor, and only for the first two of the four.** A section carrying `<!-- baseline: inventoried -->` raises neither `missing-usecase` nor `missing-acceptance` (`baseline`, above). **The operation's kind and its caller are not lifted for it**, because those describe code that is already running and already reachable.
 
-**This table is checked against the resolved document, never against one version's file.** A section the first version declared satisfies it for every version after it, so a diff that writes nothing but one new feature is complete. **A feature section this version adds is the exception**: it is new, nothing carries over into it, and it needs its own use cases and acceptance criteria like any other.
+**This table is checked against the resolved document, never against one version's file.** A diff that writes nothing but one new feature is complete. **A feature section this version adds is the exception**: nothing carries over into it, so it needs its own use cases and acceptance criteria.
 
-**Three roles cannot be satisfied by a declared Source and must be written directly in `spec.md`: the project name, the repository layout, and `Existing assets`' `Baseline` line.** All three are decisions, not facts to locate. A Source might contain evidence for one (a database name, a tech-stack table) but that is indirect evidence, not a stated decision — and `/hora-setup` needs the first two before it has any reason to read a Source deeply. Getting either of those wrong is expensive to undo (every repository gets renamed), so `/hora` never infers them from Source content, however strongly implied.
+**Three roles must be written directly in `spec.md`: the project name, the repository layout, and `Existing assets`' `Baseline` line.** All three are decisions, not facts to locate, and `/hora-setup` needs the first two before it reads a Source deeply.
 
-**`Baseline` is carved out for a different reason, and it is the reason the carve-out exists at all.** It decides how much of an inherited product gets verified before the tag, and a declaration that leaves features unaccepted is legitimate only because every later reader of the spec sees it (`structure.md`, invariant 2). Reached through a link instead, it would move that decision outside the document anybody approved — and it would change between versions with nothing in `spec.md` recording that it had. **`Authority` stays satisfiable by a Source**: it arbitrates which side is the requirement, and every consequence of getting it wrong still arrives through a checkpoint or a finding.
+**`Baseline` is carved out because it decides how much of an inherited product gets verified before the tag.** A declaration that leaves features unaccepted is legitimate only because every later reader of the spec sees it (`structure.md`, invariant 2). **`Authority` stays satisfiable by a Source**: every consequence of getting it wrong still arrives through a checkpoint or a finding.
 
-**Every other required role may be satisfied either by `spec.md`'s own text or by a declared Source — `/hora` looks in both, not only the former.** The same role-recognition that already applies to `spec.md`'s own required sections applies to a declared Source's sections too: a heading in `00-overview.md` that is recognizably "the implementation scope" satisfies that role, whether or not `spec.md` also repeats it. Only when a role is found in neither place is it missing.
+**Every other required role may be satisfied either by `spec.md`'s own text or by a declared Source.** A heading in `00-overview.md` that is recognizably "the implementation scope" satisfies that role. Only when a role is found in neither place is it missing.
 
-**This is not an open-ended search.** `/hora` reads `spec.md` itself and whatever is reachable from it — a feature file, a declared Source, supporting material linked from either — and nothing else. A role's content sitting in a file `spec.md` does not link to, declare, or reach transitively is exactly as invisible as if it did not exist.
+**This is not an open-ended search.** `/hora` reads `spec.md` and whatever is reachable from it, and nothing else.
 
-**None of the required sections above need `<!-- id: -->`/`<!-- target: -->`/`<!-- depends: -->` written on them.** Every one of them always has the same role: `target: none`, `depends: none`, and an `id` fixed by that role, not invented per project. There is nothing here for a human to decide, so there is nothing to write. `/hora` recognizes each one by its role — the same way it already reads a `target: none` section's content for meaning (a repository-layout table, a scope split into three kinds, and the like) — not by matching heading text literally, so rewording or translating a heading does not break anything.
+**None of the required sections need `<!-- id: -->`/`<!-- target: -->`/`<!-- depends: -->`.** Every one always has the same role: `target: none`, `depends: none`, and an `id` fixed by that role. `/hora` recognizes each by its role, not by matching heading text literally, so rewording or translating a heading breaks nothing.
 
-**This is different from a feature section's `id`.** A feature's `id` is chosen once, by a human (or taken from the spec's own existing scheme, above), and must never change afterward — that permanence is what makes `.hora/tasks/`'s references safe. A required section's role never varies project to project, so there is no choice being made, and nothing to keep permanent beyond the role itself.
+**This is different from a feature section's `id`**, which is chosen once by a human and must never change afterward.
 
 ---
 
 ## The blank spec is a separate file, and it lives under `specs/`
 
-**`specs/skeleton/spec.md` is the blank spec** — every heading and every table header, with nothing filled in and nothing explaining itself.
+**`specs/skeleton/spec.md` is the blank spec** — every heading and every table header, with nothing filled in.
 
 ```bash
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
 
-**The two are split on purpose.** A template with its explanation woven through it is a template you have to strip before you can use it, and an explanation cramped into HTML comments is one nobody reads twice. **This file explains; that file gets filled in.**
+**The two are split on purpose.** A template with its explanation woven through it is a template you have to strip before using. **This file explains; that file gets filled in.**
 
-**It sits under `specs/` rather than beside this file because that is where it is used.** Copying it is a plain `cp` inside one directory, and the copy lands in the shape it is meant to have — `specs/<version>/spec.md`, the one structural requirement of the whole format.
+**It sits under `specs/` because that is where it is used.** Copying it is a plain `cp` inside one directory.
 
-**`specs/skeleton/` is not a version, and is never treated as one.** `/hora` reads only the directories under `specs/` whose name is a semver version, so the skeleton is never planned, never implemented, and never counted as unfinished. It also raises no `orphan` question: that rule is about files inside a version that nothing links to.
+**`specs/skeleton/` is not a version.** `/hora` reads only the directories under `specs/` whose name is a semver version, so it is never planned, implemented, or counted as unfinished. It raises no `orphan` question either.
 
-**`/hora-spec` does the copying, and anybody who prefers to run the `cp` themselves still can.** Only two skills ever write into `specs/`: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time (`structure.md`, invariant 1).
+**`/hora-spec` does the copying, and anybody who prefers to run the `cp` themselves still can.** Only two skills ever write into `specs/` (`structure.md`, invariant 1).
 
-The skeleton's sections 9 onward are **examples of feature sections, not a fixed list.** Delete what a project has no use for, add what it needs, renumber freely: `/hora` reads `id`, never a section number.
+The skeleton's sections 9 onward are **examples of feature sections, not a fixed list.** Delete, add and renumber freely: `/hora` reads `id`, never a section number.
 
 ---
 
@@ -560,11 +552,11 @@ The skeleton's sections 9 onward are **examples of feature sections, not a fixed
 | Question language | `Japanese` / `English`. Defaults to the language of whoever runs `/hora` |
 | Annotation source | omit for the default. Or a link to a table in this spec mapping identifier prefixes to a target |
 
-**`Question language` is the language `/hora` writes into `.hora/questions/`.** Whoever runs it is usually Japanese, so this may be left out — but **on a project whose client side includes foreign members, the operator's language leaves someone unable to read it.** A question stays in a file and is read by whoever edits `specs/` next, so it cannot be settled by the operator's convenience alone. **Never write two side by side:** a single question written twice leaves no original, and only one half ever gets updated.
+**`Question language` is the language `/hora` writes into `.hora/questions/`.** A question stays in a file and is read by whoever edits `specs/` next, so it cannot be settled by the operator's convenience alone. **Never write two side by side.**
 
-**`Annotation source` only needs writing when the spec already carries its own permanent, unique identifier per requirement or element** (`FR-010`, `TBL-01`, `SCR-03`) plus a table mapping each identifier's prefix to a target. Point this at that table and `/hora` takes `id` from the element's own identifier and `target` from the table, instead of requiring `<!-- id: -->`/`<!-- target: -->` on every section. Omit the row for the default.
+**`Annotation source` only needs writing when the spec already carries its own permanent identifier per requirement or element** (`FR-010`, `TBL-01`, `SCR-03`) plus a table mapping each prefix to a target. Point this at that table and `/hora` takes `id` from the element's own identifier and `target` from the table.
 
-**The project name is written as prose, right under the table.** It becomes the **project prefix** of every repository name, and `/hora-setup` combines it with the repository layout table to create the actual repositories. **It is not derived from a directory name, so it must always be written here.**
+**The project name is written as prose, right under the table.** It becomes the **project prefix** of every repository name. **It is not derived from a directory name, so it must always be written here.**
 
 ### 2. Repository layout
 
@@ -587,18 +579,18 @@ The skeleton's sections 9 onward are **examples of feature sections, not a fixed
 
 **`/hora-setup` reads this table to decide which repositories to clone. Without it, it stops.**
 
-- **This section belongs in the entry point.** The layout applies to the whole version, so writing it in a feature file does not count as the declaration
-- **The backend is exactly one.** The policy is one DB system = one repository, so `/hora` stops with a question at zero, or at two or more
-- **Frontends are zero or more, freely.** Some projects have none at all (an API-only project for a phone app). `furo` cannot hold more than one Nuxt app per repository, so repositories split along groups of screens
-- **One backend holds several servers side by side** (renchan-core's design). A GraphQL server for employees and one for admins may run separately. **The server table is the unit contracts are derived from, so it must always be written**, and its `consumer` column lets you read in one place which frontend looks at which contract
+- **This section belongs in the entry point.** The layout applies to the whole version
+- **The backend is exactly one.** One DB system = one repository, so `/hora` stops with a question at zero, or at two or more
+- **Frontends are zero or more, freely.** `furo` cannot hold more than one Nuxt app per repository, so repositories split along groups of screens
+- **One backend holds several servers side by side.** **The server table is the unit contracts are derived from, so it must always be written**, and its `consumer` column says which frontend looks at which contract
 - **Adding a row in a later version** makes `/hora-setup` create that repository when the version is planned
-- **Names read `<myproject>-<role>-<purpose>`** — `<myproject>-frontend-admin`, not `<myproject>-admin-frontend`. Role first keeps repositories of the same role adjacent, so `app` → `backend` → `frontend-*` is the order of implementation
-- **`Origin` is either `renchan` (backend) or `furo` (frontend).** `<myproject>-app`, the repository this spec lives in, is not written here — it always exists
+- **Names read `<myproject>-<role>-<purpose>`** — `<myproject>-frontend-admin`, not `<myproject>-admin-frontend`
+- **`Origin` is either `renchan` (backend) or `furo` (frontend).** `<myproject>-app` is not written here — it always exists
 - **`target`'s value is this table's repository name with `<myproject>-` removed**
 
 #### `Directory` — for a repository that already exists under another name
 
-**A fifth column, optional, and only ever needed when adopting Hora Kit onto a project that already exists.** A repository built before Hora Kit was adopted is rarely named `<myproject>-<role>-<purpose>`, and there is no reason to rename it just to be read.
+**A fifth column, optional, and only ever needed when adopting Hora Kit onto a project that already exists.**
 
 ```markdown
 | Repository | Origin | Role | Directory |
@@ -608,12 +600,12 @@ The skeleton's sections 9 onward are **examples of feature sections, not a fixed
 
 | The column is | What `/hora-setup` does |
 |---|---|
-| **omitted** | looks for `<myproject>-<role-purpose>`, and clones the boilerplate into it if it is missing. **The default, and the only case a new project ever meets** |
-| **written** | looks for exactly that directory, **and never clones.** A stated directory is a statement that the repository already exists; if it is not there, `/hora-setup` stops and asks rather than creating something over the top of the name |
+| **omitted** | looks for `<myproject>-<role-purpose>`, and clones the boilerplate into it if it is missing. **The default** |
+| **written** | looks for exactly that directory, **and never clones.** If it is not there, `/hora-setup` stops and asks |
 
-**`target`'s value still comes from the `Repository` column, never from `Directory`.** The two are deliberately independent: `target` is a permanent classification recorded in `.hora/tasks/`, and a directory is a place on one person's disk. Rename the folder and nothing in `.hora/` moves.
+**`target`'s value still comes from the `Repository` column, never from `Directory`.** `target` is a permanent classification recorded in `.hora/tasks/`; a directory is a place on one person's disk.
 
-**Writing `Directory` also changes what gets excluded.** The hora repository's `.gitignore` and its own `eslint.config.js` exclude implementation repositories **by name** (`*-backend*/`, `*-frontend*/`), and a directory named anything else matches neither. `/hora-setup` registers it in both and reports that it did — see its own step 1. This is not something to leave to whoever adopts the kit: an unexcluded repository gets committed wholesale into the hora repository, and nothing says so until someone reads `git status`.
+**Writing `Directory` also changes what gets excluded.** The hora repository's `.gitignore` and `eslint.config.js` exclude implementation repositories **by name** (`*-backend*/`, `*-frontend*/`), and a directory named anything else matches neither. `/hora-setup` registers it in both and reports that it did. An unexcluded repository gets committed wholesale into the hora repository.
 
 ### 3. Actors and roles
 
@@ -625,11 +617,11 @@ The skeleton's sections 9 onward are **examples of feature sections, not a fixed
 | administrator | a separate login, issued by us | 3 | inside |
 ```
 
-**Every permission, every screen and every endpoint decision is written against this table.** Two actors who share a login are roles on one endpoint; two who do not are separate entities, and separating them is what stops a privilege escalation being built by accident (`../../hora-spec/references/principles.md` holds the full decision).
+**Every permission, every screen and every endpoint decision is written against this table.** Two actors who share a login are roles on one endpoint; two who do not are separate entities (`../../hora-spec/references/principles.md`).
 
-- **`Identified by` is the column that does the work.** "A manager" says nothing about whether there is one login or two, and that is the decision the whole backend hangs off
+- **`Identified by` is the column that does the work.** "A manager" says nothing about whether there is one login or two
 - **An actor named nowhere else in the document is either a missing feature or a role that does not exist.** Both are worth asking about
-- **A missing actor is not a small omission** — it is an authentication mechanism nobody designed
+- **A missing actor is an authentication mechanism nobody designed**
 
 ### 4. Implementation scope
 
@@ -644,7 +636,7 @@ permanently out of scope                  → /hora does not abstract it.
 
 Read the first as the second and the structure cannot take it later. Read the second as the first and an abstraction layer gets built that nobody uses.
 
-Write "for now" entries with what unblocks them (`<feature C> → planned for 1.1.0`, or `→ once the trigger condition is met`).
+Write "for now" entries with what unblocks them (`<feature C> → planned for 1.1.0`).
 
 ### 5. Existing assets
 
@@ -655,9 +647,9 @@ Authority: <as-built (what runs is what this version is) / to-spec (the spec is;
 Baseline: <verified (every existing feature is specified and accepted before the tag) / inventoried (a feature may be listed unaccepted, one at a time, by its own annotation)>
 ```
 
-**Required, since it changes what gets built.** If "reimplement" is written but whether the code is visible is left unstated, `/hora` stops with a question.
+**Required, since it changes what gets built.**
 
-**`Authority` says which side wins when the spec and the code disagree, and it is a different axis from `Treatment`.** `Treatment` answers "may the old code be used as material for the new implementation"; `Authority` answers "when the two diverge, which one is the requirement". A rewrite can be `to-spec` while still porting logic; a frozen system can be `as-built` while nobody ports anything.
+**`Authority` says which side wins when the spec and the code disagree, and it is a different axis from `Treatment`.** `Treatment` answers "may the old code be used as material"; `Authority` answers "when the two diverge, which is the requirement".
 
 | | `as-built` | `to-spec` |
 |---|---|---|
@@ -666,11 +658,11 @@ Baseline: <verified (every existing feature is specified and accepted before the
 | Something the code does that no spec states | drafted into the spec, as a check | **reported, never resolved alone** (`undeclared-behavior`) |
 | New work | the next version, as a diff | this version |
 
-**`Authority` is required whenever `Current implementation` is not `none`, and never asked on a new project** — with nothing running, there is nothing for it to arbitrate. Where it is missing on an existing project, `/hora` stops (`existing-assets`, `blocking: yes`). **`Treatment` stays required alongside it in both cases**: even under `as-built`, whether the old code may be read as material is its own decision, and leaving the line out would make the section's shape depend on another line's value.
+**`Authority` is required whenever `Current implementation` is not `none`, and never asked on a new project.** Where it is missing on an existing project, `/hora` stops (`existing-assets`, `blocking: yes`). **`Treatment` stays required alongside it in both cases.**
 
-**`as-built` reaches only the features that carry `built:` in the version that declared it.** A feature a later version adds is by definition not built yet, so nothing about it can be read off the running system — the declaration does not carry forward onto new work through the diff rule. Adopting another existing repository in a later version means that version restates `Existing assets` and declares again.
+**`as-built` reaches only the features that carry `built:` in the version that declared it.** It does not carry forward onto new work through the diff rule. Adopting another existing repository later means that version restates `Existing assets`.
 
-**`Baseline` says what this version's tag claims about the code it inherited, and it is a third axis again.** `Treatment` answers "may the old code be used as material"; `Authority` answers "when the two diverge, which is the requirement"; `Baseline` answers **"how much of what already runs is actually accepted before this version is tagged"**. Adoption has always answered `verified` — the sweep is what makes a fixed baseline a verified one rather than a claimed one — and writing it down is what turns that from an unstated default into a decision somebody made.
+**`Baseline` answers "how much of what already runs is actually accepted before this version is tagged".** Adoption has always answered `verified`; writing it down turns that from an unstated default into a decision somebody made.
 
 | | `verified` | `inventoried` |
 |---|---|---|
@@ -679,21 +671,21 @@ Baseline: <verified (every existing feature is specified and accepted before the
 | What acceptance covers | every feature | **the accepted ones.** A listed feature has no checkbox to be in scope by |
 | What a verdict may read | `passed` | **`passed over 17 of 20 features; 3 not accepted` — never a bare `passed`** |
 
-**Required whenever `Current implementation` is not `none`, and never asked on a new project** — the same rule and the same stop as `Authority` (`existing-assets`, `blocking: yes`). With nothing running, there is no inherited code for a tag to claim anything about.
+**Required whenever `Current implementation` is not `none`, and never asked on a new project** — the same rule and the same stop as `Authority`.
 
-**`Baseline: inventoried` is a permission, and by itself it marks nothing.** It grants what `<!-- baseline: inventoried -->` may then say about one feature at a time; a version that declares it and lists no feature behaves exactly like `verified`. **Approval is per section and never blanket** (`structure.md`), so the line is approved on its own, before any feature is listed against it.
+**`Baseline: inventoried` is a permission, and by itself it marks nothing.** A version that declares it and lists no feature behaves exactly like `verified`. **Approval is per section and never blanket** (`structure.md`), so the line is approved on its own, before any feature is listed against it.
 
-**`Baseline` reaches only the features that carry `<!-- baseline: -->` in the version that declared it, and it does not carry forward onto new work through the diff rule.** A feature a later version adds is not inherited code, so nothing about it may be listed instead of specified. A later version that inventories another existing repository restates `Existing assets` and declares again. **The reach has to be stated because omission is how the diff scheme propagates** — an unstated one would leave every later feature listed by silence, which is the worst failure available to this declaration.
+**It reaches only the features that carry `<!-- baseline: -->` in the version that declared it, and it does not carry forward onto new work.** **The reach has to be stated because omission is how the diff scheme propagates.**
 
-**It must be written directly in `spec.md`.** With the project name and the repository layout, it is one of the three roles a declared `Source` may not satisfy ("Required sections", above). A declaration that leaves features unaccepted is legitimate only because every later reader of the spec sees it (`structure.md`, invariant 2) — reached through a link, it would decide how much of the product gets verified from outside the document anybody approves.
+**It must be written directly in `spec.md`** — one of the three roles a declared `Source` may not satisfy ("Required sections", above).
 
 ### 6. Terminology and domain concepts
 
-Becomes the source of `.hora/glossary.md`. **Identifiers (class names, table names) are decided by `/hora-plan` after checking them against the lint rules**, so a term and its description are enough here. Write a name down only if one has already been decided.
+Becomes the source of `.hora/glossary.md`. **Identifiers (class names, table names) are decided by `/hora-plan` after checking them against the lint rules**, so a term and its description are enough here.
 
 ### 7. Non-functional requirements
 
-Produces no feature of its own, **but becomes a design constraint on every one of them**, so `/hora` always reads it. Performance, availability, security, and the like.
+Produces no feature of its own, **but becomes a design constraint on every one of them**, so `/hora` always reads it.
 
 ### 8. Manual verification
 
@@ -707,17 +699,17 @@ Produces no feature of its own, **but becomes a design constraint on every one o
 
 What `/hora-setup` uses to decide `docker-compose.development.yml`'s profiles and `.env.development`'s `COMPOSE_PROFILES`.
 
-**Write the server's version.** An npm dependency — a mariadb driver, say — does not indicate the server's version, and without this `/hora` has to guess. **Redis cannot be dropped in a project with any Job (BullMQ).**
+**Write the server's version.** An npm dependency does not indicate the server's version. **Redis cannot be dropped in a project with any Job (BullMQ).**
 
 ### 9 onward — the feature sections
 
-Each one carries its annotations, then its content, then its `<!-- usecases -->` and `<!-- acceptance -->` blocks (above, "The two blocks every feature carries").
+Each one carries its annotations, then its content, then its `<!-- usecases -->` and `<!-- acceptance -->` blocks.
 
 **A data model section is the one that carries acceptance criteria without use cases of its own.** A table has no user-facing use case; the features built on it do.
 
-**An API table must state the kind of every operation**, and the kind is never inferred (`structure.md`, invariant 2) — query, mutation and subscription are three different conventions on both sides of the wire, and `/hora-build` branches on the value at three separate checkpoints. Leave it out and `/hora-plan` stops with `undefined-api-kind` (`blocking: yes`).
+**An API table must state the kind of every operation**, and the kind is never inferred (`structure.md`, invariant 2). `/hora-build` branches on the value at three separate checkpoints. Leave it out and `/hora-plan` stops with `undefined-api-kind` (`blocking: yes`).
 
-**It must also state who may call every operation**, in the same table, for the same reason: nothing else in the document says it, and an operation whose caller was never stated gets implemented with whatever filter its neighbours had. Leave it out and `/hora-plan` stops with `missing-authorization` (`blocking: yes`).
+**It must also state who may call every operation**, in the same table. An operation whose caller was never stated gets implemented with whatever filter its neighbours had. Leave it out and `/hora-plan` stops with `missing-authorization` (`blocking: yes`).
 
 ```markdown
 | schema | input | result | kind | caller |
@@ -727,7 +719,7 @@ Each one carries its annotations, then its content, then its `<!-- usecases -->`
 | `rpaFlowUpdated` | `RpaFlowUpdatedInput` | `RpaFlowUpdatedResult` | subscription | the owner of the flow |
 ```
 
-**The caller belongs beside the operation, never in a security appendix.** A permission written somewhere else is a permission nobody reads next to the thing it governs.
+**The caller belongs beside the operation, never in a security appendix.**
 
 **If an input's fields are unknown, `/hora` would have to invent the shape of an API, so it stops.**
 
@@ -740,7 +732,7 @@ RpaFlowsInput              fields unknown
 
 Writing the SDL directly is the most reliable option.
 
-**The RESTful API section is written only when the repository layout declares a server whose protocol is REST**, and a project with none leaves it out entirely. The same rules apply — an unknown request or response shape stops with `blocking: yes` — and **the renderer's own name is what gets implemented and what the frontend's client is built against.**
+**The RESTful API section is written only when the repository layout declares a REST server**, and a project with none leaves it out. The same rules apply, and **the renderer's own name is what gets implemented and what the frontend's client is built against.**
 
 ```markdown
 | method | path | renderer | request | response | caller |
@@ -748,7 +740,7 @@ Writing the SDL directly is the most reliable option.
 | `GET` | `/v1/rpa-flows` | `GetRpaFlowsRenderer` | `?page=&limit=` | `RpaFlowsResponse` | the phone app, with a device token |
 ```
 
-**A background-jobs section states what does not run inside a request, and why not.** It is written only where something does — a project whose every write finishes in the request path leaves it out, and one that has any row at all must also declare Redis in the manual verification table (BullMQ needs it).
+**A background-jobs section states what does not run inside a request, and why not.** It is written only where something does, and a project with any row must also declare Redis in the manual verification table.
 
 ```markdown
 | Job | Trigger | Queue | Payload | Why not in the request path |
@@ -757,19 +749,19 @@ Writing the SDL directly is the most reliable option.
 | email the result | after `compileRpaFlow` | (post-worker) | `{ rpaFlowId }` | the caller does not wait on somebody else's mail server |
 ```
 
-**"Why not in the request path" is a required column, not a note.** A job with no stated reason is a job somebody moves back into the request later, having found no reason it was ever moved out. `/hora-build`'s checkpoint 7 builds what this table declares.
+**"Why not in the request path" is a required column, not a note.** A job with no stated reason is one somebody moves back into the request later. `/hora-build`'s checkpoint 7 builds what this table declares.
 
 ### 14. Implementation plan
 
 `/hora-plan` extracts the order of `_plan.md` from this. **It does not derive an order of its own.**
 
-**These are the project's own milestones.** They have nothing to do with `/hora-build`'s checkpoints, which are the same eighteen for every feature.
+**These are the project's own milestones**, unrelated to `/hora-build`'s checkpoints.
 
-**Check that "fine to leave for later" matches up with the scope section's "out of scope for now".** `/hora` stops with a question if the two do not clearly correspond.
+**Check that "fine to leave for later" matches the scope section's "out of scope for now".** `/hora` stops with a question if the two do not clearly correspond.
 
 ### 15. Version acceptance criteria
 
-**Every feature's own criteria stop at that feature's gate ("A criterion is checked at its own feature's gate", below). This section is where the behavior that spans several of them is written**, and the whole-version sweep is the only run that checks it (`../../hora-accept/SKILL.md`, "What is in scope").
+**Every feature's own criteria stop at that feature's gate. This section is where the behavior that spans several of them is written**, and the whole-version sweep is the only run that checks it (`../../hora-accept/SKILL.md`, "What is in scope").
 
 ```markdown
 ## 15. Version acceptance criteria
@@ -783,13 +775,13 @@ Writing the SDL directly is the most reliable option.
   spans: #attendance, #approval
 ```
 
-**`spans:` is required on every criterion, and it is not decoration.** An acceptance run's every finding names the checkpoint it sends the run back to, and in which feature (`../../hora-accept/SKILL.md`) — a criterion that names no feature leaves a sweep with a real failure and nowhere to send it. **Where a finding could land in more than one of them, it goes to the feature whose checkpoint is earliest**, because that is the one whose change the later ones are built on.
+**`spans:` is required on every criterion.** Every finding names the checkpoint it sends the run back to, and in which feature, so a criterion that names no feature leaves a sweep with a real failure and nowhere to send it. **Where a finding could land in more than one, it goes to the feature whose checkpoint is earliest.**
 
-**Written `none` where the version has none.** A version whose features share no behavior is ordinary, and `none` is the answer on many of them — which is exactly why the line has to be there on the one where it is not. **A section left out is indistinguishable from a version in which nobody considered the question**, the same rule an acceptance record's `not-accepted:` line already follows.
+**Written `none` where the version has none.** A section left out is indistinguishable from a version in which nobody considered the question.
 
-**One `###` per version, each with its own `id`.** The version that adds a cross-feature behavior writes its own subsection and leaves every earlier one alone — the diff rule keys on `id`, so a subsection nobody rewrote carries over untouched ("From the second version on, write a diff"). Written as one `##` body instead, a version adding a single criterion would have to restate every criterion the product has ever had, because prose cannot be patched.
+**One `###` per version, each with its own `id`.** The diff rule keys on `id`, so a subsection nobody rewrote carries over untouched. Written as one `##` body instead, a version adding a single criterion would have to restate every criterion the product has ever had.
 
-**So these criteria accumulate, and every later sweep checks all of them.** That is the intended shape: a behavior that spanned three features in 1.0.0 is still supposed to hold in 1.4.0, and the sweep is the run that would notice it had stopped holding. The per-version subsections are what say which version added which.
+**So these criteria accumulate, and every later sweep checks all of them.** A behavior that spanned three features in 1.0.0 is still supposed to hold in 1.4.0.
 
 **A criterion may reach a feature the spec only listed, and it says so where it is written** (`baseline`, above).
 
@@ -799,7 +791,7 @@ Writing the SDL directly is the most reliable option.
   rests on: #payroll (not accepted)
 ```
 
-**This section states behavior, never a number or a limit.** How fast, how many at once and how long anything is kept belong to the non-functional requirements, and the middleware a person checks by hand belongs to the manual verification table. A criterion here is observable in the same sense a feature's is: somebody with no access to the code can watch it hold or fail.
+**This section states behavior, never a number or a limit.** How fast, how many at once and how long anything is kept belong to the non-functional requirements.
 
 ### 16. Key file map
 
@@ -807,11 +799,11 @@ Write this where you can. `/hora` decides placement together with the real tree 
 
 ### Sources and Annex
 
-Both optional, both covered above under "Directory layout". `Sources` promotes files into feature files; `Annex` only gathers relative links in one place and changes nothing about how they are read.
+Both optional, both covered above under "Directory layout".
 
-**Stage 0 of `/hora-spec` is what fills them** — it gathers the reference documents, PDFs, diagrams and old specs that exist, asks which of the two each belongs in, and writes the tables once somebody has answered (`../../hora-spec/references/investigation.md`).
+**Stage 0 of `/hora-spec` is what fills them** (`../../hora-spec/references/investigation.md`).
 
-**Which one a document goes into is not a judgment about quality.** It is whether anybody is willing to be held to it: a current requirements list is `Sources`, a two-year-old design document is `Annex` however good it is. **A document nobody can vouch for goes in `Annex`** — promoting it would turn a stale statement into a requirement `/hora-plan` extracts tasks from.
+**Which one a document goes into is not a judgment about quality.** It is whether anybody is willing to be held to it: a current requirements list is `Sources`, a two-year-old design document is `Annex` however good it is. **A document nobody can vouch for goes in `Annex`.**
 
 **A file that is not text — a PDF, a screenshot, a mockup, a spreadsheet — is linked from `Annex` with one line saying what it shows.** Whatever was read out of it reaches the spec the ordinary way: put up as a check, confirmed, and written into the section that owns it. **Never pasted in as though a drawing were a stated requirement.**
 
@@ -838,7 +830,7 @@ Both optional, both covered above under "Directory layout". `Sources` promotes f
 | where it starts and where it ends | a step in the middle, with no beginning |
 | enough that someone could follow it with no access to the code | selectors, endpoints, table names |
 
-**A use case is what three separate checkpoints verify against**, each asking a different question of the same sentence:
+**A use case is what three separate checkpoints verify against**, each asking a different question:
 
 | Checkpoint | Asks |
 |---|---|
@@ -846,17 +838,15 @@ Both optional, both covered above under "Directory layout". `Sources` promotes f
 | 9 | can the API that was actually built support it, call by call? |
 | 11 | can a person actually do it, on the screen that was actually designed? |
 
-The three fail in different ways, and each failure is cheaper to fix at its own gate than at the next one.
+**All three run at this feature's own gate, so a use case may not reach forward into a feature built after it** ("A criterion is checked at its own feature's gate", below). It goes where the same rule sends a criterion: the order changes, or the journey becomes the version's own.
 
-**All three run at this feature's own gate, so a use case may not reach forward into a feature built after it** ("A criterion is checked at its own feature's gate", below). A use case whose steps pass through a screen or an operation a later feature adds cannot be completed at checkpoint 11 however correct it is — the screen does not exist yet — so it goes where the same rule sends a criterion: the order changes, or the journey becomes the version's own.
-
-**Without use cases, `/hora-plan` stops with `missing-usecase`** (`blocking: yes`). Inferring them would mean inventing what the product is for.
+**Without use cases, `/hora-plan` stops with `missing-usecase`** (`blocking: yes`).
 
 ---
 
 ## How to write acceptance criteria
 
-**Do not write a condition common to every feature.** That `npm run lint && npm test` passes is common to all of them, so it is not repeated. Write a section's specific **behavior.**
+**Do not write a condition common to every feature.** That `npm run lint && npm test` passes is common to all of them. Write a section's specific **behavior.**
 
 ```markdown
 ### Acceptance criteria
@@ -867,9 +857,9 @@ The three fail in different ways, and each failure is cheaper to fix at its own 
 - `rpa_compiled_flows` tied to a deleted flow disappear via CASCADE
 ```
 
-**Without one, `/hora` stops with a question** (`blocking: yes`). Acceptance criteria are the definition of "what counts as done", and `/hora` must not decide that. Filling it in by inference would leave the implementer grading their own work.
+**Without one, `/hora` stops with a question** (`blocking: yes`). Filling it in by inference would leave the implementer grading their own work.
 
-**A use case is not an acceptance criterion, and neither substitutes for the other.** The use case above ("a member of staff clocks in on arrival…") does not say what happens on a second clock-in; the criterion ("a second clock-in on the same day is rejected") does not say why anyone would clock in at all. A section needs both.
+**A use case is not an acceptance criterion, and neither substitutes for the other.** The use case above does not say what happens on a second clock-in; the criterion does not say why anyone would clock in at all.
 
 ### A criterion is checked at its own feature's gate, so it may not reach forward
 
@@ -877,9 +867,9 @@ The three fail in different ways, and each failure is cheaper to fix at its own 
 
 > **At that feature's checkpoint 18 — against a product in which that feature and its `depends` are built, and nothing later is — can this be observed?**
 
-**What the criterion may lean on is everything already built: what this feature adds, and what its `depends` already provide.** A criterion resting on a predecessor is the ordinary case and is not a defect — `depends` is precisely the statement that the predecessor is there first, and a rule against it would forbid "a signed-in member of staff…" on every feature but the first.
+**What the criterion may lean on is everything already built: what this feature adds, and what its `depends` already provide.** A criterion resting on a predecessor is the ordinary case, not a defect.
 
-**What it may not do is name something built after it.** That is a forward reference, and it is a defect wherever it appears.
+**What it may not do is name something built after it.**
 
 ```markdown
 ❌  a user who signed up appears in the admin user list
@@ -888,25 +878,25 @@ The three fail in different ways, and each failure is cheaper to fix at its own 
       observable against what #sign-up itself adds
 ```
 
-**A forward reference is not a small mistake, because four separate places act on it.** Checkpoint 1 reads the criteria to build from; checkpoints 6 and 16 **write a test for each one and run it**, so the implementer is handed a test for a feature that does not exist — and either builds it, or loosens the test until the suite passes; `hora-verifier` reports a criterion with no test as `missingTests`, so the checkpoint can never pass; and checkpoint 18's gate is scoped to this feature, so the criterion fails there by construction and sends the run back into somebody else's checkpoint (`../../hora-build/references/checkpoints.md`). **Every one of those is a run doing the wrong work confidently**, which is why this is a `blocking: yes` stop at `/hora-plan` (`forward-reference`) rather than a note.
+**A forward reference is a `blocking: yes` stop at `/hora-plan` (`forward-reference`), not a note**, because four separate places act on it: checkpoint 1 builds from the criteria, 6 and 16 write a test for each one and run it, `hora-verifier` reports the untestable one as `missingTests`, and 18 fails the feature by construction.
 
 **Three places take a behavior that reaches forward, and they are tried in this order:**
 
 | | Where the behavior goes | When this is the answer |
 |---|---|---|
-| **1** | **the order changes** — the features are reordered, or a `depends` is added | the dependency is real and the two features simply run in the wrong order. The cheapest fix, and the one that keeps the criterion where somebody will read it |
+| **1** | **the order changes** — the features are reordered, or a `depends` is added | the dependency is real and the two features simply run in the wrong order. The cheapest fix |
 | **2** | **its own section, depending on both** (below) | the behavior is closed inside two features and adds no code of its own |
 | **3** | **the version's own acceptance criteria** ("15. Version acceptance criteria", above) | the behavior genuinely spans three or more features, or the product as a whole |
 
-**The order is a rule, and 3 is last for a reason.** A criterion moved to the version gate is verified once, at the end of the version, instead of at a gate that runs while the code is one commit old — so a version that pushes everything there has restored the failure mode `/hora`'s whole feature-at-a-time design exists to avoid ("One feature at a time, never two", `../../hora-build/SKILL.md`). It is the right home for a behavior that is nobody's alone, and a bad home for one that could have been ordered.
+**The order is a rule, and 3 is last for a reason.** A criterion moved to the version gate is verified once, at the end, instead of at a gate that runs while the code is one commit old ("One feature at a time, never two", `../../hora-build/SKILL.md`).
 
-**Where a criterion cannot be placed by anyone present, it is a question and not a guess.** Both readings — the order is wrong, or the criterion belongs to the version — go out with neither recommended.
+**Where a criterion cannot be placed by anyone present, it is a question and not a guess.** Both readings go out with neither recommended.
 
 ### A behavior that only exists once two sections cooperate
 
-**Write it as its own section, depending on both.** "A user who just signed up can sign in with the same credentials" needs `#sign-up` and `#sign-in` to both already exist — it belongs to neither one alone. `/hora` never splits this out on its own (that would mean inventing a requirement the spec never stated), so a scenario left unwritten simply never becomes a feature.
+**Write it as its own section, depending on both.** "A user who just signed up can sign in with the same credentials" needs `#sign-up` and `#sign-in` to both exist. `/hora` never splits this out on its own, so a scenario left unwritten simply never becomes a feature.
 
-**This is destination 2 above, and it stays the right one for a two-feature behavior.** The section is ordered after both, so its own checkpoint 18 is the first gate at which the behavior is observable at all — which is what makes it a section rather than a criterion inside either feature.
+**This is destination 2 above.** The section is ordered after both, so its own checkpoint 18 is the first gate at which the behavior is observable at all.
 
 ```markdown
 ## Signing in right after signing up
@@ -923,20 +913,20 @@ only exists to test the two together.
 - a user who just signed up can sign in with the same credentials, receiving a session
 ```
 
-The "adds no code of its own" line carries straight into the task's `Constraint`, the same way any other note in a section's body does — `/hora` copies it, it does not decide it.
+The "adds no code of its own" line carries straight into the task's `Constraint` — `/hora` copies it, it does not decide it.
 
 ---
 
 ## Supporting material
 
-**The file itself: any name, any location.** Only `spec.md`'s own format is fixed; nothing under `specs/<version>/` beyond it has to follow a convention.
+**The file itself: any name, any location.**
 
-**How it is reached: gathered under `Annex` in the entry point** (above), or referenced inline with a relative link from whichever section needs it — both work, `Annex` just keeps them from being scattered one link per section.
+**How it is reached: gathered under `Annex` in the entry point**, or referenced inline with a relative link from whichever section needs it.
 
 ```markdown
 See the [RPA core spec](./docs/RPA_CORE_SPEC.md) for details.
 ```
 
-`/hora` follows links starting from `spec.md`. **A file nothing links to is never read.** If an orphaned file exists, it raises a question (`blocking: no`). Not listing it under `Sources` is what keeps it interpretation-only, whether it is reached through `Annex` or an inline link.
+`/hora` follows links starting from `spec.md`. **A file nothing links to is never read**, and raises a question (`blocking: no`). Not listing it under `Sources` is what keeps it interpretation-only.
 
-Supporting material needs no annotation. Features are extracted from `spec.md`, feature files and declared Sources alone; supporting material is read as material for interpretation.
+Supporting material needs no annotation.
