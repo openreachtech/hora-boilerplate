@@ -304,8 +304,10 @@ Q4  missing-authorization  blocking: yes
 ```
 .hora/
   spec/<version>/_stages.md     the spec stages (0 to 7), what was decided in conversation
-                                and is not visible in spec.md, and the proposals
-                                that were declined. /hora-spec writes it
+                                and is not visible in spec.md, the proposals that were
+                                declined, and what one stage handed to a later one — a
+                                criterion that reached past the feature it was drafted
+                                for, waiting for stage 2 to place it. /hora-spec writes it
   spec/<version>/_assets.md     what stage 0 found in the existing repositories and the
                                 declared sources, and what tag it read it at. /hora-spec
                                 writes it. A cache and an audit trail, never a requirement

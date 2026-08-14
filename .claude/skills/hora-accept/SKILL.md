@@ -1,6 +1,6 @@
 ---
 name: hora-accept
-description: Run acceptance and record what passed and what did not — the full unit suites every time, plus an acceptance review whose reach follows the invocation, scoped to the feature at the gate (checkpoint 18) or covering every feature implemented so far (the whole-version sweep, or on explicit request). Runs at the root of the hora repository (myproject-app). Invoked as checkpoint 18 of /hora-build, as the whole-version sweep, or directly as /hora-accept.
+description: Run acceptance and record what passed and what did not — the full unit suites every time, plus an acceptance review whose reach follows the invocation, scoped to the feature at the gate (checkpoint 18) or covering every feature implemented so far (the whole-version sweep, or on explicit request), the version's own cross-feature acceptance criteria being the sweep's alone. Runs at the root of the hora repository (myproject-app). Invoked as checkpoint 18 of /hora-build, as the whole-version sweep, or directly as /hora-accept.
 ---
 
 # hora-accept
@@ -52,6 +52,15 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 **"Explicitly requested" means a person asked for it, in the run.** That is the only widening there is, and the run records it with the requester named — the same shape an `acceptance-finding` already uses for a finding the project decides to live with (below). Nothing in this skill upgrades a gate run to a full one on its own judgment, and nothing downgrades the sweep.
 
 **A widening changes the reach and nothing else — least of all where the record lands.** A gate run asked to reach every done feature is still that feature's acceptance, so it appends a block to that feature's own file and says `reach: full` inside it ("Recording the result", below). **There is no third kind of run and no third path**: what varies is the subject and the reach, independently, and only the subject is ever in a filename.
+
+**The version's own acceptance criteria are a third thing in scope, and they are the sweep's alone.** A feature's criteria are checked at its own gate; a behavior spanning several features is written in the spec's `Version acceptance criteria` section and reaches no gate at all (`../hora/references/spec-format.md`, "15. Version acceptance criteria"). `_plan.md`'s `## Acceptance` entry names how many there are and which of them rest on a feature nobody accepted (`../hora-plan/SKILL.md`, "`_plan.md` — the order"), and **the sweep is judged against every one of them, beside the features in scope.**
+
+| Invoked as | The version's own criteria |
+|---|---|
+| checkpoint 18 of `/hora-build` — the feature gate | **not in scope, at any reach** |
+| the whole-version sweep | **in scope, all of them** — including the ones earlier versions added, since they stand in the resolved document until somebody removes them |
+
+**A widening does not reach them either, and this is the one line above that a widening leaves alone.** A person may ask for the sweep's reach at a gate, and that run then drives every done feature — but it is still accepting *one feature*, and these criteria are a statement about the version. **Judged at a gate, a criterion spanning three features would fail against a product holding one of them**, which is the forward reference the format keeps out of a feature's blocks, arriving through the invocation instead.
 
 **A standing policy could not live in `_plan.md`, and that is why the widening is a person and not a line.** A lever that is a person's decision may never live in the file a skill writes: `.hora/` holds derivations, written by skills and read by humans (`../hora/references/structure.md`, invariant 1), and a skill that finds a decision waiting for it in its own output has not been handed one — it has made one. `/hora-plan` is the only writer of `_plan.md` and no rule anywhere tells it to produce such a declaration, so honoring one would mean honoring text nothing may write, in the one file that always exists. **If a project ever does want "sweep live at every gate" as policy, it belongs in the spec** — where somebody approves the words, and `/hora-plan` derives the consequence from them like every other line.
 
@@ -112,6 +121,10 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
      the skills covering end-to-end test specification
      Reconcile it against the scope: every feature in scope has its
      scenarios, and coverage is derived from the API surface, not remembered
+     At a sweep, every one of the version's own acceptance criteria has a
+     scenario of its own as well. Each spans several features, so no
+     feature's list holds it and reconciling per feature would miss all of
+     them
 
 4. The acceptance review itself
      the skills covering the acceptance review
@@ -119,6 +132,8 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
      their scoped mode at a feature gate, their full mode at the sweep. Do
      not restate their phases, do not abbreviate the ones that run, and do
      not stop early because the first phases passed
+     At a sweep, the version's own acceptance criteria are judged here, one
+     by one, and the record says how many held (below)
 
 5. UX findings — at the sweep, or on explicit request; a gate run skips this
      the skills covering the UI/UX audit, against the context the shared
@@ -160,6 +175,7 @@ Read `../hora/references/structure.md` first. **This skill is strictly read-only
 <!-- scope: attendance (rests on #payroll, not accepted), sign-up, sign-in -->
 <!-- live: yes | no (skipped at the gate) -->
 <!-- not-accepted: payroll, legacy-import | none -->
+<!-- version-criteria: 4 of 4 | not in scope (gate) | none declared -->
 <!-- environment: e2e/docker, seeded 2026-08-10 -->
 <!-- asked for by: <a person's name, where they widened this run> -->
 
@@ -176,6 +192,7 @@ failed
 | unit (frontend-employee) | `<the names you matched>` | 51 passed |
 | scenarios | `<the names you matched>` | 12 scenarios, 12 covered |
 | review | `<the names you matched>` | 2 findings |
+| version criteria | — | not in scope (gate) |
 | UX | `<the names you matched>` | 1 finding (minor) |
 
 ### Findings
@@ -209,11 +226,15 @@ passed over 1 of 20 features; 2 not accepted
 
 **The record is written whether the run passed or failed.** A passing run is the evidence that a feature's gate was actually cleared, and the next run needs it to know what was already covered. **A failing one is why the work that followed it happened**, and it is the block a later reader compares the retake against. **Which is why the test above is a passing block and not the file**: a first gate run that failed creates the file, and a test keyed on its existence would then read the retake as ordinary — paying a listing's debt with the browser-less reach the table defaults to.
 
+**`version-criteria:` is written on every block, at every reach, and it has three forms and no fourth.** A sweep writes `<checked> of <declared>`; a gate run writes `not in scope (gate)`; a version whose spec declared `none` writes `none declared`, whichever run it is. **A gate run's line is not a gap it is apologizing for** — those criteria are not that run's to check — but a block with no line at all is indistinguishable from a sweep that never looked, and a sweep is exactly the run that was supposed to.
+
+**A sweep whose `<checked>` is short of `<declared>` has not passed.** Every version criterion in the resolved document is in that run's scope, so one left unchecked is the same kind of gap as a step skipped for a missing delegate: recorded by name, and the run reported as partial rather than as a pass with a footnote.
+
 **The record names its own reach and its own gaps — `reach`, `live` and `not-accepted` are not optional lines.** A scoped, live-skipped pass over eight features and a full sweep over eleven produce records that read alike otherwise, and the difference is exactly what the next reader needs: which claims rest on a driven browser, and which features the verdict is not about at all. **`not-accepted:` is written `none` where there is nothing**, because a line left out is indistinguishable from a run in which nobody considered it — and `none` is the answer on almost every project, which is precisely why the line has to be there on the one where it is not. This is the same rule the review skills apply to their own reports, kept here so the acceptance record cannot lose it.
 
 **`not-accepted:` lists every feature in the version nobody accepted, not only the ones this run's scope touched.** A gate record is what somebody opens to find out what that gate meant, and one that stayed silent about the three features nothing has ever verified would have answered the question by not raising it.
 
-**It is read off `_plan.md`'s `## Not accepted`, and out of nothing else — the section of the version being recorded, at both reaches, and no other version's.** That one section is complete by construction: a listing lives in the resolved document and carries forward until some version writes `<!-- baseline: verified -->` (`../hora/references/spec-format.md`, "`baseline`"), and `/hora-plan` re-derives the section from those annotations on every run rather than carrying the section itself over (`../hora-plan/SKILL.md`, "`_plan.md` — the order") — so a debt still outstanding stands in this version's section whether it was listed here or four versions ago. It is therefore the one place where "nobody accepted this" is written down rather than remembered by whoever invoked the run. **The whole verdict grammar below hangs on this line**, and a line composed from what a run happened to notice would decide the wording of the verdict out of the run's own recollection — which is why a `not-accepted:` line that disagrees with that section fails the run ("Three things that are always checked", below).
+**It is read off `_plan.md`'s `## Not accepted`, and out of nothing else — the section of the version being recorded, at both reaches, and no other version's.** That one section is complete by construction: a listing lives in the resolved document and carries forward until some version writes `<!-- baseline: verified -->` (`../hora/references/spec-format.md`, "`baseline`"), and `/hora-plan` re-derives the section from those annotations on every run rather than carrying the section itself over (`../hora-plan/SKILL.md`, "`_plan.md` — the order") — so a debt still outstanding stands in this version's section whether it was listed here or four versions ago. It is therefore the one place where "nobody accepted this" is written down rather than remembered by whoever invoked the run. **The whole verdict grammar below hangs on this line**, and a line composed from what a run happened to notice would decide the wording of the verdict out of the run's own recollection — which is why a `not-accepted:` line that disagrees with that section fails the run ("Four things that are always checked", below).
 
 **The union over every version in ascending order is refused, and a sweep reads no released version's section.** Scope is read that way because a `[x]` in 1.0.0 records work that really happened, but a frozen `## Not accepted` records something else — **what that version's tag claimed**, and no released `_plan.md` is ever rewritten (`../hora-plan/SKILL.md`, "Resolve the diffs first"). So 1.0.0 names `#billing` for as long as the repository exists, including after 1.1.0 writes the feature's two blocks, drives it at full live reach and re-derives its own section without it. **A feature this version's section does not repeat is one whose debt this version paid**, and folding the frozen entry in would fail the sweep of the only version that could ever clear it: `not-accepted: none` against 1.0.0's `#billing` is a disagreement, a disagreement fails the run, and the reconciling belongs to `/hora-plan`, which may not touch 1.0.0 — leaving a hand-edit of a derivation, or naming a feature this run just verified, as the only ways to a pass.
 
@@ -254,7 +275,13 @@ failed
 | the spec cannot be satisfied under any reading | a `contradiction` question (`blocking: yes`), and the spec is changed through **`/hora-spec`**, at the stage `../hora-spec/references/stages.md` names. `/hora-plan` then re-reads it and clears whatever the change invalidated |
 | an ambiguous criterion was met under one reading | a `spec-assumption` question (`blocking: no`), naming the reading assumed |
 | the environment was not there | a `lacked-environment` question (`blocking: yes`). **No code change is attempted** |
+| **a version acceptance criterion did not hold** | the named checkpoints are cleared in the features its `spans:` names — **the earliest one where a finding could land in more than one** — and rebuilt through a `retake/` branch, like any other finding |
+| **a version criterion failed in the part it `rests on:`** — the behavior of a feature the spec only listed | **there is no checkpoint to clear**, so the finding names the debt: pay it in this version (specify the feature, and the finding then routes into its real checkpoints), or change the criterion through `/hora-spec`. **Both readings recorded, neither recommended**, as a `contradiction` question (`blocking: yes`) |
 | a real finding the project decides to live with | an `acceptance-finding` question, recording the decision and who made it |
+
+**The rested-on row is the one destination in this table that is not a checkpoint, and it has to be, because a listed feature has none.** No checkpoint of one is ever marked in either direction (`../hora/references/spec-format.md`, "`baseline`"), so there is nothing to clear and nothing to re-enter — and re-scheduling the feature to make one would hand code already serving users to `/hora-build` from checkpoint 1, which is the pass nothing earned, produced by the mechanism meant to protect against it.
+
+**Which of the two readings holds cannot be settled here.** Either the inherited code does not do what the criterion claimed, or the criterion claimed something about inherited behavior nobody ever stated — and there is no specification of that feature to read the difference off. **That is the price of the criterion having been allowed to rest on unstated behavior**, and it is paid at the sweep, by the version that wrote the claim.
 
 **A finding is never resolved by deciding it is acceptable inside this skill.** That decision belongs to a person, and it goes into the question file with their name on it. Silently downgrading a finding is how an acceptance gate stops meaning anything.
 
@@ -262,17 +289,18 @@ failed
 
 ---
 
-## Three things that are always checked, whatever the delegates find
+## Four things that are always checked, whatever the delegates find
 
 These are not criteria — they are properties of *this run* rather than of the product, so no delegate owns them.
 
 - **Was every feature in the version actually exercised — the version's whole feature list, not this run's scope?** Scope is what the run set out to cover, so checking against it can only ever answer yes. A review that covered eight of eleven features passed eight features, not the version. Say which were not reached and why — out of scope at this reach, listed and never accepted, or in scope and missed. **For every feature this run did not drive, name in the record the last version in which it was driven**, read out of `.hora/acceptance/` as the newest block, in any record there, whose `live:` reads yes and whose `scope:` names that feature — the version being the directory that block sits in. A file's mere existence dates nothing: a live-skipped gate run creates one too. `never` is an answer, and it is the one worth reading
 - **Did any step get skipped because a delegate was missing?** Record the gap by name. A run with a step missing is not a pass with a footnote — it is a partial run, and the record has to say so
+- **Does `version-criteria:` account for every criterion the resolved document holds?** The denominator is read off the spec's `Version acceptance criteria` section, and `_plan.md`'s `## Acceptance` entry is what it is checked against — two derivations of one source, so a disagreement means one of them was not re-derived (`../hora-plan/SKILL.md`, "`_plan.md` — the order"). At a sweep, name every criterion that went unchecked and why. **`not in scope (gate)` is a complete answer for a gate run and never for a sweep**, however the sweep was invoked
 - **Does the `not-accepted:` line say what `_plan.md`'s `## Not accepted` says?** The line is a copy of that section ("Recording the result", above), so it is checked against the source it was copied from and against nothing else — **the section of the version being recorded, at a gate and at a sweep alike, never a released version's frozen one**, which names what that version's tag claimed and would fail the sweep of the very version that paid the debt (above). **A disagreement fails the run.** Name both readings and leave the reconciling to `/hora-plan`, the only skill that writes `_plan.md`; three entries in the plan against `not-accepted: none` in the record is a bare `passed` that `../hora/references/done-criteria.md` accepts over three features nothing has ever verified, so this is the run's result and not a footnote on a pass
 
 **The first is checked against the whole list because the sweep was the only backstop for code no spec mentions.** Nobody designed it as one: a sweep that drove every feature also, incidentally, walked over the hand edits and the hotfixes nothing in `specs/` describes, and it caught them because the browser went everywhere. Reading scope off `_plan.md`'s checkboxes takes the listed features out of that net by construction, and putting the net back is not this skill's to do — a run cannot review a feature that has no criteria. **What it can do is leave the hole visible and dated**: eleven features, eight driven here, two last driven in 1.2.0, one never. A gap somebody can read and a gap nobody wrote down are the same size, and they cost differently.
 
-**The third is a copy checked against its source, and that is the most a run can check here.** Whether the plan itself matches the spec is stage 7's, and it counts the listed sections off the resolved document without reference to `_plan.md` for exactly this reason — one source checked against itself agrees however wrong both readings are (`../hora-spec-review/SKILL.md`, "Run the mechanical pass first"). What this run can catch is the drift it introduces itself: a `not-accepted:` line assembled from this run's scope, or from a plan nobody re-derived after a version took the annotation off.
+**The last two are copies checked against their sources, and that is the most a run can check here.** Whether the plan itself matches the spec is stage 7's, and it counts the listed sections and the version criteria off the resolved document without reference to `_plan.md` for exactly this reason — one source checked against itself agrees however wrong both readings are (`../hora-spec-review/SKILL.md`, "Run the mechanical pass first"). What this run can catch is the drift it introduces itself: a `not-accepted:` line assembled from this run's scope, or from a plan nobody re-derived after a version took the annotation off, and a `version-criteria:` denominator taken from what this run happened to review rather than from what the version declared.
 
 ---
 
@@ -281,6 +309,6 @@ These are not criteria — they are properties of *this run* rather than of the 
 | File | Content |
 |---|---|
 | `../hora/references/structure.md` | the layout, the invariants, the division of labor, how a skill is named |
-| `../hora/references/spec-format.md` | `<!-- baseline: inventoried -->`, and what a listed feature does and does not owe |
+| `../hora/references/spec-format.md` | `<!-- baseline: inventoried -->`, what a listed feature does and does not owe, and **"15. Version acceptance criteria"** — what only a sweep checks |
 | `../hora/references/done-criteria.md` | what "done" means for a checkpoint, a feature and a version |
 | `../hora-build/references/checkpoints.md` | checkpoint 18, and the checkpoints a finding sends the run back to |

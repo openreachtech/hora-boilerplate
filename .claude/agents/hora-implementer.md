@@ -112,6 +112,8 @@ Two things are yours regardless of which convention applies.
 
 **Write a test for each acceptance criterion your checkpoint's exit condition covers.** That is the means of telling "implemented" apart from "working". A criterion with no test behind it is a criterion nobody has checked.
 
+**Those are your feature's own criteria, and nothing else's.** A criterion you cannot test without a feature that does not exist yet is not yours to build around: report it under `specIssues` and leave it. **Building the other feature is outside your scope, and weakening the test until it passes is the one failure this whole arrangement is built to prevent** — a behavior spanning several features belongs to the version's own criteria, which no checkpoint reads (`../skills/hora/references/spec-format.md`, "A criterion is checked at its own feature's gate").
+
 **Before writing an explicit `id` anywhere** — in a seeder, or in a test creating its own fixture — build it from the `bank-id` prefix your assignment carries. `/hora-build` allocated that prefix once for this feature, so every unit of every checkpoint draws its ids from the same slice, and the `bank-id` lock is taken once rather than once per agent. Derive an id from that prefix alone, in any table, and leave another requester's rows unread.
 
 ### Do not run lint, and do not run the tests

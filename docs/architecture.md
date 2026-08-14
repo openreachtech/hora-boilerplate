@@ -65,6 +65,8 @@ The cost is real and it is accepted deliberately: bringing a container stack up 
 
 **The regression net is cumulative, which is what makes the middle row work.** At every gate, [`/hora-accept`](../.claude/skills/hora-accept/SKILL.md) runs the **unit suites across whole repositories** — so a feature that breaks an earlier one fails in the run that broke it. The expensive half, driving screens in a real browser, is scoped to the gate's own feature there; every feature is driven end to end once, at the whole-version sweep, or earlier on explicit request.
 
+**Building in this order puts one requirement on the spec, and it is easy to miss: a feature's acceptance criteria have to be meetable at that feature's own gate.** A criterion naming a feature built later cannot be met at any gate that reads it — and four runs act on one anyway, because checkpoint 1 builds from the criteria, 6 and 16 write a test for each of them, and 18 fails the feature and sends the run into somebody else's checkpoint. **So acceptance criteria come in two tiers.** A feature's own are checked against a product in which that feature and its `depends` are built and nothing later is; a behavior spanning several features goes to the spec's `Version acceptance criteria` section, which no gate reads and the whole-version sweep checks. A criterion in the wrong tier is a `forward-reference` stop at [`/hora-plan`](../.claude/skills/hora-plan/SKILL.md), fixed by reordering the features or by moving the behavior up a tier — and the same check catches the other half of it, a written order that contradicts a `depends`.
+
 ---
 
 ## Where each thing runs, and why

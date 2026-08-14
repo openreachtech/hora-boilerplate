@@ -41,6 +41,8 @@
 | `Authority: as-built \| to-spec` | `spec-format.md`, "5. Existing assets" |
 | the implementation scope, split three ways | `spec-format.md`, "4. Implementation scope" |
 | the implementation plan's order, and what may be left for later | `spec-format.md`, "14. Implementation plan" |
+| a criterion checked at the version's sweep instead of at a feature's gate | `spec-format.md`, "15. Version acceptance criteria" |
+| a criterion resting on a feature nobody accepted | `spec-format.md`, "`baseline`" |
 | the security level | `../../hora-spec-nonfunctional/SKILL.md` |
 | a stated absence in the non-functional requirements | `spec-format.md`, "7. Non-functional requirements" |
 | an assumed number where nobody had one | `asking.md`, "What is never asked" |
@@ -79,6 +81,7 @@
 | what `Authority: as-built` lets a stage draft, and confirm in batches | `asking.md`, "What is never asked"; `../../hora-spec-usecases/SKILL.md` |
 | a stage carried over on a diff version | `../../hora-spec/references/stages.md` |
 | the digest-driven clearing table — how far a changed section reopens | `../../hora-plan/SKILL.md`, "6. Reconcile on re-entry" |
+| the sweep entry alone cleared when the version's own criteria change | `../../hora-plan/SKILL.md`, "6. Reconcile on re-entry" |
 | a not-applicable mark cleared the moment its reason stops holding | `../../hora-build/references/checkpoints.md` |
 | the verifier skipped where a passing suite already proves the exit condition | `../../hora-build/SKILL.md`, "Step 9 — when the suite is the verification (checkpoints 6 and 16)" |
 | a checkpoint's units taken by one agent each, sharing the gate's one commit | `../../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units" |
@@ -104,6 +107,7 @@
 | the live, browser-driven part of the review, skipped at a gate | `../../hora-accept/SKILL.md`, "The order to run in" |
 | the environment confirmation, required only where something is driven | `../../hora-accept/SKILL.md`, "The order to run in" |
 | the UX audit, skipped at a gate | `../../hora-accept/SKILL.md`, "The order to run in" |
+| the version's own criteria, out of scope at every gate and at every widening | `../../hora-accept/SKILL.md`, "What is in scope" |
 | a person widening a run — and nothing narrowing it | `../../hora-accept/SKILL.md`, "What is in scope" |
 | a listed feature's deferred acceptance — the run that pays it is never browser-less | `../../hora-accept/SKILL.md`, "What is in scope" |
 | a finding the project decides to live with | `../../hora-accept/SKILL.md`, "What a failure does" |

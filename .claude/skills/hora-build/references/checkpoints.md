@@ -74,10 +74,14 @@ A feature whose `target` names no frontend skips 10–17 as a whole; one that na
 |---|---|
 | **Delegate to** | the skills covering how a rough request becomes stated requirements with observable criteria. **Anything that has to change goes to `/hora-spec`** (`../../hora-spec/references/stages.md`) |
 | **Runs in** | the main session, in conversation |
-| **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable |
+| **Exit condition** | this feature's requirements, use cases and acceptance criteria are all written in `specs/`, each observable, and **each one checkable against a product in which this feature and its `depends` are built and nothing later is** |
 | **Not applicable when** | never. Every feature passes this |
 
 `/hora-plan` has already verified that these exist. **This checkpoint is where they are read closely enough to build from** — the planner checks that a spec is buildable at all; this checks that *this one feature's* corner of it is.
+
+**Reading them closely is what catches the criterion that reaches forward.** A criterion naming a feature built after this one cannot be met at any gate that reads it, and it costs the most at 6 and 16, where a test gets written for each criterion — an implementer handed one either builds the other feature or loosens the test until the suite passes (`../../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). `/hora-plan` stops on it (`forward-reference`, `blocking: yes`); one that arrives here anyway goes back the same way, to `/hora-spec` at stage 2, and **this checkpoint does not pass while it stands.**
+
+**The version's own acceptance criteria are not this feature's, and nothing here reads them.** A behavior spanning several features lives in the spec's `Version acceptance criteria` section, and the whole-version sweep is the only run that checks it (`/hora-accept`, "What is in scope"). Read them into a feature's gate and the forward reference is back, one level up.
 
 **What is found missing here is fixed where the fix belongs**, and this is the only checkpoint that reaches `specs/` at all:
 
@@ -195,6 +199,8 @@ A seeder written here, or a test fixture written later, that carries an explicit
 | REST | the renderer itself |
 
 **Write a test for each acceptance criterion, and run it.** Where a backend test lives, how it is named and how its run order is guaranteed, how one is written, and how a failing suite is driven to green without weakening it are all the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint** — the exit condition is the criteria being backed, not the command exiting 0.
+
+**"Each acceptance criterion" means this feature's own, and only those.** A behavior spanning several features is written in the spec's `Version acceptance criteria` section, which no gate reads and the whole-version sweep checks (`../../hora/references/spec-format.md`, "15. Version acceptance criteria"). **A test written here for one of those is a test for a feature that does not exist yet** — it fails, and the only two ways to make it pass are building somebody else's feature or weakening the test.
 
 **Leave the stub in place.** It is what the frontend is still building against until checkpoint 16.
 
@@ -332,7 +338,7 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Exit condition** | the screen shows real data from the **actual** API, not the stub, its loading and error paths are driven by real responses, and the unit tests covering this feature's frontend acceptance criteria pass |
 | **Not applicable when** | this feature's screen calls no API |
 
-**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6.
+**Write a test for each frontend acceptance criterion, and run it.** Where a frontend test lives, how it is named, and how one is written are the package's — delegate each. **A test that is loosened, skipped or deleted to make the suite pass fails this checkpoint**, the same as at checkpoint 6 — and, the same as there, **the criteria are this feature's own**, never the version's (`../../hora/references/spec-format.md`, "15. Version acceptance criteria").
 
 **This is where the stub is left behind.** Because the stub and the real implementation share a class name and an interface (checkpoint 4), this is a change of which endpoint is being called, not a rewrite of the client.
 
@@ -367,6 +373,8 @@ That context file is what the UI generator (checkpoints 12, 15) and the UI audit
 | **Not applicable when** | never |
 
 **The gate is scoped; the regression net is not.** The unit suites run whole repositories every time, so a feature that broke an earlier one still fails here, in the run that broke it, rather than at the end of the version. What a gate run does not do by default is drive earlier features' screens end to end — that is the whole-version sweep's job, and a live sweep at a gate happens when explicitly requested, and when the run is paying a listed feature's deferred acceptance (`/hora-accept`, "What is in scope").
+
+**What this gate judges is this feature's own acceptance criteria. The version's own are the sweep's, at every reach.** A criterion spanning several features cannot be watched until they are all built, so reading one here would fail a feature for behavior nothing built yet could produce — which is the forward reference the format forbids, arriving through the gate instead of through the block (`../../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). **The sweep's record is where those are answered**, and it says how many it checked (`/hora-accept`, "Recording the result").
 
 **Everything about what is reviewed and what fails lives in `/hora-accept` and the skills it delegates to.** Do not restate any of it here.
 

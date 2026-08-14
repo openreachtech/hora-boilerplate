@@ -170,7 +170,7 @@ For: a member of staff. Reached from the top navigation, and after clocking in.
 
 ## Exit condition
 
-Every use case naming its screens in order; every screen naming its operations; nothing unreachable in either direction; every screen's empty, loading, failed and forbidden states written — **every one of those read over the screens this version specifies, a feature listed under `Baseline: inventoried` excepted, which exits with its inherited screens as one line each and nothing else** (above). `../hora-spec/references/stages.md` is the authority.
+Every use case naming its screens in order; every screen naming its operations; nothing unreachable in either direction; every screen's empty, loading, failed and forbidden states written; **every `<!-- acceptance -->` block this stage wrote checkable at its own feature's gate**, with anything reaching further handed to stage 2 (`../hora-spec/references/stages.md`, "Acceptance criteria are drafted by the stage that writes the section") — **every one of those read over the screens this version specifies, a feature listed under `Baseline: inventoried` excepted, which exits with its inherited screens as one line each and nothing else** (above). `../hora-spec/references/stages.md` is the authority.
 
 ---
 

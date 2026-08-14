@@ -226,6 +226,9 @@ Work through the resolved document and check every one of these. **The first thr
 | **The kind of each API operation** — query / mutation / subscription / REST renderer | checkpoints 3, 6 and 14 cannot choose which convention to follow | **yes** |
 | **A stated caller per operation**, and an actors table to state it against | the operation gets whatever filter its neighbours had, and nothing says nobody decided | **yes** |
 | **A listed section carrying a usecases block, an acceptance block, a screen section or a data-model table of its own** | it is specified and listed at once, and nothing decides which half the checkpoints run against | **yes** |
+| **A feature's use cases and acceptance criteria reaching no further than that feature and its `depends`** | four separate runs act on a block that reaches forward: checkpoint 1 builds from it, 6 and 16 write a test for it, and 18 fails it by construction (below) | **yes** |
+| **The version's own acceptance criteria** — the section present, `none` or every criterion carrying `spans:` | the whole-version sweep has nothing to check the product against, and a finding it does raise has no feature to name | **yes** |
+| **An order that puts every feature after the features it depends on** | `/hora-build` silently builds them in a different order than the document states, and nothing reports it | **yes** |
 | The implementation scope, split into "for now" and "permanently" | the design cannot tell an extension point from a dead abstraction | yes |
 | Whether existing assets may be used | "reimplement" is implied, but whether the code is visible is unknown | yes |
 | Unknown fields in an SDL or a REST payload | it would mean inventing the shape of an API | yes |
@@ -245,12 +248,23 @@ Work through the resolved document and check every one of these. **The first thr
 |---|---|---|
 | a **use case** | who does what, for what purpose, end to end | checkpoints 2 (does the spec support it), 9 (does the built API support it), 11 (does the screen support it), 18 (does the product support it) |
 | an **acceptance criterion** | an observable behavior that is either present or absent | the tests written alongside the code, and checkpoint 18 |
+| a **version acceptance criterion** | an observable behavior that spans several features | **the whole-version sweep, and nothing else.** No feature gate reads it |
 
 A feature with acceptance criteria but no use cases builds a set of operations that are each correct and together unreachable — every API returns what it should, and no screen strings them into anything a person can do. **That failure surfaces at acceptance, at the far end of eighteen checkpoints, which is the most expensive place to find it.** This is exactly what the acceptance review looks for, and this gate is what stops it from being found only there.
 
 **A section carrying `<!-- baseline: inventoried -->` is the one exception to the first two rows, and it suspends exactly those two.** `missing-usecase` and `missing-acceptance` are not raised for it: it is listed rather than specified, nothing about it is built or accepted, and there is therefore nothing for either block to be checked against (`../hora/references/spec-format.md`, "`baseline`"). **Nothing else is lifted.** `undefined-api-kind` and `missing-authorization` are raised over the rows a listed feature's operations occupy exactly as over any other feature's, because those rows describe code that is already running and already reachable — an operation whose caller nobody ever stated is reachable today, by whoever the neighbouring filter let in, and a declaration about how much gets verified changes nothing about that.
 
 **The emptiness is checked in the other direction too.** A listed section is a heading, its annotations and one line of prose; one that also carries a usecases block, an acceptance block, a screen section or a data-model table of its own is claiming both states at once, and whichever half gets ignored is the half somebody wrote on purpose. Stop with `contradiction` (`blocking: yes`) rather than pick. **What the feature still owes is a row, not a section**: the tables and operations its running code already has are a row each in the version's data model and operation list, justified by the feature's name in place of a use case — leave those out and the spec stops describing the database that actually exists.
+
+### A block that reaches forward is a stop, not a note
+
+**Every gate that reads a feature's blocks runs at that feature's own position in the order**, so a criterion or a use case naming a feature built afterwards cannot be met wherever it is read (`../hora/references/spec-format.md`, "A criterion is checked at its own feature's gate"). **Four runs act on one anyway**, which is what makes this worth stopping for rather than reporting: checkpoint 1 builds from the criteria, 6 and 16 write a test for each one and run it, `hora-verifier` reports the untestable one as `missingTests`, and 18 fails the feature and sends the run into somebody else's checkpoint.
+
+**Detect it by walking the order once, carrying what is built so far**, and reading each feature's two blocks against that set plus the feature itself. A `depends` on a listed feature is satisfied by the running code and orders nothing, so it counts as already built (`../hora/references/spec-format.md`, "`baseline`").
+
+**The fix is a design decision and it belongs to `/hora-spec`, at stage 2** (`../hora-spec/references/stages.md`) — the order changes, or the behavior moves to the version's own criteria, and which of those is right depends on whether the dependency was real. **Raise `forward-reference` (`blocking: yes`) and route it there. Never move the criterion here**, and never reorder `_plan.md` to make it fit: the order comes from the spec's implementation plan, and a planner that reorders to accommodate a criterion has silently rewritten a milestone somebody planned around.
+
+**Where the order itself contradicts a `depends`, the same category and the same destination.** It is the same finding read from the other side, and the walk above cannot even run until it is settled — "what is built by then" is not what the order says.
 
 ### Resolving what was found
 
@@ -290,7 +304,8 @@ whether an extension point should be left in place.
 | `versioning` | whether the version number is valid | yes |
 | `scope` | confirming the implementation scope | yes |
 | `missing-usecase` | a feature with no stated use cases | yes |
-| `missing-acceptance` | missing acceptance criteria | yes |
+| `missing-acceptance` | missing acceptance criteria, or a version with no `Version acceptance criteria` section and no `none` | yes |
+| `forward-reference` | a feature's use case or acceptance criterion reaches a feature built after it, or the written order contradicts a `depends`. **Fixed at `/hora-spec`, stage 2 — never here** | yes |
 | `undefined-api-kind` | an operation whose kind (query / mutation / subscription / REST) is not stated | yes |
 | `missing-authorization` | an operation, a screen or a spec that does not say who may reach it | yes |
 | `unmet-usecase` | a stated use case that the design as written cannot complete | yes |
@@ -398,6 +413,7 @@ Do not write a change log (git holds that).
 ## Acceptance
 
 - [ ] Sweep the whole version, once every feature above is done
+      Version criteria: 4 (#version-acceptance-1-0-0), 1 resting on #billing
 
 ## Not accepted
 
@@ -420,6 +436,12 @@ Do not write a change log (git holds that).
 Look for the dependency inside the target version alone and it is not there. **Look back through past versions in `.hora/tasks/` and treat it as satisfied if it was finished there.**
 
 **Acceptance appears twice, and the two are different tasks.** Every feature carries its own acceptance as checkpoint 18, covering everything implemented so far; the `## Acceptance` entry above is the whole-version sweep that runs once, at the end, before the merge into main. Write both.
+
+**The sweep entry names the version's own criteria, because it is the only run that checks them.** A feature's criteria are checked at its gate; a criterion that spans several features is written in the spec's `Version acceptance criteria` section and reaches no gate at all (`../hora/references/spec-format.md`, "15. Version acceptance criteria"). The entry carries three things — **how many criteria, the section's `id`, and how many of them rest on a feature under `## Not accepted`** — so that whoever opens the plan can see what the sweep is going to be judged against without opening the spec.
+
+**It is a derivation, re-read off the resolved document on every run, and never carried over.** Count the criteria, take the `id`, count the `rests on:` lines against **this version's** `## Not accepted` (a debt an earlier version paid is no longer in force, and the count says so by shrinking). A version whose section reads `none` gets `Version criteria: none`, written rather than left out — the same reason the section itself may not be omitted.
+
+**The count going up is worth reading, not just recording.** Nine version criteria against eleven features says most of this version's verification has been moved to a single run at the end, which is the shape the feature-at-a-time design exists to avoid (`../hora-build/SKILL.md`, "One feature at a time, never two"). Stage 7 reports the same number while it is still cheap to reorder (`../hora-spec-review/SKILL.md`); this entry is where it stays visible afterwards.
 
 **`## Not accepted` is `## Withdrawn`'s shape applied to the opposite case.** `## Withdrawn` holds a feature that should not exist and was dropped; this holds one that exists, runs, and has never been specified or accepted — every feature carrying `<!-- baseline: inventoried -->` (`../hora/references/spec-format.md`, "`baseline`"). One line each, and the line says three things: **where it runs**, **which version has been listing it**, and its **`built:` value, marked as recorded and not acted on.**
 
@@ -463,6 +485,7 @@ Twenty sections carry `built:` and three of them are listed, so seventeen entrie
 ## Acceptance
 
 - [ ] Sweep the whole version — the adoption sweep. Covers checkpoint 18 of every entry above
+      Version criteria: 2 (#version-acceptance-1-0-0), 0 resting on a not-accepted feature
 
 ## Not accepted
 
@@ -638,6 +661,7 @@ Reconcile the set of sections in the resolved document against the feature files
 | a section that gained `kicked: yes` | move its entry to `_plan.md`'s `## Withdrawn`. **Raise a removal task** if it was implemented |
 | a section that gained `baseline: inventoried` | move its entry to `_plan.md`'s `## Not accepted`, and **bring every checkpoint back to `[ ]`** — an `[x]` reading `<!-- n/a: built before Hora Kit was adopted -->` is cleared; an `[x]` recording a checkpoint that actually ran is a stop (below) |
 | a section that **lost** `baseline: inventoried` | **the debt is being paid** (below). Do not plan it for building until `built:` has been restated and confirmed, or `authority: to-spec` declared. Then mark from the confirmed value, move its entry into `## Features`, and clear checkpoint 18 of every transitive dependent **in this version's own plan and task files** (below) |
+| the `Version acceptance criteria` section's digest does not match | **clear the `## Acceptance` sweep entry, and nothing else** (below). Re-derive the entry's `Version criteria:` line in the same write |
 | a section that vanished with no annotation | **do not delete anything.** The intent is unknown, so ask (`blocking: no`) |
 | a collapsed version whose `.hora/acceptance/<version>/_sweep.md` has a newest block reading a pass, over entries still standing `[ ]` | **set checkpoint 18 in each of those features' files and their entries under `## Features — adopted as built`, off that one block** (section 5). Nothing else sets them, and until they are set the version cannot be read as done |
 
@@ -651,7 +675,10 @@ A digest only detects changes to sections an existing feature points at. **A new
 | the data model, or an API's shape or kind | checkpoint 3 |
 | an acceptance criterion only | checkpoint 18 |
 | a screen or an interaction only | checkpoint 11 |
+| **the version's own acceptance criteria** | **the `## Acceptance` sweep entry alone — not one feature's checkpoint 18** |
 | wording, with no change to any of the above | nothing. Record the new digest and move on |
+
+**The version's own criteria reach no feature's checkpoint, so a change to them may not clear one.** No gate ever read them (`../hora/references/spec-format.md`, "15. Version acceptance criteria"), so no feature's pass was measured against them and none of those passes has become stale — what has is the sweep's, which is the one run that checked them. **Clear a feature's 18 for this and the version rebuilds acceptance for every feature it holds, over criteria not one of those runs was ever judged against.**
 
 **When it cannot be told apart, clear from checkpoint 2.** Rebuilding more than was necessary costs time; leaving a checkpoint marked passed against a spec it no longer satisfies costs correctness.
 
@@ -706,6 +733,8 @@ every question written to the question file — its Q<n> id, its category, its
   blocking value, one line of what it is, and a link to the file
   (../hora/references/structure.md, "Citing a question in a report")
 how many features are in the plan to build, and how many are already done
+how many version acceptance criteria the sweep will be judged against, and how
+  many of them rest on a feature nobody accepted
 every feature in ## Not accepted, BY NAME — where it runs, and which features
   rest on it
 what /hora will start on next
