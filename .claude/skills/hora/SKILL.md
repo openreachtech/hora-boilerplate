@@ -1,6 +1,6 @@
 ---
 name: hora
-description: Implement an application from its spec. Decides where a project stands and runs the five skills that do the work — spec, setup, plan, build, accept — feature by feature, taking each one to acceptance before starting the next. Runs at the root of the hora repository (myproject-app). Started or restarted only by an explicit `/hora` invocation — each run picks up where the last one stopped.
+description: Implement an application from its spec. Decides where a project stands and runs the five skills that do the work — spec, setup, plan, build, accept — one feature at a time, each to acceptance before the next starts. Runs at the root of the hora repository. Started or restarted only by an explicit `/hora` invocation.
 ---
 
 # hora
@@ -15,7 +15,7 @@ description: Implement an application from its spec. Decides where a project sta
 | **`/hora-setup`** | creates the repositories the spec declares, fills in the project's values, reads the real tree | once per version, idempotent |
 | **`/hora-plan`** | fixes the version, verifies the spec in conversation, writes the feature list | once per version, re-entered every run |
 | **`/hora-build`** | takes one feature through the eighteen checkpoints | **once per feature** |
-| **`/hora-accept`** | runs the full unit suites every time, and the acceptance review at the invocation's reach — the gate's own feature, or every feature so far | at each feature's checkpoint 18 (scoped), and once as a whole-version sweep (full) |
+| **`/hora-accept`** | runs the full unit suites every time, and the acceptance review at the invocation's reach | at each feature's checkpoint 18 (scoped), and once as a whole-version sweep (full) |
 
 Read `references/structure.md` before anything else — the repository layout, where a per-repository command runs, and the three invariants all come from there. `references/commits.md` holds every git rule.
 
@@ -29,15 +29,13 @@ Read `references/structure.md` before anything else — the repository layout, w
                                           └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
-**One feature goes all the way to acceptance before the next one starts.** Backend, then frontend, then acceptance — per feature, not per layer.
+**One feature goes all the way to acceptance before the next one starts.** Backend, then frontend, then acceptance — per feature, not per layer. Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written.
 
-**This is the whole point of the design, so the alternative is worth naming.** Building every backend task, then every frontend task, then testing, means the first time anyone finds out whether a feature *works* is after all of them are written — at which point a shortfall in the data model is twenty features deep, every one of them built on it. Taking one feature to acceptance costs a container stack coming up more often, and buys the failure arriving while its cause is one commit old.
+**Re-entrancy is the center.** A single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
 
-**Re-entrancy is the center.** Specs are assumed to be plentiful, so a single session does not run to the end. Each run decides where it is and continues from there. **Nothing is ever redone because a session ended** — every checkpoint's checkbox is written the moment it passes.
+**Serial down to the checkpoint.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint.
 
-**Serial down to the checkpoint.** No feature ever runs alongside another, and no checkpoint alongside another checkpoint. Processing one checkpoint still moves through several stages in sequence (implementers, an agent for a reported dependency, a verifier) — one stage after another, never side by side.
-
-**Inside a checkpoint, its units do run together.** Five of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component, a screen — and each gets an implementer of its own, all at once. The checkpoint stays one gate with one exit condition, and everything the units share stays with the main session (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
+**Inside a checkpoint, its units do run together.** Five of the eighteen divide into units whose files are exclusive — a table, a module, an operation, a component, a screen — and each gets an implementer of its own. The checkpoint stays one gate with one exit condition (`../hora-build/SKILL.md`, "Step 5 — splitting a checkpoint into units").
 
 ---
 
@@ -93,29 +91,27 @@ Do this first, every time — a fresh start and a restart alike.
                                                 conditions 1 and 3)
 ```
 
-**Step 0 is also what catches `release/<version>` up with a `hotfix/*`.** `/hora` has no scheduler and no background process — this fetch, run at the start of every invocation, is one of only two occasions it ever gets to notice one landed on `main`. The other is right after every merge into `release/<version>` during the run itself. Between the two, nothing that changes `origin/main` goes unnoticed for long, without `/hora` ever needing a schedule of its own.
+**Step 0 is also what catches `release/<version>` up with a `hotfix/*`.** `/hora` has no scheduler: this fetch and the one right after every merge into `release/<version>` are the only two occasions it gets to notice one landed on `main`.
 
-**`/hora` does not ask before running this check, or before acting on an ordinary result.** It only stops and asks once the check turns up something it genuinely cannot resolve on its own.
+**`/hora` does not ask before running this check, or before acting on an ordinary result.** It stops and asks once the check turns up something it cannot resolve on its own.
 
-**Step 1 is not "write the spec for them".** `/hora-spec` writes nothing without somebody reading it first, and a run that reaches step 1 with nobody there to answer stops at step 1 (`../hora-spec/SKILL.md`).
+**Step 1 is not "write the spec for them".** `/hora-spec` writes nothing without somebody reading it first, and a run that reaches step 1 with nobody there to answer stops there.
 
-**Step 3 runs even when the feature list already exists.** A spec keeps moving while implementation is under way, so sections may have been added, changed or withdrawn after the list was settled. Only once `/hora-plan`'s reconciliation shows no difference does a version move on.
+**Step 3 runs even when the feature list already exists.** A spec keeps moving while implementation is under way. Only once `/hora-plan`'s reconciliation shows no difference does a version move on.
 
-**Step 5 reads only the entries that carry a checkbox, so a listed feature is never a candidate.** A feature listed under `Baseline: inventoried` is built but neither specified nor accepted, and its entry sits under `_plan.md`'s `## Not accepted` with no box at all (`references/spec-format.md`, "`baseline`"; `../hora-plan/SKILL.md`, "`_plan.md` — the order"). It is therefore neither done nor unfinished, and **a version whose every remaining feature is listed passes step 5 and is swept at step 6** — done, rather than stuck.
+**Step 5 reads only the entries that carry a checkbox, so a listed feature is never a candidate.** A feature listed under `Baseline: inventoried` sits under `_plan.md`'s `## Not accepted` with no box at all, so it is neither done nor unfinished. **A version whose every remaining feature is listed passes step 5 and is swept at step 6** (`references/spec-format.md`, "`baseline`"). Paying the debt is a later version's ordinary work, scheduled by a person.
 
-**Counting one as unfinished goes wrong in both directions, and the entry's owner states why** (`../hora-plan/SKILL.md`, "`_plan.md` — the order"). Paying the debt is a later version's ordinary work, scheduled by a person, never by a run (`references/spec-format.md`, "`baseline`").
+**Step 5 also passes over an entry whose checkpoint 18 the `## Acceptance` sweep entry covers.** Its `[ ]` means *the sweep will close this*, not *hand this to `/hora-build`* (`../hora-plan/SKILL.md`, "collapses to one sweep"; `../hora-build/SKILL.md`, "Where to start").
 
-**The other entry step 5 passes over does carry a box, and the sweep entry beneath it is what closes it.** Where every specified feature of a version carries `built:`, `/hora-plan` collapses the per-feature gates into a single adoption sweep and writes its qualifying entries `[ ]` under it, checkpoint 18 of each covered by the `## Acceptance` line (`../hora-plan/SKILL.md`, "collapses to one sweep") — so those boxes say *the sweep is going to close this*, not *hand this to `/hora-build`*, which is why `/hora-build` declines the same entries from its own side (`../hora-build/SKILL.md`, "Where to start"). **Hand one over and step 5 finds twenty unfinished features on every run, forever — step 6 is never reached, and the version can never reach its own sweep**, the single run that closes all twenty and the whole of what the collapse was for.
+**Steps 6 and 7 read the newest block's own `reach:`, never whether `_sweep.md` exists.** That sweep may be invoked before every feature is done, and every run appends a block, so the file's presence says only that it ran at least once. A sweep invoked at the eighth of twenty gates writes a truthful `reach: scoped`.
 
-**Steps 6 and 7 read the newest block's own `reach:`, never whether `_sweep.md` exists.** `_sweep.md` has exactly one writer, the version's own sweep (`../hora-accept/SKILL.md`, "What is in scope") — but that sweep may be invoked before every feature is done, and every run appends a block, so the file's presence says only that it ran at least once, at whatever reach it actually reached. A sweep invoked at the eighth of twenty gates writes a truthful `reach: scoped` with `passed over 8 of 20 features`, and **a step 6 keyed on "the sweep has not run" then skips the whole-version sweep entirely and step 7 merges a version twelve of whose features nobody ever drove.** So step 6 fires unless `_sweep.md`'s newest block reads `reach: full` with a passing verdict, and step 7 merges on that same pair — condition 3 of `references/done-criteria.md`, "When a version is done", which is where that rule lives and here is where it is acted on.
+**They read `version-criteria:` beside `reach:`, for the same reason one level up.** `reach: full` says the run reached every feature acceptance could reach; the version's own criteria reach no feature's gate at all (`references/spec-format.md`, "15. Version acceptance criteria").
 
-**They read `version-criteria:` beside `reach:`, for the same reason one level up.** `reach: full` says the run reached every feature acceptance could reach; the version's own acceptance criteria reach no feature's gate at all, so nothing else in the record says whether the behavior that spans several features was ever checked (`references/spec-format.md`, "15. Version acceptance criteria"). A sweep that drove every feature and checked eight of eleven such criteria writes a truthful `reach: full` — and read on that alone, three statements this version makes about its own product go unverified with every box in `_plan.md` at `[x]`.
+**Keyed that way the two steps leave no gap.** Whatever fails step 7's test — no record, `reach: scoped`, a `failed` verdict, a short `version-criteria:` line — satisfies step 6's predicate, so the run goes back to `/hora-accept`.
 
-**Keyed that way the two steps leave no gap between them.** Whatever fails step 7's test — no record at all, `reach: scoped`, a `failed` verdict, a `version-criteria:` line short of what the version declared — satisfies step 6's predicate, so the run goes back to `/hora-accept` rather than stopping on a version that is neither done nor advancing.
+**Step 6a exists because the run that earns a collapsed version's checkboxes must also set them.** `/hora-accept` records and never writes `_plan.md`; `/hora-build` never opens those entries, which is the collapse; so `/hora-plan` is the writer, off the sweep's own record. Left to the next invocation's step 3, the merge happens first — and a released version's plan is never rewritten (`../hora-plan/SKILL.md`, "Resolve the diffs first").
 
-**Step 6a exists because the run that earns a collapsed version's checkboxes is the run that must also set them.** `/hora-accept` records and never writes `_plan.md`; `/hora-build` never opens those entries, which is the collapse; so `/hora-plan` is the writer, off the sweep's own record (`../hora-plan/SKILL.md`, "collapses to one sweep"). **Leave it to the next invocation's step 3 and the merge happens first** — the tag would be cut over twenty `[ ]` entries and twenty unmarked acceptance checkpoints, failing condition 1 while condition 3 held. Worse, the version is released by then, and a released version's plan is never rewritten (`../hora-plan/SKILL.md`, "Resolve the diffs first"), so the boxes could never legitimately be set at all: `/hora-plan` would keep choosing that version as the target for holding unfinished features, and every later run would report twenty unfinished features that are in fact built, swept and shipped.
-
-**Which is why step 7 tests condition 1 as well, and not condition 3 alone.** The two conditions fail in different places and only one of them is about the product — a passing sweep says the work was accepted, and the checkboxes are what says the record caught up. Merging on the first without the second releases a version whose own plan does not know it is finished.
+**Step 7 tests condition 1 as well, and not condition 3 alone.** A passing sweep says the work was accepted; the checkboxes say the record caught up.
 
 Report the decision in one line before starting work — for example, "continuing 1.0.0. 4 of 11 features done, building #payroll from checkpoint 6".
 
@@ -123,7 +119,7 @@ Report the decision in one line before starting work — for example, "continuin
 
 ## What `/hora` owns, and what it never does
 
-**Every git operation happens in the main session.** Cutting a branch, committing, merging, rebasing, catching up with a hotfix — whether `/hora` runs it directly or a skill it invoked does (`/hora-setup` initializing a row, `/hora-build` cutting a feature branch), it is the same session following `references/commits.md`. **No agent any skill starts ever touches git.**
+**Every git operation happens in the main session** — whether `/hora` runs it directly or a skill it invoked does (`/hora-setup` initializing a row, `/hora-build` cutting a feature branch). **No agent any skill starts ever touches git.**
 
 | | Who does it |
 |---|---|
@@ -132,7 +128,7 @@ Report the decision in one line before starting work — for example, "continuin
 | writing `specs/` | **`/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time. Nobody else** (`references/structure.md`, invariant 1) |
 | writing code and tests | the agents `/hora-build` starts |
 
-**Manual verification is not one of the phases.** A human does it whenever they want, in the backend row, with the commands `/hora-setup` read in its real tree (`.hora/tree/<repository>.md` holds them). `/hora` does not do it for them. What *is* required is the local end-to-end environment checkpoint 17 builds — that one is a prerequisite of acceptance, not a convenience, and whenever a run drives a browser `/hora-accept` stops without it rather than reviewing something that is not really running. A gate run that skips the live review is the one run that neither requires the stack nor brings it up, and its record says so (`../hora-accept/SKILL.md`, "What is in scope").
+**Manual verification is not one of the phases.** A human does it whenever they want, in the backend row, with the commands `/hora-setup` recorded in `.hora/tree/<repository>.md`. What *is* required is the local end-to-end environment checkpoint 17 builds: whenever a run drives a browser, `/hora-accept` stops without it. A gate run that skips the live review is the one run that neither requires the stack nor brings it up, and its record says so (`../hora-accept/SKILL.md`, "What is in scope").
 
 ---
 
@@ -140,22 +136,22 @@ Report the decision in one line before starting work — for example, "continuin
 
 **`/hora` holds the order. It holds no procedure and no pass/fail criterion.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all live in `@openreachtech/ai-agent-skills`, which `/hora-setup` equips into this repository's own `.claude/skills/`.
 
-**Never write one of those procedures into a hora skill.** A copy disagrees with the original the first time the package is updated, and nothing announces that it has. `references/structure.md`, "The division of labor", is the full statement of this, including how to match one of those skills by prefix.
+**Never write one of those procedures into a hora skill** (`references/structure.md`, "The division of labor").
 
 ---
 
 ## The closing report
 
-**The one real harm of the nested structure is that the outer `git status` shows nothing from inside.** Run `git status` at the root and only updates to `.hora/` are visible. Commits get forgotten.
+**The outer `git status` shows nothing from inside the nested repositories.** Run it at the root and only updates to `.hora/` are visible, so commits get forgotten.
 
-**Check and report `git status` for the hora repository and for every declared repository.** This cannot be skipped. The number of repositories differs per project, so walk the declaration.
+**Check and report `git status` for the hora repository and for every declared repository.** The number of repositories differs per project, so walk the declaration.
 
 ```bash
 git status --short --branch
 git -C <project name>-<declared row> status --short --branch    # for every row
 ```
 
-**`--branch` matters now, not just `--short`.** Every repository is expected to be on `release/<version>`; one sitting on anything else is worth surfacing, not silently reported as if it were normal.
+**`--branch` matters now, not just `--short`.** Every repository is expected to be on `release/<version>`; one sitting on anything else is worth surfacing.
 
 What the report includes:
 
@@ -174,21 +170,21 @@ git status for every repository, including the branch (state it explicitly if
 what the next run of /hora will start from
 ```
 
-**Write it in the language of whoever ran it**, always — it is conversation, and it does not stay in a file (`references/structure.md`).
+**Write it in the language of whoever ran it**, always (`references/structure.md`).
 
-**Every question is named and linked, whatever its blocking value.** "Two questions remain" is not a report — the person reading it cannot act on it without already knowing where `.hora/questions/` is and which of forty entries is new. `references/structure.md`, "Citing a question in a report", is the rule.
+**Every question is named and linked, whatever its blocking value** (`references/structure.md`, "Citing a question in a report"). "Two questions remain" is not a report.
 
-When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section to add what to, and the link, at the top rather than buried in a tally.
+When it stopped with a `blocking: yes` outstanding, **put what the human has to do first** — which section to add what to, and the link, at the top.
 
-**Every `eslint-exception` question gets its own, separate line, by name, with its link — never just counted among the ordinary questions.** It records that a real lint rule contradiction forced an `adhoc/` branch through, and that is worth a human's attention on its own even though it never stopped the run.
+**Every `eslint-exception` question gets its own line, by name, with its link** — never counted among the ordinary questions.
 
-**Every feature the version listed rather than accepted is named by id too, and never counted.** "3 features not accepted" is the same non-report as "two questions remain" — it says something went unverified and nothing about *which running code nobody checked*. Name each one, and name what rests on it: a dependent records `Rests on: #x (not accepted)` in its own feature file, and that line is what turns one unaccepted feature into the list of passes leaning on it (`../hora-plan/SKILL.md`, "One file per feature").
+**Every feature the version listed rather than accepted is named by id too, and never counted.** Name each one, and name what rests on it: a dependent records `Rests on: #x (not accepted)` in its own feature file (`../hora-plan/SKILL.md`, "One file per feature").
 
-**This report is where such a debt is most easily lost.** The record already carries it — a `not-accepted:` line in the acceptance record, and a verdict that may never read a bare `passed` (`../hora-accept/SKILL.md`, "Recording the result") — but the verdict and the findings are the two things everybody reads, and a closing report that ends at "passed" is the sentence somebody remembers a month later, when they build on the one feature nobody ever verified.
+**This report is where such a debt is most easily lost.** The verdict and the findings are what everybody reads, and a closing report that ends at "passed" is the sentence somebody remembers a month later (`../hora-accept/SKILL.md`, "Recording the result").
 
 ### When a version cannot proceed, lay out the choices
 
-A version with unfinished features blocks the next one from starting (versions run serially). **State the ways out.** Without that, a human is left to guess why the next version is not starting.
+A version with unfinished features blocks the next one from starting. **State the ways out.**
 
 ```
 1.0.0 has 3 unfinished features. 1.1.0 exists under specs/, but versions run
@@ -201,9 +197,9 @@ Remaining: #payroll #bonus #year-end
   defer it        → kicked: yes in 1.0.0, kicked: no on the specs/1.1.0/ side
 ```
 
-**A listed feature is never one of the remaining ones, and it is never offered these three ways out.** It is not unfinished work waiting on a decision — it is running code nobody has specified yet, and the way out of it is a later version writing its two blocks (`references/spec-format.md`, "`baseline`"). Offer `kicked: yes` for one and the report is proposing that somebody withdraw a feature already serving users.
+**A listed feature is never one of the remaining ones, and it is never offered these three ways out.** It is running code nobody has specified yet, and the way out is a later version writing its two blocks (`references/spec-format.md`, "`baseline`").
 
-**`/hora` only lays out the choices; it does not decide.** Deciding the scope is on the side that must not be inferred.
+**`/hora` only lays out the choices; it does not decide.**
 
 ---
 
@@ -214,11 +210,12 @@ Remaining: #payroll #bonus #year-end
 | `references/structure.md` | **read first.** The layout, where a command runs, the invariants, the division of labor, the language rule, what lives in `.hora/` |
 | `references/commits.md` | branches, commit granularity, merging, hotfix catch-up, merge order into main |
 | `references/done-criteria.md` | what "done" means for a checkpoint, a feature, a version and a session |
-| `references/asking.md` | **how anything is put to a person** — a check, a proposal or a question, and the question tool. Read by `/hora-spec` and `/hora-plan` |
-| `references/spec-format.md` | **the authority on the format** of `specs/<version>/spec.md`. Explains it; is not the thing filled in |
-| `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. Copied to `specs/<version>/spec.md`. Not a version, and never read as one |
+| `references/asking.md` | **how anything is put to a person** — a check, a proposal or a question, and the question tool |
+| `references/spec-format.md` | **the authority on the format** of `specs/<version>/spec.md` |
+| `references/levers.md` | every lever, and which file owns its rules |
+| `specs/skeleton/spec.md` | **the blank spec.** Headings and table headers only. Not a version |
 | `../hora-spec/SKILL.md` | **the author** — how a version's spec gets written |
-| `../hora-spec/references/stages.md` | stage 0, then the seven stages a spec is written through, and each one's exit condition |
+| `../hora-spec/references/stages.md` | stage 0, then the seven stages, and each one's exit condition |
 | `../hora-spec/references/investigation.md` | what stage 0 reads, and the line between a fact and an intent |
 | `../hora-spec/references/principles.md` | the thinking a spec is written with |
 | `../hora-setup/SKILL.md` | code setup |
@@ -227,8 +224,8 @@ Remaining: #payroll #bonus #year-end
 | `../hora-build/references/checkpoints.md` | the eighteen checkpoints themselves |
 | `../hora-accept/SKILL.md` | acceptance |
 
-**When a human asks how to write a spec, run `/hora-spec`.** `specs/1.0.0/spec.md` ships empty, and that skill reads whatever already exists at stage 0, copies the skeleton, asks its way through seven stages, and writes each section once it has been read and approved.
+**When a human asks how to write a spec, run `/hora-spec`.** `specs/1.0.0/spec.md` ships empty, and that skill reads whatever already exists at stage 0, copies the skeleton, asks its way through seven stages, and writes each section once it has been approved.
 
-**On a project that already holds working code, that stage 0 is the difference between a spec somebody dictates and one they correct.** It reads the repositories and the declared sources, drafts what they show, and puts it back as something to confirm — never as a requirement it decided (`references/asking.md`).
+**On a project that already holds working code, stage 0 is the difference between a spec somebody dictates and one they correct.**
 
-Point them at `references/spec-format.md` and `specs/skeleton/spec.md` when what they want is the format itself, or when they would rather write it by hand (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). Both routes produce the same document, and `/hora-plan` reads it the same way.
+Point them at `references/spec-format.md` and `specs/skeleton/spec.md` when what they want is the format itself, or when they would rather write it by hand (`cp specs/skeleton/spec.md specs/1.0.0/spec.md`). Both routes produce the same document.
