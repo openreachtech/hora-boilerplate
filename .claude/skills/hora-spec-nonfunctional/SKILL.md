@@ -1,6 +1,6 @@
 ---
 name: hora-spec-nonfunctional
-description: Stage 3 of /hora-spec. Turn "it should be fast" into the four numbers that change a design — users now, users foreseen, the heaviest single operation, and how long data is kept — plus availability, the security level, and the middleware each server version. Writes the non-functional requirements and the manual verification table. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 3 of /hora-spec. Turn "it should be fast" into the four numbers that change a design — users now, users foreseen, the heaviest operation, and how long data is kept — plus availability, the security level and the middleware. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-nonfunctional

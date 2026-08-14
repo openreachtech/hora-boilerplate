@@ -1,13 +1,13 @@
 ---
 name: hora-spec
-description: Write one version's spec from a conversation with whoever wants the product — reading whatever already exists first, then use cases, the horizon, the non-functional requirements, the data / API / execution design, the screens, security, and a whole-document review. On a project that already runs, it reads the repositories and documents and puts them back as something to confirm, so nobody dictates a product from memory. From the second version on it writes a diff against the version before it, drafted from a page of notes dropped into `specs/<version>/request/` or from what somebody says, so that adding a feature to a released product costs a conversation about that feature and not about the twenty already built. Writes `specs/<version>/spec.md` itself, one approved section at a time, and runs the seven stage skills that do the work. Runs at the root of the hora repository (myproject-app). Invoked by /hora when a version has no spec, by /hora-plan when a finding needs design work, or directly as /hora-spec.
+description: Write one version's spec, in conversation, through stage 0 and seven stages. Reads what already exists first, so nobody dictates a running product from memory; from the second version on it writes a diff. Invoked by /hora when a version has no spec, by /hora-plan when a finding needs design work, or directly.
 ---
 
 # hora-spec
 
 **The author.** Turn what somebody wants into `specs/<version>/spec.md`, in conversation, and write it in the format the rest of Hora Kit reads.
 
-Read `../hora/references/structure.md` first — the layout, the invariants and the language rule all come from there. **`../hora/references/asking.md` fixes how anything is put to a person** — a check, a proposal or a question, and the question tool each defaults to. **`references/principles.md` holds the thinking this skill applies**, **`references/investigation.md` what stage 0 reads and what reading can never settle**, and **`references/stages.md` is the authority on stage 0 and the seven stages**, each one's exit condition, and which sub-skill runs it.
+Read `../hora/references/structure.md` first. **`../hora/references/asking.md` fixes how anything is put to a person** — a check, a proposal or a question. **`references/principles.md` holds the thinking this skill applies**, **`references/investigation.md` what stage 0 reads**, and **`references/stages.md` is the authority on stage 0 and the seven stages.**
 
 `/hora-spec` does no design of its own. **Stage 0 it runs itself; seven skills do the rest, in order:**
 
@@ -26,11 +26,9 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 
 ## Why this skill exists
 
-**Leaving `specs/` as human-only territory would make the first step of every project the one step nobody would do twice.** A blank spec plus a format document is a writing assignment, and the format is exacting: use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change. Handed that, a person writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time, for as long as it takes.
+**A blank spec plus a format document is a writing assignment.** The format is exacting — use cases and acceptance criteria per feature, the kind of every operation, two different kinds of out-of-scope, an `id` that may never change — so a person handed it writes the parts they find easy and leaves `/hora-plan` to ask about the rest, one question at a time.
 
-**Nobody should be asked to hand-edit twenty holes.** That is the whole reason this skill writes.
-
-**And nobody should be asked to dictate a product that already runs.** A person describing twenty existing features from memory, in an exacting format, describes the ones they remember — the rest is silence, and silence reads exactly like "there is nothing there". **The system is the better witness for what it does**, so stage 0 reads it and puts the reading back as something to correct. What no system can witness is what anybody *wanted*, and that is what the seven stages are still for (`references/investigation.md`).
+**And nobody should be asked to dictate a product that already runs.** Twenty existing features described from memory come out as the ones somebody remembers, and silence reads exactly like "there is nothing there". **The system is the better witness for what it does**, so stage 0 reads it and puts the reading back as something to correct. What no system can witness is what anybody *wanted* (`references/investigation.md`).
 
 ---
 
@@ -40,17 +38,17 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 |---|---|
 | a requirement, a constraint or a decision **stated in the conversation** | **write it into `specs/`.** This is the skill's entire job |
 | something **read off a repository or a document** | **put it up as a check** — "I read it as this; is that right?" Written once it is confirmed or corrected |
-| something **asked for in `request/`** | **draft it into the section that owns it and put it up as a proposal** — it is what somebody wants, not yet what the product does. Written once they approve the words |
+| something **asked for in `request/`** | **draft it into the section that owns it and put it up as a proposal.** Written once they approve the words |
 | an improvement, an alternative or a gap **this skill thought of** | **propose it, marked as a proposal.** It becomes spec text only once the person says yes |
-| a requirement **nobody stated and nobody approved** | **never written.** That is inventing what the spec does not say (`../hora/references/structure.md`, invariant 2) |
+| a requirement **nobody stated and nobody approved** | **never written** (`../hora/references/structure.md`, invariant 2) |
 
-**The check and the two kinds of proposal are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do — whether it came out of a request or out of the skill's own thinking, and the record says which. Stated in the same voice, a proposal becomes an existing fact, and nothing afterwards can tell it apart from something that was actually there. **`../hora/references/asking.md` is the authority on this, and it is read by `/hora-plan` too.**
+**The check and the two kinds of proposal are different acts and must never sound alike.** A check asks whether the skill read the system correctly; a proposal asks whether to do something the system does not do. Stated in the same voice, a proposal becomes an existing fact. **`../hora/references/asking.md` is the authority.**
 
-**Invariant 2 was never "a human must type it".** It is that **no requirement enters `specs/` without a human having read the exact words.** Typing was never the protection; reading is. A skill that drafts a section, shows it in full, and writes it only after the person says yes protects exactly what the invariant protects — and a person who was made to type it themselves read it no more carefully.
+**Invariant 2 was never "a human must type it".** It is that **no requirement enters `specs/` without a human having read the exact words.** A skill that drafts a section, shows it in full, and writes it only after the person says yes protects exactly what the invariant protects.
 
-**Proposing is required, not merely allowed.** Whoever asks for a product describes the product they already have in mind, and the gaps in it are invisible from the inside. Breaking a request down, offering a better shape for a flow, and naming the case nobody thought of is the value of this stage. What is forbidden is the proposal that goes in silently.
+**Proposing is required, not merely allowed.** The gaps in a request are invisible from inside it. What is forbidden is the proposal that goes in silently.
 
-**Say which is which, every time.** A proposal is labelled a proposal. Where a stage assumed something in order to keep moving, the assumption is stated in the same breath, and recorded (`spec-assumption`).
+**Say which is which, every time.** Where a stage assumed something in order to keep moving, the assumption is stated in the same breath and recorded (`spec-assumption`).
 
 ### Approval is per section, at the end of the stage that wrote it
 
@@ -64,23 +62,23 @@ Read `../hora/references/structure.md` first — the layout, the invariants and 
 6. it writes what was approved, and only that
 ```
 
-**Step 3 stays in prose, never in the question tool.** What approval protects is that somebody read the exact words, and an option labelled "approve" is precisely what lets them not read them (`../hora/references/asking.md`). The individual checks and proposals inside the conversation are a different matter — those default to the tool, with the likely answer offered first.
+**Step 3 stays in prose, never in the question tool.** An option labelled "approve" is precisely what lets somebody not read the words (`../hora/references/asking.md`). The individual checks and proposals inside the conversation default to the tool, with the likely answer offered first.
 
 | Granularity | Why not |
 |---|---|
-| per line | twenty approvals for one section is a burden nobody carries twice, and a spec that never gets written is the result |
+| per line | twenty approvals for one section is a burden nobody carries twice |
 | **per section** | **what this skill uses.** A section is the smallest unit that means anything on its own |
-| per document | a whole spec approved with one "yes" is a spec nobody read. That is worse than no approval, because the record says otherwise |
+| per document | a whole spec approved with one "yes" is a spec nobody read, and the record says otherwise |
 
 **A section the person redirects is redrafted and shown again.** Never write "most of it" and note the disagreement.
 
-**`/hora-plan`'s per-edit rule is unchanged, and the two do not compete.** A one-line hole found while planning — a missing annotation, a `target` that names no repository, a typo — is settled there, one edit at a time. **A finding that needs design work comes back here**, to the stage that owns it (`../hora-plan/SKILL.md`, and `references/stages.md`, "What sends a run back into a stage").
+**`/hora-plan`'s per-edit rule is unchanged, and the two do not compete.** A one-line hole found while planning is settled there. **A finding that needs design work comes back here**, to the stage that owns it (`references/stages.md`, "What sends a run back into a stage").
 
 ---
 
 ## The order of the stages is a rule
 
-**Each stage's answers are the next stage's input.** Not a suggestion, not a default ordering — the reason is that the alternative costs the work twice.
+**Each stage's answers are the next stage's input.** The alternative costs the work twice.
 
 ```
 use cases ──> horizon ──> non-functional ──> data / API / jobs ──> screens ──> security ──> review
@@ -92,7 +90,7 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 
 **Going back is normal, and it is not a failure.** A stage that turns up something an earlier one got wrong says so, names the stage, and the run returns there. Stage 7 exists to do exactly this. `references/stages.md` holds which stage each kind of shortfall returns to.
 
-**No stage may write another stage's section.** Stage 4 does not write use cases; stage 1 does not choose a column type. A stage that reaches into the next one's section has decided something before the conversation that was supposed to decide it. **The two exceptions are both stage 6's**: a refusal is a behavior, so it belongs in the owning section's `<!-- acceptance -->` block, and stage 6 appends it there — proposed and approved like any other text (`references/stages.md`, "Acceptance criteria are drafted by the stage that writes the section"); and the security rows of `Non-functional requirements`, which land in stage 3's table because a reader looks for every non-functional line in one place (`references/stages.md`, stage 6, "Writes").
+**No stage may write another stage's section.** Stage 4 does not write use cases; stage 1 does not choose a column type. **The two exceptions are both stage 6's**: a refusal is a behavior, so it belongs in the owning section's `<!-- acceptance -->` block; and the security rows of `Non-functional requirements`, which land in stage 3's table because a reader looks for every non-functional line in one place (`references/stages.md`).
 
 ---
 
@@ -102,14 +100,14 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 |---|---|
 | `specs/<version>/spec.md`, and the version's feature files | **written by this skill**, one approved section at a time |
 | `specs/skeleton/spec.md` | **copied from, never written to.** This skill does the copying, **and only for the first version** |
-| `specs/<version>/request/` | **read, never written to and never tidied up.** It is what somebody asked for, and it stays as they wrote it |
-| `specs/<older version>/` | **never.** Past versions are frozen (`../hora/references/spec-format.md`) |
+| `specs/<version>/request/` | **read, never written to and never tidied up.** It stays as they wrote it |
+| `specs/<older version>/` | **never.** Past versions are frozen |
 | `.hora/spec/<version>/_stages.md` | this skill's own record of where it got to |
 | `.hora/spec/<version>/_assets.md` | what stage 0 read, where from, and at what commit (`references/investigation.md`) |
-| `.hora/spec/<version>/_divergence.md` | where the documents and the code disagree. **Stage 0 writes the rows, unrouted; the stage that owns a row's subject writes its `Routed to`, once stage 1 has fixed the `Authority` declaration** (`references/investigation.md`) |
+| `.hora/spec/<version>/_divergence.md` | where the documents and the code disagree. **Stage 0 writes the rows, unrouted; the stage that owns a row's subject writes its `Routed to`** (`references/investigation.md`) |
 | `.hora/questions/<version>/open.md` | appended to, like any other skill |
 | `.hora/tasks/`, `.hora/contracts/`, `.hora/glossary.md` | **never.** They are `/hora-plan`'s |
-| code, tests, any implementation repository | **read, never written.** Reading is how stage 0 and stages 4 to 6 get something to put up for confirmation; nothing read is ever written back, and nothing read becomes a requirement on its own |
+| code, tests, any implementation repository | **read, never written.** Nothing read becomes a requirement on its own |
 | git, in any repository | **never.** `/hora` owns every git operation |
 
 ### Fixing the version, and starting the file
@@ -122,8 +120,7 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 
 2. If specs/<version>/ does not exist, create it, with sources/, annex/ and
    request/ inside it — each holding a .gitkeep, so that an empty one survives
-   being committed and is there for somebody to drop a file into
-   (../hora/references/spec-format.md, "a drop-off convention")
+   being committed (../hora/references/spec-format.md, "a drop-off convention")
 
 3. If spec.md is missing or empty, and this is the FIRST version:
        cp specs/skeleton/spec.md specs/<version>/spec.md
@@ -134,21 +131,19 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
    Start spec.md with its H1 and Document information alone, and let each stage
    add the sections it turns out this version touches
    (../hora/references/spec-format.md, "The blank spec is not copied into a
-   diff version", and "The second version onward" below)
+   diff version")
 
-5. Run stage 0 before entering stage 1, always
-   (references/investigation.md). On a project with nothing to read it is over
-   in a sentence; on one that already runs it is what stops the seven stages
-   from being a dictation exercise
+5. Run stage 0 before entering stage 1, always (references/investigation.md).
+   On a project with nothing to read it is over in a sentence
 ```
 
-**Step 3 is a copy, not a draft.** The skeleton lands as it ships: headings and table headers, nothing filled in. Every value in it arrives through a stage's conversation.
+**Step 3 is a copy, not a draft.** The skeleton lands as it ships: headings and table headers. Every value in it arrives through a stage's conversation.
 
-**Step 4 is why it is not copied twice.** The skeleton's empty headings mean "the body carries over" under the diff rule, so copying it into a later version writes twenty sections that say nothing while looking like they were written, and nothing afterwards can tell them from sections somebody meant to restate.
+**Step 4 is why it is not copied twice.** The skeleton's empty headings mean "the body carries over" under the diff rule, so copying it into a later version writes twenty sections that say nothing while looking like they were written.
 
 **A version whose `spec.md` already has content is edited, never restarted.** Read what is there, work out which stages it already satisfies, record that in `_stages.md`, and enter the first stage that is not satisfied. A spec somebody wrote by hand is a spec at stage 7, not stage 1.
 
-**Stage 0 still runs, even then.** A hand-written spec says nothing about which documents exist or what the repositories hold, and `Sources` / `Annex` are exactly what a person writing by hand leaves empty.
+**Stage 0 still runs, even then.** A hand-written spec says nothing about which documents exist or what the repositories hold.
 
 **Never write into a past version's directory.** A fix that belongs to a released version goes into the version being written now, as a full replacement of that section.
 
@@ -156,19 +151,19 @@ use cases ──> horizon ──> non-functional ──> data / API / jobs ─�
 
 ## The second version onward
 
-**A released product's next version is one or two features on top of twenty that already work, and the seven stages must not make somebody re-agree to the twenty.** Run head-on, stage 3 asks for user counts that were settled a release ago and stage 6 asks who may call operations nobody has touched — and a person answering those for the third time answers them without reading, which is the failure the whole approval model exists to prevent.
+**A released product's next version is one or two features on top of twenty that already work, and the seven stages must not make somebody re-agree to the twenty.** Run head-on, stage 3 asks for user counts settled a release ago and stage 6 asks who may call operations nobody has touched — and a person answering those for the third time answers without reading.
 
 **Nothing about the format changes. What changes is how much of it this version writes** (`../hora/references/spec-format.md`, "From the second version on, write a diff").
 
 ### A stage passes by carry-over, and says so
 
-**A stage whose section nothing in this version touches is passed, with the reason written** — it is not skipped, and it is not `n/a`. The three states are still the only three (`references/stages.md`); carrying over is a stage that passed for a stated reason, exactly like any other.
+**A stage whose section nothing in this version touches is passed, with the reason written** — it is not skipped, and it is not `n/a`.
 
 ```markdown
 3. [x] Non-functional requirements  <!-- carried: 1.0.0's numbers, confirmed unchanged -->
 ```
 
-**Carrying over is a check, never an assumption.** The stage states what the previous version fixed, in the words it fixed it in, and asks whether what this version adds changes it. A confirmed carry-over is a decision somebody made this release; an unexamined one is a stage that did not run while reporting that it did.
+**Carrying over is a check, never an assumption.** The stage states what the previous version fixed, in the words it fixed it in, and asks whether what this version adds changes it.
 
 ```
 hora  Stage 3. 1.0.0 fixed these, and nothing in the CSV export request
@@ -185,29 +180,27 @@ hora  Stage 3. 1.0.0 fixed these, and nothing in the CSV export request
 
 **That is the shape of every stage on a diff version:** what already holds, what this version adds, and the one question the addition actually raises.
 
-**Which stages may carry over, and which never may, is stated per stage in `references/stages.md`** — as a `Carried over when` line, next to that stage's exit condition and its `Not applicable when`. It is not restated here, and there is one place to change it.
+**Which stages may carry over is stated per stage in `references/stages.md`**, as a `Carried over when` line. It is not restated here.
 
-**Stages 6 and 7 are the two that never carry over for anything this version adds, and they are what make a diff version safe to run quickly.** Everything above them is allowed to be brief because those two are not: every new operation states its caller at the version that introduced it, and the whole-document review reads the **resolved** document, where a new operation contradicting a rule 1.0.0 wrote is obvious — in a diff, it is invisible.
+**Stages 6 and 7 never carry over for anything this version adds, and they are what make a diff version safe to run quickly.** Everything above them is allowed to be brief because those two are not: every new operation states its caller at the version that introduced it, and the whole-document review reads the **resolved** document, where a new operation contradicting a rule 1.0.0 wrote is obvious.
 
 ---
 
 ## A page of notes is enough to start from
 
-**Drop what is wanted into `specs/<version>/request/` and run `/hora-spec`.** Any file, any name, in anybody's own words — a mail, a ticket, a page of bullets, a meeting note. Stage 0 reads it first and treats it as **this version's agenda**: what somebody wants, in the form they had it (`references/investigation.md`).
+**Drop what is wanted into `specs/<version>/request/` and run `/hora-spec`.** Any file, any name, in anybody's own words. Stage 0 reads it first and treats it as **this version's agenda** (`references/investigation.md`).
 
-**A request is not a source, and the difference is the point.** Nothing in it is spec text. What it says clearly is drafted into the section that owns it and goes back as a **proposal**; what it implies goes back as a question — and only what somebody approves is written. `/hora-plan` never reads `request/` at all, so a wish list cannot become a task by sitting in a folder.
+**A request is not a source, and the difference is the point.** Nothing in it is spec text. What it says clearly is drafted into the section that owns it and goes back as a **proposal**; what it implies goes back as a question. `/hora-plan` never reads `request/` at all, so a wish list cannot become a task by sitting in a folder.
 
-**Requests are the one thing this skill reads that nobody has to be held to.** Somebody writing a request may contradict themselves, ask for two incompatible things, or describe a screen without saying who opens it. **That is expected, and each one is a question this skill asks rather than a defect in the file** — being able to hand over rough notes is the whole reason the directory exists.
+**Requests are the one thing this skill reads that nobody has to be held to.** Somebody writing one may contradict themselves or describe a screen without saying who opens it. **That is expected, and each one is a question this skill asks rather than a defect in the file.**
 
 **Saying it in conversation works identically.** The directory exists because a request is regularly longer than a message, written by somebody who is not in the session, and worth keeping next to the version that answered it.
-
-**It works for the first version and earns its keep from the second.** A first version is a long conversation whatever it starts from; a later one is often one page of notes away from being a diff nobody had to write.
 
 ---
 
 ## The record of where it got to
 
-`.hora/spec/<version>/_stages.md`. **There is no separate state file** — the checkboxes are the state, and `git log .hora/` is the history (`../hora/references/structure.md`).
+`.hora/spec/<version>/_stages.md`. **There is no separate state file** — the checkboxes are the state, and `git log .hora/` is the history.
 
 ```markdown
 # Spec — 1.0.0
@@ -238,11 +231,11 @@ hora  Stage 3. 1.0.0 fixed these, and nothing in the CSV export request
 | splitting approval into its own release | keep it in 1.0.0 | Q4, `scope`, blocking: no |
 ```
 
-**On a diff version, a stage that carried over is `[x]` with the carry-over written next to it** — `<!-- carried: ... -->`, saying what it was confirmed against ("The second version onward"). It reads as what it is: a stage that ran, found the previous version's answer still standing, and got that confirmed.
+**On a diff version, a stage that carried over is `[x]` with the carry-over written next to it** — `<!-- carried: ... -->`, saying what it was confirmed against.
 
-**"Decided in conversation, and not visible in `spec.md`" is the part worth the file.** A spec states what the product is; it does not state what it was nearly instead, and the reason a design came out this way is exactly what somebody later needs in order not to undo it. This is the same reasoning `/hora-plan`'s glossary applies to names it avoided.
+**"Decided in conversation, and not visible in `spec.md`" is the part worth the file.** A spec states what the product is; it does not state what it was nearly instead, and the reason a design came out this way is exactly what somebody later needs in order not to undo it.
 
-**"Proposals not taken" stops a run from proposing the same thing every time.** A proposal that was declined is closed until something changes; re-raising it every session is how a person learns to say yes without reading.
+**"Proposals not taken" stops a run from proposing the same thing every time.** Re-raising a declined proposal every session is how a person learns to say yes without reading.
 
 ---
 
@@ -256,9 +249,9 @@ Appended to `.hora/questions/<version>/open.md`, in the format and the language 
 | `unmet-usecase` | a stated use case cannot be completed under the design as drafted, and the fix needs somebody who is not here | **yes** |
 | `spec-proposal` | an improvement was proposed and declined or deferred | no |
 
-**Everything else uses the categories that already exist** — `scope` for a release nobody will narrow, `contradiction` for two requirements that cannot both hold, `undefined-detail` for a shape nobody has decided, `spec-assumption` for a reading this skill assumed and wrote against.
+**Everything else uses the categories that already exist** — `scope`, `contradiction`, `undefined-detail`, `spec-assumption`.
 
-**A `blocking: yes` question does not stop this skill from finishing the other stages.** It stops `/hora-build`. Carry on to the end of stage 7 with the hole recorded, so that one unanswerable question does not cost the whole document.
+**A `blocking: yes` question does not stop this skill from finishing the other stages.** It stops `/hora-build`. Carry on to the end of stage 7 with the hole recorded.
 
 ---
 
@@ -281,15 +274,15 @@ every question raised — its Q<n> id, its category, its blocking value, one
 what /hora will start on next (normally /hora-setup, then /hora-plan)
 ```
 
-**Report checks and proposals separately, never as one number.** "Twelve things confirmed, three corrected, two proposals taken, one declined" says what actually happened; "eighteen items agreed" says nothing, and hides the corrections — which are the most interesting part, because each one is a place the system and somebody's understanding of it had drifted apart.
+**Report checks and proposals separately, never as one number.** "Eighteen items agreed" hides the corrections, which are the most interesting part — each one is a place the system and somebody's understanding of it had drifted apart.
 
-**Name every stage that carried over, never a count of them.** "Four stages carried over" and "stages 3 and 6 carried over untouched, 1 and 4 ran on the export alone" describe the same run, and only the second lets somebody notice that a stage carried over which should not have. A carry-over is the one kind of pass that looks identical to not having run.
+**Name every stage that carried over, never a count of them.** A carry-over is the one kind of pass that looks identical to not having run.
 
-**Write it in the language of whoever ran it** — it is conversation, and it does not stay in a file.
+**Write it in the language of whoever ran it.**
 
-When a `blocking: yes` is outstanding, **put what the human has to do first**: which decision is missing, who can make it, and a link to `.hora/questions/<version>/open.md`.
+When a `blocking: yes` is outstanding, **put what the human has to do first**: which decision is missing, who can make it, and a link to the question file.
 
-**Never report questions as a count.** A stage can raise several in one pass, and "four questions raised" leaves whoever reads it to find out which four, in a file that only grows. Name each one and link it (`../hora/references/structure.md`, "Citing a question in a report").
+**Never report questions as a count** (`../hora/references/structure.md`, "Citing a question in a report").
 
 **Never report a spec as finished while stage 7 has not passed.** A document that every earlier stage wrote and nothing reviewed is a document whose sections agree with their own conversations and with nothing else.
 
@@ -298,9 +291,9 @@ When a `blocking: yes` is outstanding, **put what the human has to do first**: w
 ## What this skill never does
 
 - **decide scope.** It says when a release is carrying too much, proposes the narrowing, and records the answer. The decision is the requester's (`references/principles.md`)
-- **plan.** No task list, no feature order, no contract, no glossary. `/hora-plan` reads the spec this produces
+- **plan.** No task list, no feature order, no contract, no glossary
 - **clone or configure a repository.** Declaring the layout is stage 4's; creating it is `/hora-setup`'s
-- **let anything it read become a requirement without somebody confirming the words.** Reading a repository, a document or a diagram is what stage 0 and half the later stages are for — what is forbidden is the step after it, where evidence turns into spec text nobody agreed to. A reading goes out as a check, and only what comes back confirmed is written (`references/investigation.md`)
+- **let anything it read become a requirement without somebody confirming the words** (`references/investigation.md`)
 - **conclude how far a feature was already built.** A half-built screen and a finished one look identical from a file listing. `built:` is asked, with the evidence offered as material and no option recommended
 - **touch git.** Not a branch, not a commit
 
@@ -312,9 +305,9 @@ When a `blocking: yes` is outstanding, **put what the human has to do first**: w
 |---|---|
 | `references/stages.md` | **the authority on stage 0 and the seven stages** — each one's exit condition, what it reads, its delegates, and what sends a run back into it |
 | `references/investigation.md` | **the authority on stage 0** — what may be read, what reading never settles, `Sources` and `Annex`, `_assets.md` |
-| `../hora/references/asking.md` | **the authority on how anything is put to a person** — a check, a proposal or a question, and the question tool |
+| `../hora/references/asking.md` | **the authority on how anything is put to a person** |
 | `references/principles.md` | **the thinking this skill applies**, and the boundary against the package's own design skills |
-| `../hora/references/structure.md` | the layout, the invariants, the language rule, what lives in `.hora/` |
+| `../hora/references/structure.md` | the layout, the invariants, the language rule |
 | `../hora/references/spec-format.md` | **the authority on the format** of what this skill writes |
 | `specs/skeleton/spec.md` | the blank spec this skill copies |
 | `../hora-plan/SKILL.md` | what happens to the spec next, and the question categories |

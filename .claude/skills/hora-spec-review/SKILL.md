@@ -1,6 +1,6 @@
 ---
 name: hora-spec-review
-description: Stage 7 of /hora-spec. Read the whole spec against itself — every required section present, every feature carrying observable acceptance criteria its own gate can check, nothing reaching forward into a feature built later, every use case satisfiable by the design, the two out-of-scope lists still matching it, no contradiction — and send each shortfall back to the stage that owns it. The stage that makes the other six mean anything. Runs at the root of the hora repository (myproject-app). Invoked by /hora-spec, or directly.
+description: Stage 7 of /hora-spec. Read the whole spec against itself — required sections, observable criteria, nothing reaching forward, every use case satisfiable, no contradiction — and send each shortfall back to the stage that owns it. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-review
@@ -85,7 +85,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
      criteria against what is built by then
 ```
 
-**A listed section carrying any of those four is itself the finding, and it goes back to the stage that wrote the offending block** — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing — no use case read off its screens, no criterion read off its tests (`../hora/references/structure.md`, invariant 2) — so a criterion sitting inside it is a pass waiting to be claimed by whoever reads the document next, and a half-written use-case block is a feature somebody started specifying and abandoned, with two suspended checks covering for it. Either way the emptiness that justified suspending them is gone. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick** — the section claims both states at once, and whichever half gets dropped is the one somebody wrote on purpose.
+**A listed section carrying any of those four is itself the finding, and it goes back to the stage that wrote the offending block** — stage 1 for a use-case or acceptance block, stage 4 for a data-model table, stage 5 for a screen — **and to stage 1 whenever the resolution is that the feature should never have been listed**, since the annotation is stage 1's to remove. What made the section admissible was that it claims nothing, and a criterion sitting inside it is a pass waiting to be claimed. **Where nobody present can say which half was meant, record a `contradiction` (`blocking: yes`) rather than pick.**
 
 **Report the count, not just the findings.** "17 sections, 6 features, 3 listed, 0 missing blocks, 4 version criteria" is what says the pass actually ran.
 
@@ -108,7 +108,7 @@ Nothing. **It finds, and the stage that owns the section fixes.**
 
 **Report how many criteria ended up in the version's own block, beside the section counts.** A version whose features hold three criteria each and whose own block holds nine has not split a document — it has moved most of its verification to the far end of the version, which is the failure the feature-at-a-time design exists to avoid (`../hora-build/SKILL.md`, "One feature at a time, never two"). The number is the only thing that makes that visible while it is still cheap to reorder.
 
-**Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong they both are — so the whole value of the number is that it came from somewhere else. Read `_plan.md`'s `## Not accepted` afterwards, where the version has been planned at all, compare the two, and **report a mismatch as a finding naming both numbers**: three listed in the document and two in the ledger means a version listed a feature that nothing is tracking, and that is precisely the state in which somebody rebuilds running code. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1) — `/hora-plan` reconciles it on its next entry, against the finding.
+**Count the listed sections off the resolved document, before opening `_plan.md` and without reference to it.** A count taken from the ledger and a ledger checked against that count are two readings of one source, and they agree however wrong both are. Read `_plan.md`'s `## Not accepted` afterwards, where the version has been planned at all, and **report a mismatch as a finding naming both numbers** — three listed in the document and two in the ledger means a version listed a feature that nothing is tracking. This stage does not edit `_plan.md` (`../hora/references/structure.md`, invariant 1); `/hora-plan` reconciles it on its next entry.
 
 ---
 

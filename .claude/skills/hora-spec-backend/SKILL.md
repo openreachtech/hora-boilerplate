@@ -1,6 +1,6 @@
 ---
 name: hora-spec-backend
-description: Stage 4 of /hora-spec. Declare the repositories and servers, then design the data model, the operation list and the background jobs that every stage-1 use case can actually be walked against — one endpoint switched on role or several of their own, GraphQL by default and REST with a reason, synchronous work in the request and everything else in a job. Runs at the root of the hora repository (myproject-app), in conversation. Invoked by /hora-spec, or directly.
+description: Stage 4 of /hora-spec. Declare the repositories and servers, then design the data model, the operation list and the background jobs that every stage-1 use case can be walked against. Invoked by /hora-spec, or directly.
 ---
 
 # hora-spec-backend
@@ -19,7 +19,7 @@ Read `../hora/references/structure.md` and `../hora-spec/references/principles.m
 
 **The whole existing data model and operation list goes out as checks, batched per area** — one for the tables, one for the operations, one for what runs outside the request. Not per table and not per operation: a person confirming the fourteenth table in a row has stopped reading (`../hora-spec/references/investigation.md`).
 
-**A feature listed under `Baseline: inventoried` still owes its tables and its operations a row each here.** The section itself carries a name and one line and nothing else (`../hora/references/spec-format.md`, "`baseline`") — but the tables it already has are in the database everything designed here has to fit around, and the operations it already exposes sit on a server stage 6 has to state a caller for. Leave them out and the spec stops describing the database that actually exists: the next version reads a data model with no `payslips` in it, and generates a migration for a table that is already there. **It costs almost no exchanges**, because the whole existing model and operation list are already going out as the batched checks above, and a listed feature's rows sit inside those same batches.
+**A feature listed under `Baseline: inventoried` still owes its tables and its operations a row each here.** The section itself carries a name and one line and nothing else (`../hora/references/spec-format.md`, "`baseline`") — but its tables are in the database everything designed here has to fit around, and its operations sit on a server stage 6 has to state a caller for. **It costs almost no exchanges**, since a listed feature's rows sit inside the batched checks above.
 
 | Read it, put it up as a **check** | Ask, or **propose** |
 |---|---|
