@@ -9,7 +9,7 @@ description: Stage 2 of /hora-spec. Narrow the release to the fewest use cases s
 
 Read `../hora/references/structure.md` and `../hora-spec/references/principles.md` first. **`../hora/references/asking.md` fixes how anything here is put to a person** — a check, a proposal or a question, each with the question tool as its default. **`../hora-spec/references/stages.md` is the authority on this stage's exit condition.**
 
-**This stage reads nothing new.** What already exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** Every question here is a question or a proposal — there is nothing to put up as a check.
+**This stage reads nothing new, and one thing stage 1 wrote down for it.** What already exists is stage 1's finding; **what to build next is a decision, and no repository holds one.** Every question here is a question or a proposal — there is nothing to put up as a check. **The one thing to read is `.hora/spec/<version>/_stages.md`**, where stage 1 recorded the criteria that reached past the feature they were drafted for ("The version's own acceptance criteria", below).
 
 ---
 
@@ -177,7 +177,7 @@ If nothing equipped covers it, say so by the work it names, carry on, and record
   spans: #sign-up, #attendance, #user-admin
 ```
 
-**What arrives here is stage 1's held-back list**, plus whatever the walk above turned up: stage 1 drafts a feature's criteria and hands over the ones that reach past that feature, without placing them, because at stage 1 there is no order to place them against (`../hora-spec-usecases/SKILL.md`).
+**What arrives here is stage 1's held-back list, in `.hora/spec/<version>/_stages.md`**, plus whatever the walk above turned up: stage 1 drafts a feature's criteria, writes the ones that reach past that feature into that file, and hands them over without placing them, because at stage 1 there is no order to place them against (`../hora-spec-usecases/SKILL.md`). **Read it before this section is written** — a criterion stage 1 wrote down and this stage never opened is the requirement both stages were watching, lost between them.
 
 **Take each one and try the three destinations in order** — reorder, a section of its own, or this section (`../hora/references/spec-format.md`). **The third is last, and this stage is where the discipline actually holds**: a criterion here is checked once, at the end of the version, instead of at a gate that runs while the code is one commit old, so a stage that sends everything here has quietly given up the feature-at-a-time design (`../hora-spec/references/principles.md`). Say the number out loud, the way the narrowing above does — "eleven features, and nine criteria that nobody's feature owns" is a sentence that gets a spec reordered.
 

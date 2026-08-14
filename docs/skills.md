@@ -97,11 +97,22 @@ So the match is made at run time, against what is actually equipped:
 The main session is handed the equipped skills' descriptions as part of its own context, so it is the one place where the match can be made *and written down*. It records what it picked:
 
 ```markdown
-- [x] 15. UI  <!-- skills: <every name matched> -->     ← .hora/tasks/<version>/<feature-id>.md
+- [x] 15. UI  <!-- skills: <every name matched>; digests: <package version> -->
+                                                       ← .hora/tasks/<version>/<feature-id>.md
 | review | <the names matched> | 2 findings |           ← .hora/acceptance/<version>/...
 ```
 
 **An agent never picks its own.** It would pick differently on a rerun, and nothing downstream could say which set the first run actually used. Recording the choice is also what makes a package rename visible: last run matched five skills for a checkpoint, this one matched four.
+
+### What reaches the agent is a digest, not the skill
+
+**A matched skill runs to thousands of lines, and it stays resident for every turn the agent reading it takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so what `/hora-build` hands an implementer is `.hora/digests/<skill-name>.md` — the same conventions in short form, written by [`hora-digester`](../.claude/agents/hora-digester.md) the first time a matched skill has no digest at the installed package version. That is also why the record above names the version the digests came from, beside the names themselves.
+
+**A digest is a copy, and it is the one copy the rule this page opens with admits.** What makes a copy dangerous is that it goes stale in silence. A digest carries the package version it was derived from in its own header, so it is read only while that version is installed — and a package update leaves every digest to be rewritten before any of them is read again. It reduces what an agent holds resident, and it decides nothing.
+
+**When the two disagree, the skill's own text is what settles it.** A digest names the file it came from, and the agent opens that file the moment a question stays open — where the digest is thin, where it points there, or where the work is not obviously the thing it describes. So a convention a digest states too briefly costs one read; it is not a convention lost.
+
+**Nothing whose skill *is* the criteria is read this way.** The security audit at checkpoint 8 and the acceptance review invoke their skills whole, because an agent writing code has a moment where the short form announces its own gap and an audit does not: the missing check is the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** ([`structure.md`](../.claude/skills/hora/references/structure.md), "How the match is made")
 
 ### The prefix is the one part of a name worth reading
 

@@ -37,7 +37,7 @@ So the rule is the same one the procedures follow, applied to the names themselv
 
 **This applies to every hora file without exception** — `checkpoints.md`, `stages.md`, an agent definition, a `docs/` page. A name written "just as an example" is the same copy with a softer label on it.
 
-**Skills Hora Kit itself ships may be named freely** — `/hora-spec`, `/hora-plan`, `/hora-build`, `/hora-accept`, `bank-id`, `hora-implementer`, `hora-verifier`. Those live in this repository, so a rename here is a rename everywhere, in the same commit.
+**Skills Hora Kit itself ships may be named freely** — `/hora-spec`, `/hora-plan`, `/hora-build`, `/hora-accept`, `bank-id`, `hora-implementer`, `hora-verifier`, `hora-digester`. Those live in this repository, so a rename here is a rename everywhere, in the same commit.
 
 ### How the match is made
 
