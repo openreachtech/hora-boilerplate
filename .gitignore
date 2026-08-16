@@ -17,16 +17,17 @@ node_modules/
 # here. Left out, the whole repository gets committed into this one, and
 # nothing says so until somebody reads `git status`.
 
-#### skills equipped from @openreachtech/ai-agent-skills by equip-skills.sh (regenerated, not authored here)
+#### skills equipped by equip-skills.sh from the conventions package (regenerated, not authored here)
 #
 # Ignore everything under .claude/skills/ and name this repository's own back
-# in. The package does prefix its skills (hb-/hf-/hc-), but those names belong
-# to the package, and a denylist that stops matching says nothing when it
-# stops — every equipped skill would simply start being committed here. An
-# allowlist of the ones we author cannot fail that way.
+# in. A conventions package's skill names belong to that package, and a
+# denylist that stops matching says nothing when it stops — every equipped
+# skill would simply start being committed here. An allowlist of the ones we
+# author cannot fail that way.
 #
-# Every hora-spec-* stage skill is named literally, for the same reason: a
-# pattern would start matching whatever the package prefixes next.
+# equip-skills.sh reads this list through `git check-ignore`, so a skill added
+# here without being named below is treated as the package's and removed on
+# the next equip.
 /.claude/skills/*
 !/.claude/skills/bank-id/
 !/.claude/skills/hora/
@@ -38,8 +39,8 @@ node_modules/
 !/.claude/skills/hora-spec-usecases/
 !/.claude/skills/hora-spec-horizon/
 !/.claude/skills/hora-spec-nonfunctional/
-!/.claude/skills/hora-spec-backend/
-!/.claude/skills/hora-spec-frontend/
+!/.claude/skills/hora-spec-provider/
+!/.claude/skills/hora-spec-consumer/
 !/.claude/skills/hora-spec-security/
 !/.claude/skills/hora-spec-review/
 

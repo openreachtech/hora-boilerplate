@@ -47,11 +47,11 @@ export default [
       '*-backend*/',
       '*-frontend*/',
 
-      // Skills equipped from @openreachtech/ai-agent-skills. Not authored here,
-      // and some of them ship .js/.mjs/.cjs. The package prefixes them
-      // (hb-/hf-/hc-), but those names belong to the package, and a denylist
-      // that stops matching says nothing when it stops. So this ignores the
-      // whole directory and names this repository's own skills back in.
+      // Skills equipped from the project's conventions package. Not authored
+      // here, and some packages ship .js/.mjs/.cjs alongside their skills.
+      // Their names belong to that package, and a denylist that stops matching
+      // says nothing when it stops — so this ignores the whole directory and
+      // names this repository's own skills back in.
       '.claude/skills/*/',
       '!.claude/skills/bank-id/',
       '!.claude/skills/hora/',
@@ -63,8 +63,8 @@ export default [
       '!.claude/skills/hora-spec-usecases/',
       '!.claude/skills/hora-spec-horizon/',
       '!.claude/skills/hora-spec-nonfunctional/',
-      '!.claude/skills/hora-spec-backend/',
-      '!.claude/skills/hora-spec-frontend/',
+      '!.claude/skills/hora-spec-provider/',
+      '!.claude/skills/hora-spec-consumer/',
       '!.claude/skills/hora-spec-security/',
       '!.claude/skills/hora-spec-review/',
     ],
