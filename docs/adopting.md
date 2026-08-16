@@ -94,7 +94,7 @@ npm install
 
 **Move them, or clone them fresh — do not symlink.** A symlinked repository breaks the working-directory rule that every per-repository command depends on, and the failures are indirect: a command runs, reads the wrong config, and reports something plausible.
 
-**Nothing is done to their `.git`.** The `rm -rf .git && git init` you may read about in [`boilerplates.md`](../.claude/skills/hora-setup/references/boilerplates.md) belongs to a *fresh clone of a boilerplate*, so that hundreds of somebody else's commits never land on a product repository's `main`. **A repository that already existed skips that entirely** — the kit is adopted onto it, never over it.
+**Nothing is done to their `.git`.** The `rm -rf .git && git init` you may read about in [`hora-setup/SKILL.md`](../.claude/skills/hora-setup/SKILL.md) belongs to a *fresh clone of a boilerplate*, so that hundreds of somebody else's commits never land on a product repository's `main`. **A repository that already existed skips that entirely** — the kit is adopted onto it, never over it.
 
 ---
 

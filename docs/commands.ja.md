@@ -77,7 +77,7 @@
 7. 全体レビュー                全体が整合しているか、全ユースケースが実現可能か
 ```
 
-**ステージ1〜7はそれぞれが独立した skill で、単独でも叩けます**：`/hora-spec-usecases`、`/hora-spec-horizon`、`/hora-spec-nonfunctional`、`/hora-spec-backend`、`/hora-spec-frontend`、`/hora-spec-security`、`/hora-spec-review`。`/hora-spec` はこれらを順に走らせます。そのステージの対話だけやり直したいときに単独で叩いてください。ステージ0 だけは専用 skill を持たず、`/hora-spec` 自身が実行します。
+**ステージ1〜7はそれぞれが独立した skill で、単独でも叩けます**：`/hora-spec-usecases`、`/hora-spec-horizon`、`/hora-spec-nonfunctional`、`/hora-spec-provider`、`/hora-spec-consumer`、`/hora-spec-security`、`/hora-spec-review`。`/hora-spec` はこれらを順に走らせます。そのステージの対話だけやり直したいときに単独で叩いてください。ステージ0 だけは専用 skill を持たず、`/hora-spec` 自身が実行します。
 
 **順序は規則であり、各ステージは関所です。** ユースケースが固まる前に作った DB 設計は2回作ることになり、ユーザー数を知る前に設計したテーブルは間違った規模向けに設計されます。各ステージの通過条件は [`stages.md`](../.claude/skills/hora-spec/references/stages.md) にあります。
 

@@ -81,7 +81,7 @@ It reports the decision in one line before starting: *"continuing 1.0.0. 4 of 11
                              is satisfiable
 ```
 
-**Each stage from 1 to 7 is its own skill, and each may be run directly**: `/hora-spec-usecases`, `/hora-spec-horizon`, `/hora-spec-nonfunctional`, `/hora-spec-backend`, `/hora-spec-frontend`, `/hora-spec-security`, `/hora-spec-review`. `/hora-spec` runs them in order; run one alone to redo just that stage's conversation. Stage 0 has no skill of its own — `/hora-spec` runs it itself.
+**Each stage from 1 to 7 is its own skill, and each may be run directly**: `/hora-spec-usecases`, `/hora-spec-horizon`, `/hora-spec-nonfunctional`, `/hora-spec-provider`, `/hora-spec-consumer`, `/hora-spec-security`, `/hora-spec-review`. `/hora-spec` runs them in order; run one alone to redo just that stage's conversation. Stage 0 has no skill of its own — `/hora-spec` runs it itself.
 
 **The order is a rule, and each stage is a gate.** A data model designed before the use cases are fixed is designed twice; a table designed before the user counts are known is designed for the wrong number. Each stage's exit condition is in [`stages.md`](../.claude/skills/hora-spec/references/stages.md).
 
