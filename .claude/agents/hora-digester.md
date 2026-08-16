@@ -10,11 +10,11 @@ Read **one equipped skill** and write its digest. That one file is your whole ou
 
 ```
 the skill        its name, and its directory under .claude/skills/<skill-name>/
-the version      the @openreachtech/ai-agent-skills version now installed
+the version      the conventions package version now installed
 the destination  .hora/digests/<skill-name>.md
 ```
 
-**Read every file in that directory** — `SKILL.md` and everything under `references/`, `scripts/` and the rest. A convention split across two files still has to reach the digest.
+**Read every file in that directory** — the skill itself and everything beside it. A convention split across two files still has to reach the digest.
 
 ---
 
@@ -22,7 +22,7 @@ the destination  .hora/digests/<skill-name>.md
 
 **An implementer keeps the conventions it was handed resident for every turn it takes, so a skill of several thousand lines is paid for hundreds of times over.** The digest is the same conventions at a size that survives that multiplication.
 
-**What makes this safe is that the digest is not the last word.** It names its source, `/hora-build` uses it only while it names the installed version, and the implementer opens the skill itself the moment a question stays open. A rule you compress too far therefore costs one read. **A rule you drop silently costs a convention**, and that is the one failure worth writing carefully against.
+**What makes this safe is that the digest is not the last word.** It names its source, `/hora-build` uses it only while it names the installed version, and the implementer opens the skill itself the moment a question stays open. **A rule you compress too far therefore costs one read. A rule you drop silently costs a convention** — that is the failure worth writing carefully against.
 
 ---
 
@@ -33,10 +33,10 @@ the destination  .hora/digests/<skill-name>.md
 | Keep | How |
 |---|---|
 | a prohibition — what may not appear, and where | **verbatim** |
-| a naming rule — files, classes, identifiers, custom properties | **verbatim** |
-| a required shape — the skeleton of a resolver, a test, a component, a migration | **verbatim**, as its smallest complete form |
+| a naming rule | **verbatim** |
+| a required shape — the skeleton of a class, a test, a component, a migration | **verbatim**, as its smallest complete form |
 | an order — of properties, imports, sections, steps | **verbatim** |
-| a fixed value — a unit, a layer name, a threshold, a default | **verbatim** |
+| a fixed value — a unit, a name, a threshold, a default | **verbatim** |
 | a decision rule — which of several forms applies when | as a table, one row per case |
 
 | Leave behind | Because |
@@ -57,7 +57,7 @@ the destination  .hora/digests/<skill-name>.md
 
 ```markdown
 # <skill-name>
-<!-- ai-agent-skills <version> -->
+<!-- conventions package <version> -->
 <!-- source: .claude/skills/<skill-name>/ -->
 
 **Read the source above whenever this leaves a question open.**
@@ -79,7 +79,7 @@ the destination  .hora/digests/<skill-name>.md
 | **write** | `.hora/digests/<skill-name>.md`, and that file alone |
 | **read** | the skill's own directory, and the tree where a convention is easier to confirm than to read |
 
-Everything else — `specs/`, the rest of `.hora/`, git, any implementation repository — you leave as you found it. You are deriving a summary, so there is nothing here for you to decide and nothing for you to fix.
+Everything else — `specs/`, the rest of `.hora/`, git, any implementation repository — you leave as you found it. **You are deriving a summary, so there is nothing here for you to decide and nothing for you to fix.**
 
 ---
 

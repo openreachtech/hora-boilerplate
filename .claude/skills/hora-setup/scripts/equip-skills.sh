@@ -1,56 +1,56 @@
 #!/bin/bash
 
-# Copy every skill shipped by @openreachtech/ai-agent-skills into this
-# repository's .claude/skills/, so they become directly invocable here.
+# Copy a conventions package's skills into this repository's .claude/skills/,
+# so they become directly invocable here.
 #
-# Why: skill discovery only looks at the session's own .claude/skills/, and
-# a package's skills live under node_modules/, never under that path.
-# Without this step, everything ai-agent-skills ships stays invisible for
-# the rest of the session.
+# Why: skill discovery only looks at the session's own .claude/skills/. A
+# package's skills live wherever that package was installed, which is never
+# that path — so without this step, everything it ships stays invisible.
 #
-# ai-agent-skills already ships its skills flattened under dist/skills/ (one
-# directory per skill, named after the `name:` the skill declares, unique
-# across the package), so this script clones them as-is. No renaming, no
-# rewriting.
+# This script does not know how the package is distributed. /hora-setup
+# resolves the directory holding the skills — from a dependency tree, a
+# submodule, a cloned repository, a plain path — and passes it in.
 #
-# Run this from the repository root (myproject-app). It does not depend on
-# any declared repository being cloned — like @openreachtech/hora-ecosystem,
-# ai-agent-skills comes from this repository's own devDependencies, so it is
-# ready as soon as this repository's own `npm install` has run. Safe to
-# re-run: it synchronizes rather than overlays — every package-equipped
-# directory is removed first (below), then copied fresh, so a skill the
-# package renamed or dropped does not linger as a live match candidate.
+# Safe to re-run: it synchronizes rather than overlays. Every previously
+# equipped directory is removed first, then the source is copied fresh, so a
+# skill the package renamed or dropped does not linger as a live match
+# candidate.
 #
-# Usage: .claude/skills/hora-setup/scripts/equip-skills.sh
+# Usage: .claude/skills/hora-setup/scripts/equip-skills.sh <source directory>
 #
-# Note on names: a skill lands under the name it declares in its own
-# frontmatter — hb- for backend, hf- for frontend, hc- for either. Those
-# prefixes have already changed twice, so .gitignore and eslint.config.js do
-# not match on them: they ignore this whole directory and name this
-# repository's own skills back in, which no renaming can invalidate.
+# The source directory holds one subdirectory per skill, each named by the
+# `name:` that skill declares. Names are copied as-is: this repository never
+# matches a package's skill by name, so the naming scheme is the package's
+# own business.
 
 set -euo pipefail
 
-SOURCE_ROOT='node_modules/@openreachtech/ai-agent-skills/dist/skills'
+SOURCE_ROOT="${1:-}"
 DEST_ROOT='.claude/skills'
 
-# Without this check, an unmatched glob below would loop once over the
-# literal '*', mkdir a directory named '*' under .claude/skills/, and die
-# on the cp with a message that names a glob instead of the real cause.
-if [ ! -d "$SOURCE_ROOT" ]; then
-  echo "error: $SOURCE_ROOT not found." >&2
-  echo "Run this from the repository root (myproject-app), after its own \`npm install\` has run." >&2
+if [ -z "$SOURCE_ROOT" ]; then
+  echo "usage: $0 <directory holding the conventions package's skills>" >&2
   exit 1
 fi
 
-# Remove what an earlier equip left behind, before copying. cp alone only
-# overwrites: a skill the package renamed or dropped would stay equipped
-# forever — and, since matching reads every description under
-# .claude/skills/, stay a live candidate. Which directories are the
-# package's is not decided by name (the prefixes have changed before):
-# a directory here is package-equipped exactly when .gitignore ignores it,
-# and this repository's own skills are named back in there — so git is the
-# one authority this check cannot drift from.
+# Without this check, an unmatched glob below would loop once over the
+# literal '*', mkdir a directory named '*', and die on the copy with a
+# message naming a glob instead of the real cause.
+if [ ! -d "$SOURCE_ROOT" ]; then
+  echo "error: $SOURCE_ROOT not found." >&2
+  echo "Run this from the hora repository's root, with the conventions package already fetched." >&2
+  exit 1
+fi
+
+# Remove what an earlier equip left behind, before copying. Copying alone
+# only overwrites, so a renamed or dropped skill would stay equipped forever
+# — and, since matching reads every description under .claude/skills/, stay a
+# live candidate.
+#
+# Which directories are the package's is decided by git, not by name: a
+# directory here is package-equipped exactly when .gitignore ignores it, and
+# this repository's own skills are named back in there. A naming scheme the
+# package changes cannot invalidate that.
 for equipped_dir in "$DEST_ROOT"/*/; do
   [ -d "$equipped_dir" ] || continue
 

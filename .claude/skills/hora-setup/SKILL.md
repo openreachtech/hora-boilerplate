@@ -1,140 +1,155 @@
 ---
 name: hora-setup
-description: Fetch the boilerplates a spec declares, fill in the project's values, and read what was cloned in place. Idempotent — creates only what is missing, and re-evaluates on every version. Invoked by /hora, or directly as /hora-setup.
+description: Create the repositories a spec declares, fill in the project's values, equip the conventions package, and read what arrived. Idempotent — creates only what is missing, and re-evaluates on every version. Invoked by /hora, or directly as /hora-setup.
 ---
 
 # hora-setup
 
 **Code setup.** Create the repositories the spec declares, fill in this project's values, and read the real tree that arrived.
 
-Read `../hora/references/structure.md` first — the repository layout, where a per-repository command runs, and the invariants. **This skill is strictly read-only on `specs/`.**
-
-## What this skill is for
+Read `../hora/references/structure.md` first — the layout, where a per-repository command runs, and the invariants. **This skill is strictly read-only on `specs/`.**
 
 ```
-1. Create only the repositories that are missing, from the declaration
+1. Create only the repositories that are missing
 2. Fill in the values that carry this project's name
-3. Equip the skills @openreachtech/ai-agent-skills ships
-4. Read what was cloned, in place, and record what was read
+3. Equip the conventions package
+4. Read what arrived, in place, and record what was read
 ```
 
-**It is idempotent, and it re-evaluates on every version.** Repositories arrive in later versions, so passing this once is not the end of it. Anything already there is passed over.
+**It is idempotent, and it re-evaluates on every version.** Rows arrive in later versions, so passing once is not the end of it. Anything already there is passed over.
 
 ---
 
 ## 1. Create what is missing
 
-**Which repositories to create is declared by the spec's repository layout section.** Never carry "a backend and a frontend" as an assumption.
-
-If there is no declaration, **stop here and ask.** Adding a repository is an architectural decision.
+**The spec's repository layout section says which repositories to create.** Never carry an assumption about how many there are, or what roles they play.
 
 | Detection | Action |
 |---|---|
-| No repository layout section | **stop and ask** |
-| **Zero or two or more** backends (origin `renchan`) | **stop and ask.** For now it is always exactly one |
-| Zero frontends (origin `furo`) | **normal.** Some projects are only an API for a phone app |
-| No table of servers | **stop and ask.** Contracts cannot be derived |
+| no repository layout section | **stop and ask** |
+| no row declaring the `provider` role | **stop and ask.** Something has to own the data |
+| two rows declaring they own the same data store | **stop and ask** |
+| no server table | **stop and ask.** Contracts cannot be derived |
 
-**The repository layout must be written in the entry point (`specs/<version>/spec.md`).** Written in a feature file, it does not count as the declaration.
+**The layout must be in the entry point (`specs/<version>/spec.md`).** Written in a feature file, it does not count as the declaration.
 
-Settle the project name first, from `specs/<version>/spec.md`. **If it is not written, stop here and ask.** It must not be derived from the directory name, and — unlike most required roles — **it must not be taken from a declared Source either.** The project name and the repository layout are decisions, not facts to locate.
+**Settle the project name first, from the spec.** If it is not written, stop and ask. It must not be derived from a directory name, and — unlike most required roles — **it must not be taken from a declared Source either.** Once settled, fill it into the hora repository's own manifest, which ships with a placeholder.
 
-**Once it is settled, also fill in this repository's own `package.json`** (`name` / `description`) — it ships with the same placeholder a cloned boilerplate does.
-
-Read `references/boilerplates.md` for the detailed procedure. The essentials for each declared row (**numbered for this summary alone — these numbers do not line up with `boilerplates.md`'s own**):
+For each declared row:
 
 ```
-0. Settle this row's directory (below), and register it in the exclusion lists
-1. git ls-remote --tags to find the newest tag
-2. git clone --depth 1 --branch <newest tag> ... <that directory>
-3. rm -rf <dir>/.git && git -C <dir> init && git -C <dir> checkout -b release/<version>
-4. git -C <dir> commit --allow-empty -m "Release <version>" (the branch's opening marker)
-5. Rewrite name / description in package.json with the project's name
-6. Fill in the values in .env.development (renchan-boilerplate ships keys with empty values)
-7. Place docker.sh / docker-compose.development.yml and decide profiles from the spec
-8. Write COMPOSE_PROFILES into .env.development (when there is a profile to enable — never into .env)
-9. npm install
-10. Backend row only: copy `.claude/skills/bank-id/` into `<dir>/.claude/skills/bank-id/`, if it is not already there
+0. Settle its directory, and register it in the exclusion lists (below)
+1. Create it, if it is missing, from the row's `Template` (below)
+2. Point it at its own fresh history:
+     git -C <dir> init
+     git -C <dir> checkout -b release/<version>
+     git -C <dir> commit --allow-empty -m "Release <version>"
+3. Fill in the values carrying the project's name — its manifest, and whatever
+   else the template ships with a placeholder in it
+4. Fill in its environment configuration, from the spec's services table
+5. Install its dependencies, with that repository's own command
+6. Make its initial commit, on release/<version>
 ```
+
+**Step 2's `checkout -b` right after `init` matters.** `HEAD` is unborn at that point, so `checkout -b` points the first commit at the named branch instead of whatever default `git init` configured — often `main`, the one branch the commit rules say never to commit straight to.
 
 ### Step 0 — which directory a row lives in, and excluding it
 
-**A row's directory is `<project name>-<declared row>`, unless the layout's optional `Directory` column says otherwise.**
+**A row's directory is `<project name>-<row suffix>`, unless the layout's `Directory` column says otherwise.**
 
 | The `Directory` column is | Treatment |
 |---|---|
-| **omitted** | `<project name>-<declared row>`. Clone the boilerplate into it if it is missing. **The default, and the only case a new project meets** |
-| **written** | look for exactly that directory, **and never clone.** A stated directory declares that the repository already exists — if it is not there, **stop and ask** |
+| **omitted** | `<project>-<row>`. Create it from `Template` if missing. **The default** |
+| **written** | look for exactly that directory, **and never create.** A stated directory declares the repository already exists — if it is not there, **stop and ask** |
 
-**Then register the directory in both of this repository's own exclusion lists, unless it already matches them.**
+**Then register the directory in both of this repository's exclusion lists, unless it already matches them** — the gitignore, and the lint config's ignore list.
 
-```
-.gitignore          /*-backend*/ and /*-frontend*/ already cover a default name
-eslint.config.js    `ignores` already covers '*-backend*/' and '*-frontend*/'
-```
+**A directory named outside the default pattern matches neither, and both failures are silent.** An unexcluded implementation repository gets committed wholesale into the hora repository, and the root's lint walks into a repository whose config is not its own. **Add one entry per unmatched directory, to both files, and report that you did.**
 
-**A directory named anything else matches neither, and both failures are silent.** An unexcluded implementation repository gets committed wholesale into the hora repository, and the root's eslint walks into a repository whose config is not its own. Add one entry per unmatched directory, to both files, and **report that you added it.**
+### Step 1 — creating a row from its `Template`
 
-**If `<that directory>` already exists, skip steps 1–4 for that row** — treat it as already fetched, however it got there. **A row with a `Directory` column always takes this path.** `../hora/references/commits.md`'s branch rule still applies to it (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker once created) — it is just not the fresh-`git init` case. This is not only for the idempotent re-run: the boilerplates are currently private, so a non-interactive session's own `git clone` fails for lack of credentials until a human clones the row beforehand. **Still run steps 5 onward for that row** — each is its own idempotent check, not an all-or-nothing skip.
+| The `Template` column says | What to do |
+|---|---|
+| **a repository to clone** | fetch its newest released tag, not a branch head (`../hora/references/structure.md`, invariant 3). Then **discard its history**: `rm -rf <dir>/.git` |
+| **a command that scaffolds** | run it, in a directory of that name |
+| **`existing`** | create nothing. The row is expected to be there already |
 
-**Step 10 never overwrites an existing copy.** A human may have customized `bank-id` inside their own backend repository. This step is also why `bank-id` can be invoked without `/hora`: it lands in the backend row's own `.claude/skills/`.
+**`.git` is discarded so that hundreds of somebody else's commits never land on a product repository's `main`.** Keeping it would allow pulling upstream updates, which is not worth that cost.
 
-`.git` is thrown away and re-initialized so that hundreds of commits from somebody else's repo never land on a product repository's `main`.
+**If the directory already exists, skip steps 1 and 2 for that row** — treat it as already created, however it got there. **Still run steps 3 onward**, each of which is its own idempotent check.
 
-**This never happens to a repository that already existed.** A row skipped past step 3 keeps its own history untouched — Hora Kit is adopted onto a repository, never over it.
+**This is not only for the idempotent re-run.** A private template's clone fails in a non-interactive session for lack of credentials, so a human commonly places the directory themselves beforehand.
 
-When this step finishes, make an initial commit in each repository it created, on the `release/<version>` branch checked out in step 3, after the empty marker from step 4.
+**A repository that already existed keeps its own history untouched.** Hora is adopted onto a repository, never over it.
+
+**Never overwrite configuration a row already carries.** A repository adopted into hora very often brings its own environment setup, tuned to that project. Leave it, read what it offers, and **report the difference against the spec's services table.**
 
 ---
 
-## 2. Equip the skills `@openreachtech/ai-agent-skills` ships
+## 2. Equip the conventions package
+
+The spec's document information declares one, or declares `none` (`../hora/references/spec-format.md`, "1. Document information").
 
 ```bash
-.claude/skills/hora-setup/scripts/equip-skills.sh
+.claude/skills/hora-setup/scripts/equip-skills.sh <the directory holding its skills>
 ```
 
-It copies every skill that package ships into this repository's own `.claude/skills/` — **skill discovery only looks at the session's own `.claude/skills/`, and a package's skills live under `node_modules/`.**
+**Resolve that directory however the package is distributed** — a dependency tree, a submodule, a cloned repository, a plain path. The script is a copy with a cleanup; it knows nothing about distribution.
 
-**This does not wait on any declared row being cloned.** Run it on every invocation: the package may have been updated, and the script synchronizes rather than overlays, so a re-run leaves nothing stale behind.
+**This does not wait on any row being created.** Run it on every invocation: the package may have been updated, and the script synchronizes rather than overlays, so a re-run leaves nothing stale behind.
 
-**Everything `/hora-build` and `/hora-accept` delegate to comes from here** (`../hora/references/structure.md`, "The division of labor"). Without this step, every one of those delegations has nothing to reach.
+**Everything `/hora-build` and `/hora-accept` delegate to comes from here.** Without this step, every one of those delegations has nothing to reach.
+
+**Where the spec declares `none`, say so and continue.** Every gate then runs without conventions and records that it did.
 
 Report what was equipped, by count, and **name anything a later checkpoint will look for and not find.**
 
 ---
 
-## 3. Read what was cloned, in place
+## 3. Read what arrived, in place
 
-**This skill does not bake in knowledge of the boilerplates' conventions.** The newest tag is always cloned, so anything written down here would eventually disagree with the real thing.
+**This skill bakes in no knowledge of any template's conventions.** The newest tag is always fetched, so anything written down here would eventually disagree with the real thing.
 
-The order to read in:
+1. If there is a `CLAUDE.md` or equivalent, read it — the maintainer updates it alongside the code
+2. Otherwise read the tree in place
 
-1. If there is a `CLAUDE.md`, read it (the authority, updated by the maintainer along with the code)
-2. Otherwise read the tree in place. At minimum, get hold of:
+At minimum, get hold of:
 
 ```
 Directory layout          where things go
-How servers are split     how several servers are separated. Entry points and the pm2 config
+How servers are split     how several servers are separated, and their entry points
 Naming conventions        how classes, files and tables are named
 How tests are written     placement, naming, helpers, the mocking style
-The existing GraphQL schema   how the SDL is written
-How things get registered     automatic via directory scanning, or an aggregation file to append to
-Existing model definitions    how sequelize is used, and how it maps to migrations
-npm scripts               the names of the test / lint / db commands
-A local E2E environment   whether one ships (an `e2e/docker/` stack and its up/seed/clean scripts)
+The existing interface    how it is defined
+How things get registered automatic through directory scanning, or an
+                          aggregation file to append to
+Existing model definitions and how they map to migrations
+Commands                  the lint, test, install and database commands, by name
+The lint configuration    its rule set, and which rules are formatting-only
+A local end-to-end stack  whether one ships, and its up/seed/clean commands
 ```
 
-**"How things get registered" deserves particular care.** If registration is automatic through directory scanning, implementation only has to drop its own file in, and the aggregation-file problem disappears entirely. If appending is required, several checkpoints end up touching the same single place. **It is the highest-value thing to check.**
+**"How things get registered" deserves particular care.** If registration is automatic, implementation only has to drop its own file in and the aggregation-file problem disappears entirely. If appending is required, several checkpoints end up touching one shared place. **It is the highest-value thing to check.**
 
-The real tree beats any assumption. This step stays even after a `CLAUDE.md` exists.
+**"The lint configuration" is what `/hora-build` needs to resolve a rule contradiction** (`../hora-build/SKILL.md`, "A lint rule contradiction"). Record which rules restrict what may appear in the code, and which only shape how it is formatted.
 
-### Record what was read, and what tag it was read at
+**The real tree beats any assumption. This step stays even after a `CLAUDE.md` exists.**
+
+### Record what was read, and at what tag
 
 Write it to `.hora/tree/<repository>.md`, with the tag at the top:
 
 ```markdown
-# myproject-backend
-<!-- boilerplate: renchan-boilerplate 1.8.1 -->
+# myproject-core
+<!-- template: <name> <tag> -->
+
+## Commands
+| Purpose | Command |
+|---|---|
+| lint | … |
+| lint, fixing what it can | … |
+| test | … |
+| install a dependency | … |
 
 ## Directory layout
 ...
@@ -150,12 +165,12 @@ Write it to `.hora/tree/<repository>.md`, with the tag at the top:
 
 | Not done | Why |
 |---|---|
-| Baking the boilerplate into the template (vendoring) | upstream is updated piecemeal over time. It would also contradict the parent's `.gitignore` |
-| Keeping `.git` and holding an upstream remote | mixes somebody else's commits into the product repo's history |
-| Turning it into a submodule | the consistency gained is not worth the added complexity |
-| Baking the boilerplate's conventions into this file | they will disagree with the real thing eventually. Step 3 reads it in place instead |
-| `npm update` / bumping a dependency's version | following upstream is a human's deliberate action |
-| Starting the middleware (`./docker.sh start`) | a human does that when they want it. `/hora-accept` is where an environment becomes a prerequisite, and it says so rather than acting |
+| vendoring a template into this repository | upstream is updated piecemeal, and it would contradict the gitignore |
+| keeping `.git` and holding an upstream remote | mixes somebody else's commits into the product repository's history |
+| making a row a submodule | the consistency gained is not worth the complexity |
+| baking a template's conventions into this file | they will disagree with the real thing eventually. Step 3 reads them in place |
+| upgrading a dependency | following upstream is a human's deliberate act |
+| starting the services | a human does that when they want it. `/hora-accept` is where an environment becomes a prerequisite, and it says so rather than acting |
 
 ---
 
@@ -163,7 +178,7 @@ Write it to `.hora/tree/<repository>.md`, with the tag at the top:
 
 | File | Content |
 |---|---|
-| `references/boilerplates.md` | the detailed procedure. Which boilerplate to choose, and what to fill in where |
-| `scripts/equip-skills.sh` | copies `@openreachtech/ai-agent-skills`' skills into `.claude/skills/` |
+| `scripts/equip-skills.sh` | copies a conventions package's skills into `.claude/skills/` |
 | `../hora/references/structure.md` | the layout, the per-repository command rule, the invariants |
+| `../hora/references/spec-format.md` | the repository layout table, and the services table |
 | `../hora/references/commits.md` | the branch each created repository starts on |
