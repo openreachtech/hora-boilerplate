@@ -45,24 +45,27 @@ Hora Kit          「stub resolver は server/graphql/resolvers/<audience>/stub/
 
 Claude Code がスキルを見つけるのは、セッション自身の `.claude/skills/` だけです。パッケージのスキルは `node_modules/` にあり、そこはその場所ではありません。**コピーする手順が無ければ、パッケージが配るものは全部見えないままです。**
 
-`/hora-setup` がそのコピーを実行します。
+`npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
-```bash
-.claude/skills/hora-setup/scripts/equip-skills.sh
+```json
+"hora:init": "npx hora-core install && npx hora-skills install",
+"postinstall": "npm run hora:init"
 ```
 
 ```
-node_modules/@openreachtech/hora-skills/dist/skills/<skill>/
-                          │  そのままコピー。改名も書き換えもしない
-                          ▼
-                 .claude/skills/<skill>/
+node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
+node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
+                          そのままコピー。改名も書き換えもしない
 ```
 
-- **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。上書きではなく同期です — パッケージ由来のディレクトリ（gitignore されているもの。自前のスキルには決して触れません）を先に削除してからコピーし直すので、パッケージが改名・削除したスキルが残留せず、再実行は安全です
-- **リポジトリの clone を待ちません。** `hora-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
-- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身のスキルを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
+- **パッケージ2つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、`@openreachtech/hora-skills` がそれらの委譲先である手順を運びます。どちらも平坦な1つの `.claude/skills/` に並んで着地します。`hb-`/`hf-`/`hc-` の接頭辞はそのためにあります
+- **`npm install` だけで足ります。** 引数なしの `npm install` はフックを再実行するので、更新されたパッケージも追随します。コマンドラインでパッケージを名指しした場合は再実行されないため、そのときは `npm run hora:init` で配り直します
+- **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`.hora/equip-core.json` と `.hora/equip-skills.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
+- **リポジトリの clone を待ちません。** 両パッケージはこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
+- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視した上で、このリポジトリ自身のものを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
-**キットが読むパッケージは `hora-skills` を含めて2つあります。** もう1つは **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
+**配置されるのはこの2つで、3つ目は置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 

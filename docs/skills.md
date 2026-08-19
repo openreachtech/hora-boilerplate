@@ -43,26 +43,29 @@ This is the same reasoning `/hora-setup` already applies to the boilerplates: **
 
 ## How the skills reach the session
 
-Claude Code discovers skills only in the session's own `.claude/skills/`. A package's skills live under `node_modules/`, which is not that path — so without a copying step, **everything the package ships stays invisible.**
+Claude Code discovers skills only in the session's own `.claude/skills/`. A package's skills live under `node_modules/`, which is not that path — so without a copying step, **everything the packages ship stays invisible.**
 
-`/hora-setup` runs the copy:
+`npm install` runs the copy, through this repository's own `postinstall`:
 
-```bash
-.claude/skills/hora-setup/scripts/equip-skills.sh
+```json
+"hora:init": "npx hora-core install && npx hora-skills install",
+"postinstall": "npm run hora:init"
 ```
 
 ```
-node_modules/@openreachtech/hora-skills/dist/skills/<skill>/
-                          │  straight copy, no renaming, no rewriting
-                          ▼
-                 .claude/skills/<skill>/
+node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
+node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
+                          straight copy, no renaming, no rewriting
 ```
 
-- **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It synchronizes rather than overlays — package-equipped directories (the gitignored ones; your own skills are never touched) are removed first, then copied fresh — so a skill the package renamed or dropped does not linger, and a re-run is safe
-- **It does not wait for any repository to be cloned.** `hora-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
-- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
+- **Two packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and `@openreachtech/hora-skills` carries the procedures they delegate to. They land side by side in one flat `.claude/skills/`, which is what the `hb-`/`hf-`/`hc-` prefix is for
+- **`npm install` alone is enough**, and a plain `npm install` with no arguments re-runs the hook, so an updated package follows along. Naming a package on the command line does not, so `npm run hora:init` re-equips on demand
+- **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` and `.hora/equip-skills.json` — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
+- **It does not wait for any repository to be cloned.** Both packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
+- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` and naming this repository's own entries back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
-**`hora-skills` is one of two packages the kit reads.** The other is **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
+**Those two are equipped. A third package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 
