@@ -33,16 +33,18 @@ This document explains the design. It is not the authority on any rule — each 
 
 ## Four layers
 
-![Four layers: /hora, the five skills, the stage skills and the two agents, and ai-agent-skills](./images/layers.svg)
+![Four layers: /hora, the five skills, the stage skills and the two agents, and hora-skills](./images/layers.svg)
 
-| Layer | What it decides | What it never decides |
-|---|---|---|
-| `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself |
-| the five skills | the order of the work, and each gate's exit condition | how any of it is written |
-| the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git |
-| `ai-agent-skills` | **every procedure and every pass/fail criterion** | when it is invoked |
+| Layer | What it decides | What it never decides | Ships in |
+|---|---|---|---|
+| `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself | `@openreachtech/hora` |
+| the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora` |
+| the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git | `@openreachtech/hora` |
+| `hora-skills` | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills` |
 
-**The bottom layer is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in a package that is versioned and updated on its own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
+**Not one of the four is in this repository.** All four arrive as packages, and what this repository holds is the spec, these documents, and the run's own record under `.hora/`.
+
+**The split between the two packages is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in a package that is versioned and updated on its own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
 
 ---
 
@@ -87,7 +89,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 
 **`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint — or for one unit of one — and reports everything else: a dependency it needs, a shared file it must not edit, the folder whose aggregation file the main session should regenerate, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
 
-**`hora-digester` writes one file and reads everything else.** Its output is `.hora/digests/<skill-name>.md`, and the header names the `ai-agent-skills` version it was derived from — so a digest is used only while it matches what is installed, and a package update leaves each one to be rewritten before it is read again. The skill itself stays the authority: an implementer opens it the moment its digest leaves a question open.
+**`hora-digester` writes one file and reads everything else.** Its output is `.hora/digests/<skill-name>.md`, and the header names the `hora-skills` version it was derived from — so a digest is used only while it matches what is installed, and a package update leaves each one to be rewritten before it is read again. The skill itself stays the authority: an implementer opens it the moment its digest leaves a question open.
 
 **Why the agents are so tightly bounded:** every one of those prohibitions removes a way for two writers to collide, or for a decision to be made where nobody can see it.
 
@@ -101,7 +103,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   digests/<skill-name>.md       one equipped skill's conventions in short form, and the
-                                ai-agent-skills version they came from
+                                hora-skills version they came from
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
   spec/<version>/_divergence.md where the documents and the code disagree — one row
@@ -117,16 +119,21 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
                                 appended block each
     _sweep.md                   the whole-version sweep
   glossary.md                   append-only, not split per version
+
+  equip-core.json               what the last hora-core install placed. Gitignored
+  equip-skills.json             what the last hora-skills install placed. Gitignored
 ```
 
 `git log .hora/` is the history of what ran. Nothing else records it, and nothing needs to.
+
+**The two `equip-*.json` files are the exception, and they are gitignored for it.** They record what each package's installer wrote, so the next run can remove exactly that before copying fresh. They are not state of the project and no skill reads them.
 
 ### Who may write what
 
 | Directory | Written by | Everyone else |
 |---|---|---|
 | `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
-| `.hora/` | the skill whose work it records, and `hora-digester` for the one digest it derives | humans read only |
+| `.hora/` | the skill whose work it records, and `hora-digester` for the one digest it derives — plus the two package installers, each writing only its own `equip-*.json` | humans read only |
 | the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's — or one unit's — code and tests, and the main session for every git operation and every aggregation file | — |
 
 **What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.

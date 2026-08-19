@@ -2,9 +2,11 @@
 
 # hora スキルの書き方
 
-`.claude/skills/` と `.claude/agents/` の全ファイルは、エージェントが動く前に実行時に読まれます。**8 文かけて述べた規則は、毎回 8 文ぶんの費用がかかります。**
+両 hora パッケージが配る全ファイル — skill も agent も — は、エージェントが動く前に実行時に読まれます。**8 文かけて述べた規則は、毎回 8 文ぶんの費用がかかります。**
 
 この文書は、それらのファイルが従う文体です。書き方の話であって、規則の中身の話ではありません。
+
+**ここで書かれるものではありません。** hora の skill と agent は [`hora-core`](https://github.com/openreachtech/hora-core) で、それらの委譲先である手順は [`hora-skills`](https://github.com/openreachtech/hora-skills) で書かれます。このリポジトリはそれを `.claude/` に受け取るだけです。文体は方法論と同じ場所に置く、という理由でここにあります。
 
 ---
 
