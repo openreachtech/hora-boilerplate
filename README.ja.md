@@ -41,7 +41,7 @@ npm install
 
 `specs/` を書く前に行ってください。リポジトリに自分のコミットができた後で `.git` を捨てると、それも一緒に失われます。
 
-**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。** キット自身が読むパッケージ — `@openreachtech/ai-agent-skills`（装備されるスキル群）と `@openreachtech/hora-ecosystem`（パッケージカタログ）— はこのリポジトリ自身の devDependencies から来ており、他の何もそれをインストールしません。
+**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。** キット自身が読むパッケージ — `@openreachtech/hora-skills`（装備されるスキル群）と `@openreachtech/hora-ecosystem`（パッケージカタログ）— はこのリポジトリ自身の devDependencies から来ており、他の何もそれをインストールしません。
 
 ### 2. 仕様書を書く
 
@@ -143,7 +143,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 
 18のチェックポイントは [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) にあります。仕様、想定ユースケース、DB / API スキーマ、stub API、実装に必要なモジュール、actual API、worker、セキュリティ検証、そしてフロントエンド、最後に検収です。
 
-**Hora Kit が持つのは「順序」と「関所」だけで、「やり方」は持ちません。** resolver / migration / コンポーネント / テストの書き方も、受入レビューが何を見るかも、すべて [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills) にあります。`/hora-setup` がこのリポジトリの `.claude/skills/` に配置します。詳しくは [`docs/skills.ja.md`](./docs/skills.ja.md) を参照してください。
+**Hora Kit が持つのは「順序」と「関所」だけで、「やり方」は持ちません。** resolver / migration / コンポーネント / テストの書き方も、受入レビューが何を見るかも、すべて [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills) にあります。`/hora-setup` がこのリポジトリの `.claude/skills/` に配置します。詳しくは [`docs/skills.ja.md`](./docs/skills.ja.md) を参照してください。
 
 ## ドキュメント
 

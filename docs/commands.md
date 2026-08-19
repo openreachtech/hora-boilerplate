@@ -173,13 +173,13 @@ hora  Stage 1. You described "attendance management, approval, payroll".
 | **Reads** | the spec's repository layout and project name; the real tree of every repository |
 | **Writes** | the implementation repositories; this repository's `package.json`, `.gitignore` and `eslint.config.js`; `.claude/skills/` (equipped skills); `.hora/tree/` |
 | **Stops when** | there is no repository layout section; no project name; zero or ≥2 backends; no server table; a declared `Directory` points at something that is not there |
-| **Run it directly** | after adding a repository row to a later version; after a failed or half-finished first run; to re-equip the skills after updating `ai-agent-skills` |
+| **Run it directly** | after adding a repository row to a later version; after a failed or half-finished first run; to re-equip the skills after updating `hora-skills` |
 
 ### What it does
 
 ```
 1. Create only what is missing, per the declaration      (idempotent)
-2. Equip every skill @openreachtech/ai-agent-skills ships
+2. Equip every skill @openreachtech/hora-skills ships
 3. Read what was cloned, in place, and record it in .hora/tree/
 ```
 
