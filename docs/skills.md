@@ -2,7 +2,7 @@
 
 # The skills Hora Kit runs on
 
-Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills) package.
+Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills) package.
 
 This document is about that boundary: why it exists, how the skills reach the session, how they are referred to, and what happens when one is missing.
 
@@ -13,7 +13,7 @@ This document is about that boundary: why it exists, how the skills reach the se
 Two documents describing the same convention will disagree. **The question is only when, and whether anybody notices.**
 
 ```
-ai-agent-skills   "a stub resolver lives under server/graphql/resolvers/<audience>/stub/"
+hora-skills       "a stub resolver lives under server/graphql/resolvers/<audience>/stub/"
                        │
                        │  the package is updated. The path changes.
                        ▼
@@ -26,7 +26,7 @@ Hora Kit          "a stub resolver lives under server/graphql/resolvers/<audienc
 
 So Hora Kit's rule is absolute:
 
-> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `ai-agent-skills` already holds it. State the work and delegate it.**
+> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `hora-skills` already holds it. State the work and delegate it.**
 
 This is the same reasoning `/hora-setup` already applies to the boilerplates: **read the real thing; do not bake in what it currently says.** The package is the real thing here.
 
@@ -35,7 +35,7 @@ This is the same reasoning `/hora-setup` already applies to the boilerplates: **
 | | Owns | Example |
 |---|---|---|
 | **Hora Kit** | when something happens, and what must be true before the next thing may | *"Checkpoint 4 passes when a schema-accurate stub exists for every operation this feature adds"* |
-| **`ai-agent-skills`** | how to do it, and what counts as done properly | *"a stub lives under `stub/{queries,mutations}/`, mirrors the schema, holds no DB access, and shares its class name with the real resolver"* |
+| **`hora-skills`** | how to do it, and what counts as done properly | *"a stub lives under `stub/{queries,mutations}/`, mirrors the schema, holds no DB access, and shares its class name with the real resolver"* |
 
 **The two sentences do not overlap.** That is the test: if a line in Hora Kit could be checked against the package and found to disagree, it does not belong in Hora Kit.
 
@@ -52,17 +52,17 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 ```
 
 ```
-node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
+node_modules/@openreachtech/hora-skills/dist/skills/<skill>/
                           │  straight copy, no renaming, no rewriting
                           ▼
                  .claude/skills/<skill>/
 ```
 
 - **It runs on every `/hora-setup` invocation**, because the package may have been updated since the last one. It synchronizes rather than overlays — package-equipped directories (the gitignored ones; your own skills are never touched) are removed first, then copied fresh — so a skill the package renamed or dropped does not linger, and a re-run is safe
-- **It does not wait for any repository to be cloned.** `ai-agent-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
+- **It does not wait for any repository to be cloned.** `hora-skills` is this repository's own devDependency, so it is ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/skills/` and naming this repository's own skills back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
-**`ai-agent-skills` is one of two packages the kit reads.** The other is **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
+**`hora-skills` is one of two packages the kit reads.** The other is **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 

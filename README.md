@@ -41,7 +41,7 @@ npm install
 
 Do this before writing `specs/` — once the repository holds commits of its own, discarding `.git` would take those with it too.
 
-**Either way, run `npm install` in the new repository before `/hora`.** The packages the kit itself reads — `@openreachtech/ai-agent-skills` (the equipped skills) and `@openreachtech/hora-ecosystem` (the package catalog) — come from this repository's own devDependencies, and nothing else installs them.
+**Either way, run `npm install` in the new repository before `/hora`.** The packages the kit itself reads — `@openreachtech/hora-skills` (the equipped skills) and `@openreachtech/hora-ecosystem` (the package catalog) — come from this repository's own devDependencies, and nothing else installs them.
 
 ### 2. Write the spec
 
@@ -143,7 +143,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
-**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`. See [`docs/skills.md`](./docs/skills.md).
+**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`. See [`docs/skills.md`](./docs/skills.md).
 
 ## Documentation
 
