@@ -119,11 +119,15 @@ The main session is handed the equipped skills' descriptions as part of its own 
 
 ### The prefix is the one part of a name worth reading
 
-| Prefix | Applies to |
-|---|---|
-| `hb-` (hora-backend) | the backend repository |
-| `hf-` (hora-frontend) | a frontend repository |
-| `hc-` (hora-core) | either |
+| Prefix | Domain | Applies to |
+|---|---|---|
+| `hb-` | `backend` | the backend repository |
+| `hf-` | `frontend` | a frontend repository |
+| `hc-` | `core` | either |
+
+The domain is `hora-skills`' own, and a repository can install a subset of them — `npx hora-skills install --domains core,backend` on a project with no frontend, or the same list declared once under `horaSkills` in package.json.
+
+**`hc-` is the `core` domain, not the `hora-core` package.** Both names are in play here and they name different things: `hora-core` is the command that installs `@openreachtech/hora`, which distributes no `hc-` skill at all.
 
 So which surface a skill serves is visible before anything else. **Everything after the prefix is a label, not a classification** — one skill in this package covers operation clients in the frontend app and another covers SDL for the backend server, and their names differ by no more than a word. **The description is the only thing that says which is which**, and matching on what a name sounds like is how the wrong one gets invoked.
 
