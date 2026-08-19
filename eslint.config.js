@@ -47,26 +47,14 @@ export default [
       '*-backend*/',
       '*-frontend*/',
 
-      // Skills equipped from @openreachtech/ai-agent-skills. Not authored here,
-      // and some of them ship .js/.mjs/.cjs. The package prefixes them
-      // (hb-/hf-/hc-), but those names belong to the package, and a denylist
-      // that stops matching says nothing when it stops. So this ignores the
-      // whole directory and names this repository's own skills back in.
-      '.claude/skills/*/',
-      '!.claude/skills/bank-id/',
-      '!.claude/skills/hora/',
-      '!.claude/skills/hora-accept/',
-      '!.claude/skills/hora-build/',
-      '!.claude/skills/hora-plan/',
-      '!.claude/skills/hora-setup/',
-      '!.claude/skills/hora-spec/',
-      '!.claude/skills/hora-spec-usecases/',
-      '!.claude/skills/hora-spec-horizon/',
-      '!.claude/skills/hora-spec-nonfunctional/',
-      '!.claude/skills/hora-spec-backend/',
-      '!.claude/skills/hora-spec-frontend/',
-      '!.claude/skills/hora-spec-security/',
-      '!.claude/skills/hora-spec-review/',
+      // The kit equipped by postinstall, from @openreachtech/hora and
+      // @openreachtech/hora-skills. Not authored here, and some of the skills
+      // ship .js/.mjs/.cjs. Both payload directories are ignored whole, the way
+      // .gitignore does it: a denylist written against the names the packages
+      // use today says nothing when it stops matching. A skill this repository
+      // authors is named back in, one literal line each.
+      '.claude/agents/',
+      '.claude/skills/',
     ],
   },
 ]
