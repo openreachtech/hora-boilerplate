@@ -61,7 +61,7 @@ After that, new features go through the full eighteen, one at a time.
 |---|---|
 | **The repositories are renchan / furo based** | the checkpoints delegate to skills that describe renchan and Furo conventions specifically. A repository on a different stack will get the order and the gates, but every delegated procedure will describe something it is not |
 | **One backend, holding one DB system** | the policy is `one DB system = one repository`. Zero, or two or more, stops and asks |
-| **Node and npm**, for the kit's own `npm install` | |
+| **Node and npm**, for the kit's own `npm install` | it is what places the kit — the skills come from packages, not from this template's tree |
 | **Claude Code** | |
 
 **A frontend is optional.** Some projects are only an API for a phone app.
@@ -303,7 +303,7 @@ It works out that repositories are declared but not all set up, and runs `/hora-
 | `package.json` name/description | filled in **only if still a placeholder** |
 | `.env.development` | filled in **only where a key is still empty** |
 | `docker.sh` / `docker-compose.development.yml` | **never overwritten.** If yours exist, they are read, and any difference from the spec's manual-verification table is reported |
-| `npm install` | run |
+| `npm install` | run, and its `postinstall` equips the kit from both hora packages |
 | copying `bank-id` into the backend | **only if not already there** |
 | reading the real tree | run, and cached in `.hora/tree/` with the boilerplate tag it was read at |
 

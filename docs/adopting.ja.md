@@ -61,7 +61,7 @@ Hora Kit は通常「そこから始めるテンプレート」として出会�
 |---|---|
 | **リポジトリが renchan / furo 系であること** | 関所は renchan と Furo の規約を述べたスキルに委譲します。別スタックのリポジトリでも順序と関所は効きますが、委譲される手順はすべて「それではないもの」を説明することになります |
 | **バックエンドは1つ、DB システムも1つ** | 方針は `1 DB システム = 1 リポジトリ`。0個または2個以上は止まって尋ねます |
-| **Node と npm**（キット自身の `npm install` 用） | |
+| **Node と npm**（キット自身の `npm install` 用） | これがキットを配置します。スキルはパッケージから来るもので、このテンプレートのツリーには入っていません |
 | **Claude Code** | |
 
 **フロントエンドは任意です。** スマホアプリ向け API だけ、という案件もあります。
@@ -303,7 +303,7 @@ Authority: as-built — what these repositories do is what 1.0.0 is
 | `package.json` の name/description | **プレースホルダのままの場合だけ**埋める |
 | `.env.development` | **キーが空のままの箇所だけ**埋める |
 | `docker.sh` / `docker-compose.development.yml` | **絶対に上書きしない。** 既にあれば読み、仕様書の手動検証表との差分を報告する |
-| `npm install` | 実行する |
+| `npm install` | 実行する。その `postinstall` が両 hora パッケージからキットを配置する |
 | `bank-id` の backend へのコピー | **まだ無い場合だけ** |
 | 実物ツリーの読み取り | 実行し、読んだ時点の boilerplate タグとともに `.hora/tree/` に控える |
 
