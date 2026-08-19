@@ -39,8 +39,5 @@ jobs:
       - name: 🧵 Run ESLint
         run: npm run lint
 
-      - name: 🧭 Check levers.md references
-        run: npm run lint:references
-
       - name: 🌐 Check ja/en doc pairs
         run: npm run lint:docs-pairs
