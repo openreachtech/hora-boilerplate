@@ -35,14 +35,16 @@ This document explains the design. It is not the authority on any rule — each 
 
 ![Four layers: /hora, the five skills, the stage skills and the two agents, and hora-skills](./images/layers.svg)
 
-| Layer | What it decides | What it never decides |
-|---|---|---|
-| `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself |
-| the five skills | the order of the work, and each gate's exit condition | how any of it is written |
-| the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git |
-| `hora-skills` | **every procedure and every pass/fail criterion** | when it is invoked |
+| Layer | What it decides | What it never decides | Ships in |
+|---|---|---|---|
+| `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself | `@openreachtech/hora` |
+| the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora` |
+| the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git | `@openreachtech/hora` |
+| `hora-skills` | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills` |
 
-**The bottom layer is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in a package that is versioned and updated on its own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
+**Not one of the four is in this repository.** All four arrive as packages, and what this repository holds is the spec, these documents, and the run's own record under `.hora/`.
+
+**The split between the two packages is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in a package that is versioned and updated on its own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
 
 ---
 
