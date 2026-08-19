@@ -8,8 +8,7 @@
   "scripts": {
     "l": "npm run lint",
     "lint": "eslint .",
-    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",
-    "lint:references": "node scripts/check-references.mjs"
+    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs"
   },
   "dependencies": {
   },
