@@ -20,12 +20,16 @@ Every command runs **at the root of the hora repository** (`<myproject>-app`).
 |---|---|
 | **Reads** | `specs/`, `.hora/`, and `git` state in every declared repository |
 | **Writes** | nothing directly — but **every branch, commit and merge in every repository is its own** |
-| **Stops when** | a blocking question is unresolved; a decision it must not make on its own is needed; a hotfix catch-up hits something it cannot resolve |
+| **Stops when** | no implementation skill is equipped at all (below); a blocking question is unresolved; a decision it must not make on its own is needed; a hotfix catch-up hits something it cannot resolve |
 | **Run it directly** | always. This is the normal entry point |
 
 ### What it does first, every time
 
 ```
+   is any skill under .claude/skills/ named hb- / hf- / hc-?
+                                              no → stop, and ask for the
+                                                   implementation skills to
+                                                   be equipped
 0. git fetch origin --prune, everywhere. Then: did a hotfix land on main?
 1. does the target version have a spec at all?  no → /hora-spec
 2. are all declared repositories present?     missing → /hora-setup
