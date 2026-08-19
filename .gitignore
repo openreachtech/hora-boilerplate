@@ -17,31 +17,24 @@ node_modules/
 # here. Left out, the whole repository gets committed into this one, and
 # nothing says so until somebody reads `git status`.
 
-#### skills equipped from @openreachtech/ai-agent-skills by equip-skills.sh (regenerated, not authored here)
+#### the kit equipped by postinstall, from @openreachtech/hora and
+#### @openreachtech/hora-skills (regenerated, not authored here)
 #
-# Ignore everything under .claude/skills/ and name this repository's own back
-# in. The package does prefix its skills (hb-/hf-/hc-), but those names belong
-# to the package, and a denylist that stops matching says nothing when it
-# stops — every equipped skill would simply start being committed here. An
-# allowlist of the ones we author cannot fail that way.
-#
-# Every hora-spec-* stage skill is named literally, for the same reason: a
-# pattern would start matching whatever the package prefixes next.
+# Ignore the contents of both payload directories, and name this repository's
+# own entries back in, one literal line each. What the two packages distribute
+# changes with every release, so a pattern written against today's names goes
+# stale without saying so — and a denylist that stops matching says nothing
+# when it stops: every equipped entry would simply start being committed here.
+# An allowlist cannot fail that way. Nothing is named back in today, because
+# this repository authors no skill and no agent of its own.
+/.claude/agents/*
 /.claude/skills/*
-!/.claude/skills/bank-id/
-!/.claude/skills/hora/
-!/.claude/skills/hora-accept/
-!/.claude/skills/hora-build/
-!/.claude/skills/hora-plan/
-!/.claude/skills/hora-setup/
-!/.claude/skills/hora-spec/
-!/.claude/skills/hora-spec-usecases/
-!/.claude/skills/hora-spec-horizon/
-!/.claude/skills/hora-spec-nonfunctional/
-!/.claude/skills/hora-spec-backend/
-!/.claude/skills/hora-spec-frontend/
-!/.claude/skills/hora-spec-security/
-!/.claude/skills/hora-spec-review/
+
+# The two equip manifests, written by the install commands. These are the only
+# entries under .hora/ that are ignored: everything else there is the run's own
+# record, and `git log .hora/` is the history of what ran.
+/.hora/equip-core.json
+/.hora/equip-skills.json
 
 #### for Windows
 Thumbs.db
