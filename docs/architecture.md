@@ -119,16 +119,21 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
                                 appended block each
     _sweep.md                   the whole-version sweep
   glossary.md                   append-only, not split per version
+
+  equip-core.json               what the last hora-core install placed. Gitignored
+  equip-skills.json             what the last hora-skills install placed. Gitignored
 ```
 
 `git log .hora/` is the history of what ran. Nothing else records it, and nothing needs to.
+
+**The two `equip-*.json` files are the exception, and they are gitignored for it.** They record what each package's installer wrote, so the next run can remove exactly that before copying fresh. They are not state of the project and no skill reads them.
 
 ### Who may write what
 
 | Directory | Written by | Everyone else |
 |---|---|---|
 | `specs/` | **humans**, and the two skills that write on their behalf: `/hora-spec`, one approved section at a time, and `/hora-plan`, one approved edit at a time | read-only |
-| `.hora/` | the skill whose work it records, and `hora-digester` for the one digest it derives | humans read only |
+| `.hora/` | the skill whose work it records, and `hora-digester` for the one digest it derives — plus the two package installers, each writing only its own `equip-*.json` | humans read only |
 | the implementation repositories | `/hora-setup` as it creates and fills them, `hora-implementer` for one checkpoint's — or one unit's — code and tests, and the main session for every git operation and every aggregation file | — |
 
 **What is protected is not the act of writing — it is that no requirement ever enters `specs/` without a human having read the exact words first.** Both exceptions keep that: approval is per section in `/hora-spec` and per edit in `/hora-plan`, and "yes, do them all" is not approval of anything nobody read. [Part 2](#approval-is-per-section) holds why the granularity is what it is.
