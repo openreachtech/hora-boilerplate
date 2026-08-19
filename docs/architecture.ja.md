@@ -35,14 +35,16 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 
 ![4つの層：/hora、5つの skill、ステージ skill と2つのエージェント、そして hora-skills](./images/layers.ja.svg)
 
-| 層 | 決めること | 決してしないこと |
-|---|---|---|
-| `/hora` | 次にどの段階が来るか。すべてのブランチ・コミット・マージ | 作業の中身に関する一切 |
-| 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 |
-| ステージ skill と2つの agent | 仕様書の1節、あるいは1関所ぶんのコードや判定 | 順序上の位置。git に関する一切 |
-| `hora-skills` | **すべての手順と、すべての合否基準** | それが呼ばれる時機 |
+| 層 | 決めること | 決してしないこと | 配布元 |
+|---|---|---|---|
+| `/hora` | 次にどの段階が来るか。すべてのブランチ・コミット・マージ | 作業の中身に関する一切 | `@openreachtech/hora` |
+| 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 | `@openreachtech/hora` |
+| ステージ skill と2つの agent | 仕様書の1節、あるいは1関所ぶんのコードや判定 | 順序上の位置。git に関する一切 | `@openreachtech/hora` |
+| `hora-skills` | **すべての手順と、すべての合否基準** | それが呼ばれる時機 | `@openreachtech/hora-skills` |
 
-**驚かれるのは最下層です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらは独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](../.claude/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
+**4つのどれも、このリポジトリの中にはありません。** 4層すべてがパッケージとして届き、このリポジトリが持つのは仕様書と、これらの文書と、`.hora/` にある実行自身の記録です。
+
+**驚かれるのは、パッケージ2つの間の分割です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらは独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](../.claude/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
 
 ---
 
