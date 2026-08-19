@@ -20,12 +20,16 @@ Every command runs **at the root of the hora repository** (`<myproject>-app`).
 |---|---|
 | **Reads** | `specs/`, `.hora/`, and `git` state in every declared repository |
 | **Writes** | nothing directly — but **every branch, commit and merge in every repository is its own** |
-| **Stops when** | a blocking question is unresolved; a decision it must not make on its own is needed; a hotfix catch-up hits something it cannot resolve |
+| **Stops when** | no implementation skill is equipped at all (below); a blocking question is unresolved; a decision it must not make on its own is needed; a hotfix catch-up hits something it cannot resolve |
 | **Run it directly** | always. This is the normal entry point |
 
 ### What it does first, every time
 
 ```
+   is any skill under .claude/skills/ named hb- / hf- / hc-?
+                                              no → stop, and ask for the
+                                                   implementation skills to
+                                                   be equipped
 0. git fetch origin --prune, everywhere. Then: did a hotfix land on main?
 1. does the target version have a spec at all?  no → /hora-spec
 2. are all declared repositories present?     missing → /hora-setup
@@ -171,21 +175,21 @@ hora  Stage 1. You described "attendance management, approval, payroll".
 | | |
 |---|---|
 | **Reads** | the spec's repository layout and project name; the real tree of every repository |
-| **Writes** | the implementation repositories; this repository's `package.json`, `.gitignore` and `eslint.config.js`; `.claude/skills/` (equipped skills); `.hora/tree/` |
+| **Writes** | the implementation repositories; this repository's `package.json`, `.gitignore` and `eslint.config.js`; `.hora/tree/` |
 | **Stops when** | there is no repository layout section; no project name; zero or ≥2 backends; no server table; a declared `Directory` points at something that is not there |
-| **Run it directly** | after adding a repository row to a later version; after a failed or half-finished first run; to re-equip the skills after updating `ai-agent-skills` |
+| **Run it directly** | after adding a repository row to a later version; after a failed or half-finished first run |
 
 ### What it does
 
 ```
 1. Create only what is missing, per the declaration      (idempotent)
-2. Equip every skill @openreachtech/ai-agent-skills ships
+2. Fill in the values that carry this project's name
 3. Read what was cloned, in place, and record it in .hora/tree/
 ```
 
 **It re-evaluates on every version.** Repositories arrive later — a project starts as an API for a phone app and gains an admin screen — so passing this once is not the end of it.
 
-**Step 2 is what everything else depends on.** The checkpoints delegate their procedures to that package; without this step, every one of those delegations has nothing to reach. It runs on every invocation, because the package may have been updated.
+**Equipping the skills is no longer a step here.** `npm install` places them, through this repository's `postinstall` ([`skills.md`](./skills.md)), so there is nothing for `/hora-setup` to do about it and nothing for a half-finished run to leave undone. `npm run hora:init` re-equips on demand.
 
 **Step 3 does not bake anything in.** The newest tag is always cloned, so any convention written into Hora Kit would eventually disagree with the real thing. What it reads is cached in `.hora/tree/<repository>.md` with the tag it was read at, and re-read when that tag changes. **On any disagreement, the tree wins.**
 
@@ -396,8 +400,7 @@ you   /hora
          and works through its seven stages with you, writing each section
          once you have read it.
       →  no repositories yet. Runs /hora-setup: clones the boilerplates at their
-         newest tags, fills in the project's values, equips the skills, reads
-         the trees.
+         newest tags, fills in the project's values, reads the trees.
       →  Runs /hora-plan. It reads specs/1.0.0/spec.md and starts asking.
 
 hora  #attendance states three use cases but no acceptance criteria.

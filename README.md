@@ -21,7 +21,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | | |
 |---|---|
 | **Claude Code** | the skills run there |
-| **Node and npm** | for this repository's own `npm install` |
+| **Node and npm** | for this repository's own `npm install`, which is what puts the skills in place. Node 20 or newer, the floor both hora packages declare |
 | **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
 | **A runner for CI** | only before opening pull requests. A self-hosted runner labeled `light` is the default; switching the workflows to GitHub-hosted runners is a change you make yourself. See [Continuous integration](#continuous-integration) |
 
@@ -41,7 +41,9 @@ npm install
 
 Do this before writing `specs/` — once the repository holds commits of its own, discarding `.git` would take those with it too.
 
-**Either way, run `npm install` in the new repository before `/hora`.** The packages the kit itself reads — `@openreachtech/ai-agent-skills` (the equipped skills) and `@openreachtech/hora-ecosystem` (the package catalog) — come from this repository's own devDependencies, and nothing else installs them.
+**Either way, run `npm install` in the new repository before `/hora`. Without it there is no `/hora` to run.** This repository carries no skill and no agent of its own: `/hora` and the five skills it orders come from [`@openreachtech/hora`](https://github.com/openreachtech/hora-core), the procedures they delegate to from [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills), and a `postinstall` hook places both into `.claude/`. A fresh clone has an empty `.claude/` until that has run.
+
+The third package, `@openreachtech/hora-ecosystem`, is the catalog checkpoint 5 checks before anything is written new. It is never placed anywhere — it is read where npm put it.
 
 ### 2. Write the spec
 
@@ -143,7 +145,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
 
 The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
-**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills), which `/hora-setup` equips into this repository's own `.claude/skills/`. See [`docs/skills.md`](./docs/skills.md).
+**Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills), equipped into this repository's own `.claude/skills/` by `npm install`. See [`docs/skills.md`](./docs/skills.md).
 
 ## Documentation
 
@@ -172,7 +174,7 @@ npm run lint
 
 **Every file under `docs/` is a pair — `x.md` and `x.ja.md`.** Change one and change the other in the same commit. Two documents saying the same thing will disagree the moment only one of them is updated, and the stale one still reads as authoritative.
 
-**The skills under `.claude/` are English only.** They are read by Claude Code, not by a reader choosing a language.
+**Nothing under `.claude/` is edited here.** It is installed by `npm install`, and the next one overwrites whatever you changed. A fix to a hora skill or an agent belongs in [`hora-core`](https://github.com/openreachtech/hora-core), and one to a procedure they delegate to in [`hora-skills`](https://github.com/openreachtech/hora-skills) — both English only, since Claude Code reads them rather than a person choosing a language. [`docs/writing-style.md`](./docs/writing-style.md) is the style they are held to.
 
 ## License
 

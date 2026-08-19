@@ -2,7 +2,7 @@
 
 # Hora Kit が乗っているスキル群
 
-Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — [`@openreachtech/ai-agent-skills`](https://github.com/openreachtech/ai-agent-skills) パッケージにあります。
+Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills) パッケージにあります。
 
 このドキュメントはその境界の話です。なぜ在るのか、スキルはどうやってセッションに届くのか、どう参照するのか、無かったときどうなるのか。
 
@@ -13,7 +13,7 @@ Hora Kit が持っているのは順序と関所です。**手順と合否基準
 同じ規約を書いた文書が2つあれば、必ず食い違います。**問題は「いつ」と「誰かが気づくか」だけです。**
 
 ```
-ai-agent-skills   「stub resolver は server/graphql/resolvers/<audience>/stub/ に置く」
+hora-skills       「stub resolver は server/graphql/resolvers/<audience>/stub/ に置く」
                        │
                        │  パッケージが更新される。パスが変わる。
                        ▼
@@ -26,7 +26,7 @@ Hora Kit          「stub resolver は server/graphql/resolvers/<audience>/stub/
 
 したがって Hora Kit の規則は絶対です。
 
-> **`ai-agent-skills` のスキルが既に持っている手順・規約・合否基準を、hora skill 側に書いてはならない。「何をする作業か」を書いて委譲すること。**
+> **`hora-skills` のスキルが既に持っている手順・規約・合否基準を、hora skill 側に書いてはならない。「何をする作業か」を書いて委譲すること。**
 
 これは `/hora-setup` が boilerplate に対して既に採っている考え方と同じです：**実物を読め。今そう書いてあることを焼き込むな。** ここでの実物はパッケージです。
 
@@ -35,7 +35,7 @@ Hora Kit          「stub resolver は server/graphql/resolvers/<audience>/stub/
 | | 所有するもの | 例 |
 |---|---|---|
 | **Hora Kit** | 何がいつ起きるか。次に進む前に何が真でなければならないか | *「関所4は、この機能が足す全操作にスキーマ準拠の stub が存在したら通過」* |
-| **`ai-agent-skills`** | どうやるか。何をもって「ちゃんとできた」か | *「stub は `stub/{queries,mutations}/` に置き、スキーマを写し、DB アクセスを持たず、実装 resolver とクラス名を共有する」* |
+| **`hora-skills`** | どうやるか。何をもって「ちゃんとできた」か | *「stub は `stub/{queries,mutations}/` に置き、スキーマを写し、DB アクセスを持たず、実装 resolver とクラス名を共有する」* |
 
 **2つの文は重なりません。** それが判定基準です — Hora Kit のある行が、パッケージと突き合わせて「食い違っている」と判定できてしまうなら、その行は Hora Kit にあるべきではありません。
 
@@ -45,24 +45,27 @@ Hora Kit          「stub resolver は server/graphql/resolvers/<audience>/stub/
 
 Claude Code がスキルを見つけるのは、セッション自身の `.claude/skills/` だけです。パッケージのスキルは `node_modules/` にあり、そこはその場所ではありません。**コピーする手順が無ければ、パッケージが配るものは全部見えないままです。**
 
-`/hora-setup` がそのコピーを実行します。
+`npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
-```bash
-.claude/skills/hora-setup/scripts/equip-skills.sh
+```json
+"hora:init": "npx hora-core install && npx hora-skills install",
+"postinstall": "npm run hora:init"
 ```
 
 ```
-node_modules/@openreachtech/ai-agent-skills/dist/skills/<skill>/
-                          │  そのままコピー。改名も書き換えもしない
-                          ▼
-                 .claude/skills/<skill>/
+node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
+node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
+                          そのままコピー。改名も書き換えもしない
 ```
 
-- **`/hora-setup` のたびに走ります。** 前回以降にパッケージが更新されている可能性があるためです。上書きではなく同期です — パッケージ由来のディレクトリ（gitignore されているもの。自前のスキルには決して触れません）を先に削除してからコピーし直すので、パッケージが改名・削除したスキルが残留せず、再実行は安全です
-- **リポジトリの clone を待ちません。** `ai-agent-skills` はこのリポジトリ自身の devDependency なので、ここで `npm install` が済んでいれば使えます
-- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/skills/` 全体を無視した上で、このリポジトリ自身のスキルを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
+- **パッケージ2つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、`@openreachtech/hora-skills` がそれらの委譲先である手順を運びます。どちらも平坦な1つの `.claude/skills/` に並んで着地します。`hb-`/`hf-`/`hc-` の接頭辞はそのためにあります
+- **`npm install` だけで足ります。** 引数なしの `npm install` はフックを再実行するので、更新されたパッケージも追随します。コマンドラインでパッケージを名指しした場合は再実行されないため、そのときは `npm run hora:init` で配り直します
+- **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`.hora/equip-core.json` と `.hora/equip-skills.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
+- **リポジトリの clone を待ちません。** 両パッケージはこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
+- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視した上で、このリポジトリ自身のものを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
-**キットが読むパッケージは `ai-agent-skills` を含めて2つあります。** もう1つは **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
+**配置されるのはこの2つで、3つ目は置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 
@@ -116,11 +119,15 @@ Hora Kit    「<かつての名前> に委譲せよ」
 
 ### 名前のうち読む価値があるのは接頭辞だけです
 
-| 接頭辞 | 対象 |
-|---|---|
-| `hb-`（hora-backend） | バックエンドリポジトリ |
-| `hf-`（hora-frontend） | フロントエンドリポジトリ |
-| `hc-`（hora-core） | どちらでも |
+| 接頭辞 | ドメイン | 対象 |
+|---|---|---|
+| `hb-` | `backend` | バックエンドリポジトリ |
+| `hf-` | `frontend` | フロントエンドリポジトリ |
+| `hc-` | `core` | どちらでも |
+
+ドメインは `hora-skills` 自身のもので、その一部だけを入れることもできます — フロントエンドが無いプロジェクトなら `npx hora-skills install --domains core,backend`、あるいは同じ指定を package.json の `horaSkills` に一度書いておく形です。
+
+**`hc-` は `core` ドメインであって、`hora-core` パッケージではありません。** ここでは両方の名前が出てきますが、指すものが違います。`hora-core` は `@openreachtech/hora` を配置するコマンドで、そのパッケージは `hc-` スキルを1つも配りません。
 
 どの面に仕えるスキルかは、その先を読む前に分かります。**接頭辞の後ろはラベルであって、分類ではありません** — このパッケージには、フロントエンドアプリの操作クライアントを扱うスキルと、バックエンドサーバーの SDL を扱うスキルがあり、名前の違いは単語1つ分しかありません。**どちらがどちらかを言えるのは description だけ**で、名前の語感で選ぶのは間違ったスキルが呼ばれる典型です。
 
