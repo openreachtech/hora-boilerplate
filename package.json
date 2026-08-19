@@ -6,9 +6,11 @@
   "description": "TODO: fulfill here",
   "type": "module",
   "scripts": {
+    "hora:init": "npx hora-core install && npx hora-skills install",
     "l": "npm run lint",
     "lint": "eslint .",
-    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs"
+    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",
+    "postinstall": "npm run hora:init"
   },
   "dependencies": {
   },
