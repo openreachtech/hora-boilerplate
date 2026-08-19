@@ -174,7 +174,7 @@ npm run lint
 
 **`docs/` 配下は全てペアです** — `x.md` と `x.ja.md`。片方を直したら、同じコミットでもう片方も直してください。同じことを言う文書が2つあれば、片方だけ更新された瞬間に食い違い、しかも古い方も権威ある文面のままです。
 
-**`.claude/` 配下の skill は英語のみです。** 読み手が言語を選ぶ文書ではなく、Claude Code が読む文書だからです。
+**`.claude/` 配下は、ここでは編集しません。** `npm install` が配置する場所で、次の `npm install` が変更を上書きします。hora の skill や agent の修正は [`hora-core`](https://github.com/openreachtech/hora-core)、それらの委譲先である手順の修正は [`hora-skills`](https://github.com/openreachtech/hora-skills) が置き場所です。どちらも英語のみ — 読み手が言語を選ぶ文書ではなく、Claude Code が読む文書だからです。従う文体は [`docs/writing-style.ja.md`](./docs/writing-style.ja.md) にあります。
 
 ## ライセンス
 

@@ -174,7 +174,7 @@ npm run lint
 
 **Every file under `docs/` is a pair — `x.md` and `x.ja.md`.** Change one and change the other in the same commit. Two documents saying the same thing will disagree the moment only one of them is updated, and the stale one still reads as authoritative.
 
-**The skills under `.claude/` are English only.** They are read by Claude Code, not by a reader choosing a language.
+**Nothing under `.claude/` is edited here.** It is installed by `npm install`, and the next one overwrites whatever you changed. A fix to a hora skill or an agent belongs in [`hora-core`](https://github.com/openreachtech/hora-core), and one to a procedure they delegate to in [`hora-skills`](https://github.com/openreachtech/hora-skills) — both English only, since Claude Code reads them rather than a person choosing a language. [`docs/writing-style.md`](./docs/writing-style.md) is the style they are held to.
 
 ## License
 
