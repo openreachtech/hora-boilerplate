@@ -5,38 +5,61 @@ on:
     branches:
       - '**'
 
-permissions:
-  contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  test:
-    runs-on: [self-hosted, light]
+permissions:
+  contents: read
 
-    strategy:
-      matrix:
-        node-version: ['20.x']
+jobs:
+  ci:
+    # ⚠️ Keep this name fixed. Required status checks are configured per-organization
+    # by check name, so renaming the job here silently exempts this repository
+    # from the merge gate.
+    name: CI Test
+
+    # private repository: self-hosted
+    # public repository: github-hosted
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
+
+    timeout-minutes: 60
 
     steps:
-      - name: 📮 Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: 🛎️ Checkout repository code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The ja/en pair check diffs against the PR's base branch, and a
           # shallow checkout cannot resolve a merge base for that.
           fetch-depth: 0
 
-      - name: 🏗 Setup Node.js version ${{ matrix.node-version }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - name: 🏗️ Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          # ⚠️ The npm cache only pays off where ~/.npm is discarded between jobs.
+          # On a persistent [self-hosted] runner it re-ships what is already on disk,
+          # adding a measured 2.7 GB and ~2m30s to this step so that the next one,
+          # npm ci, can finish in 5s instead of 7s.
+          cache: ${{ runner.environment == 'github-hosted' && 'npm' || '' }}
+          package-manager-cache: false
+          # A floating LTS alias keeps every repository current without a scheduled
+          # sweep to bump a pinned major across all of them. Pin a concrete version
+          # here only in a repository that genuinely needs one.
+          node-version: lts/*
+
+      - name: 🖨️ Print environment
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          echo
+          echo "runner: $RUNNER_ENVIRONMENT"
+          echo "node  : $(node -v)"
+          echo "npm   : $(npm -v)"
 
       - name: 📦 Install packages
         run: npm ci
 
-      - name: 🧵 Run ESLint
+      - name: 🧵 ESLint
         run: npm run lint
 
       - name: 🌐 Check ja/en doc pairs
