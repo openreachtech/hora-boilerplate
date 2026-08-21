@@ -1,114 +1,126 @@
 name: Create Semantic Version Tag and Release
 
+# When a pull request into main is merged, tag its merge commit with the version
+# in the title ("Release > Main as `x.x.x`") and publish a GitHub Release.
+#
+# NOTE: This workflow must work on both GitHub-hosted and self-hosted runners.
+# A self-hosted runner cannot be assumed to have gh or Python installed, so use
+# actions/github-script rather than depend on a binary being on PATH.
+
 on:
   pull_request:
     types: [closed]
     branches:
       - main
 
-# The one workflow that pushes a tag and creates a release. Without this
-# block it inherits the repository default, which may be read-only.
+# ⚠️ Don't add concurrency: here, because cancelling a run between the tag and
+# the release would leave the tag without one. Each merge runs once and is never
+# rerun, so there is nothing for a group to protect.
+
+# Required to create the tag and the release.
 permissions:
   contents: write
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   tag-and-release:
-    # Only run when a release/* or hotfix/* PR is merged. dev and env also
-    # merge into main (main-guard.yml allows them), but neither means a
-    # release — a version-looking substring in one of their PR titles
-    # ("bump eslint 9.39.5") must not create a tag.
-    if: >-
-      github.event.pull_request.merged == true &&
-      (startsWith(github.event.pull_request.head.ref, 'release/') ||
-       startsWith(github.event.pull_request.head.ref, 'hotfix/'))
+    # Only run when PR is merged
+    if: github.event.pull_request.merged == true
 
-    runs-on: [self-hosted, light]
+    # private repository: self-hosted
+    # public repository: github-hosted
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
+
+    timeout-minutes: 5
 
     steps:
-      - name: 🛎 Checkout the merge commit on main
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          # On a pull_request event the default ref is refs/pull/<n>/merge,
-          # an ephemeral test merge — tagging that puts the tag on a commit
-          # main never holds. Tag the commit that actually landed instead.
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-
-      - name: ✅️ Extract the version from the PR title, or the release branch name
+      - name: ✂️ Extract the version from the PR title, or the release branch name
         id: extract_version
-        env:
-          # Passed through env, never interpolated into the script text — a
-          # PR title is attacker-controlled and this is a self-hosted runner.
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          # The PR title is the required, priority source: a bare 1.1.0, optionally
-          # followed by a prerelease suffix (1.1.0-rc-1, 1.1.0-alpha.1+build.5, ...).
-          # The suffix is restricted to characters a git tag name may hold.
-          VERSION=$(echo "$PR_TITLE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z._+-]+)?' | head -n 1)
+        uses: actions/github-script@v9
+        with:
+          script: |
+            /*
+             * Publishing targets npmjs, so only a bare x.x.x is accepted.
+             */
+            const CORE = /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)/u.source
+            const pullRequest = context.payload.pull_request
 
-          if [ -z "$VERSION" ]; then
-            echo "No version in the PR title. Falling back to the branch name."
-            # Fallback: a release/x.x.x branch name.
-            VERSION=$(echo "$HEAD_REF" | grep -oE '^release/[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z._+-]+)?$' | sed 's#^release/##')
-          fi
+            const titleMatch = pullRequest.title.match(new RegExp(`\`(${CORE})\``, 'u'))
 
-          if [ -z "$VERSION" ]; then
-            case "$HEAD_REF" in
-              release/*)
-                # A release branch that yields no version would otherwise
-                # leave the version untagged behind a green run — and an
-                # untagged version reads as "never released".
-                echo "::error::No version found in the PR title, and the branch name '$HEAD_REF' is not release/x.y.z."
-                exit 1
-                ;;
-              *)
-                echo "version=" >> "$GITHUB_OUTPUT"
-                echo "No version in the PR title. A hotfix without one gets no tag."
-                ;;
-            esac
-          else
-            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "Version: $VERSION"
-          fi
+            const [
+              ,
+              titleVersion = null,
+            ] = titleMatch ?? []
 
-      - name: ✅️ Check whether the tag already exists
-        id: check_tag
+            /*
+             * Fallback: a release/x.x.x branch name.
+             */
+            const branchMatch = pullRequest.head.ref.match(new RegExp(`^release/(${CORE})$`, 'u'))
+
+            const [
+              ,
+              branchVersion = null,
+            ] = branchMatch ?? []
+
+            /*
+             * Both names carry the version, and both are typed by hand. Two
+             * sources of one value are worth nothing unless they must agree, so
+             * a disagreement stops the run instead of picking a winner.
+             */
+            if (titleVersion && branchVersion && titleVersion !== branchVersion) {
+              core.setFailed(`Version mismatch: title \`${titleVersion}\` vs branch \`${branchVersion}\`.`)
+
+              return
+            }
+
+            const version = titleVersion ?? branchVersion
+
+            if (version) {
+              core.info(`Version: ${version}`)
+            } else {
+              core.info('No version found in the PR title or the branch name. Skipping the tag and release.')
+            }
+
+            core.setOutput('version', version)
+
+      - name: 🏷️ Create the version tag
         if: steps.extract_version.outputs.version != ''
+        uses: actions/github-script@v9
         env:
           VERSION: ${{ steps.extract_version.outputs.version }}
-        run: |
-          # Ask the remote — the checkout above does not fetch tags, so a
-          # local lookup would miss every tag and re-push on every re-run.
-          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Tag $VERSION already exists. Skipping."
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+        with:
+          script: |
+            const { VERSION } = process.env
 
-      - name: 🏷️ Create and push the version tag
-        if: steps.extract_version.outputs.version != '' && steps.check_tag.outputs.exists == 'false'
-        env:
-          VERSION: ${{ steps.extract_version.outputs.version }}
-        run: |
-          git tag "$VERSION"
-          git push origin "$VERSION"
-          echo "Created and pushed tag: $VERSION"
+            /*
+             * Every failure here is a real one, so none is caught. A tag that
+             * is already there means the version was released before, which is
+             * a title left unbumped rather than a state to skip over.
+             */
+            await github.rest.git
+              .createRef({
+                ...context.repo,
+                ref: `refs/tags/${VERSION}`,
+                sha: context.payload.pull_request.merge_commit_sha,
+              })
 
       - name: 📢 Create GitHub Release
-        if: steps.extract_version.outputs.version != '' && steps.check_tag.outputs.exists == 'false'
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
-        with:
-          tag_name: ${{ steps.extract_version.outputs.version }}
-          name: ${{ steps.extract_version.outputs.version }}
-          draft: false
-          # The version regex deliberately accepts a prerelease suffix; an
-          # rc must not become "Latest" on the releases page.
-          prerelease: ${{ contains(steps.extract_version.outputs.version, '-') }}
-          generate_release_notes: true
+        if: steps.extract_version.outputs.version != ''
+        uses: actions/github-script@v9
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.extract_version.outputs.version }}
+        with:
+          script: |
+            const { VERSION } = process.env
+
+            /*
+             * A step condition carrying no status function still requires every
+             * earlier step to have succeeded, so this runs only once the tag is
+             * in place and needs no guard of its own.
+             */
+            await github.rest.repos
+              .createRelease({
+                ...context.repo,
+                tag_name: VERSION,
+                name: VERSION,
+                generate_release_notes: true,
+              })
