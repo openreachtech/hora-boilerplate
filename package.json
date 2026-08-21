@@ -16,9 +16,9 @@
   },
   "devDependencies": {
     "@openreachtech/eslint-config": "^4.5.0",
-    "@openreachtech/hora": "^0.1.0",
+    "@openreachtech/hora": "^0.2.0",
     "@openreachtech/hora-ecosystem": "^0.0.0",
-    "@openreachtech/hora-skills": "^0.1.0",
+    "@openreachtech/hora-skills": "^0.2.0",
     "eslint": "^9.39.5"
   }
 }
