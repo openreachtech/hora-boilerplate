@@ -48,7 +48,7 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 `npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
 ```json
-"hora:init": "npx hora-core install && npx hora-skills install",
+"hora:init": "hora-core install && hora-skills install",
 "postinstall": "npm run hora:init"
 ```
 
@@ -125,7 +125,7 @@ Hora Kit    「<かつての名前> に委譲せよ」
 | `hf-` | `frontend` | フロントエンドリポジトリ |
 | `hc-` | `core` | どちらでも |
 
-ドメインは `hora-skills` 自身のもので、その一部だけを入れることもできます — フロントエンドが無いプロジェクトなら `npx hora-skills install --domains core,backend`、あるいは同じ指定を package.json の `horaSkills` に一度書いておく形です。
+ドメインは `hora-skills` 自身のもので、その一部だけを入れることもできます — フロントエンドが無いプロジェクトなら `npx --no hora-skills install --domains core,backend`、あるいは同じ指定を package.json の `horaSkills` に一度書いておく形です。**`--no` は、ダウンロードの前で npx を止めます** — 名前の解決はレジストリに問い合わせますが、取得はしないので、他人のパッケージの install スクリプトも bin も走りません。これが無いと、bin が入っていない状態は、その無スコープ名で公開されたものの取得になります。
 
 **`hc-` は `core` ドメインであって、`hora-core` パッケージではありません。** ここでは両方の名前が出てきますが、指すものが違います。`hora-core` は `@openreachtech/hora` を配置するコマンドで、そのパッケージは `hc-` スキルを1つも配りません。
 
