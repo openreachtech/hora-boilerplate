@@ -48,7 +48,7 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 `npm install` runs the copy, through this repository's own `postinstall`:
 
 ```json
-"hora:init": "npx hora-core install && npx hora-skills install",
+"hora:init": "hora-core install && hora-skills install",
 "postinstall": "npm run hora:init"
 ```
 
@@ -125,7 +125,7 @@ The main session is handed the equipped skills' descriptions as part of its own 
 | `hf-` | `frontend` | a frontend repository |
 | `hc-` | `core` | either |
 
-The domain is `hora-skills`' own, and a repository can install a subset of them — `npx hora-skills install --domains core,backend` on a project with no frontend, or the same list declared once under `horaSkills` in package.json.
+The domain is `hora-skills`' own, and a repository can install a subset of them — `npx --no hora-skills install --domains core,backend` on a project with no frontend, or the same list declared once under `horaSkills` in package.json. **`--no` stops npx before it downloads**: the name is still resolved against the registry, but nothing is fetched, so neither the install script nor the bin of a stranger's package ever runs. Without it, a bin that is not installed becomes a fetch of whatever has been published under that unscoped name.
 
 **`hc-` is the `core` domain, not the `hora-core` package.** Both names are in play here and they name different things: `hora-core` is the command that installs `@openreachtech/hora`, which distributes no `hc-` skill at all.
 
