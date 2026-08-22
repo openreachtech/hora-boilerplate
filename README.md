@@ -161,9 +161,13 @@ The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](.
 
 ## Contribution
 
-Bug reports, feature requests, and code contributions are welcome.
+**Bug reports and feature requests are welcome**, through GitHub Issues.
 
-Feel free to contact us through GitHub Issues.
+**Code contributions are not being taken for now.** A fix to the kit belongs
+in the repository that holds it either way, and the last paragraph of this
+section says which one that is.
+
+What follows is for work done inside this repository.
 
 ```sh
 git clone https://github.com/openreachtech/hora-boilerplate.git
