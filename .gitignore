@@ -1,5 +1,13 @@
 #### environment
+#
+# Every variant, not just the bare name: `.env` alone leaves `.env.local` and
+# `.env.production` to be committed by whoever writes one. An example file is
+# named back in, because it carries the variable names and none of their
+# values, and a project built from this template is expected to commit one.
 .env
+.env.*
+!.env.example
+!.env.*.example
 node_modules/
 .eslintcache
 # Ignore the contents, not the directory itself — git cannot re-include a
@@ -7,6 +15,20 @@ node_modules/
 # the `!` line below dead and leave `.scratch/` absent from a fresh clone.
 .scratch/*
 !.scratch/directory-keeper
+
+#### keys and certificates
+#
+# Nothing here is authored in this repository, and the entries exist for what
+# gets built inside one made from it — a TLS certificate dropped in to test
+# against, a deploy key, a keystore. A secret committed once is committed for
+# as long as the history lives, so the patterns are here before the first
+# project needs them rather than after one of them leaks.
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
 
 #### implementation repositories, fetched or adopted by /hora-setup
 /*-backend*/
@@ -16,6 +38,14 @@ node_modules/
 # above, so /hora-setup appends one literal entry per declared `Directory`
 # here. Left out, the whole repository gets committed into this one, and
 # nothing says so until somebody reads `git status`.
+
+#### one machine's own Claude Code settings
+#
+# The permissions somebody accepted on their own machine, and whatever else
+# they configured locally. It is the settings file that carries no `.local`
+# that a repository shares; this one answers to one checkout and nothing else,
+# and committing it hands everyone else a set of allowances they never granted.
+/.claude/settings.local.json
 
 #### the kit equipped by postinstall, from @openreachtech/hora and
 #### @openreachtech/hora-skills (regenerated, not authored here)
