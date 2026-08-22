@@ -6,6 +6,10 @@
     "target": "ES2023"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".claude/skills",
+    ".scratch",
+    "*-backend*",
+    "*-frontend*"
   ]
 }

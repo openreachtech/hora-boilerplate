@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 252" width="880" height="252" font-family="-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, Helvetica, Arial, sans-serif" role="img" aria-label="Approval is per section — not per line, not per document"><title>Approval is per section — not per line, not per document</title><defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah" fill="#8b949e"/></marker><marker id="mb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-b" fill="#0969da"/></marker><marker id="mp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-p" fill="#8250df"/></marker><marker id="mo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-o" fill="#bc4c00"/></marker><marker id="mg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-g" fill="#1a7f37"/></marker></defs><style>
+.t{font-size:15px;font-weight:600}
+.l{font-size:12.5px}
+.n{font-size:12.5px;font-weight:600}
+.m{font-size:11.5px}
+.xs{font-size:10.5px}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.dash{stroke-dasharray:5 4}
+
+@media (prefers-color-scheme:dark){
+text{fill:#e6edf3}
+.m,.xs{fill:#9198a1}
+.bx{fill:#151b23;stroke:#3d444d}
+.bx-1{fill:#0d1117;stroke:#3d444d}
+.bx-b{fill:#0c2d59;stroke:#4493f8}
+.bx-p{fill:#251a44;stroke:#ab7df8}
+.bx-o{fill:#40200a;stroke:#f0883e}
+.bx-g{fill:#0f3018;stroke:#3fb950}
+.bx-r{fill:#3d1418;stroke:#f85149}
+.arr{stroke:#6e7681}
+.arr-b{stroke:#4493f8}
+.arr-p{stroke:#ab7df8}
+.arr-o{stroke:#f0883e}
+.arr-g{stroke:#3fb950}
+.ah{fill:#6e7681}
+.ah-b{fill:#4493f8}
+.ah-p{fill:#ab7df8}
+.ah-o{fill:#f0883e}
+.ah-g{fill:#3fb950}
+.ln{stroke:#3d444d}
+.lane{stroke:#6e7681}
+.lane-b{stroke:#4493f8}
+.lane-g{stroke:#3fb950}
+.dt{fill:#6e7681}
+.dt-b{fill:#4493f8}
+.dt-g{fill:#3fb950}
+}
+</style><text x="440.0" y="26" class="t" fill="#1f2328" text-anchor="middle">Approval is per section — not per line, not per document</text><rect x="12" y="52" width="156" height="92" rx="8" class="bx bx-p" fill="#f3ecff" stroke="#8250df" stroke-width="1"/><circle cx="90.0" cy="72" r="11" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="90.0" y="76" class="n" fill="#1f2328" text-anchor="middle">1</text><text x="90.0" y="102" class="l" fill="#1f2328" text-anchor="middle">the stage runs its</text><text x="90.0" y="117" class="l" fill="#1f2328" text-anchor="middle">conversation and</text><text x="90.0" y="132" class="l" fill="#1f2328" text-anchor="middle">drafts the section</text><path d="M168,98.0 L189,98.0" class="arr arr-p" fill="none" stroke="#8250df" stroke-width="1.4" marker-end="url(#mp)"/><rect x="193" y="52" width="156" height="92" rx="8" class="bx bx-p" fill="#f3ecff" stroke="#8250df" stroke-width="1"/><circle cx="271.0" cy="72" r="11" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="271.0" y="76" class="n" fill="#1f2328" text-anchor="middle">2</text><text x="271.0" y="102" class="l" fill="#1f2328" text-anchor="middle">it shows the section</text><text x="271.0" y="117" class="l" fill="#1f2328" text-anchor="middle">in full, as it</text><text x="271.0" y="132" class="l" fill="#1f2328" text-anchor="middle">will be written</text><path d="M349,98.0 L370,98.0" class="arr arr-p" fill="none" stroke="#8250df" stroke-width="1.4" marker-end="url(#mp)"/><rect x="374" y="52" width="156" height="92" rx="8" class="bx bx-p" fill="#f3ecff" stroke="#8250df" stroke-width="1"/><circle cx="452.0" cy="72" r="11" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="452.0" y="76" class="n" fill="#1f2328" text-anchor="middle">3</text><text x="452.0" y="102" class="l" fill="#1f2328" text-anchor="middle">it says which lines</text><text x="452.0" y="117" class="l" fill="#1f2328" text-anchor="middle">came from the talk,</text><text x="452.0" y="132" class="l" fill="#1f2328" text-anchor="middle">and which are proposals</text><path d="M530,98.0 L551,98.0" class="arr arr-p" fill="none" stroke="#8250df" stroke-width="1.4" marker-end="url(#mp)"/><rect x="555" y="52" width="156" height="92" rx="8" class="bx bx-o" fill="#fff1e5" stroke="#bc4c00" stroke-width="1"/><circle cx="633.0" cy="72" r="11" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="633.0" y="76" class="n" fill="#1f2328" text-anchor="middle">4</text><text x="633.0" y="102" class="l" fill="#1f2328" text-anchor="middle">it waits</text><path d="M711,98.0 L732,98.0" class="arr arr-p" fill="none" stroke="#8250df" stroke-width="1.4" marker-end="url(#mp)"/><rect x="736" y="52" width="156" height="92" rx="8" class="bx bx-p" fill="#f3ecff" stroke="#8250df" stroke-width="1"/><circle cx="814.0" cy="72" r="11" class="bx bx-1" fill="#ffffff" stroke="#d1d9e0" stroke-width="1"/><text x="814.0" y="76" class="n" fill="#1f2328" text-anchor="middle">5</text><text x="814.0" y="102" class="l" fill="#1f2328" text-anchor="middle">it writes what was</text><text x="814.0" y="117" class="l" fill="#1f2328" text-anchor="middle">approved, and</text><text x="814.0" y="132" class="l" fill="#1f2328" text-anchor="middle">only that</text><path d="M633.0,146 L633.0,196 L90.0,196 L90.0,148" class="arr arr-o dash" fill="none" stroke="#bc4c00" stroke-width="1.4" marker-end="url(#mo)"/><text x="361.5" y="190" class="xs" fill="#59636e" text-anchor="middle">redirected → redrafted and shown again. Never "most of it, with a note"</text><text x="440.0" y="238" class="xs" fill="#59636e" text-anchor="middle">per line, the approval burden means the spec never gets written; per document, one "yes" is a spec nobody read — and the record says otherwise</text></svg>

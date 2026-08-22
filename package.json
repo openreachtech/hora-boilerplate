@@ -6,15 +6,19 @@
   "description": "TODO: fulfill here",
   "type": "module",
   "scripts": {
+    "hora:init": "hora-core install && hora-skills install",
     "l": "npm run lint",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",
+    "postinstall": "npm run hora:init"
   },
   "dependencies": {
   },
   "devDependencies": {
-    "@openreachtech/ai-agent-skills": "^0.0.0",
-    "@openreachtech/eslint-config": "^4.4.0",
+    "@openreachtech/eslint-config": "^4.5.0",
+    "@openreachtech/hora": "^0.2.1",
     "@openreachtech/hora-ecosystem": "^0.0.0",
+    "@openreachtech/hora-skills": "^0.2.1",
     "eslint": "^9.39.5"
   }
 }
