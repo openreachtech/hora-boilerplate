@@ -161,9 +161,11 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 
 ## コントリビューション
 
-バグ報告・機能要望・コード貢献を歓迎します。
+**バグ報告と機能要望を歓迎します。** GitHub Issues からお気軽にご連絡ください。
 
-GitHub Issues からお気軽にご連絡ください。
+**コード貢献は、当面お受けしていません。** キットの修正はいずれにせよ、それを持つリポジトリが置き場所で、どちらなのかはこの節の最後の段落が示しています。
+
+以下は、このリポジトリの中で作業する場合の話です。
 
 ```sh
 git clone https://github.com/openreachtech/hora-boilerplate.git
