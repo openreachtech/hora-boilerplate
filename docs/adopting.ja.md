@@ -384,7 +384,7 @@ Authority: as-built — what these repositories do is what 1.0.0 is
 
 ### CI
 
-`.github/workflows/` のワークフローは、既定では `light` ラベルのセルフホストランナーで動きます。**GitHub がホストするランナーを使う場合は、3つのワークフローの `runs-on` を自分で `ubuntu-latest` に書き換え**、`specs/<version>/spec.md` にその旨を記載してください — private リポジトリでは、実行ごとに課金されることを意味します。適用先リポジトリが元々持っているワークフローはそのままです。ここで言っているのは、キットが持ち込むワークフローだけです。
+`.github/workflows/` のワークフローは、リポジトリの公開状態に従います。private リポジトリなら `light` ラベルのセルフホストランナー、public なら GitHub の `ubuntu-latest` です。**どちらを使うかを手で書き換える箇所はありません。** private リポジトリで GitHub ホストに固定する場合は、4本のワークフローの `runs-on` の式を置き換え、`specs/<version>/spec.md` にその旨を記載してください — private リポジトリでは、GitHub ホストは実行ごとに課金されることを意味します。適用先リポジトリが元々持っているワークフローはそのままです。ここで言っているのは、キットが持ち込むワークフローだけです。
 
 ---
 

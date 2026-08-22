@@ -23,7 +23,7 @@
 | **Claude Code** | skill はここで動きます |
 | **Node と npm** | このリポジトリ自身の `npm install` 用。これがスキルを配置します。両 hora パッケージが宣言する下限に合わせ、Node 20 以降 |
 | **ボイラープレートへのアクセス権** | `renchan-boilerplate` と `furo-boilerplate-nuxt` は現在 private で、非対話セッションには認証を通す端末がありません。**認証情報を設定するか、`/hora` を走らせる前にご自身で clone しておいてください** — 既にあるディレクトリは、そのまま扱って先に進みます |
-| **CI 用のランナー** | プルリクエストを送る前だけ。既定は `light` ラベルのセルフホストランナーで、GitHub がホストするランナーに切り替える場合は自分で書き換えます。[継続的インテグレーション](#継続的インテグレーション)を参照 |
+| **CI 用のランナー** | プルリクエストを送る前だけ、しかも private の間だけ。ワークフローが `light` ラベルのセルフホストランナーを要求するのは、そのときです。public なら GitHub ホストのランナーで動くので、用意するものはありません。[継続的インテグレーション](#継続的インテグレーション)を参照 |
 
 ### 1. `<myproject>-app` を作る
 
@@ -91,13 +91,16 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 ## 継続的インテグレーション
 
-**`.github/workflows/` 配下のワークフローは、既定では GitHub の `ubuntu-latest` ではなく `light` というラベルのセルフホストランナーで動きます。** `<myproject>-app` は private リポジトリになることが多く、GitHub がホストするランナーだと実行のたびに課金されてしまうためです。プルリクエストを送る前に、`light` ラベルを持つセルフホストランナーを用意してください。用意しないと、これらのワークフローはキューされたまま実行されません。
+**`.github/workflows/` 配下のワークフローは、リポジトリの公開状態に従います。** private リポジトリなら `light` というラベルのセルフホストランナー、public なら GitHub の `ubuntu-latest` です。この切り替えが何のためかというと請求書のためで、private リポジトリでは GitHub がホストするランナーは実行のたびに課金されます。`<myproject>-app` は private になることが多いので、プルリクエストを送る前に `light` ラベルを持つセルフホストランナーを用意してください。用意しないと、これらのワークフローはキューされたまま実行されません。
 
-**GitHub がホストするランナーを使うのも、支持された選択です。そして、それを決めるのはあなたです。** その場合は3つのワークフロー（`lint.yml` / `main-guard.yml` / `release.yml`）の `runs-on` を自分で書き換えてください。
+**どちらを使うかを手で書き換える箇所はありません。そして、その選択を上書きするかどうかを決めるのはあなたです。** 4本のワークフロー（`lint.yml` / `main-guard.yml` / `release.yml` / `fill-publish-version.yml`）が同じ式を持つので、公開状態に関わらず GitHub ホストに固定したい場合は、その式を置き換えます。
 
 ```yaml
-    runs-on: [self-hosted, light]   # 既定
-    runs-on: ubuntu-latest          # GitHub ホスト。private リポジトリでは実行ごとに課金される
+    # 4本が持っている式
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
+
+    # 公開状態に関わらず固定する場合
+    runs-on: ubuntu-latest
 ```
 
 そして、その決定を `specs/<version>/spec.md` に記載してください。全員が — そして以後の `/hora` の実行が — ワークフローのファイルから推し量るのではなく、同じ記述を読むためです。

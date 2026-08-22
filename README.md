@@ -23,7 +23,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | **Claude Code** | the skills run there |
 | **Node and npm** | for this repository's own `npm install`, which is what puts the skills in place. Node 20 or newer, the floor both hora packages declare |
 | **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
-| **A runner for CI** | only before opening pull requests. A self-hosted runner labeled `light` is the default; switching the workflows to GitHub-hosted runners is a change you make yourself. See [Continuous integration](#continuous-integration) |
+| **A runner for CI** | only before opening pull requests, and only while the repository is private — that is when the workflows ask for a self-hosted runner labeled `light`. A public one runs on GitHub-hosted runners with nothing to arrange. See [Continuous integration](#continuous-integration) |
 
 ### 1. Create `<myproject>-app`
 
@@ -91,13 +91,16 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 ## Continuous integration
 
-**The workflows under `.github/workflows/` default to a self-hosted runner labeled `light`, not GitHub's own `ubuntu-latest`** — `<myproject>-app` is usually a private repository, and a GitHub-hosted runner bills you for every run. Register a self-hosted runner with the `light` label before opening pull requests, or these workflows stay queued and never run.
+**The workflows under `.github/workflows/` follow the repository's visibility** — a private repository runs them on a self-hosted runner labeled `light`, a public one on GitHub's `ubuntu-latest`. What the switch is for is the bill: a GitHub-hosted runner charges for every run on a private repository. `<myproject>-app` is usually private, so register a self-hosted runner with the `light` label before opening pull requests, or these workflows stay queued and never run.
 
-**Using GitHub-hosted runners instead is a supported choice, and it is yours to make.** Change `runs-on` yourself in all three workflows — `lint.yml`, `main-guard.yml` and `release.yml`:
+**Nothing is hand-edited to choose between them, and overriding the choice is still yours to make.** All four workflows — `lint.yml`, `main-guard.yml`, `release.yml` and `fill-publish-version.yml` — carry the same expression, so pinning one to a GitHub-hosted runner whatever the visibility means replacing it:
 
 ```yaml
-    runs-on: [self-hosted, light]   # the default
-    runs-on: ubuntu-latest          # GitHub-hosted, billed per run on a private repository
+    # what all four carry
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
+
+    # pinned, whatever the repository's visibility
+    runs-on: ubuntu-latest
 ```
 
 Then note the decision in `specs/<version>/spec.md`, so that everyone — and every later `/hora` run — reads the same thing rather than inferring it from the workflow files.
