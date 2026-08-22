@@ -21,9 +21,41 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | | |
 |---|---|
 | **Claude Code** | the skills run there |
-| **Node and npm** | for this repository's own `npm install`, which is what puts the skills in place. Node 20 or newer, the floor both hora packages declare |
+| **Node and npm** | for this repository's own `npm install`, which is what puts the skills in place. See [Requirements](#requirements) |
+| **A POSIX shell** | the skills run shell commands and nest git repositories. Windows `cmd` and PowerShell are not equivalent. See [Recommended](#recommended) |
 | **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
 | **A runner for CI** | only before opening pull requests, and only while the repository is private — that is when the workflows ask for a self-hosted runner labeled `light`. A public one runs on GitHub-hosted runners with nothing to arrange. See [Continuous integration](#continuous-integration) |
+
+#### Requirements
+
+| Tool | Version |
+| :-- | :-- |
+| Node.js | >=20.19.0 |
+| npm | >=10.0.0 |
+
+**The floor comes from `nuxt`, not from the hora packages.** `nuxt` declares
+`^20.19.0 || >=22.12.0`, which rules out 20.0 through 20.18 and 22.0 through 22.11; the three ORT
+packages that declare a floor at all ask for 20 or newer.
+
+#### Recommended
+
+| Tool | Version |
+| :-- | :-- |
+| Node.js | the active LTS — 24.19.0 today |
+| npm | whatever that Node bundles — 11.17.0 today |
+
+**Follow CI.** The workflows resolve `node-version: lts/*`, so the active LTS is what this
+repository is built against. Install Node through nvm rather than a system package manager, so the
+version stays per-project.
+
+**npm 11.6 is where `.npmrc` starts working.** Below it, `min-release-age = 7` is ignored without a
+warning, and a package published minutes ago installs. Node 20 and 22 bundle npm 10; the active LTS
+bundles 11.x.
+
+**On Windows, work inside WSL 2 (Ubuntu).** macOS and Linux run the skills natively. `sqlite3` and
+`mariadb` build from source, which on Windows needs a separate toolchain. Keep the project in the
+Linux filesystem — `~/<myproject>-app`, not `/mnt/c/…` — because a Windows-mounted path is slower,
+and a Node installed on the Windows side reaches the WSL `PATH`.
 
 ### 1. Create `<myproject>-app`
 
