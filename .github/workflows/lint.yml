@@ -33,6 +33,13 @@ jobs:
           # shallow checkout cannot resolve a merge base for that.
           fetch-depth: 0
 
+          # ⚠️ Checkout otherwise leaves the token in .git/config for the rest
+          # of the job, and no step here reaches a remote: npm ci talks to the
+          # registry, and the pair check reads refs this fetch already brought
+          # down. What would still reach the token is an install script, which
+          # arrives from whatever the lockfile of the branch under test names.
+          persist-credentials: false
+
       - name: 🏗️ Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
