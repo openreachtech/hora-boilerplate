@@ -39,6 +39,14 @@ id_ed25519
 # here. Left out, the whole repository gets committed into this one, and
 # nothing says so until somebody reads `git status`.
 
+#### one machine's own Claude Code settings
+#
+# The permissions somebody accepted on their own machine, and whatever else
+# they configured locally. It is the settings file that carries no `.local`
+# that a repository shares; this one answers to one checkout and nothing else,
+# and committing it hands everyone else a set of allowances they never granted.
+/.claude/settings.local.json
+
 #### the kit equipped by postinstall, from @openreachtech/hora and
 #### @openreachtech/hora-skills (regenerated, not authored here)
 #
