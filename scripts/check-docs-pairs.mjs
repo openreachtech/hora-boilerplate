@@ -262,7 +262,7 @@ function collectSameChangeFindings ({
 }) {
   const changedDocs = (git(['diff', '--name-only', mergeBase]) ?? '')
     .split('\n')
-    .filter(filePath => /^docs\/[^/]+\.md$/u.test(filePath))
+    .filter(filePath => /^docs\/.+\.md$/u.test(filePath))
 
   const exceptions = collectPairExceptions({
     mergeBase,
@@ -332,7 +332,9 @@ function comparePair ({
  * }} The findings, and how many pairs were compared.
  */
 function collectParityFindings () {
-  const docFiles = fs.readdirSync(DOCS_DIR)
+  const docFiles = fs.readdirSync(DOCS_DIR, {
+    recursive: true,
+  })
     .filter(name => name.endsWith('.md'))
     .map(name => path.join(DOCS_DIR, name))
 
