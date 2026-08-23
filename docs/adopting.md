@@ -429,6 +429,21 @@ The workflows under `.github/workflows/` follow the repository's visibility: a p
 
 ---
 
+## A project created before the stack handbook
+
+**Projects started from a boilerplate older than this one have no `docs/stack/`**, and a kit version that reads the handbook stops there and asks rather than guessing at a stack.
+
+The migration is one copy:
+
+```sh
+# from the project root, with a checkout of a hora-boilerplate that carries it
+cp -r <hora-boilerplate>/docs/stack docs/stack
+```
+
+Commit it like any other document. The handbook is versioned with your project's own git from then on, and nothing else about the project changes — the kit reads it in place. If your project deviates from the boilerplate's defaults (a different middleware version, an extra profile), edit your copy to say so: the handbook in *your* repository describes *your* stack.
+
+---
+
 ## Where to go next
 
 | | |
