@@ -26,7 +26,7 @@ Every command runs **at the root of the hora repository** (`<myproject>-app`).
 ### What it does first, every time
 
 ```
-   is any skill under .claude/skills/ named hb- / hf- / hc-?
+   is any skill under .claude/skills/ named hoc- / hor- / hof-?
                                               no → stop, and ask for the
                                                    implementation skills to
                                                    be equipped
