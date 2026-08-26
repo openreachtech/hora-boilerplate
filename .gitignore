@@ -60,11 +60,14 @@ id_ed25519
 /.claude/agents/*
 /.claude/skills/*
 
-# The two equip manifests, written by the install commands. These are the only
-# entries under .hora/ that are ignored: everything else there is the run's own
-# record, and `git log .hora/` is the history of what ran.
+# The four equip manifests, written by the install commands — one per package,
+# each named after the package that writes it. These are the only entries under
+# .hora/ that are ignored: everything else there is the run's own record, and
+# `git log .hora/` is the history of what ran.
 /.hora/equip-core.json
-/.hora/equip-skills.json
+/.hora/hora-skills-ort-core.json
+/.hora/hora-skills-ort-furo.json
+/.hora/hora-skills-ort-renchan.json
 
 #### for Windows
 Thumbs.db
