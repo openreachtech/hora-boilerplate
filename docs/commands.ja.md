@@ -26,7 +26,7 @@
 ### 毎回、最初にやること
 
 ```
-   .claude/skills/ に hb- / hf- / hc- の名前を持つスキルはあるか
+   .claude/skills/ に hoc- / hor- / hof- の名前を持つスキルはあるか
                                            無ければ → 止まり、実装スキルの
                                                       装備を求める
 0. どこでも git fetch origin --prune。そして hotfix が main に入ったか確認
