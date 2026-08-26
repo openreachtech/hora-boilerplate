@@ -33,14 +33,14 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 
 ## 4つの層
 
-![4つの層：/hora、5つの skill、ステージ skill と2つのエージェント、そして hora-skills](./images/layers.ja.svg)
+![4つの層：/hora、5つの skill、ステージ skill と2つのエージェント、そして3つのスキルパッケージ](./images/layers.ja.svg)
 
 | 層 | 決めること | 決してしないこと | 配布元 |
 |---|---|---|---|
 | `/hora` | 次にどの段階が来るか。すべてのブランチ・コミット・マージ | 作業の中身に関する一切 | `@openreachtech/hora` |
 | 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 | `@openreachtech/hora` |
 | ステージ skill と2つの agent | 仕様書の1節、あるいは1関所ぶんのコードや判定 | 順序上の位置。git に関する一切 | `@openreachtech/hora` |
-| `hora-skills` | **すべての手順と、すべての合否基準** | それが呼ばれる時機 | `@openreachtech/hora-skills` |
+| 3つのスキルパッケージ | **すべての手順と、すべての合否基準** | それが呼ばれる時機 | `@openreachtech/hora-skills-ort-core`・`-ort-renchan`・`-ort-furo` |
 
 **4つのどれも、このリポジトリの中にはありません。** 4層すべてがパッケージとして届き、このリポジトリが持つのは仕様書と、これらの文書と、`.hora/` にある実行自身の記録です。
 
@@ -89,7 +89,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 
 **`hora-implementer` は git にも `.hora/` にも `specs/` にも触れません。** 1関所ぶん — または1関所の1単位ぶん — のコードとテストを書き、それ以外はすべて報告します。必要な依存、触ってはいけない共有ファイル、メインセッションに集約ファイルを再生成させたいフォルダ、変えたくなった contract、仕様書で見つけた問題です。[`/hora-build`](../.claude/skills/hora-build/SKILL.md) がその報告に基づいて動きます。
 
-**`hora-digester` は1つのファイルだけを書き、他はすべて読むだけです。** 出力は `.hora/digests/<skill-name>.md` で、ヘッダには由来した `hora-skills` のバージョンが入ります — だからダイジェストはインストール済みのバージョンと一致する間だけ使われ、パッケージが更新されれば、次に読まれる前に書き直されます。権威はスキル本体のままです。ダイジェストで解けない疑問が出た時点で、implementer が本体を開きます。
+**`hora-digester` は1つのファイルだけを書き、他はすべて読むだけです。** 出力は `.hora/digests/<skill-name>.md` で、ヘッダには由来したパッケージと、そのパッケージのバージョンが入ります — だからダイジェストはインストール済みのバージョンと一致する間だけ使われ、由来したパッケージが更新されれば、そのダイジェストは次に読まれる前に書き直されます。権威はスキル本体のままです。ダイジェストで解けない疑問が出た時点で、implementer が本体を開きます。
 
 **エージェントをここまで縛る理由：** 禁止の一つひとつが、「2人の書き手が衝突する経路」か「誰にも見えないところで決定が下される経路」を1本ずつ塞いでいます。
 
@@ -103,7 +103,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 .hora/
   tree/<repository>.md          /hora-setup が実地に読んだ内容と、読んだ時点のタグ
   digests/<skill-name>.md       equip 済みスキル1つの規約を短くしたもの。由来した
-                                hora-skills のバージョン付き
+                                由来したパッケージとバージョン付き
   spec/<version>/_stages.md     /hora-spec 自身の、どこまで進んだかの記録（第2部）
   spec/<version>/_assets.md     ステージ0 が何を、どこから、どのコミット時点で読んだか
   spec/<version>/_divergence.md 文書とコードの食い違い — 1件につき1行、各行はその
@@ -119,7 +119,9 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
   glossary.md                   追記のみ。版で分けない
 
   equip-core.json               hora-core の install が置いたもの。gitignore 対象
-  equip-skills.json             hora-skills の install が置いたもの。gitignore 対象
+  hora-skills-ort-core.json     各スキルパッケージの install が置いたもの。
+  hora-skills-ort-furo.json     パッケージごとに1ファイル。gitignore 対象
+  hora-skills-ort-renchan.json
 ```
 
 `git log .hora/` が「何が走ったか」の履歴です。他に記録している場所はなく、必要もありません。
