@@ -6,7 +6,7 @@
 
 この文書は、それらのファイルが従う文体です。書き方の話であって、規則の中身の話ではありません。
 
-**ここで書かれるものではありません。** hora の skill と agent は [`hora-core`](https://github.com/openreachtech/hora-core) で、それらの委譲先である手順は [`hora-skills`](https://github.com/openreachtech/hora-skills) で書かれます。このリポジトリはそれを `.claude/` に受け取るだけです。文体は方法論と同じ場所に置く、という理由でここにあります。
+**ここで書かれるものではありません。** hora の skill と agent は [`hora-core`](https://github.com/openreachtech/hora-core) で、それらの委譲先である手順は、そのドメインのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) で書かれます。このリポジトリはそれを `.claude/` に受け取るだけです。文体は方法論と同じ場所に置く、という理由でここにあります。
 
 ---
 
