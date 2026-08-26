@@ -158,10 +158,10 @@ Run it in the repository once the values are filled in.
 
 | Skill | Why it is copied |
 |---|---|
-| `hb-bank-id` | allocates exclusive row-id prefixes inside this repository. It has to be invocable, and safely editable, from a session working in the backend directly — so it lands in the row's own `.claude/skills/` |
+| `hor-bank-id` | allocates exclusive row-id prefixes inside this repository. It has to be invocable, and safely editable, from a session working in the backend directly — so it lands in the row's own `.claude/skills/` |
 
 ```bash
-cp -r .claude/skills/hb-bank-id <myproject>-backend/.claude/skills/hb-bank-id
+cp -r .claude/skills/hor-bank-id <myproject>-backend/.claude/skills/hor-bank-id
 ```
 
 **Never overwrite an existing copy** — skip the copy entirely if the destination exists. A human may have customized it inside their own backend repository.
