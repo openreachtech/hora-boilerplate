@@ -47,11 +47,11 @@ id_ed25519
 # and committing it hands everyone else a set of allowances they never granted.
 /.claude/settings.local.json
 
-#### the kit equipped by postinstall, from @openreachtech/hora and
-#### @openreachtech/hora-skills (regenerated, not authored here)
+#### the kit equipped by postinstall, from @openreachtech/hora and the three
+#### @openreachtech/hora-skills-ort-* packages (regenerated, not authored here)
 #
 # Ignore the contents of both payload directories, and name this repository's
-# own entries back in, one literal line each. What the two packages distribute
+# own entries back in, one literal line each. What the packages distribute
 # changes with every release, so a pattern written against today's names goes
 # stale without saying so — and a denylist that stops matching says nothing
 # when it stops: every equipped entry would simply start being committed here.
