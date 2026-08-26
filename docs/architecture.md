@@ -33,14 +33,14 @@ This document explains the design. It is not the authority on any rule — each 
 
 ## Four layers
 
-![Four layers: /hora, the five skills, the stage skills and the two agents, and hora-skills](./images/layers.svg)
+![Four layers: /hora, the five skills, the stage skills and the two agents, and the three skills packages](./images/layers.svg)
 
 | Layer | What it decides | What it never decides | Ships in |
 |---|---|---|---|
 | `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself | `@openreachtech/hora` |
 | the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora` |
 | the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git | `@openreachtech/hora` |
-| `hora-skills` | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills` |
+| the three skills packages | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills-ort-core`, `-ort-renchan`, `-ort-furo` |
 
 **Not one of the four is in this repository.** All four arrive as packages, and what this repository holds is the spec, these documents, and the run's own record under `.hora/`.
 
@@ -89,7 +89,7 @@ Not everything can be delegated to a subagent, and the line is not about difficu
 
 **`hora-implementer` never touches git, `.hora/`, or `specs/`.** It writes code and tests for one checkpoint — or for one unit of one — and reports everything else: a dependency it needs, a shared file it must not edit, the folder whose aggregation file the main session should regenerate, a contract it wanted to change, a problem it found in the spec. [`/hora-build`](../.claude/skills/hora-build/SKILL.md) acts on the report.
 
-**`hora-digester` writes one file and reads everything else.** Its output is `.hora/digests/<skill-name>.md`, and the header names the `hora-skills` version it was derived from — so a digest is used only while it matches what is installed, and a package update leaves each one to be rewritten before it is read again. The skill itself stays the authority: an implementer opens it the moment its digest leaves a question open.
+**`hora-digester` writes one file and reads everything else.** Its output is `.hora/digests/<skill-name>.md`, and the header names the package it was derived from and that package's version — so a digest is used only while it matches what is installed, and an update of the package it came from leaves each of its digests to be rewritten before any is read again. The skill itself stays the authority: an implementer opens it the moment its digest leaves a question open.
 
 **Why the agents are so tightly bounded:** every one of those prohibitions removes a way for two writers to collide, or for a decision to be made where nobody can see it.
 
@@ -103,7 +103,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
 .hora/
   tree/<repository>.md          what /hora-setup read in the real tree, and the tag it read it at
   digests/<skill-name>.md       one equipped skill's conventions in short form, and the
-                                hora-skills version they came from
+                                package and version they came from
   spec/<version>/_stages.md     /hora-spec's own record of where it got to (Part 2)
   spec/<version>/_assets.md     what stage 0 read, where from, and at what commit
   spec/<version>/_divergence.md where the documents and the code disagree — one row
@@ -121,7 +121,9 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
   glossary.md                   append-only, not split per version
 
   equip-core.json               what the last hora-core install placed. Gitignored
-  equip-skills.json             what the last hora-skills install placed. Gitignored
+  hora-skills-ort-core.json     what the last install of each skills package placed —
+  hora-skills-ort-furo.json     one record per package. Gitignored
+  hora-skills-ort-renchan.json
 ```
 
 `git log .hora/` is the history of what ran. Nothing else records it, and nothing needs to.
