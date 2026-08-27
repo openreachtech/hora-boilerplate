@@ -23,7 +23,6 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | **Claude Code** | the skills run there |
 | **Node and npm** | for this repository's own `npm install`, which is what puts the skills in place. See [Requirements](#requirements) |
 | **A POSIX shell** | the skills run shell commands and nest git repositories. Windows `cmd` and PowerShell are not equivalent. See [Recommended](#recommended) |
-| **Access to the boilerplate repositories** | `renchan-boilerplate` and `furo-boilerplate-nuxt` are currently private, and a non-interactive session has no terminal to authenticate through. **Either configure credentials, or clone the repositories yourself before running `/hora`** — it handles a directory that already exists and moves on |
 | **A runner for CI** | only before opening pull requests, and only while the repository is private — that is when the workflows ask for a self-hosted runner labeled `light`. A public one runs on GitHub-hosted runners with nothing to arrange. See [Continuous integration](#continuous-integration) |
 
 #### Requirements
@@ -34,8 +33,9 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 | npm | >=10.0.0 |
 
 **The floor comes from `nuxt`, not from the hora packages.** `nuxt` declares
-`^20.19.0 || >=22.12.0`, which rules out 20.0 through 20.18 and 22.0 through 22.11; the three ORT
-packages that declare a floor at all ask for 20 or newer.
+`^20.19.0 || >=22.12.0`, which rules out 20.0 through 20.18 and 22.0 through 22.11. Of the ORT
+packages, `@openreachtech/hora` is the one that declares a floor at all, and it asks for 20 or
+newer.
 
 #### Recommended
 
