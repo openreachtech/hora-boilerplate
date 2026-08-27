@@ -22,7 +22,7 @@ Hora Kit は通常「そこから始めるテンプレート」として出会�
 
 ## 最初に、2つの適用のどちらかを決める
 
-**以下のどの手順より先に、1つの問いに答えてください：仕様書とコードが食い違ったとき、どちらが正しいのか。** この文書の残り全部がその答えで分岐し、答えは仕様書の1行 — `Existing assets` 節の `Authority:` — に書かれます（[`spec-format.md`](../.claude/skills/hora/references/spec-format.md) の "Existing assets"）。
+**以下のどの手順より先に、1つの問いに答えてください：仕様書とコードが食い違ったとき、どちらが正しいのか。** この文書の残り全部がその答えで分岐し、答えは仕様書の1行 — `Existing assets` 節の `Authority:` — に書かれます（[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) の "Existing assets"）。
 
 | | **`as-built`** — 実装が正 | **`to-spec`** — 仕様が正 |
 |---|---|---|
@@ -34,11 +34,11 @@ Hora Kit は通常「そこから始めるテンプレート」として出会�
 | 計画 | 全機能 `built:`、**1回の適用掃引**が全機能の関所18を閉じる | 未完了の機能ごとに関所が走り、既存コードを仕様へ**突き合わせて直す**（ゼロから作り直さない） |
 | その後 | 掃引通過 → merge → **タグ `1.0.0` — `Baseline: verified` なら、現状が検証されたベースラインとして固定される。** 新しい作業は `1.1.0` の差分として、`specs/1.1.0/request/` のメモから始まる | コードが仕様に届いたとき版が終わり、他の版と同じように検収される |
 
-**混在が普通で、機能ごとに宣言できます。** 15機能は完成、3機能は道半ば — `Existing assets` に `Authority: as-built` と書き、3機能に `<!-- authority: to-spec -->` を付けます（[`spec-format.md`](../.claude/skills/hora/references/spec-format.md) の "`authority`"）。ステージ1の機能ごとの確認でその3機能に「まだ終わっていない」と答えれば、手で編集しなくてもちょうどこの形になります。
+**混在が普通で、機能ごとに宣言できます。** 15機能は完成、3機能は道半ば — `Existing assets` に `Authority: as-built` と書き、3機能に `<!-- authority: to-spec -->` を付けます（[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) の "`authority`"）。ステージ1の機能ごとの確認でその3機能に「まだ終わっていない」と答えれば、手で編集しなくてもちょうどこの形になります。
 
 **`as-built` が買わないもの：** 関所18は必ず走ります — 適用掃引こそが、固定されたベースラインを「主張された」ものではなく「検証された」ものにします。未認証で到達できるものは、宣言が何であれ1操作ずつ尋ねられます。そして宣言が届くのは、宣言した時点で作られていた機能だけです — `1.1.0` で足す機能は、他の新機能と同じく対話で仕様化されます。
 
-**もう1つ宣言があり、こちらは「どこまで検収してからタグを打つか」を決めます。** 同じ `Existing assets` 節の `Baseline:` 行で、値は2つです（[`spec-format.md`](../.claude/skills/hora/references/spec-format.md) の "Existing assets"）。
+**もう1つ宣言があり、こちらは「どこまで検収してからタグを打つか」を決めます。** 同じ `Existing assets` 節の `Baseline:` 行で、値は2つです（[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) の "Existing assets"）。
 
 | | `verified` | `inventoried` |
 |---|---|---|
@@ -94,7 +94,7 @@ npm install
 
 **移動するか、新しく clone してください。シンボリックリンクは駄目です。** リンクされたリポジトリは、リポジトリ単位のコマンドがすべて依存している作業ディレクトリ規則を壊し、しかも壊れ方が間接的です — コマンドは走り、間違った設定を読み、もっともらしい結果を返します。
 
-**既存の `.git` には何もしません。** [`boilerplates.md`](../.claude/skills/hora-setup/references/boilerplates.md) にある `rm -rf .git && git init` は**boilerplate を新規 clone した場合**の手順で、他人のコミット数百件が製品リポジトリの `main` に着地しないためのものです。**既に存在したリポジトリはこれを丸ごと飛ばします** — キットはその上に**被せる**のであって、**上書きする**のではありません。
+**既存の `.git` には何もしません。** [`boilerplates.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/references/handbook.md) にある `rm -rf .git && git init` は**boilerplate を新規 clone した場合**の手順で、他人のコミット数百件が製品リポジトリの `main` に着地しないためのものです。**既に存在したリポジトリはこれを丸ごと飛ばします** — キットはその上に**被せる**のであって、**上書きする**のではありません。
 
 ---
 
@@ -143,7 +143,7 @@ myproject-app/
 
 **実装リポジトリの中へリンクしないでください。** `legacy-api/docs/` は gitignore されているので、そこへのリンクは**あなたのディスクでは解決し、他の全員のクローンでは切れます** — しかも静かに切れます。必要なものは `specs/<version>/` 側にコピーしてください。
 
-**資料は1つの版の中に閉じ、版をまたいで共有しません**（[`structure.md`](../.claude/skills/hora/references/structure.md) の不変条件3）。1.1.0 で同じ文書が要るなら、そちらにコピーを置きます。冗長に見えますが意図的です — 共有すると、1.1.0 のために資料を直した瞬間に、1.0.0 が「当時とは違う資料」を指すことになります。
+**資料は1つの版の中に閉じ、版をまたいで共有しません**（[`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の不変条件3）。1.1.0 で同じ文書が要るなら、そちらにコピーを置きます。冗長に見えますが意図的です — 共有すると、1.1.0 のために資料を直した瞬間に、1.0.0 が「当時とは違う資料」を指すことになります。
 
 ### このディレクトリが実際に決めていること
 
@@ -163,7 +163,7 @@ myproject-app/
 
 **迷ったら `annex/` へ。** 失われるものはありません — 内容が本当に必要なら、対話を通って仕様書に入り、そこから機能になります。遠回りの分だけ増えるのは「人が一度読んで是と言う」という一段で、それはまさに `sources/` が飛ばしている一段です。
 
-手で表を書き、どちらのディレクトリも使わない方法も使えます。書式は [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) の "Directory layout" にあります。
+手で表を書き、どちらのディレクトリも使わない方法も使えます。書式は [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) の "Directory layout" にあります。
 
 ### 持ち込めないものがあるとき
 
@@ -173,13 +173,13 @@ myproject-app/
 
 ## 手順3 — 「既にあるもの」として仕様書を書く
 
-**`/hora-spec` を実行してください。** ステージ0で既にあるものを読み、空の仕様書をコピーし、7つのステージ（[`stages.md`](../.claude/skills/hora-spec/references/stages.md)）を通して1節ずつあなたと書きます。手でコピーして埋める方法も使えます。同じ文書になります。
+**`/hora-spec` を実行してください。** ステージ0で既にあるものを読み、空の仕様書をコピーし、7つのステージ（[`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md)）を通して1節ずつあなたと書きます。手でコピーして埋める方法も使えます。同じ文書になります。
 
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
 
-**製品を口述することは求められません。** 既存の20機能を記憶から、しかも厳密な書式で説明させれば、人は覚えているものだけを説明します。そして**語られなかった部分の沈黙は、「そこには何も無い」と全く同じに読めます。** そこでステージ0が、リポジトリと、あなたが指し示した文書を読み、そこに現れているものを草案に起こし、**書き上げるためではなく訂正するために**あなたへ返します（[`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)）。
+**製品を口述することは求められません。** 既存の20機能を記憶から、しかも厳密な書式で説明させれば、人は覚えているものだけを説明します。そして**語られなかった部分の沈黙は、「そこには何も無い」と全く同じに読めます。** そこでステージ0が、リポジトリと、あなたが指し示した文書を読み、そこに現れているものを草案に起こし、**書き上げるためではなく訂正するために**あなたへ返します（[`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md)）。
 
 **「読むもの」と「尋ねるもの」は別の一覧で、その線引きが設計の中心です。**
 
@@ -193,7 +193,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **4行目が、既存プロジェクトへの適用が元を取る場所です。** 「サインインしていれば誰でも呼べる」は auth filter から読み取れる事実ですが、それが誰かの決定だったのかは、たいてい全く別の話だと判明します。
 
-**読んだものが、そのまま要件になることはありません。** 読み取りは確認として提示され（*「こう読み取りました。合っていますか」*）、あなたが是とするか訂正したものだけが書かれます。キット側の思いつきは提案として別に区別されるので、**提案が「システムが既にそうなっている」として文書に入ることはありません**（[`asking.md`](../.claude/skills/hora/references/asking.md)）。
+**読んだものが、そのまま要件になることはありません。** 読み取りは確認として提示され（*「こう読み取りました。合っていますか」*）、あなたが是とするか訂正したものだけが書かれます。キット側の思いつきは提案として別に区別されるので、**提案が「システムが既にそうなっている」として文書に入ることはありません**（[`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md)）。
 
 **回答は、可能な限り選択肢として提示されます。** 保持期間の質問には現在の行数が、認可の質問には現在のフィルタが、`built:` の質問にはステージ0がその機能について見つけたものが添えられます。**書き起こすより、直すほうがはるかに多くなります。**
 
@@ -204,7 +204,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 | **1（想定ユースケース）** | 誰も書き残していない挙動が製品にはあります。ここでそれが言語化され、「実際の動き」と「本来望まれていたもの」の差が見えるようになります |
 | **6（セキュリティ）** | 呼び出し元が決められたことのない操作が、すでに動いています。現在のフィルタを読んで人の前に置けば、その全部が見つかります — 驚かれた1つ1つが「誰も決めていない認可」であり、それぞれが最初の検収掃引で確認される基準になります |
 
-各節の説明は [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) にあります。適用時にはそのうち3つがいつも以上に重要です。
+各節の説明は [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) にあります。適用時にはそのうち3つがいつも以上に重要です。
 
 ### 3.1 リポジトリ構成表に `Directory` 列
 
@@ -447,8 +447,8 @@ cp -r <hora-boilerplate>/docs/stack docs/stack
 | 各コマンドの詳細 | [`commands.ja.md`](./commands.ja.md) |
 | なぜこの設計なのか | [`architecture.ja.md`](./architecture.ja.md) |
 | 関所が委譲するスキル群 | [`skills.ja.md`](./skills.ja.md) |
-| 仕様書の書式 | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
-| ステージ0と、仕様書を書く7つのステージ | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
-| ステージ0が何を読み、読んでも決まらないものは何か | [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) |
-| 「確認」と「提案」の違い | [`asking.md`](../.claude/skills/hora/references/asking.md) |
-| 18の関所 | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
+| 仕様書の書式 | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |
+| ステージ0と、仕様書を書く7つのステージ | [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) |
+| ステージ0が何を読み、読んでも決まらないものは何か | [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md) |
+| 「確認」と「提案」の違い | [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md) |
+| 18の関所 | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
