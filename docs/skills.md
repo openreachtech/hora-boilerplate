@@ -67,13 +67,13 @@ node_modules/@openreachtech/hora-skills-ort-furo/dist/skills/<skill>/     ─>  
 - **It does not wait for any repository to be cloned.** All four packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` and naming this repository's own entries back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
-**Those four are equipped. One more package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
+**Those four are equipped. One more package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 
 ## No hora file names one of these skills
 
-Not [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), not [`stages.md`](../.claude/skills/hora-spec/references/stages.md), not an agent definition, not this page. **A skill's name belongs to the package, which is free to change it** — and a written-down name is the one kind of copy that fails silently.
+Not [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), not [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), not an agent definition, not this page. **A skill's name belongs to the package, which is free to change it** — and a written-down name is the one kind of copy that fails silently.
 
 ```
 the package renames a skill
@@ -111,13 +111,13 @@ The main session is handed the equipped skills' descriptions as part of its own 
 
 ### What reaches the agent is a digest, not the skill
 
-**A matched skill runs to thousands of lines, and it stays resident for every turn the agent reading it takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so what `/hora-build` hands an implementer is `.hora/digests/<skill-name>.md` — the same conventions in short form, written by [`hora-digester`](../.claude/agents/hora-digester.md) the first time a matched skill has no digest at the installed package version. That is also why the record above names the version the digests came from, beside the names themselves.
+**A matched skill runs to thousands of lines, and it stays resident for every turn the agent reading it takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so what `/hora-build` hands an implementer is `.hora/digests/<skill-name>.md` — the same conventions in short form, written by [`hora-digester`](https://github.com/openreachtech/hora-core/blob/main/kit/agents/hora-digester.md) the first time a matched skill has no digest at the installed package version. That is also why the record above names the version the digests came from, beside the names themselves.
 
 **A digest is a copy, and it is the one copy the rule this page opens with admits.** What makes a copy dangerous is that it goes stale in silence. A digest carries the package version it was derived from in its own header, so it is read only while that version is installed — and a package update leaves every digest to be rewritten before any of them is read again. It reduces what an agent holds resident, and it decides nothing.
 
 **When the two disagree, the skill's own text is what settles it.** A digest names the file it came from, and the agent opens that file the moment a question stays open — where the digest is thin, where it points there, or where the work is not obviously the thing it describes. So a convention a digest states too briefly costs one read; it is not a convention lost.
 
-**Nothing whose skill *is* the criteria is read this way.** The security audit at checkpoint 8 and the acceptance review invoke their skills whole, because an agent writing code has a moment where the short form announces its own gap and an audit does not: the missing check is the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** ([`structure.md`](../.claude/skills/hora/references/structure.md), "How the match is made")
+**Nothing whose skill *is* the criteria is read this way.** The security audit at checkpoint 8 and the acceptance review invoke their skills whole, because an agent writing code has a moment where the short form announces its own gap and an audit does not: the missing check is the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** ([`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), "How the match is made")
 
 ### The prefix is the one part of a name worth reading
 
@@ -145,7 +145,7 @@ This is also why the exclusion lists above are allowlists rather than `hor-*`/`h
 ls .claude/skills/
 ```
 
-And the authoritative statement of **what work** each checkpoint delegates is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](../.claude/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either would be exactly the drift this whole document is about.
+And the authoritative statement of **what work** each checkpoint delegates is [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either would be exactly the drift this whole document is about.
 
 ### `hor-` — backend (renchan)
 
@@ -223,7 +223,7 @@ Matching against descriptions removes the rename problem, not the *dropped* one.
 
 | | |
 |---|---|
-| the authoritative statement of what work each checkpoint delegates | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
-| the boundary, stated as a rule | [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor" and "No hora file ever names one of those skills" |
+| the authoritative statement of what work each checkpoint delegates | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
+| the boundary, stated as a rule | [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), "The division of labor" and "No hora file ever names one of those skills" |
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | what each command does | [`commands.md`](./commands.md) |
