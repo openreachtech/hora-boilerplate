@@ -22,7 +22,7 @@ After that, new features go through the full eighteen, one at a time.
 
 ## First, decide which of the two adoptions this is
 
-**Before any step below, answer one question: when the spec and the code disagree, which one is right?** Everything else in this document branches on the answer, and it is declared in one line of the spec — `Authority:`, in the `Existing assets` section ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Existing assets").
+**Before any step below, answer one question: when the spec and the code disagree, which one is right?** Everything else in this document branches on the answer, and it is declared in one line of the spec — `Authority:`, in the `Existing assets` section ([`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md), "Existing assets").
 
 | | **`as-built`** — the implementation is the truth | **`to-spec`** — the spec is the truth |
 |---|---|---|
@@ -34,11 +34,11 @@ After that, new features go through the full eighteen, one at a time.
 | The plan | every feature `built:`, **one adoption sweep** closes checkpoint 18 for all of them | each unfinished feature runs its checkpoints, which **reconcile** existing code toward the spec rather than starting over |
 | Then | sweep passes → merge → **tag `1.0.0` — under `Baseline: verified`, the current state is now the fixed and verified baseline.** New work arrives as `1.1.0`, a diff, drafted from a note in `specs/1.1.0/request/` | the version finishes when the code reaches the spec, and is accepted like any other |
 
-**Mixing them is normal, and it is declared per feature.** Fifteen features are done and three are half-way: write `Authority: as-built` in `Existing assets` and put `<!-- authority: to-spec -->` on the three ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "`authority`"). Answering `not finished` on those three during stage 1's per-feature confirmation produces exactly this shape without you editing anything by hand.
+**Mixing them is normal, and it is declared per feature.** Fifteen features are done and three are half-way: write `Authority: as-built` in `Existing assets` and put `<!-- authority: to-spec -->` on the three ([`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md), "`authority`"). Answering `not finished` on those three during stage 1's per-feature confirmation produces exactly this shape without you editing anything by hand.
 
 **What `as-built` does not buy:** checkpoint 18 still runs — the adoption sweep is what makes the fixed baseline a verified one, not a claimed one. Anything reachable without authentication is still asked about one operation at a time, whatever the declaration says. And the declaration reaches only the features built when it was made — a feature added in `1.1.0` is specified in conversation like any other new feature.
 
-**There is a second declaration, and it decides how much is accepted before the tag.** It is the `Baseline:` line of the same `Existing assets` section, and it has two values ([`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Existing assets").
+**There is a second declaration, and it decides how much is accepted before the tag.** It is the `Baseline:` line of the same `Existing assets` section, and it has two values ([`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md), "Existing assets").
 
 | | `verified` | `inventoried` |
 |---|---|---|
@@ -94,7 +94,7 @@ npm install
 
 **Move them, or clone them fresh — do not symlink.** A symlinked repository breaks the working-directory rule that every per-repository command depends on, and the failures are indirect: a command runs, reads the wrong config, and reports something plausible.
 
-**Nothing is done to their `.git`.** The `rm -rf .git && git init` you may read about in [`boilerplates.md`](../.claude/skills/hora-setup/references/boilerplates.md) belongs to a *fresh clone of a boilerplate*, so that hundreds of somebody else's commits never land on a product repository's `main`. **A repository that already existed skips that entirely** — the kit is adopted onto it, never over it.
+**Nothing is done to their `.git`.** The `rm -rf .git && git init` you may read about in [`boilerplates.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/references/handbook.md) belongs to a *fresh clone of a boilerplate*, so that hundreds of somebody else's commits never land on a product repository's `main`. **A repository that already existed skips that entirely** — the kit is adopted onto it, never over it.
 
 ---
 
@@ -143,7 +143,7 @@ myproject-app/
 
 **Do not link into the implementation repositories.** `legacy-api/docs/` is gitignored, so a link into it **resolves on your disk and breaks in everybody else's clone** — and it breaks silently. Copy what you need into `specs/<version>/` instead.
 
-**Material is closed inside one version, not shared across them** ([`structure.md`](../.claude/skills/hora/references/structure.md), invariant 3). If 1.1.0 needs the same document, it gets its own copy. That looks redundant and is deliberate: shared material means editing it for 1.1.0 silently changes what 1.0.0 was written against.
+**Material is closed inside one version, not shared across them** ([`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), invariant 3). If 1.1.0 needs the same document, it gets its own copy. That looks redundant and is deliberate: shared material means editing it for 1.1.0 silently changes what 1.0.0 was written against.
 
 ### What the directories actually decide
 
@@ -163,7 +163,7 @@ The first two map onto two tables in `spec.md`, and **the difference is not fili
 
 **When in doubt, `annex/`.** Nothing is lost: if its content matters, it reaches the spec through the conversation and becomes a feature from there. All the longer route adds is one place where a person reads it and says yes — which is exactly what `sources/` skips.
 
-Writing the tables by hand and using neither directory works too — the format is in [`spec-format.md`](../.claude/skills/hora/references/spec-format.md), "Directory layout".
+Writing the tables by hand and using neither directory works too — the format is in [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md), "Directory layout".
 
 ### If you cannot bring something in
 
@@ -173,13 +173,13 @@ Writing the tables by hand and using neither directory works too — the format 
 
 ## Step 3 — Write the spec, describing what is already there
 
-**Run `/hora-spec`.** It reads what already exists at stage 0, copies the blank spec, and writes it with you a section at a time through its seven stages ([`stages.md`](../.claude/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
+**Run `/hora-spec`.** It reads what already exists at stage 0, copies the blank spec, and writes it with you a section at a time through its seven stages ([`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md)). Copying it and filling it in by hand still works and produces the same document:
 
 ```sh
 cp specs/skeleton/spec.md specs/1.0.0/spec.md
 ```
 
-**You are not expected to dictate the product.** A person describing twenty existing features from memory, in an exacting format, describes the ones they remember — and the silence around the rest reads exactly like "there is nothing there". So stage 0 reads the repositories and every document you point it at, drafts what they show, and puts it back to you **to correct rather than to compose** ([`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)).
+**You are not expected to dictate the product.** A person describing twenty existing features from memory, in an exacting format, describes the ones they remember — and the silence around the rest reads exactly like "there is nothing there". So stage 0 reads the repositories and every document you point it at, drafts what they show, and puts it back to you **to correct rather than to compose** ([`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md)).
 
 **What it reads and what it asks are two different lists**, and the split is the whole design:
 
@@ -193,7 +193,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **The fourth row is where adoption pays for itself.** "Anyone signed in can call this" is read off an auth filter; whether that was ever anybody's decision usually turns out to be a different question entirely.
 
-**Nothing it reads becomes a requirement on its own.** A reading is shown to you as a check — *"I read it as this; is that right?"* — and only what you confirm or correct is written. What the kit proposes is labelled a proposal, separately, so that a suggestion never enters the document as something the system already does ([`asking.md`](../.claude/skills/hora/references/asking.md)).
+**Nothing it reads becomes a requirement on its own.** A reading is shown to you as a check — *"I read it as this; is that right?"* — and only what you confirm or correct is written. What the kit proposes is labelled a proposal, separately, so that a suggestion never enters the document as something the system already does ([`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md)).
 
 **Answers are offered as choices wherever they can be.** Existing row counts come with the retention question, current filters come with the authorization question, and what stage 0 found for a feature comes with the `built:` question. You correct far more than you compose.
 
@@ -204,7 +204,7 @@ Two stages earn their keep more here than anywhere else:
 | **1, use cases** | the product has behavior nobody ever wrote down. This is where it gets stated, and where the gap between what it does and what anybody wanted becomes visible |
 | **6, security** | an operation whose caller was never decided is already deployed. Reading the current filters and putting them in front of somebody finds every one — each surprise is an authorization nobody made, and each becomes a criterion the first acceptance sweep checks |
 
-[`spec-format.md`](../.claude/skills/hora/references/spec-format.md) explains every section. Three of them matter more than usual when adopting.
+[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) explains every section. Three of them matter more than usual when adopting.
 
 ### 3.1 The repository layout, with a `Directory` column
 
@@ -451,8 +451,8 @@ Commit it like any other document. The handbook is versioned with your project's
 | what each command does, in detail | [`commands.md`](./commands.md) |
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
-| the format of a spec | [`spec-format.md`](../.claude/skills/hora/references/spec-format.md) |
-| stage 0, then the seven stages a spec is written through | [`stages.md`](../.claude/skills/hora-spec/references/stages.md) |
-| what stage 0 may read, and what no reading settles | [`investigation.md`](../.claude/skills/hora-spec/references/investigation.md) |
-| how a check differs from a proposal | [`asking.md`](../.claude/skills/hora/references/asking.md) |
-| the eighteen checkpoints | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
+| the format of a spec | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |
+| stage 0, then the seven stages a spec is written through | [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) |
+| what stage 0 may read, and what no reading settles | [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md) |
+| how a check differs from a proposal | [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md) |
+| the eighteen checkpoints | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
