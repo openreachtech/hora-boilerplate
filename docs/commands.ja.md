@@ -82,17 +82,17 @@
 
 **ステージ1〜7はそれぞれが独立した skill で、単独でも叩けます**：`/hora-spec-usecases`、`/hora-spec-horizon`、`/hora-spec-nonfunctional`、`/hora-spec-backend`、`/hora-spec-frontend`、`/hora-spec-security`、`/hora-spec-review`。`/hora-spec` はこれらを順に走らせます。そのステージの対話だけやり直したいときに単独で叩いてください。ステージ0 だけは専用 skill を持たず、`/hora-spec` 自身が実行します。
 
-**順序は規則であり、各ステージは関所です。** ユースケースが固まる前に作った DB 設計は2回作ることになり、ユーザー数を知る前に設計したテーブルは間違った規模向けに設計されます。各ステージの通過条件は [`stages.md`](../.claude/skills/hora-spec/references/stages.md) にあります。
+**順序は規則であり、各ステージは関所です。** ユースケースが固まる前に作った DB 設計は2回作ることになり、ユーザー数を知る前に設計したテーブルは間違った規模向けに設計されます。各ステージの通過条件は [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) にあります。
 
 **後戻りは正常です。** ステージ7は、見つかった不足をそれを所有するステージへ戻すために存在します。チェックポイント2 / 9 / 11 / 18 が「コードではなく仕様の不足」を見つけたときも、同じ表に従ってここへ戻ります。
 
-**ステージ0 が、動いている製品を口述させずに済ませる仕組みです。** リポジトリと文書を読み、そこに現れているものを草案に起こし、あなたが訂正できる形で返します。読むものが何も無いプロジェクトでは、その旨を記録して次へ進みます（[`investigation.md`](../.claude/skills/hora-spec/references/investigation.md)）。
+**ステージ0 が、動いている製品を口述させずに済ませる仕組みです。** リポジトリと文書を読み、そこに現れているものを草案に起こし、あなたが訂正できる形で返します。読むものが何も無いプロジェクトでは、その旨を記録して次へ進みます（[`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md)）。
 
 **コードのあるプロジェクトでは、1つの宣言がこの対話の量を決めます：`Authority:`** — `as-built`（今動いているものがこの版。質問は数個に減り、ユースケースはシステムから草案されてあなたが訂正する）か `to-spec`（仕様が正。コードが関所を通って追いつく）か。ステージ1で1回だけ尋ねられ、機能ごとに上書きでき、必須です — 手順の全体は [`adopting.ja.md`](./adopting.ja.md) の「最初に、2つの適用のどちらかを決める」にあります。
 
 ### 出した版に機能を足すとき
 
-**2版目からの `spec.md` は、直前の版に対する差分です** — この版が変える節だけを書きます。それ以外は「書かないこと」によって引き継がれ、過去の版は決して書き換えません（[`spec-format.md`](../.claude/skills/hora/references/spec-format.md)）。**空のスケルトンは差分の版にはコピーしません**。機能を1つ足すだけの文書に、空の見出しが20個並ぶことになるからです。
+**2版目からの `spec.md` は、直前の版に対する差分です** — この版が変える節だけを書きます。それ以外は「書かないこと」によって引き継がれ、過去の版は決して書き換えません（[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md)）。**空のスケルトンは差分の版にはコピーしません**。機能を1つ足すだけの文書に、空の見出しが20個並ぶことになるからです。
 
 **書くのは文書ではなく、概要で構いません。** 欲しいものを `specs/<version>/request/` に置いてください — メール、チケット、箇条書き1ページ、欲しいと言った本人の言葉のままで結構です。そして `/hora-spec` を実行します。ステージ0 がそれを最初に読み、**この版の議題**として扱い、7つのステージが節に起こします。各節は、書き込む前に全文を提示して承認を得ます。
 
@@ -114,11 +114,11 @@ specs/1.1.0/
 
 **ステージは、既に出したものへの同意を取り直しません。** この版が触らない節を持つステージは**引き継ぎ**として通過します — 直前の版の答えを、そこで確定した言葉のまま提示し、確認を取ります。**推測ではなく確認**であり、終了報告は引き継いだステージを1つずつ名指しします。引き継ぎは、走らなかった場合と見分けのつかない唯一の通過だからです。
 
-**2つのステージだけは決して引き継ぎません。そしてそれが、他を短く済ませてよい理由です。** ステージ6 は、この版が足す全操作の呼び出し元と拒否のされ方を、足した版で明記します。ステージ7 は差分ではなく**解決後の文書**をレビューします — 1.0.0 が書いた規則と矛盾する新操作は、2ページの差分の中では見えず、全体の中でははっきり見えるからです。どのステージが引き継げるかは [`stages.md`](../.claude/skills/hora-spec/references/stages.md) にステージごとに書かれています。
+**2つのステージだけは決して引き継ぎません。そしてそれが、他を短く済ませてよい理由です。** ステージ6 は、この版が足す全操作の呼び出し元と拒否のされ方を、足した版で明記します。ステージ7 は差分ではなく**解決後の文書**をレビューします — 1.0.0 が書いた規則と矛盾する新操作は、2ページの差分の中では見えず、全体の中でははっきり見えるからです。どのステージが引き継げるかは [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) にステージごとに書かれています。
 
 ### 尋ね方 — 確認・提案・質問
 
-**この3つは別のもので、同じ言い回しで出されることはありません**（[`asking.md`](../.claude/skills/hora/references/asking.md)）。
+**この3つは別のもので、同じ言い回しで出されることはありません**（[`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md)）。
 
 | | 意味 | あなたが決めること |
 |---|---|---|
@@ -151,7 +151,7 @@ hora  ステージ1。「勤怠管理、承認、給与」と伺いました。
       どちらか追加しますか？
 ```
 
-**承認は「1節ごと」で、文書まるごとではありません。** 仕様書全体に対する1回の「はい」は、承認が無いよりも悪くなります — 記録の上では「読んだ」ことになるからです。理由は [`structure.md`](../.claude/skills/hora/references/structure.md) の不変条件1にあります。
+**承認は「1節ごと」で、文書まるごとではありません。** 仕様書全体に対する1回の「はい」は、承認が無いよりも悪くなります — 記録の上では「読んだ」ことになるからです。理由は [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の不変条件1にあります。
 
 ### 決してしないこと
 
@@ -314,7 +314,7 @@ contract に現れない変更（文言の修正、内部リファクタ）は p
 | **フロントエンド** | 10 フロント着手 · 11 UI/UX とユースケース · 12 コンポーネント設計 · 13 フロントのモジュール · 14 API クライアント · 15 UI · 16 データ取得の組み込み · 17 ローカルテスト環境 | frontend 行 | 17 の後 |
 | **検収** | 18 検収 | 無し | — |
 
-各関所の終了条件・委譲先スキル・n/a 条件は [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) にあります。
+各関所の終了条件・委譲先スキル・n/a 条件は [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) にあります。
 
 **順序について、意図して決めた点が3つあります。**
 
