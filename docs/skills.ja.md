@@ -67,13 +67,13 @@ node_modules/@openreachtech/hora-skills-ort-furo/dist/skills/<skill>/     ─>  
 - **リポジトリの clone を待ちません。** 4つのパッケージはいずれもこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
 - **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視した上で、このリポジトリ自身のものを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
-**配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) の関所5）。
+**配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 
 ## hora のファイルは、これらのスキル名を書きません
 
-[`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) も、[`stages.md`](../.claude/skills/hora-spec/references/stages.md) も、エージェント定義も、このページも書きません。**スキル名はパッケージのものであり、パッケージはそれを自由に変えられます** — そして書き留められた名前は、**静かに壊れる唯一の種類の写し**です。
+[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) も、[`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) も、エージェント定義も、このページも書きません。**スキル名はパッケージのものであり、パッケージはそれを自由に変えられます** — そして書き留められた名前は、**静かに壊れる唯一の種類の写し**です。
 
 ```
 パッケージがスキルを改名する
@@ -111,13 +111,13 @@ Hora Kit    「<かつての名前> に委譲せよ」
 
 ### エージェントに届くのはスキル本体ではなく、そのダイジェストです
 
-**マッチしたスキルは数千行に及び、それを読むエージェントのターン全部で常駐し続けます。** 関所のコストは常駐サイズとターン数の積に近いので、`/hora-build` が implementer に渡すのは `.hora/digests/<skill-name>.md` — 同じ規約を短くしたもので、マッチしたスキルにインストール済みバージョンのダイジェストが無ければ、そのとき [`hora-digester`](../.claude/agents/hora-digester.md) が書きます。上の記録が名前と並べて由来バージョンを残しているのは、そのためです。
+**マッチしたスキルは数千行に及び、それを読むエージェントのターン全部で常駐し続けます。** 関所のコストは常駐サイズとターン数の積に近いので、`/hora-build` が implementer に渡すのは `.hora/digests/<skill-name>.md` — 同じ規約を短くしたもので、マッチしたスキルにインストール済みバージョンのダイジェストが無ければ、そのとき [`hora-digester`](https://github.com/openreachtech/hora-core/blob/main/kit/agents/hora-digester.md) が書きます。上の記録が名前と並べて由来バージョンを残しているのは、そのためです。
 
 **ダイジェストは写しであり、このページ冒頭の規則が認める唯一の写しです。** 写しが危険なのは、静かに古びるからです。ダイジェストは由来したパッケージバージョンを自分のヘッダに持つので、そのバージョンがインストールされている間しか読まれず、パッケージが更新されれば、次に読まれる前に全部が書き直されます。エージェントの常駐量を減らすだけで、何も決めません。
 
 **両者が食い違ったとき決めるのは、スキル本体の文面です。** ダイジェストは出典ファイルを名指ししていて、疑問が残った時点でエージェントはそのファイルを開きます — 記述が薄いとき、そこを見ろと書かれているとき、これから書くものがダイジェストの説明そのものだと言い切れないとき。だから短く書きすぎた規約のコストは「1回の読み込み」であって、規約が失われることではありません。
 
-**スキルそのものが合否基準である工程は、この経路を通りません。** 関所8のセキュリティ監査と検収レビューはスキルを丸ごと invoke します。コードを書くエージェントには「短い版では足りない」と気づく瞬間がありますが、監査にはそれが無いからです — 抜けている検査は、誰も尋ねようと思いつかない検査です。**要約された検査リストは短い検査リストであり、そして合格を報告します。**（[`structure.md`](../.claude/skills/hora/references/structure.md)「How the match is made」）
+**スキルそのものが合否基準である工程は、この経路を通りません。** 関所8のセキュリティ監査と検収レビューはスキルを丸ごと invoke します。コードを書くエージェントには「短い版では足りない」と気づく瞬間がありますが、監査にはそれが無いからです — 抜けている検査は、誰も尋ねようと思いつかない検査です。**要約された検査リストは短い検査リストであり、そして合格を報告します。**（[`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md)「How the match is made」）
 
 ### 名前のうち読む価値があるのは接頭辞だけです
 
@@ -145,7 +145,7 @@ Hora Kit    「<かつての名前> に委譲せよ」
 ls .claude/skills/
 ```
 
-そして「関所 → 委譲するスキル」の権威ある対応は [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md)、「仕様ステージ → 委譲するスキル」は [`stages.md`](../.claude/skills/hora-spec/references/stages.md) です。**どちらも意図的にここには再掲しません** — あの表の2つ目の写しは、まさにこのドキュメント全体が扱っている食い違いそのものになります。
+そして「関所 → 委譲するスキル」の権威ある対応は [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md)、「仕様ステージ → 委譲するスキル」は [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) です。**どちらも意図的にここには再掲しません** — あの表の2つ目の写しは、まさにこのドキュメント全体が扱っている食い違いそのものになります。
 
 ### `hor-` — バックエンド（renchan）
 
@@ -223,7 +223,7 @@ description で突き合わせることは、改名の問題を消しますが�
 
 | | |
 |---|---|
-| 各関所が何の作業を委譲するかの権威 | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
-| 境界の規則としての記述 | [`structure.md`](../.claude/skills/hora/references/structure.md) の "The division of labor" と "No hora file ever names one of those skills" |
+| 各関所が何の作業を委譲するかの権威 | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
+| 境界の規則としての記述 | [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の "The division of labor" と "No hora file ever names one of those skills" |
 | なぜこの設計なのか | [`architecture.ja.md`](./architecture.ja.md) |
 | 各コマンドが何をしているか | [`commands.ja.md`](./commands.ja.md) |
