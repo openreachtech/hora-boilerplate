@@ -99,7 +99,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 [`specs/skeleton/spec.md`](./specs/skeleton/spec.md) is the blank spec — headings and table headers only. `specs/skeleton/` is not a version, so `/hora` never reads it as one.
 
-[`spec-format.md`](./.claude/skills/hora/references/spec-format.md) explains the format: what each section is for, which ones are required, and what makes `/hora` stop and ask. **Read that one; fill in the other.**
+[`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) explains the format: what each section is for, which ones are required, and what makes `/hora` stop and ask. **Read that one; fill in the other.**
 
 ### 3. Run `/hora`
 
@@ -143,11 +143,11 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 
 | Skill | Does | Runs |
 |---|---|---|
-| [`/hora-spec`](./.claude/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
-| [`/hora-setup`](./.claude/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
-| [`/hora-plan`](./.claude/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
-| [`/hora-build`](./.claude/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
-| [`/hora-accept`](./.claude/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
+| [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
+| [`/hora-setup`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
+| [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
+| [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
+| [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
 
 ```
 /hora-spec ─> /hora-setup ─> /hora-plan ──┬─> /hora-build #A ─> /hora-accept ─┐
@@ -155,7 +155,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
                                           └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
-Stage 0 and the seven spec stages are in [`stages.md`](./.claude/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](./.claude/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](./.claude/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](./.claude/skills/hora-spec/references/principles.md).
+Stage 0 and the seven spec stages are in [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/principles.md).
 
 ### Adding a feature after a version has shipped
 
@@ -178,7 +178,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
 
 **First decide whether you need a new version at all.** The line is not the size of the change but whether the version has been released — `git tag -l '1.0.0'` empty means you edit `specs/1.0.0/` and the number does not change. Once released, leave it alone and start the next one. [`docs/commands.md`](./docs/commands.md) has the whole procedure, including how the new number is chosen.
 
-The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
+The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
 **Hora Kit holds the order and the gates; it holds no procedure.** How to write a resolver, a migration, a component or a test — and what an acceptance review looks at — all come from the `@openreachtech/hora-skills-ort-*` packages — one per domain, equipped into this repository's own `.claude/skills/` by `npm install`. See [`docs/skills.md`](./docs/skills.md).
 
@@ -193,7 +193,7 @@ The eighteen checkpoints are in [`checkpoints.md`](./.claude/skills/hora-build/r
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
 
-The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](./.claude/skills/hora/SKILL.md), [`structure.md`](./.claude/skills/hora/references/structure.md), [`commits.md`](./.claude/skills/hora/references/commits.md), [`done-criteria.md`](./.claude/skills/hora/references/done-criteria.md), [`spec-format.md`](./.claude/skills/hora/references/spec-format.md), [`stages.md`](./.claude/skills/hora-spec/references/stages.md), [`principles.md`](./.claude/skills/hora-spec/references/principles.md) and [`checkpoints.md`](./.claude/skills/hora-build/references/checkpoints.md).
+The rules themselves live with the skill that owns each one: [`hora/SKILL.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/SKILL.md), [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), [`commits.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/commits.md), [`done-criteria.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/done-criteria.md), [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md), [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), [`principles.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/principles.md) and [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md).
 
 ## Contribution
 
