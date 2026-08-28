@@ -172,6 +172,8 @@ hora  Stage 1. You described "attendance management, approval, payroll".
 
 **Code setup.** Creates the repositories the spec declares, fills in this project's values, and reads the real tree that arrived.
 
+**This is the one skill this repository authors**, under `kit/skills/hora-setup/`: what it does is this stack from beginning to end, which is why it lives beside the stack handbook it reads rather than in a package that knows no stack.
+
 | | |
 |---|---|
 | **Reads** | the spec's repository layout and project name; the real tree of every repository |
