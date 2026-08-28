@@ -44,7 +44,7 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 
 **4つのどれも、このリポジトリの中にはありません。** 4層すべてがパッケージとして届き、このリポジトリが持つのは仕様書と、これらの文書と、`.hora/` にある実行自身の記録です。
 
-**驚かれるのは、パッケージ2つの間の分割です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらは独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
+**驚かれるのは、キットとスキルパッケージの間の分割です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらはそれぞれ独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
 
 ---
 
