@@ -304,7 +304,7 @@ Authority: as-built — what these repositories do is what 1.0.0 is
 | `.env.development` | **キーが空のままの箇所だけ**埋める |
 | `docker.sh` / `docker-compose.development.yml` | **絶対に上書きしない。** 既にあれば読み、仕様書の手動検証表との差分を報告する |
 | `npm install` | 実行する。その `postinstall` がすべての hora-skills パッケージからキットを配置する |
-| `bank-id` の backend へのコピー | **まだ無い場合だけ** |
+| `hor-bank-id` の backend へのコピー | **まだ無い場合だけ** |
 | 実物ツリーの読み取り | 実行し、読んだ時点の boilerplate タグとともに `.hora/tree/` に控える |
 
 **そのどれもが独立した冪等チェックであって、全部か無しかのスキップではありません。** 人が既に埋めたものは上書きされません。

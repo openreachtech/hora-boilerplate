@@ -304,7 +304,7 @@ It works out that repositories are declared but not all set up, and runs `/hora-
 | `.env.development` | filled in **only where a key is still empty** |
 | `docker.sh` / `docker-compose.development.yml` | **never overwritten.** If yours exist, they are read, and any difference from the spec's manual-verification table is reported |
 | `npm install` | run, and its `postinstall` equips the kit from all hora-skills packages |
-| copying `bank-id` into the backend | **only if not already there** |
+| copying `hor-bank-id` into the backend | **only if not already there** |
 | reading the real tree | run, and cached in `.hora/tree/` with the boilerplate tag it was read at |
 
 **Every one of those is a separate idempotent check, not one all-or-nothing skip.** Nothing a human already filled in is overwritten.
