@@ -55,8 +55,10 @@ id_ed25519
 # changes with every release, so a pattern written against today's names goes
 # stale without saying so — and a denylist that stops matching says nothing
 # when it stops: every equipped entry would simply start being committed here.
-# An allowlist cannot fail that way. Nothing is named back in today, because
-# this repository authors no skill and no agent of its own.
+# An allowlist cannot fail that way. Nothing is named back in today: the one
+# skill this repository authors is kept at kit/skills/, and the hook places a
+# copy of it here like any other — so everything under .claude/ is generated,
+# whoever wrote it.
 /.claude/agents/*
 /.claude/skills/*
 
