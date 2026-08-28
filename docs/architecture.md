@@ -38,11 +38,11 @@ This document explains the design. It is not the authority on any rule — each 
 | Layer | What it decides | What it never decides | Ships in |
 |---|---|---|---|
 | `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself | `@openreachtech/hora` |
-| the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora` |
+| the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora`, and `/hora-setup` from this repository |
 | the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git | `@openreachtech/hora` |
 | the three skills packages | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills-ort-core`, `-ort-renchan`, `-ort-furo` |
 
-**Not one of the four is in this repository.** All four arrive as packages, and what this repository holds is the spec, these documents, and the run's own record under `.hora/`.
+**One skill of the four layers is in this repository, and the rest arrive as packages.** `/hora-setup` is authored here, under `kit/skills/`, because its whole content is this stack; everything else is installed. What this repository holds besides it is the spec, these documents, and the run's own record under `.hora/`.
 
 **The split between the kit and the skills packages is the one that surprises people.** Hora Kit contains no instructions for writing a GraphQL resolver, a Sequelize migration or a Vue component, and it must not — those live in packages that are versioned and updated on their own. A copy inside Hora Kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), "The division of labor", and [`skills.md`](./skills.md).
 

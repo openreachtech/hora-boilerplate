@@ -38,11 +38,11 @@ Hora Kit が仕様書をアプリケーションに変えるまで。何がど�
 | 層 | 決めること | 決してしないこと | 配布元 |
 |---|---|---|---|
 | `/hora` | 次にどの段階が来るか。すべてのブランチ・コミット・マージ | 作業の中身に関する一切 | `@openreachtech/hora` |
-| 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 | `@openreachtech/hora` |
+| 5つの skill | 作業の順序と、各関所の終了条件 | その書き方 | `@openreachtech/hora`、および このリポジトリの `/hora-setup` |
 | ステージ skill と2つの agent | 仕様書の1節、あるいは1関所ぶんのコードや判定 | 順序上の位置。git に関する一切 | `@openreachtech/hora` |
 | 3つのスキルパッケージ | **すべての手順と、すべての合否基準** | それが呼ばれる時機 | `@openreachtech/hora-skills-ort-core`・`-ort-renchan`・`-ort-furo` |
 
-**4つのどれも、このリポジトリの中にはありません。** 4層すべてがパッケージとして届き、このリポジトリが持つのは仕様書と、これらの文書と、`.hora/` にある実行自身の記録です。
+**4層のうち skill 1つだけがこのリポジトリの中にあり、残りはパッケージとして届きます。** `/hora-setup` は内容がまるごとこのスタックの話なので `kit/skills/` でここが書きます。それ以外は配置されるもので、このリポジトリが持つのは仕様書と、これらの文書と、`.hora/` にある実行自身の記録です。
 
 **驚かれるのは、キットとスキルパッケージの間の分割です。** Hora Kit は GraphQL resolver や Sequelize migration や Vue コンポーネントの書き方を一切持っていません。持ってはいけません — それらはそれぞれ独自にバージョン管理・更新されるパッケージにあります。Hora Kit 側に写しを置けば、そのパッケージが動いた瞬間に食い違い、しかも**食い違ったことを誰も知らせません。** [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の "The division of labor" と [`skills.ja.md`](./skills.ja.md) を参照してください。
 
