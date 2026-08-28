@@ -73,7 +73,7 @@ npm install
 
 `specs/` を書く前に行ってください。リポジトリに自分のコミットができた後で `.git` を捨てると、それも一緒に失われます。
 
-**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。実行しなければ、走らせる `/hora` がそもそも存在しません。** このリポジトリは skill も agent も自分では持ちません。`/hora` とそれが指揮する5つの skill は [`@openreachtech/hora`](https://github.com/openreachtech/hora-core) から、それらが委譲する手順は3つのスキルパッケージ [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) から来て、`postinstall` フックがそのすべてを `.claude/` に配置します。clone 直後の `.claude/` は、それが走るまで空です。
+**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。実行しなければ、走らせる `/hora` がそもそも存在しません。** このリポジトリは skill を1つだけ自分で持ちます（`kit/skills/` の `/hora-setup`）。agent は持ちません。`/hora` とそれが指揮する残り4つの skill は [`@openreachtech/hora`](https://github.com/openreachtech/hora-core) から、それらが委譲する手順は3つのスキルパッケージ [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) から来て、`postinstall` フックがそのすべてを、最後にこのリポジトリ自身のものを、`.claude/` に配置します。clone 直後の `.claude/` は、それが走るまで空です。
 
 3つ目のパッケージ `@openreachtech/hora-ecosystem` は、関所5が「新しく書く前に」確認するカタログです。どこにも配置されず、npm が置いた場所で読まれます。
 
