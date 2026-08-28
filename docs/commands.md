@@ -2,7 +2,7 @@
 
 # What each command does
 
-The six main commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own. Alongside them, and also invocable directly: `/bank-id` (at the end of this page), and the seven stage skills `/hora-spec` runs (named under `/hora-spec`, below).
+The six main commands, described the same way each time: what it does, what it reads, what it writes, when it stops, and when you would run it on its own. Alongside them, and also invocable directly: `/hor-bank-id` (at the end of this page), and the seven stage skills `/hora-spec` runs (named under `/hora-spec`, below).
 
 **In normal use you only ever type `/hora`.** It decides which of the others to run. The rest are documented because you will sometimes want one directly — to redo an acceptance run, to re-plan after a spec change, to fix a setup that half-finished.
 
@@ -379,7 +379,7 @@ When a verification gate fails it clears the checkpoints it invalidates and the 
 
 ---
 
-## `/bank-id`
+## `/hor-bank-id`
 
 **A supporting skill, not a phase.** Hands out an exclusive row-id prefix inside one backend repository, so two writers never pick the same explicit `id`.
 
