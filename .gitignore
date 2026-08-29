@@ -47,7 +47,7 @@ id_ed25519
 # and committing it hands everyone else a set of allowances they never granted.
 /.claude/settings.local.json
 
-#### the kit equipped by postinstall, from @openreachtech/hora and the three
+#### the kit equipped by postinstall, from @openreachtech/hora and the four
 #### @openreachtech/hora-skills-ort-* packages (regenerated, not authored here)
 #
 # Ignore the contents of both payload directories, and name this repository's
@@ -62,7 +62,7 @@ id_ed25519
 /.claude/agents/*
 /.claude/skills/*
 
-# The four equip manifests, written by the install commands — one per package,
+# The five equip manifests, written by the install commands — one per package,
 # each named after the package that writes it. These are the only entries under
 # .hora/ that are ignored: everything else there is the run's own record, and
 # `git log .hora/` is the history of what ran.
