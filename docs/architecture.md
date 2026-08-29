@@ -33,14 +33,14 @@ This document explains the design. It is not the authority on any rule — each 
 
 ## Four layers
 
-![Four layers: /hora, the five skills, the stage skills and the two agents, and the three skills packages](./images/layers.svg)
+![Four layers: /hora, the five skills, the stage skills and the two agents, and the four skills packages](./images/layers.svg)
 
 | Layer | What it decides | What it never decides | Ships in |
 |---|---|---|---|
 | `/hora` | which phase comes next; every branch, commit and merge | anything about the work itself | `@openreachtech/hora` |
 | the five skills | the order of the work, and each gate's exit condition | how any of it is written | `@openreachtech/hora`, and `/hora-setup` from this repository |
 | the stage skills and the two agents | one section of the spec, or one checkpoint's code or verdict | where they run in the order; anything about git | `@openreachtech/hora` |
-| the three skills packages | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills-ort-core`, `-ort-renchan`, `-ort-furo` |
+| the four skills packages | **every procedure and every pass/fail criterion** | when it is invoked | `@openreachtech/hora-skills-ort-core`, `-ort-renchan`, `-ort-furo`, `-ort-support` |
 
 **One skill of the four layers is in this repository, and the rest arrive as packages.** `/hora-setup` is authored here, under `kit/skills/`, because its whole content is this stack; everything else is installed. What this repository holds besides it is the spec, these documents, and the run's own record under `.hora/`.
 
@@ -124,6 +124,7 @@ There is no state file. **The state is `.hora/`, and its checkboxes are the stat
   hora-skills-ort-core.json     what the last install of each skills package placed —
   hora-skills-ort-furo.json     one record per package. Gitignored
   hora-skills-ort-renchan.json
+  hora-skills-ort-support.json
 ```
 
 `git log .hora/` is the history of what ran. Nothing else records it, and nothing needs to.
