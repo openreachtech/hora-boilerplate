@@ -43,7 +43,7 @@ export default [
       '*-backend*/',
       '*-frontend*/',
 
-      // The kit equipped by postinstall, from @openreachtech/hora and the three
+      // The kit equipped by postinstall, from @openreachtech/hora and the four
       // @openreachtech/hora-skills-ort-* packages. Not authored here, and some of the skills
       // ship .js/.mjs/.cjs. Both payload directories are ignored whole, the way
       // .gitignore does it: a denylist written against the names the packages
