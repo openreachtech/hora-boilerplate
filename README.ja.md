@@ -73,7 +73,7 @@ npm install
 
 `specs/` を書く前に行ってください。リポジトリに自分のコミットができた後で `.git` を捨てると、それも一緒に失われます。
 
-**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。実行しなければ、走らせる `/hora` がそもそも存在しません。** このリポジトリは skill を1つだけ自分で持ちます（`kit/skills/` の `/hora-setup`）。agent は持ちません。`/hora` とそれが指揮する残り4つの skill は [`@openreachtech/hora`](https://github.com/openreachtech/hora-core) から、それらが委譲する手順は3つのスキルパッケージ [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) から来て、`postinstall` フックがそのすべてを、最後にこのリポジトリ自身のものを、`.claude/` に配置します。clone 直後の `.claude/` は、それが走るまで空です。
+**どちらの経路でも、`/hora` の前に新しいリポジトリで `npm install` を実行してください。実行しなければ、走らせる `/hora` がそもそも存在しません。** このリポジトリは skill を1つだけ自分で持ちます（`kit/skills/` の `/hora-setup`）。agent は持ちません。`/hora` とそれが指揮する残り4つの skill は [`@openreachtech/hora`](https://github.com/openreachtech/hora-core) から、それらが委譲する手順は4つのスキルパッケージ [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) から来て、`postinstall` フックがそのすべてを、最後にこのリポジトリ自身のものを、`.claude/` に配置します。clone 直後の `.claude/` は、それが走るまで空です。
 
 3つ目のパッケージ `@openreachtech/hora-ecosystem` は、関所5が「新しく書く前に」確認するカタログです。どこにも配置されず、npm が置いた場所で読まれます。
 
@@ -212,7 +212,7 @@ npm run lint
 
 **`docs/` 配下は全てペアです** — `x.md` と `x.ja.md`。片方を直したら、同じコミットでもう片方も直してください。同じことを言う文書が2つあれば、片方だけ更新された瞬間に食い違い、しかも古い方も権威ある文面のままです。
 
-**`.claude/` 配下は、ここでは編集しません。** `npm install` が配置する場所で、次の `npm install` が変更を上書きします。hora の skill や agent の修正は [`hora-core`](https://github.com/openreachtech/hora-core)、それらの委譲先である手順の修正は、そのドメインのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) が置き場所です。いずれも英語のみ — 読み手が言語を選ぶ文書ではなく、Claude Code が読む文書だからです。従う文体は [`docs/writing-style.ja.md`](./docs/writing-style.ja.md) にあります。
+**`.claude/` 配下は、ここでは編集しません。** `npm install` が配置する場所で、次の `npm install` が変更を上書きします。hora の skill や agent の修正は [`hora-core`](https://github.com/openreachtech/hora-core)、それらの委譲先である手順の修正は、そのドメインのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) が置き場所です。いずれも英語のみ — 読み手が言語を選ぶ文書ではなく、Claude Code が読む文書だからです。従う文体は [`docs/writing-style.ja.md`](./docs/writing-style.ja.md) にあります。
 
 ## ライセンス
 
