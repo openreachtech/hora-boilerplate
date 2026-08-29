@@ -2,7 +2,7 @@
 
 # The skills Hora Kit runs on
 
-Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the three skill packages: [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan) and [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo), one per domain.
+Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the four skill packages: [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support), one per domain.
 
 This document is about that boundary: why it exists, how the skills reach the session, how they are referred to, and what happens when one is missing.
 
@@ -48,7 +48,7 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 `npm install` runs the copy, through this repository's own `postinstall`:
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
 "postinstall": "npm run hora:init"
 ```
 
@@ -58,12 +58,13 @@ node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<
 node_modules/@openreachtech/hora-skills-ort-core/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
 node_modules/@openreachtech/hora-skills-ort-renchan/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
 node_modules/@openreachtech/hora-skills-ort-furo/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
                           straight copy, no renaming, no rewriting
 ```
 
-- **Four packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the three `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-` prefix is for
+- **Four packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
 - **`npm install` alone is enough**, and a plain `npm install` with no arguments re-runs the hook, so an updated package follows along. Naming a package on the command line does not, so `npm run hora:init` re-equips on demand
-- **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` for `hora-core`, and in `.hora/<package name>.json` for each of the three skill packages — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
+- **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` for `hora-core`, and in `.hora/<package name>.json` for each of the four skill packages — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
 - **It does not wait for any repository to be cloned.** All four packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` and naming this repository's own entries back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
@@ -127,7 +128,7 @@ The main session is handed the equipped skills' descriptions as part of its own 
 | `hof-` | `frontend` | a frontend repository |
 | `hoc-` | `core` | either |
 
-Each domain is a package of its own — `hora-skills-ort-core`, `hora-skills-ort-renchan`, `hora-skills-ort-furo` — so **a repository selects domains by selecting packages.** A project with no frontend leaves `-ort-furo` out of its devDependencies and out of `hora:init`; there is no option to pass and nothing to declare in package.json. Each package installs only its own payload and removes only what its own record names, so leaving one out later takes its skills with it and touches none of the others.
+Each domain is a package of its own — `hora-skills-ort-core`, `hora-skills-ort-renchan`, `hora-skills-ort-furo`, `hora-skills-ort-support` — so **a repository selects domains by selecting packages.** A project with no frontend leaves `-ort-furo` out of its devDependencies and out of `hora:init`; there is no option to pass and nothing to declare in package.json. Each package installs only its own payload and removes only what its own record names, so leaving one out later takes its skills with it and touches none of the others.
 
 **`hoc-` is the `core` domain, not the `hora-core` command.** Both names are in play here and they name different things: `hora-core` installs `@openreachtech/hora`, which distributes no `hoc-` skill at all — every `hoc-` skill comes from `hora-skills-ort-core`.
 
