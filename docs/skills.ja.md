@@ -2,7 +2,7 @@
 
 # Hora Kit が乗っているスキル群
 
-Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — ドメインごとに分かれた3つのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) にあります。
+Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — ドメインごとに分かれた4つのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) にあります。
 
 このドキュメントはその境界の話です。なぜ在るのか、スキルはどうやってセッションに届くのか、どう参照するのか、無かったときどうなるのか。
 
@@ -48,7 +48,7 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 `npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
 "postinstall": "npm run hora:init"
 ```
 
@@ -58,12 +58,13 @@ node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<
 node_modules/@openreachtech/hora-skills-ort-core/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
 node_modules/@openreachtech/hora-skills-ort-renchan/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
 node_modules/@openreachtech/hora-skills-ort-furo/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
                           そのままコピー。改名も書き換えもしない
 ```
 
-- **パッケージ4つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、3つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-` の接頭辞はそのためにあります
+- **パッケージ4つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、4つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-`/`hos-` の接頭辞はそのためにあります
 - **`npm install` だけで足ります。** 引数なしの `npm install` はフックを再実行するので、更新されたパッケージも追随します。コマンドラインでパッケージを名指しした場合は再実行されないため、そのときは `npm run hora:init` で配り直します
-- **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`hora-core` は `.hora/equip-core.json`、3つのスキルパッケージはそれぞれ `.hora/<パッケージ名>.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
+- **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`hora-core` は `.hora/equip-core.json`、4つのスキルパッケージはそれぞれ `.hora/<パッケージ名>.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
 - **リポジトリの clone を待ちません。** 4つのパッケージはいずれもこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
 - **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視した上で、このリポジトリ自身のものを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
 
@@ -127,7 +128,7 @@ Hora Kit    「<かつての名前> に委譲せよ」
 | `hof-` | `frontend` | フロントエンドリポジトリ |
 | `hoc-` | `core` | どちらでも |
 
-ドメインごとにパッケージが分かれています（`hora-skills-ort-core`・`hora-skills-ort-renchan`・`hora-skills-ort-furo`）。したがって **ドメインの選択は、入れるパッケージの選択そのものです。** フロントエンドが無いプロジェクトは `-ort-furo` を devDependencies と `hora:init` から外すだけで、渡すオプションも package.json に書く指定もありません。各パッケージは自分のペイロードだけを配り、自分の記録が名指すものだけを削除するので、後から1つ外せばそのスキルだけが消え、他には触れません。
+ドメインごとにパッケージが分かれています（`hora-skills-ort-core`・`hora-skills-ort-renchan`・`hora-skills-ort-furo`・`hora-skills-ort-support`）。したがって **ドメインの選択は、入れるパッケージの選択そのものです。** フロントエンドが無いプロジェクトは `-ort-furo` を devDependencies と `hora:init` から外すだけで、渡すオプションも package.json に書く指定もありません。各パッケージは自分のペイロードだけを配り、自分の記録が名指すものだけを削除するので、後から1つ外せばそのスキルだけが消え、他には触れません。
 
 **`hoc-` は `core` ドメインであって、`hora-core` コマンドではありません。** ここでは両方の名前が出てきますが、指すものが違います。`hora-core` が配置するのは `@openreachtech/hora` で、そのパッケージは `hoc-` スキルを1つも配りません。`hoc-` スキルはすべて `hora-skills-ort-core` から来ます。
 
