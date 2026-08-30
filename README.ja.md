@@ -14,7 +14,7 @@
 
 ## 始め方
 
-**新規ではなく、既存の renchan / furo プロジェクトに適用する場合**は [`docs/adopting.ja.md`](./docs/adopting.ja.md) へ。手順1から異なり、最初に決めるのは「実装と仕様のどちらが正か」です — **`as-built`** は今動いているものを版として固定し、質問は数個と検収掃引1回で済みます。**`to-spec`** は作りかけのコードを仕様まで届かせます。
+**新規ではなく、既存の renchan / furo プロジェクトに適用する場合**は `hora-core` の [`adopting.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.ja.md) へ。手順1から異なり、最初に決めるのは「実装と仕様のどちらが正か」です — **`as-built`** は今動いているものを版として固定し、質問は数個と検収掃引1回で済みます。**`to-spec`** は作りかけのコードを仕様まで届かせます。
 
 ### 0. 必要なもの
 
@@ -87,7 +87,7 @@ npm install
 
 **すでに動くコードがあるプロジェクトでは、それを口述させられることはありません。** ステージ0がリポジトリと、あなたが指し示した文書を読み、そこに現れているものを草案に起こし、訂正できる形で返します — **「こう読み取りました。合っていますか」という確認としてであって、AI が決めた要件としてではありません。** 読んでも決まらないもの — その機能が誰のためか、本来誰がその操作を呼べるべきか、どこまでが完成か — は、材料を並べた上で何も推奨せずに尋ねられます。回答は可能な限り選択肢として提示されるので、**書き起こすより直すほうがはるかに多くなります。**
 
-**既存の文書がある場合は、実行前に入れておいてください。** 仕様**そのもの**（要件定義、API リファレンス）は `specs/1.0.0/sources/` へ、仕様を**説明するだけ**のもの（モックアップ、図、古い設計書）は `specs/1.0.0/annex/` へ。どちらも空で同梱済みで、必須ではありません。ステージ0 はファイルごとに尋ねる代わりに、その区別を確認します。詳細は [`docs/adopting.ja.md`](./docs/adopting.ja.md) の手順2 にあります。
+**既存の文書がある場合は、実行前に入れておいてください。** 仕様**そのもの**（要件定義、API リファレンス）は `specs/1.0.0/sources/` へ、仕様を**説明するだけ**のもの（モックアップ、図、古い設計書）は `specs/1.0.0/annex/` へ。どちらも空で同梱済みで、必須ではありません。ステージ0 はファイルごとに尋ねる代わりに、その区別を確認します。詳細は `hora-core` の [`adopting.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.ja.md) の手順2 にあります。
 
 **あるのが「欲しいもの」だけなら、それを `specs/1.0.0/request/` に置いてください** — メール、チケット、箇条書き1ページ、あなたの言葉のままで結構です。ステージ0 がこの版の議題として読み、7つのステージが節に起こして、1節ずつ承認を取ります。これも空で同梱済みで、中身がそれ自体で仕様テキストになることはなく、`/hora-plan` は読みません。
 
@@ -189,7 +189,6 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 | [`docs/architecture.ja.md`](./docs/architecture.ja.md) | **この boilerplate から作ったプロジェクトが持つもの。** 4つの層と各層の配布元、実行が埋めるディレクトリ、`.claude/` が生成物である理由、誰が何を書いてよいか。オーケストレーター自身の走り方は `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) |
 | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
-| [`docs/adopting.ja.md`](./docs/adopting.ja.md) | **既存プロジェクトへの適用。** 動くコードを持つ renchan バックエンドと furo フロントエンドに被せる |
 | [`docs/stack/`](./docs/stack/README.ja.md) | **スタック・ハンドブック。** この boilerplate の技術スタックに固有のことすべて — origin カタログ、ミドルウェア、API 種別ごとの成果物 — を持ち、hora スキルが実行時に読む |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **このテンプレート自身の版の記録** — プロジェクトがどの hora-boilerplate から始まったか。製品の版ではありません。製品の版は git タグが持ちます |
 

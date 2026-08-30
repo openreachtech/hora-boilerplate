@@ -14,7 +14,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 
 ## Getting started
 
-**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`docs/adopting.md`](./docs/adopting.md) — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
+**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
 
 ### 0. What you need
 
@@ -87,7 +87,7 @@ The third package, `@openreachtech/hora-ecosystem`, is the catalog checkpoint 5 
 
 **On a project that already holds working code, you are not asked to dictate it.** Stage 0 reads the repositories and any document you point it at, drafts what they show, and puts it back for you to correct — **as a check, "I read it as this; is that right?", never as a requirement it decided.** What no reading can settle — who a feature is *for*, who *should* be allowed to call an operation, how much of it counts as finished — is asked outright, with the evidence laid out and nothing recommended. Answers come as choices wherever they can, so you correct far more than you compose.
 
-**If you already have documents, drop them in before running this.** `specs/1.0.0/sources/` for anything that **is** the specification — requirements, an API reference — and `specs/1.0.0/annex/` for anything that only **explains** it — mockups, diagrams, an old design doc. Both ship empty, neither is required, and stage 0 confirms the split rather than asking you about each file. [`docs/adopting.md`](./docs/adopting.md), step 2, has the details.
+**If you already have documents, drop them in before running this.** `specs/1.0.0/sources/` for anything that **is** the specification — requirements, an API reference — and `specs/1.0.0/annex/` for anything that only **explains** it — mockups, diagrams, an old design doc. Both ship empty, neither is required, and stage 0 confirms the split rather than asking you about each file. [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core`, step 2, has the details.
 
 **If all you have is what you want, put that in `specs/1.0.0/request/`** — a mail, a ticket, a page of bullets, in your own words. Stage 0 reads it as this version's agenda and the seven stages turn it into sections you approve one at a time. It ships empty too, nothing in it becomes spec text on its own, and `/hora-plan` never reads it.
 
@@ -189,7 +189,6 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 | [`docs/architecture.md`](./docs/architecture.md) | **what a project built from this boilerplate holds:** the four layers and where each ships from, the directories a run fills, why `.claude/` is generated, and who may write what. How the orchestrator itself runs is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
-| [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
 
