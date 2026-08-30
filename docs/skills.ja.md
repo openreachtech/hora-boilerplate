@@ -227,4 +227,4 @@ description で突き合わせることは、改名の問題を消しますが�
 | 各関所が何の作業を委譲するかの権威 | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
 | 境界の規則としての記述 | [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md) の "The division of labor" と "No hora file ever names one of those skills" |
 | なぜこの設計なのか | [`architecture.ja.md`](./architecture.ja.md) |
-| 各コマンドが何をしているか | [`commands.ja.md`](./commands.ja.md) |
+| 各コマンドが何をしているか | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) |

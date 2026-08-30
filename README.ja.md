@@ -105,7 +105,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 `/hora` は、その版の仕様書がまだ無ければ先に `/hora-spec` を動かし、続いてボイラープレートを取得し、対話しながら版の計画を立て、機能を1つずつ実装して検収します。答えが要るところで自ら止まります。プランナーはその場で尋ねますが、その場で答えられないものは `.hora/questions/` に書き出されるので、`specs/` を編集して `/hora` を再実行してください。
 
-**通常の利用で打つコマンドは `/hora` だけです。** 各時点で何をしているのか、他の skill を直接呼びたい場合については [`docs/commands.ja.md`](./docs/commands.ja.md) を参照してください。
+**通常の利用で打つコマンドは `/hora` だけです。** 各時点で何をしているのか、他の skill を直接呼びたい場合については `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) を参照してください。
 
 ### 推奨：仕様は対話で、実装は自動執行で
 
@@ -176,7 +176,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 
 **ステージは、既に出したものへの同意を取り直しません。** この版が触らない節を持つステージは**引き継ぎ**として通過します — 直前の版の答えを、その文言のまま提示し、確認を取ります。**ステージ6と7だけは、あなたが足すものについて決して引き継ぎません** — 新しい操作は必ず「誰が呼べるか」を述べ、全体レビューは差分ではなく解決後の文書を読みます。
 
-**その前に、そもそも新しい版が要るかを決めてください。** 境界は変更の大きさではなく、**その版がリリース済みかどうか**です。`git tag -l '1.0.0'` が空なら `specs/1.0.0/` を直接編集してよく、版番号も変わりません。リリース済みなら手を触れず、次の版を始めます。新しい版番号の決め方を含む手順全体は [`docs/commands.ja.md`](./docs/commands.ja.md) にあります。
+**その前に、そもそも新しい版が要るかを決めてください。** 境界は変更の大きさではなく、**その版がリリース済みかどうか**です。`git tag -l '1.0.0'` が空なら `specs/1.0.0/` を直接編集してよく、版番号も変わりません。リリース済みなら手を触れず、次の版を始めます。新しい版番号の決め方を含む手順全体は `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) にあります。
 
 18のチェックポイントは [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) にあります。仕様、想定ユースケース、DB / API スキーマ、stub API、実装に必要なモジュール、actual API、worker、セキュリティ検証、そしてフロントエンド、最後に検収です。
 
@@ -187,7 +187,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 | | |
 |---|---|
 | [`docs/architecture.ja.md`](./docs/architecture.ja.md) | **タスク実行アーキテクチャ。** 2部構成、図つき。`/hora`：4つの層、何がどこで動くか、状態モデル、再入可能性、git モデル、なぜ直列なのか。`/hora-spec`：既にあるものを読むこと、7つのステージ、なぜその全部が対話なのか、承認の仕組み |
-| [`docs/commands.ja.md`](./docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
+| `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
 | [`docs/adopting.ja.md`](./docs/adopting.ja.md) | **既存プロジェクトへの適用。** 動くコードを持つ renchan バックエンドと furo フロントエンドに被せる |
 | [`docs/stack/`](./docs/stack/README.ja.md) | **スタック・ハンドブック。** この boilerplate の技術スタックに固有のことすべて — origin カタログ、ミドルウェア、API 種別ごとの成果物 — を持ち、hora スキルが実行時に読む |

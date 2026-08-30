@@ -105,7 +105,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 `/hora` runs `/hora-spec` first if the version has no spec yet, then fetches the boilerplates, plans the version with you, and builds and accepts one feature at a time. It stops on its own whenever it needs an answer — the planner asks in conversation, and anything nobody can answer on the spot is written to `.hora/questions/` for you to settle by editing `specs/`.
 
-**In normal use, `/hora` is the only command you type.** For what it is doing at each point, and for running one of the other skills directly, see [`docs/commands.md`](./docs/commands.md).
+**In normal use, `/hora` is the only command you type.** For what it is doing at each point, and for running one of the other skills directly, see [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core`.
 
 ### Recommended: converse through the spec, let the implementation run
 
@@ -176,7 +176,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # what you want, in your own words
 
 **The stages do not make you re-agree to what shipped.** A stage whose section this version does not touch passes as a **carry-over**: the previous version's answer, quoted back and confirmed. **Stages 6 and 7 never carry over for anything you add** — every new operation states who may call it, and the whole-document review reads the resolved document rather than the diff.
 
-**First decide whether you need a new version at all.** The line is not the size of the change but whether the version has been released — `git tag -l '1.0.0'` empty means you edit `specs/1.0.0/` and the number does not change. Once released, leave it alone and start the next one. [`docs/commands.md`](./docs/commands.md) has the whole procedure, including how the new number is chosen.
+**First decide whether you need a new version at all.** The line is not the size of the change but whether the version has been released — `git tag -l '1.0.0'` empty means you edit `specs/1.0.0/` and the number does not change. Once released, leave it alone and start the next one. [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` has the whole procedure, including how the new number is chosen.
 
 The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) — spec, use cases, DB and API schemas, stub API, supporting modules, real API, worker, security audit, then the frontend, then acceptance.
 
@@ -187,7 +187,7 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 | | |
 |---|---|
 | [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed,** in two parts and drawn out in figures. `/hora`: the four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial. `/hora-spec`: reading what already exists, the seven stages, why every one of them is a conversation, and how approval works |
-| [`docs/commands.md`](./docs/commands.md) | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
+| [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
