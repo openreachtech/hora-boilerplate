@@ -70,7 +70,7 @@ Each installer records what it placed in `.hora/<package name>.json`, so the nex
 | how the orchestrator runs, in full | [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | what each command does, step by step | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
-| putting this on a project that already exists | [`adopting.md`](./adopting.md) |
+| putting this on a project that already exists | [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` |
 | the stack this boilerplate declares | [`README.md`](./stack/README.md) under `docs/stack/` |
 | the eighteen checkpoints themselves | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
 | the format of a spec | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |
