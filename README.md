@@ -186,7 +186,7 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 
 | | |
 |---|---|
-| [`docs/architecture.md`](./docs/architecture.md) | **how work gets executed,** in two parts and drawn out in figures. `/hora`: the four layers, what runs where and why, the state model, re-entrancy, the git model, and why it is serial. `/hora-spec`: reading what already exists, the seven stages, why every one of them is a conversation, and how approval works |
+| [`docs/architecture.md`](./docs/architecture.md) | **what a project built from this boilerplate holds:** the four layers and where each ships from, the directories a run fills, why `.claude/` is generated, and who may write what. How the orchestrator itself runs is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/adopting.md`](./docs/adopting.md) | **adopting the kit onto a project that already exists.** A renchan backend and a furo frontend that already hold working code |
