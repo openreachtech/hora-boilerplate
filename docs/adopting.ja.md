@@ -444,7 +444,7 @@ cp -r <hora-boilerplate>/docs/stack docs/stack
 
 | | |
 |---|---|
-| 各コマンドの詳細 | [`commands.ja.md`](./commands.ja.md) |
+| 各コマンドの詳細 | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) |
 | なぜこの設計なのか | [`architecture.ja.md`](./architecture.ja.md) |
 | 関所が委譲するスキル群 | [`skills.ja.md`](./skills.ja.md) |
 | 仕様書の書式 | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |

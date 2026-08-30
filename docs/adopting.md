@@ -448,7 +448,7 @@ Commit it like any other document. The handbook is versioned with your project's
 
 | | |
 |---|---|
-| what each command does, in detail | [`commands.md`](./commands.md) |
+| what each command does, in detail | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` |
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | the format of a spec | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |

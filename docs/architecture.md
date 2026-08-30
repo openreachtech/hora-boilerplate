@@ -360,7 +360,7 @@ Everything above rests on two lines. Both are stated in [`structure.md`](https:/
 
 | | |
 |---|---|
-| what each command does, step by step | [`commands.md`](./commands.md) |
+| what each command does, step by step | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | putting this on a project that already exists | [`adopting.md`](./adopting.md) |
 | the eighteen checkpoints themselves | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
