@@ -125,10 +125,10 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **The workflows under `.github/workflows/` follow the repository's visibility** — a private repository runs them on a self-hosted runner labeled `light`, a public one on GitHub's `ubuntu-latest`. What the switch is for is the bill: a GitHub-hosted runner charges for every run on a private repository. `<myproject>-app` is usually private, so register a self-hosted runner with the `light` label before opening pull requests, or these workflows stay queued and never run.
 
-**Nothing is hand-edited to choose between them, and overriding the choice is still yours to make.** All four workflows — `lint.yml`, `main-guard.yml`, `release.yml` and `fill-publish-version.yml` — carry the same expression, so pinning one to a GitHub-hosted runner whatever the visibility means replacing it:
+**Nothing is hand-edited to choose between them, and overriding the choice is still yours to make.** All five workflows — `lint.yml`, `main-guard.yml`, `release.yml`, `fill-publish-version.yml` and `boilerplate-version.yml` — carry the same expression, so pinning one to a GitHub-hosted runner whatever the visibility means replacing it:
 
 ```yaml
-    # what all four carry
+    # what all five carry
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
 
     # pinned, whatever the repository's visibility
@@ -210,6 +210,14 @@ cd hora-boilerplate
 npm install
 npm run lint
 ```
+
+**Raising the `@openreachtech/*` versions needs the release-age window turned off for that one command.** `.npmrc` sets `min-release-age = 7` and exempts nothing, so resolving a range raised to a version published inside that window fails with `ETARGET` rather than quietly settling for an older one. Raise the ranges in `package.json`, then refresh the lockfile with the exemption passed on the command itself.
+
+```sh
+npm install --min-release-age-exclude="@openreachtech/*"
+```
+
+**Only there, and never back in `.npmrc`.** A standing exemption travels to every repository made from this one, and what it would stand in front of is `postinstall` — the hook that runs `hora:init` on every clone. Nothing else asks for the flag: `npm ci`, and any `npm install` that reuses the committed `package-lock.json`, install the locked versions whatever the window says.
 
 **Every file under `docs/` is a pair — `x.md` and `x.ja.md`.** Change one and change the other in the same commit. Two documents saying the same thing will disagree the moment only one of them is updated, and the stale one still reads as authoritative.
 

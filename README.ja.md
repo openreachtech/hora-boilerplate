@@ -125,10 +125,10 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **`.github/workflows/` 配下のワークフローは、リポジトリの公開状態に従います。** private リポジトリなら `light` というラベルのセルフホストランナー、public なら GitHub の `ubuntu-latest` です。この切り替えが何のためかというと請求書のためで、private リポジトリでは GitHub がホストするランナーは実行のたびに課金されます。`<myproject>-app` は private になることが多いので、プルリクエストを送る前に `light` ラベルを持つセルフホストランナーを用意してください。用意しないと、これらのワークフローはキューされたまま実行されません。
 
-**どちらを使うかを手で書き換える箇所はありません。そして、その選択を上書きするかどうかを決めるのはあなたです。** 4本のワークフロー（`lint.yml` / `main-guard.yml` / `release.yml` / `fill-publish-version.yml`）が同じ式を持つので、公開状態に関わらず GitHub ホストに固定したい場合は、その式を置き換えます。
+**どちらを使うかを手で書き換える箇所はありません。そして、その選択を上書きするかどうかを決めるのはあなたです。** 5本のワークフロー（`lint.yml` / `main-guard.yml` / `release.yml` / `fill-publish-version.yml` / `boilerplate-version.yml`）が同じ式を持つので、公開状態に関わらず GitHub ホストに固定したい場合は、その式を置き換えます。
 
 ```yaml
-    # 4本が持っている式
+    # 5本が持っている式
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
 
     # 公開状態に関わらず固定する場合
@@ -208,6 +208,14 @@ cd hora-boilerplate
 npm install
 npm run lint
 ```
+
+**`@openreachtech/*` の版を上げるときは、そのコマンドに限ってリリース経過日数の窓を外します。** `.npmrc` は `min-release-age = 7` を設定し、何も免除していません。そのため窓の内側で公開された版へ range を上げて解決すると、古い版で妥協するのではなく `ETARGET` で失敗します。`package.json` の range を上げたら、免除をコマンド自身に渡して lockfile を作り直してください。
+
+```sh
+npm install --min-release-age-exclude="@openreachtech/*"
+```
+
+**ここだけです。`.npmrc` に戻してはいけません。** 常設の免除は、このリポジトリから作られる全てのリポジトリへ渡ります。そしてその免除が前に立つのは `postinstall` — 全ての clone で `hora:init` を走らせるフックです。他にこのフラグが要る場面はありません。`npm ci` と、コミット済みの `package-lock.json` を再利用する `npm install` は、窓に関わらず lock された版を入れます。
 
 **`docs/` 配下は全てペアです** — `x.md` と `x.ja.md`。片方を直したら、同じコミットでもう片方も直してください。同じことを言う文書が2つあれば、片方だけ更新された瞬間に食い違い、しかも古い方も権威ある文面のままです。
 
