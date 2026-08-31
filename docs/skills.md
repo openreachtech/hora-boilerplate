@@ -2,7 +2,7 @@
 
 # The skills Hora Kit runs on
 
-Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the [`@openreachtech/hora-skills`](https://github.com/openreachtech/hora-skills) package.
+Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the four skill packages: [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support), one per domain.
 
 This document is about that boundary: why it exists, how the skills reach the session, how they are referred to, and what happens when one is missing.
 
@@ -13,7 +13,7 @@ This document is about that boundary: why it exists, how the skills reach the se
 Two documents describing the same convention will disagree. **The question is only when, and whether anybody notices.**
 
 ```
-hora-skills       "a stub resolver lives under server/graphql/resolvers/<audience>/stub/"
+hora-skills-ort-* "a stub resolver lives under server/graphql/resolvers/<audience>/stub/"
                        │
                        │  the package is updated. The path changes.
                        ▼
@@ -26,7 +26,7 @@ Hora Kit          "a stub resolver lives under server/graphql/resolvers/<audienc
 
 So Hora Kit's rule is absolute:
 
-> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in `hora-skills` already holds it. State the work and delegate it.**
+> **Never write a procedure, a convention or a pass/fail criterion into a hora skill when a skill in the `hora-skills-ort-*` packages already holds it. State the work and delegate it.**
 
 This is the same reasoning `/hora-setup` already applies to the boilerplates: **read the real thing; do not bake in what it currently says.** The package is the real thing here.
 
@@ -35,7 +35,7 @@ This is the same reasoning `/hora-setup` already applies to the boilerplates: **
 | | Owns | Example |
 |---|---|---|
 | **Hora Kit** | when something happens, and what must be true before the next thing may | *"Checkpoint 4 passes when a schema-accurate stub exists for every operation this feature adds"* |
-| **`hora-skills`** | how to do it, and what counts as done properly | *"a stub lives under `stub/{queries,mutations}/`, mirrors the schema, holds no DB access, and shares its class name with the real resolver"* |
+| **the `hora-skills-ort-*` packages** | how to do it, and what counts as done properly | *"a stub lives under `stub/{queries,mutations}/`, mirrors the schema, holds no DB access, and shares its class name with the real resolver"* |
 
 **The two sentences do not overlap.** That is the test: if a line in Hora Kit could be checked against the package and found to disagree, it does not belong in Hora Kit.
 
@@ -48,30 +48,33 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 `npm install` runs the copy, through this repository's own `postinstall`:
 
 ```json
-"hora:init": "hora-core install && hora-skills install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
 "postinstall": "npm run hora:init"
 ```
 
 ```
 node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
 node_modules/@openreachtech/hora/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
-node_modules/@openreachtech/hora-skills/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-core/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-renchan/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-furo/dist/skills/<skill>/     ─>  .claude/skills/<skill>/
+node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  .claude/skills/<skill>/
                           straight copy, no renaming, no rewriting
 ```
 
-- **Two packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and `@openreachtech/hora-skills` carries the procedures they delegate to. They land side by side in one flat `.claude/skills/`, which is what the `hb-`/`hf-`/`hc-` prefix is for
+- **Four packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
 - **`npm install` alone is enough**, and a plain `npm install` with no arguments re-runs the hook, so an updated package follows along. Naming a package on the command line does not, so `npm run hora:init` re-equips on demand
-- **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` and `.hora/equip-skills.json` — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
-- **It does not wait for any repository to be cloned.** Both packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
+- **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` for `hora-core`, and in `.hora/<package name>.json` for each of the four skill packages — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
+- **It does not wait for any repository to be cloned.** All four packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` and naming this repository's own entries back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
 
-**Those two are equipped. A third package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), checkpoint 5).
+**Those four are equipped. One more package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 
 ## No hora file names one of these skills
 
-Not [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md), not [`stages.md`](../.claude/skills/hora-spec/references/stages.md), not an agent definition, not this page. **A skill's name belongs to the package, which is free to change it** — and a written-down name is the one kind of copy that fails silently.
+Not [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), not [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), not an agent definition, not this page. **A skill's name belongs to the package, which is free to change it** — and a written-down name is the one kind of copy that fails silently.
 
 ```
 the package renames a skill
@@ -109,33 +112,33 @@ The main session is handed the equipped skills' descriptions as part of its own 
 
 ### What reaches the agent is a digest, not the skill
 
-**A matched skill runs to thousands of lines, and it stays resident for every turn the agent reading it takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so what `/hora-build` hands an implementer is `.hora/digests/<skill-name>.md` — the same conventions in short form, written by [`hora-digester`](../.claude/agents/hora-digester.md) the first time a matched skill has no digest at the installed package version. That is also why the record above names the version the digests came from, beside the names themselves.
+**A matched skill runs to thousands of lines, and it stays resident for every turn the agent reading it takes.** A checkpoint's cost is close to that resident size multiplied by its turn count, so what `/hora-build` hands an implementer is `.hora/digests/<skill-name>.md` — the same conventions in short form, written by [`hora-digester`](https://github.com/openreachtech/hora-core/blob/main/kit/agents/hora-digester.md) the first time a matched skill has no digest at the installed package version. That is also why the record above names the version the digests came from, beside the names themselves.
 
 **A digest is a copy, and it is the one copy the rule this page opens with admits.** What makes a copy dangerous is that it goes stale in silence. A digest carries the package version it was derived from in its own header, so it is read only while that version is installed — and a package update leaves every digest to be rewritten before any of them is read again. It reduces what an agent holds resident, and it decides nothing.
 
 **When the two disagree, the skill's own text is what settles it.** A digest names the file it came from, and the agent opens that file the moment a question stays open — where the digest is thin, where it points there, or where the work is not obviously the thing it describes. So a convention a digest states too briefly costs one read; it is not a convention lost.
 
-**Nothing whose skill *is* the criteria is read this way.** The security audit at checkpoint 8 and the acceptance review invoke their skills whole, because an agent writing code has a moment where the short form announces its own gap and an audit does not: the missing check is the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** ([`structure.md`](../.claude/skills/hora/references/structure.md), "How the match is made")
+**Nothing whose skill *is* the criteria is read this way.** The security audit at checkpoint 8 and the acceptance review invoke their skills whole, because an agent writing code has a moment where the short form announces its own gap and an audit does not: the missing check is the one nobody thinks to ask about. **A summarized check list is a shorter check list, and it reports a pass.** ([`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), "How the match is made")
 
 ### The prefix is the one part of a name worth reading
 
 | Prefix | Domain | Applies to |
 |---|---|---|
-| `hb-` | `backend` | the backend repository |
-| `hf-` | `frontend` | a frontend repository |
-| `hc-` | `core` | either |
+| `hor-` | `backend` | the backend repository |
+| `hof-` | `frontend` | a frontend repository |
+| `hoc-` | `core` | either |
 
-The domain is `hora-skills`' own, and a repository can install a subset of them — `npx --no hora-skills install --domains core,backend` on a project with no frontend, or the same list declared once under `horaSkills` in package.json. **`--no` stops npx before it downloads**: the name is still resolved against the registry, but nothing is fetched, so neither the install script nor the bin of a stranger's package ever runs. Without it, a bin that is not installed becomes a fetch of whatever has been published under that unscoped name.
+Each domain is a package of its own — `hora-skills-ort-core`, `hora-skills-ort-renchan`, `hora-skills-ort-furo`, `hora-skills-ort-support` — so **a repository selects domains by selecting packages.** A project with no frontend leaves `-ort-furo` out of its devDependencies and out of `hora:init`; there is no option to pass and nothing to declare in package.json. Each package installs only its own payload and removes only what its own record names, so leaving one out later takes its skills with it and touches none of the others.
 
-**`hc-` is the `core` domain, not the `hora-core` package.** Both names are in play here and they name different things: `hora-core` is the command that installs `@openreachtech/hora`, which distributes no `hc-` skill at all.
+**`hoc-` is the `core` domain, not the `hora-core` command.** Both names are in play here and they name different things: `hora-core` installs `@openreachtech/hora`, which distributes no `hoc-` skill at all — every `hoc-` skill comes from `hora-skills-ort-core`.
 
-So which surface a skill serves is visible before anything else. **Everything after the prefix is a label, not a classification** — one skill in this package covers operation clients in the frontend app and another covers SDL for the backend server, and their names differ by no more than a word. **The description is the only thing that says which is which**, and matching on what a name sounds like is how the wrong one gets invoked.
+So which surface a skill serves is visible before anything else. **Everything after the prefix is a label, not a classification** — one skill covers operation clients in the frontend app and another covers SDL for the backend server, and their names differ by no more than a word. **The description is the only thing that says which is which**, and matching on what a name sounds like is how the wrong one gets invoked.
 
-This is also why the exclusion lists above are allowlists rather than `hb-*`/`hf-*`/`hc-*` patterns: a denylist that stops matching says nothing when it stops.
+This is also why the exclusion lists above are allowlists rather than `hor-*`/`hof-*`/`hoc-*` patterns: a denylist that stops matching says nothing when it stops.
 
 ---
 
-## What the package covers
+## What the packages cover
 
 **This is an orientation, not an inventory.** The authoritative list is whatever `.claude/skills/` holds after equipping:
 
@@ -143,9 +146,9 @@ This is also why the exclusion lists above are allowlists rather than `hb-*`/`hf
 ls .claude/skills/
 ```
 
-And the authoritative statement of **what work** each checkpoint delegates is [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](../.claude/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either would be exactly the drift this whole document is about.
+And the authoritative statement of **what work** each checkpoint delegates is [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md); for a spec stage it is [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md). **Neither is repeated here, deliberately** — a second copy of either would be exactly the drift this whole document is about.
 
-### `hb-` — backend (renchan)
+### `hor-` — backend (renchan)
 
 | Area | Covers |
 |---|---|
@@ -160,7 +163,7 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | **Security** | a read-only, repo-wide audit that produces findings and fixes nothing |
 | **Testing** | where a test goes, how its run order is guaranteed, and the local E2E container stack |
 
-### `hf-` — frontend (Furo / Nuxt)
+### `hof-` — frontend (Furo / Nuxt)
 
 | Area | Covers |
 |---|---|
@@ -172,7 +175,7 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | **UI/UX** | the project context file, generating UI that is correct by construction, and auditing existing output |
 | **Acceptance** | **the acceptance review**, and the durable end-to-end scenario specification |
 
-### `hc-` — core (either surface)
+### `hoc-` — core (either surface)
 
 | Area | Covers |
 |---|---|
@@ -221,7 +224,7 @@ Matching against descriptions removes the rename problem, not the *dropped* one.
 
 | | |
 |---|---|
-| the authoritative statement of what work each checkpoint delegates | [`checkpoints.md`](../.claude/skills/hora-build/references/checkpoints.md) |
-| the boundary, stated as a rule | [`structure.md`](../.claude/skills/hora/references/structure.md), "The division of labor" and "No hora file ever names one of those skills" |
+| the authoritative statement of what work each checkpoint delegates | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
+| the boundary, stated as a rule | [`structure.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/structure.md), "The division of labor" and "No hora file ever names one of those skills" |
 | why the design is shaped this way | [`architecture.md`](./architecture.md) |
-| what each command does | [`commands.md`](./commands.md) |
+| what each command does | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` |

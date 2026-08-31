@@ -43,12 +43,13 @@ export default [
       '*-backend*/',
       '*-frontend*/',
 
-      // The kit equipped by postinstall, from @openreachtech/hora and
-      // @openreachtech/hora-skills. Not authored here, and some of the skills
+      // The kit equipped by postinstall, from @openreachtech/hora and the four
+      // @openreachtech/hora-skills-ort-* packages. Not authored here, and some of the skills
       // ship .js/.mjs/.cjs. Both payload directories are ignored whole, the way
       // .gitignore does it: a denylist written against the names the packages
-      // use today says nothing when it stops matching. A skill this repository
-      // authors is named back in, one literal line each.
+      // use today says nothing when it stops matching. The skill this repository
+      // authors lives at kit/skills/, and the hook places a copy here like any
+      // other, so nothing has to be named back in.
       '.claude/agents/',
       '.claude/skills/',
     ],

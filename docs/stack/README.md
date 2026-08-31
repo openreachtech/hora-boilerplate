@@ -4,7 +4,7 @@
 
 **This directory is what makes the hora skills stack-agnostic.** The skills installed under `.claude/skills/` own the order and the gates; everything specific to this boilerplate's technology stack — which repositories to fetch, what to fill in, what middleware exists, what an API operation produces — lives here, and the skills read it at run time.
 
-This is the same division of labor the kit already applies to `@openreachtech/hora-skills`: a hora skill states the kind of information it needs, and never bakes in the answer. For conventions and pass/fail criteria the answer comes from the equipped skills, matched by description. For the stack's structure the answer comes from this directory, found by its fixed place.
+This is the same division of labor the kit already applies to the `@openreachtech/hora-skills-ort-*` packages: a hora skill states the kind of information it needs, and never bakes in the answer. For conventions and pass/fail criteria the answer comes from the equipped skills, matched by description. For the stack's structure the answer comes from this directory, found by its fixed place.
 
 **The place is the contract.** A hora skill looks for `docs/stack/README.md` at the project root. If it, or an entry it needs, is missing, the skill stops and asks — it never guesses at a stack.
 
@@ -44,6 +44,6 @@ One file per origin, under [`origins/`](./origins/). Each answers, in this order
 
 ## What this handbook is not
 
-- **It is not a copy of the boilerplates' conventions.** How a resolver is written, how a table is shaped, what a review fails on — all of that is `@openreachtech/hora-skills`' and the boilerplates' own trees'. This handbook holds only what follows from *choosing* these boilerplates: what exists, where it comes from, and what has to be filled in
+- **It is not a copy of the boilerplates' conventions.** How a resolver is written, how a table is shaped, what a review fails on — all of that is the `@openreachtech/hora-skills-ort-*` packages' and the boilerplates' own trees'. This handbook holds only what follows from *choosing* these boilerplates: what exists, where it comes from, and what has to be filled in
 - **It is not read instead of the real tree.** `/hora-setup` still reads what was actually cloned, and the real tree beats anything written here
 - **It is not the kit's.** The hora skills never restate its contents. When this boilerplate's stack changes, this directory changes with it, and no skill needs an edit

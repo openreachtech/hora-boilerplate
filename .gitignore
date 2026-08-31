@@ -47,24 +47,30 @@ id_ed25519
 # and committing it hands everyone else a set of allowances they never granted.
 /.claude/settings.local.json
 
-#### the kit equipped by postinstall, from @openreachtech/hora and
-#### @openreachtech/hora-skills (regenerated, not authored here)
+#### the kit equipped by postinstall, from @openreachtech/hora and the four
+#### @openreachtech/hora-skills-ort-* packages (regenerated, not authored here)
 #
 # Ignore the contents of both payload directories, and name this repository's
-# own entries back in, one literal line each. What the two packages distribute
+# own entries back in, one literal line each. What the packages distribute
 # changes with every release, so a pattern written against today's names goes
 # stale without saying so — and a denylist that stops matching says nothing
 # when it stops: every equipped entry would simply start being committed here.
-# An allowlist cannot fail that way. Nothing is named back in today, because
-# this repository authors no skill and no agent of its own.
+# An allowlist cannot fail that way. Nothing is named back in today: the one
+# skill this repository authors is kept at kit/skills/, and the hook places a
+# copy of it here like any other — so everything under .claude/ is generated,
+# whoever wrote it.
 /.claude/agents/*
 /.claude/skills/*
 
-# The two equip manifests, written by the install commands. These are the only
-# entries under .hora/ that are ignored: everything else there is the run's own
-# record, and `git log .hora/` is the history of what ran.
+# The five equip manifests, written by the install commands — one per package,
+# each named after the package that writes it. These are the only entries under
+# .hora/ that are ignored: everything else there is the run's own record, and
+# `git log .hora/` is the history of what ran.
 /.hora/equip-core.json
-/.hora/equip-skills.json
+/.hora/hora-skills-ort-core.json
+/.hora/hora-skills-ort-furo.json
+/.hora/hora-skills-ort-renchan.json
+/.hora/hora-skills-ort-support.json
 
 #### for Windows
 Thumbs.db
