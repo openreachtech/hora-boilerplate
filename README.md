@@ -125,10 +125,10 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **The workflows under `.github/workflows/` follow the repository's visibility** — a private repository runs them on a self-hosted runner labeled `light`, a public one on GitHub's `ubuntu-latest`. What the switch is for is the bill: a GitHub-hosted runner charges for every run on a private repository. `<myproject>-app` is usually private, so register a self-hosted runner with the `light` label before opening pull requests, or these workflows stay queued and never run.
 
-**Nothing is hand-edited to choose between them, and overriding the choice is still yours to make.** All four workflows — `lint.yml`, `main-guard.yml`, `release.yml` and `fill-publish-version.yml` — carry the same expression, so pinning one to a GitHub-hosted runner whatever the visibility means replacing it:
+**Nothing is hand-edited to choose between them, and overriding the choice is still yours to make.** All five workflows — `lint.yml`, `main-guard.yml`, `release.yml`, `fill-publish-version.yml` and `boilerplate-version.yml` — carry the same expression, so pinning one to a GitHub-hosted runner whatever the visibility means replacing it:
 
 ```yaml
-    # what all four carry
+    # what all five carry
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
 
     # pinned, whatever the repository's visibility
