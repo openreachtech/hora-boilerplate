@@ -1,0 +1,141 @@
+name: Boilerplate Version Guard
+
+# When a release/x.x.x branch is merged into main, require the branch name, the
+# pull request title, and `## Version` in about-boilerplate.md to state one and
+# the same version. Releasing is the only moment that record moves, and it lives
+# in prose no test reads, so nothing else would notice it left behind.
+#
+# NOTE: This workflow must work on both GitHub-hosted and self-hosted runners.
+# A self-hosted runner cannot be assumed to have gh or Python installed, so keep
+# the checks to shell builtins and coreutils.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  boilerplate-version:
+    name: Boilerplate Version Guard
+
+    # private repository: self-hosted
+    # public repository: github-hosted
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
+
+    timeout-minutes: 5
+
+    # Every step reads the same few values, so they are declared once here rather
+    # than repeated per step.
+    env:
+      ABOUT_FILE: about-boilerplate.md
+      # Publishing targets npmjs, so only a bare x.x.x is accepted. npm strips
+      # build metadata and leading zeros, and any other form would name a version
+      # that never exists once published.
+      VERSION_PATTERN: '(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)'
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      HEAD_REF: ${{ github.head_ref }}
+
+    steps:
+      - name: 🛎️ Checkout repository code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The title is what release.yml reads first when it tags the merge, so the
+      # version it carries is the one the release is named after, and every step
+      # after this one is held against it. A pull request that is not a release
+      # leaves those steps skipped and the job green.
+      - name: ✂️ Extract the version from the PR title
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Only a boilerplate owns the version in this record. Everywhere else
+          # the file is a clone record frozen at the version it was taken from,
+          # and moving it would erase what the repository came from.
+          case "$REPOSITORY_NAME" in
+            *-boilerplate*)
+              ;;
+            *)
+              echo "::notice::'$REPOSITORY_NAME' is not a boilerplate repository; nothing to verify."
+
+              exit 0
+              ;;
+          esac
+
+          # The prefix alone decides this, since a release branch carrying a
+          # malformed version is a release to be rejected rather than one to be
+          # waved through as something else.
+          case "$HEAD_REF" in
+            release/*)
+              ;;
+            *)
+              echo "::notice::'$HEAD_REF' is not a release branch; nothing to verify."
+
+              exit 0
+              ;;
+          esac
+
+          version=$(printf '%s' "$PR_TITLE" | grep -oE "\`$VERSION_PATTERN\`" | head -n 1 | tr -d '`' || true)
+
+          if [ -z "$version" ]; then
+            echo "::error::The pull request title states no version. Write it in backticks, as in 'Release \`1.2.3\` > Main'."
+
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "The pull request title states \`$version\`."
+
+      - name: ✅ Verify version in branch
+        if: steps.release.outputs.version != ''
+        shell: bash
+        env:
+          RELEASING_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          # Both names are typed by hand. Two sources of one value are worth
+          # nothing unless they must agree, so the whole branch name is held
+          # against the title rather than parsed loosely.
+          if [ "$HEAD_REF" != "release/$RELEASING_VERSION" ]; then
+            echo "::error::Branch '$HEAD_REF' does not name the version in the title. Rename it to 'release/$RELEASING_VERSION'."
+
+            exit 1
+          fi
+
+          echo "The branch names \`$RELEASING_VERSION\`."
+
+      - name: ✅ Verify version in about-boilerplate.md
+        if: steps.release.outputs.version != ''
+        shell: bash
+        env:
+          RELEASING_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          # A boilerplate mid-release states its version here, so the record is
+          # required rather than optional.
+          if [ ! -f "$ABOUT_FILE" ]; then
+            echo "::error::'$ABOUT_FILE' does not exist. A boilerplate must declare its version there."
+
+            exit 1
+          fi
+
+          declared_version=$(awk '/^## Version$/ { found = 1; next } found && NF { print $1; exit }' "$ABOUT_FILE")
+
+          if [ "$declared_version" != "$RELEASING_VERSION" ]; then
+            echo "::error::'$ABOUT_FILE' still declares \`${declared_version:-(none)}\`. Update '## Version' to \`$RELEASING_VERSION\` before merging into main."
+
+            exit 1
+          fi
+
+          echo "'$ABOUT_FILE' declares \`$declared_version\`."
