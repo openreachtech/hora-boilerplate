@@ -209,6 +209,14 @@ npm install
 npm run lint
 ```
 
+**`@openreachtech/*` の版を上げるときは、そのコマンドに限ってリリース経過日数の窓を外します。** `.npmrc` は `min-release-age = 7` を設定し、何も免除していません。そのため窓の内側で公開された版へ range を上げて解決すると、古い版で妥協するのではなく `ETARGET` で失敗します。`package.json` の range を上げたら、免除をコマンド自身に渡して lockfile を作り直してください。
+
+```sh
+npm install --min-release-age-exclude="@openreachtech/*"
+```
+
+**ここだけです。`.npmrc` に戻してはいけません。** 常設の免除は、このリポジトリから作られる全てのリポジトリへ渡ります。そしてその免除が前に立つのは `postinstall` — 全ての clone で `hora:init` を走らせるフックです。他にこのフラグが要る場面はありません。`npm ci` と、コミット済みの `package-lock.json` を再利用する `npm install` は、窓に関わらず lock された版を入れます。
+
 **`docs/` 配下は全てペアです** — `x.md` と `x.ja.md`。片方を直したら、同じコミットでもう片方も直してください。同じことを言う文書が2つあれば、片方だけ更新された瞬間に食い違い、しかも古い方も権威ある文面のままです。
 
 **`.claude/` 配下は、ここでは編集しません。** `npm install` が配置する場所で、次の `npm install` が変更を上書きします。hora の skill や agent の修正は [`hora-core`](https://github.com/openreachtech/hora-core)、それらの委譲先である手順の修正は、そのドメインのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) が置き場所です。いずれも英語のみ — 読み手が言語を選ぶ文書ではなく、Claude Code が読む文書だからです。従う文体は `hora-core` の [`writing-style.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/writing-style.ja.md) にあります。

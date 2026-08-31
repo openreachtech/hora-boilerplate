@@ -211,6 +211,14 @@ npm install
 npm run lint
 ```
 
+**Raising the `@openreachtech/*` versions needs the release-age window turned off for that one command.** `.npmrc` sets `min-release-age = 7` and exempts nothing, so resolving a range raised to a version published inside that window fails with `ETARGET` rather than quietly settling for an older one. Raise the ranges in `package.json`, then refresh the lockfile with the exemption passed on the command itself.
+
+```sh
+npm install --min-release-age-exclude="@openreachtech/*"
+```
+
+**Only there, and never back in `.npmrc`.** A standing exemption travels to every repository made from this one, and what it would stand in front of is `postinstall` — the hook that runs `hora:init` on every clone. Nothing else asks for the flag: `npm ci`, and any `npm install` that reuses the committed `package-lock.json`, install the locked versions whatever the window says.
+
 **Every file under `docs/` is a pair — `x.md` and `x.ja.md`.** Change one and change the other in the same commit. Two documents saying the same thing will disagree the moment only one of them is updated, and the stale one still reads as authoritative.
 
 **Nothing under `.claude/` is edited here.** It is installed by `npm install`, and the next one overwrites whatever you changed. A fix to a hora skill or an agent belongs in [`hora-core`](https://github.com/openreachtech/hora-core), and one to a procedure they delegate to in the skills package of its domain — [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) or [`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) — all English only, since Claude Code reads them rather than a person choosing a language. [`writing-style.md`](https://github.com/openreachtech/hora-core/blob/main/docs/writing-style.md) in `hora-core` is the style they are held to.
