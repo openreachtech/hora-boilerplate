@@ -125,10 +125,10 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 
 **`.github/workflows/` 配下のワークフローは、リポジトリの公開状態に従います。** private リポジトリなら `light` というラベルのセルフホストランナー、public なら GitHub の `ubuntu-latest` です。この切り替えが何のためかというと請求書のためで、private リポジトリでは GitHub がホストするランナーは実行のたびに課金されます。`<myproject>-app` は private になることが多いので、プルリクエストを送る前に `light` ラベルを持つセルフホストランナーを用意してください。用意しないと、これらのワークフローはキューされたまま実行されません。
 
-**どちらを使うかを手で書き換える箇所はありません。そして、その選択を上書きするかどうかを決めるのはあなたです。** 4本のワークフロー（`lint.yml` / `main-guard.yml` / `release.yml` / `fill-publish-version.yml`）が同じ式を持つので、公開状態に関わらず GitHub ホストに固定したい場合は、その式を置き換えます。
+**どちらを使うかを手で書き換える箇所はありません。そして、その選択を上書きするかどうかを決めるのはあなたです。** 5本のワークフロー（`lint.yml` / `main-guard.yml` / `release.yml` / `fill-publish-version.yml` / `boilerplate-version.yml`）が同じ式を持つので、公開状態に関わらず GitHub ホストに固定したい場合は、その式を置き換えます。
 
 ```yaml
-    # 4本が持っている式
+    # 5本が持っている式
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
 
     # 公開状態に関わらず固定する場合
