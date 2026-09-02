@@ -144,7 +144,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 | SKILL | 役割 | 実行単位 |
 |---|---|---|
 | [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | 既にあるものを読んだ上で、版の仕様書を対話しながら7つのステージで書く。1節ずつ承認を取って書き込む | 版ごとに1回 |
-| [`/hora-setup`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/SKILL.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
+| [`/hora-setup`](./kit/skills/hora-setup/SKILL.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
 | [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | 版を確定し、対話しながら仕様を検証し、機能一覧を作る | 版ごとに1回 |
 | [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | 1つの機能を18のチェックポイントで通す | 機能ごとに1回 |
 | [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | その時点で実装済みの全機能に対して受入テストを実施する | 各機能の最終チェックポイント、および版全体の掃引 |

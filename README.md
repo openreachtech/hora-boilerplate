@@ -144,7 +144,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 | Skill | Does | Runs |
 |---|---|---|
 | [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
-| [`/hora-setup`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
+| [`/hora-setup`](./kit/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
 | [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
 | [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
 | [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
