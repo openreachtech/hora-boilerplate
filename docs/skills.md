@@ -2,6 +2,8 @@
 
 # The skills Hora Kit runs on
 
+*[日本語](./skills.ja.md)*
+
 Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the four skill packages: [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support), one per domain.
 
 This document is about that boundary: why it exists, how the skills reach the session, how they are referred to, and what happens when one is missing.

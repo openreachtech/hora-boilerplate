@@ -2,6 +2,8 @@
 
 # この boilerplate から作ったプロジェクトが持つもの
 
+*[English](./architecture.md)*
+
 このリポジトリは、プロジェクトを取り巻くキットです。仕様書、実行の記録、スタック・ハンドブック、そして自前の skill を1つ持ちます。それ以外はすべて npm パッケージとして届き、`.claude/` に配置されます。
 
 **オーケストレーターが実際にどう走るか — 18の関所、再入、git モデル、仕様の7ステージ — は `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) にあります。** この文書が説明するのは、あなたのプロジェクトに何が入っていて、その各部分がどこから来たか、です。
