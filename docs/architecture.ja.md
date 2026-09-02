@@ -73,6 +73,7 @@ kit/scripts/equip-own-skills.mjs  その skill を、パッケージの後に .c
 | オーケストレーターの走り方（全体） | `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) |
 | 各コマンドが何をしているか | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) |
 | 関所が委譲するスキル | [`skills.ja.md`](./skills.ja.md) |
+| このリポジトリが自分で書く skill | [`hora-setup.ja.md`](./hora-setup.ja.md) |
 | 既存プロジェクトへの適用 | `hora-core` の [`adopting.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.ja.md) |
 | `main` の不具合が待てないときの緊急経路 | `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) |
 | この boilerplate が宣言するスタック | `docs/stack/` の [`README.ja.md`](./stack/README.ja.md) |

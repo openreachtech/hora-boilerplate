@@ -146,7 +146,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 | Skill | Does | Runs |
 |---|---|---|
 | [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
-| [`/hora-setup`](./kit/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
+| [`/hora-setup`](./docs/hora-setup.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
 | [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
 | [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
 | [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
@@ -194,6 +194,7 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` | **the emergency route.** What `/hora-hotfix` does on `main`, and how the release lines left open are brought back onto it |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
+| [`docs/hora-setup.md`](./docs/hora-setup.md) | **the one skill this repository authors.** Why it is here rather than in the kit, what it reads and writes, and the six places it stops to ask you |
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
 

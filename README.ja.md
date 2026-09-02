@@ -146,7 +146,7 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
 | SKILL | 役割 | 実行単位 |
 |---|---|---|
 | [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | 既にあるものを読んだ上で、版の仕様書を対話しながら7つのステージで書く。1節ずつ承認を取って書き込む | 版ごとに1回 |
-| [`/hora-setup`](./kit/skills/hora-setup/SKILL.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
+| [`/hora-setup`](./docs/hora-setup.ja.md) | 仕様書が宣言したボイラープレートを取得し、案件用の値を埋め、実地に読む | 版ごとに1回 |
 | [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | 版を確定し、対話しながら仕様を検証し、機能一覧を作る | 版ごとに1回 |
 | [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | 1つの機能を18のチェックポイントで通す | 機能ごとに1回 |
 | [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | その時点で実装済みの全機能に対して受入テストを実施する | 各機能の最終チェックポイント、および版全体の掃引 |
@@ -194,6 +194,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
 | `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) | **緊急経路。** `/hora-hotfix` が `main` の上で何をするか、開いたままのリリースラインをどう戻すか |
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
+| [`docs/hora-setup.ja.md`](./docs/hora-setup.ja.md) | **このリポジトリが自分で書く唯一の skill。** なぜキットではなくここにあるのか、何を読み書きするのか、どこで止まって尋ねるのか |
 | [`docs/stack/`](./docs/stack/README.ja.md) | **スタック・ハンドブック。** この boilerplate の技術スタックに固有のことすべて — origin カタログ、ミドルウェア、API 種別ごとの成果物 — を持ち、hora スキルが実行時に読む |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **このテンプレート自身の版の記録** — プロジェクトがどの hora-boilerplate から始まったか。製品の版ではありません。製品の版は git タグが持ちます |
 
