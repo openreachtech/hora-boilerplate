@@ -21,6 +21,8 @@ This repository is the kit that sits around a project: it carries the spec, the 
 
 **One skill of those layers is written here, and the rest arrive as packages.** `/hora-setup` is authored in this repository, under `kit/skills/`, because its whole content is this stack — which repositories exist, what fills them, what to read once they arrived — and a package that knows no stack cannot hold it.
 
+**And one skill sits outside all four: `/hora-hotfix`.** It is the only one `/hora` never starts, because whether something is an emergency is a person's call. It is invoked directly, it works on `main` rather than on a release line, and `/hora` rebases the open release lines onto what it produced. It ships in `@openreachtech/hora` like the rest — [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` has the whole route.
+
 **The split between the kit and the skills packages is the one that surprises people.** Hora Kit contains no instructions for writing a resolver, a migration or a component, and it must not: those live in packages versioned and updated on their own. A copy inside the kit would disagree with the original the first time that package moved, and nothing would announce that it had. See [`skills.md`](./skills.md).
 
 ---
@@ -71,6 +73,7 @@ Each installer records what it placed in `.hora/<package name>.json`, so the nex
 | what each command does, step by step | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` |
 | the skills the checkpoints delegate to | [`skills.md`](./skills.md) |
 | putting this on a project that already exists | [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` |
+| the emergency route, when something on `main` cannot wait | [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` |
 | the stack this boilerplate declares | [`README.md`](./stack/README.md) under `docs/stack/` |
 | the eighteen checkpoints themselves | [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
 | the format of a spec | [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |
