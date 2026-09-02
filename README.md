@@ -16,7 +16,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 
 ## Getting started
 
-**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
+Adopting this onto an existing renchan / furo project instead of starting fresh? Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
 
 ### 0. What you need
 
@@ -85,7 +85,7 @@ The third package, `@openreachtech/hora-ecosystem`, is the catalog checkpoint 5 
 /hora-spec
 ```
 
-**`/hora-spec` writes it with you.** It reads whatever already exists at stage 0, copies the blank spec, and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
+`/hora-spec` writes it with you. It reads whatever already exists at stage 0, copies the blank spec, and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
 
 **On a project that already holds working code, you are not asked to dictate it.** Stage 0 reads the repositories and any document you point it at, drafts what they show, and puts it back for you to correct — **as a check, "I read it as this; is that right?", never as a requirement it decided.** What no reading can settle — who a feature is *for*, who *should* be allowed to call an operation, how much of it counts as finished — is asked outright, with the evidence laid out and nothing recommended. Answers come as choices wherever they can, so you correct far more than you compose.
 
@@ -163,7 +163,7 @@ Stage 0 and the seven spec stages are in [`stages.md`](https://github.com/openre
 
 ### Adding a feature after a version has shipped
 
-**Everything above describes one version. A second version is the same five skills over a spec that is a diff.**
+Everything above describes one version. A second version is the same five skills over a spec that is a diff.
 
 ```sh
 mkdir -p specs/1.1.0/request

@@ -76,13 +76,13 @@ node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  
                           straight copy, no renaming, no rewriting
 ```
 
-- **Four packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
+- Four packages, two payloads, one destination. `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
 - **`npm install` alone is enough**, and a plain `npm install` with no arguments re-runs the hook, so an updated package follows along. Naming a package on the command line does not, so `npm run hora:init` re-equips on demand
 - **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` for `hora-core`, and in `.hora/<package name>.json` for each of the four skill packages — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
 - **It does not wait for any repository to be cloned.** All four packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
 - **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` rather than by a name pattern, for the reason below, and neither names anything back in: the one skill this repository authors is kept at `kit/skills/`, and the hook places a copy of it here like any other. They are regenerated, not authored here
 
-**Those four are equipped. One more package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
+Those four are equipped. One more package is read where it lies: **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 

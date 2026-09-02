@@ -76,13 +76,13 @@ node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  
                           そのままコピー。改名も書き換えもしない
 ```
 
-- **パッケージ4つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、4つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-`/`hos-` の接頭辞はそのためにあります
+- パッケージ4つ、ペイロード2種、行き先は1つ。 `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、4つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-`/`hos-` の接頭辞はそのためにあります
 - **`npm install` だけで足ります。** 引数なしの `npm install` はフックを再実行するので、更新されたパッケージも追随します。コマンドラインでパッケージを名指しした場合は再実行されないため、そのときは `npm run hora:init` で配り直します
 - **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`hora-core` は `.hora/equip-core.json`、4つのスキルパッケージはそれぞれ `.hora/<パッケージ名>.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
 - **リポジトリの clone を待ちません。** 4つのパッケージはいずれもこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
 - **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視する形で、名前パターンは使いません（理由は後述）。名指しで戻すものは1つもありません。このリポジトリが自分で書く唯一の skill は `kit/skills/` にあり、フックがそのコピーを他と同じようにここへ配置するからです。生成物であって、ここで書いたものではありません
 
-**配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) の関所5）。
+配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。 **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 
