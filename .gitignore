@@ -50,15 +50,14 @@ id_ed25519
 #### the kit equipped by postinstall, from @openreachtech/hora and the four
 #### @openreachtech/hora-skills-ort-* packages (regenerated, not authored here)
 #
-# Ignore the contents of both payload directories, and name this repository's
-# own entries back in, one literal line each. What the packages distribute
-# changes with every release, so a pattern written against today's names goes
-# stale without saying so — and a denylist that stops matching says nothing
-# when it stops: every equipped entry would simply start being committed here.
-# An allowlist cannot fail that way. Nothing is named back in today: the one
-# skill this repository authors is kept at kit/skills/, and the hook places a
-# copy of it here like any other — so everything under .claude/ is generated,
-# whoever wrote it.
+# Ignore the contents of both payload directories rather than matching on a
+# name. What the packages distribute changes with every release, so a pattern
+# written against today's names goes stale without saying so — and a denylist
+# that stops matching says nothing when it stops: every equipped entry would
+# simply start being committed here. Ignoring whole cannot fail that way.
+# Nothing has to be named back in: the one skill this repository authors is
+# kept at kit/skills/, and the hook places a copy of it here like any other —
+# so everything under .claude/ is generated, whoever wrote it.
 /.claude/agents/*
 /.claude/skills/*
 
