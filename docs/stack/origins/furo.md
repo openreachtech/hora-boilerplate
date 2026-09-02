@@ -2,6 +2,8 @@
 
 # Origin `furo` — a frontend repository
 
+*[日本語](./furo.ja.md)*
+
 What `/hora-setup` needs to know to create and initialize a repository whose declared origin is `furo`. The git handling itself — fetching the newest tag, discarding history, which branch the repository starts on — is the kit's own and is not restated here.
 
 ## Where it comes from

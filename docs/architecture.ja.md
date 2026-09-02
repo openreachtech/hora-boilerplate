@@ -2,6 +2,8 @@
 
 # この boilerplate から作ったプロジェクトが持つもの
 
+*[English](./architecture.md)*
+
 このリポジトリは、プロジェクトを取り巻くキットです。仕様書、実行の記録、スタック・ハンドブック、そして自前の skill を1つ持ちます。それ以外はすべて npm パッケージとして届き、`.claude/` に配置されます。
 
 **オーケストレーターが実際にどう走るか — 18の関所、再入、git モデル、仕様の7ステージ — は `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) にあります。** この文書が説明するのは、あなたのプロジェクトに何が入っていて、その各部分がどこから来たか、です。
@@ -20,6 +22,8 @@
 | 4つのスキルパッケージ | **すべての手順と、すべての合否基準** | それが呼ばれる時機 | `@openreachtech/hora-skills-ort-core`・`-ort-renchan`・`-ort-furo`・`-ort-support` |
 
 **この4層のうち skill 1つだけがここで書かれ、残りはパッケージとして届きます。** `/hora-setup` は `kit/skills/` でこのリポジトリが書きます。やることが最初から最後までこのスタックの話 — どのリポジトリが要るか、何がそれを満たすか、届いた後に何を読むか — であり、スタックを知らないパッケージには持てないからです。
+
+**そして、4つの層のどれにも属さない skill が1つあります：`/hora-hotfix`。** `/hora` が決して起動しない唯一の skill です。何を緊急とするかの判断は人が下すものだからです。直接呼び出され、リリースラインではなく `main` の上で作業し、`/hora` は開いているリリースラインをその結果の上に rebase します。配布元は他と同じ `@openreachtech/hora` です。経路の全体は `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) にあります。
 
 **キットとスキルパッケージの分担は、いちばん意外に思われるところです。** Hora Kit には resolver・migration・コンポーネントの書き方が一切なく、あってはなりません。それらは独自にバージョン管理・更新されるパッケージのものです。キット側に写しを置けば、そのパッケージが動いた瞬間に原本と食い違い、しかも誰もそれを知らせません。[`skills.ja.md`](./skills.ja.md) を参照してください。
 
@@ -69,7 +73,9 @@ kit/scripts/equip-own-skills.mjs  その skill を、パッケージの後に .c
 | オーケストレーターの走り方（全体） | `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) |
 | 各コマンドが何をしているか | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) |
 | 関所が委譲するスキル | [`skills.ja.md`](./skills.ja.md) |
+| このリポジトリが自分で書く skill | [`hora-setup.ja.md`](./hora-setup.ja.md) |
 | 既存プロジェクトへの適用 | `hora-core` の [`adopting.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.ja.md) |
+| `main` の不具合が待てないときの緊急経路 | `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) |
 | この boilerplate が宣言するスタック | `docs/stack/` の [`README.ja.md`](./stack/README.ja.md) |
 | 18の関所そのもの | `hora-core` の [`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) |
 | 仕様書の書式 | `hora-core` の [`spec-format.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/spec-format.md) |

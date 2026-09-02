@@ -2,6 +2,8 @@
 
 # The stack handbook
 
+*[日本語](./README.ja.md)*
+
 **This directory is what makes the hora skills stack-agnostic.** The skills installed under `.claude/skills/` own the order and the gates; everything specific to this boilerplate's technology stack — which repositories to fetch, what to fill in, what middleware exists, what an API operation produces — lives here, and the skills read it at run time.
 
 This is the same division of labor the kit already applies to the `@openreachtech/hora-skills-ort-*` packages: a hora skill states the kind of information it needs, and never bakes in the answer. For conventions and pass/fail criteria the answer comes from the equipped skills, matched by description. For the stack's structure the answer comes from this directory, found by its fixed place.
