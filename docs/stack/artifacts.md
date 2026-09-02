@@ -2,6 +2,8 @@
 
 # What each API kind produces
 
+*[日本語](./artifacts.ja.md)*
+
 The spec states the kind of every operation — `query`, `mutation`, `subscription`, or REST — and the kind is never inferred. The build checkpoints branch on that value; **what each value actually produces, at each layer, is this stack's answer and lives here.** How any of it is *written* stays with the equipped skills and the real trees.
 
 ## The contract a server's consumers read

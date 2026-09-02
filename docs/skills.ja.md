@@ -2,9 +2,23 @@
 
 # Hora Kit が乗っているスキル群
 
+*[English](./skills.md)*
+
 Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — ドメインごとに分かれた4つのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) にあります。
 
 このドキュメントはその境界の話です。なぜ在るのか、スキルはどうやってセッションに届くのか、どう参照するのか、無かったときどうなるのか。
+
+---
+
+## 目次
+
+- [なぜ Hora Kit は手順を持たないのか](#なぜ-hora-kit-は手順を持たないのか)
+- [スキルがセッションに届くまで](#スキルがセッションに届くまで)
+- [hora のファイルは、これらのスキル名を書きません](#hora-のファイルはこれらのスキル名を書きません)
+- [これらのパッケージが覆っている範囲](#これらのパッケージが覆っている範囲)
+- [Hora Kit が最も強く寄りかかっているもの](#hora-kit-が最も強く寄りかかっているもの)
+- [その作業を扱うものが無いとき](#その作業を扱うものが無いとき)
+- [次に読むもの](#次に読むもの)
 
 ---
 
@@ -48,7 +62,7 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 `npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
 "postinstall": "npm run hora:init"
 ```
 
@@ -62,13 +76,13 @@ node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  
                           そのままコピー。改名も書き換えもしない
 ```
 
-- **パッケージ4つ、ペイロード2種、行き先は1つ。** `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、4つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-`/`hos-` の接頭辞はそのためにあります
+- パッケージ4つ、ペイロード2種、行き先は1つ。 `@openreachtech/hora` が hora の skill と agent を運び（`/hora` 自身もその1つです）、4つの `hora-skills-ort-*` パッケージがそれらの委譲先である手順を、ドメインごとに1パッケージずつ運びます。いずれも平坦な1つの `.claude/skills/` に並んで着地します。`hoc-`/`hor-`/`hof-`/`hos-` の接頭辞はそのためにあります
 - **`npm install` だけで足ります。** 引数なしの `npm install` はフックを再実行するので、更新されたパッケージも追随します。コマンドラインでパッケージを名指しした場合は再実行されないため、そのときは `npm run hora:init` で配り直します
 - **各コマンドは再実行可能です。** 自分の前回の実行が入れたもの（`hora-core` は `.hora/equip-core.json`、4つのスキルパッケージはそれぞれ `.hora/<パッケージ名>.json` に記録）と、自分が配る名前を持つものを先に削除してから、新しくコピーします。パッケージが改名・削除したスキルは残留せず、このリポジトリが自分で書いたスキルには触れません
 - **リポジトリの clone を待ちません。** 4つのパッケージはいずれもこのリポジトリ自身の devDependencies なので、ここで `npm install` が済んでいれば使えます
-- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視した上で、このリポジトリ自身のものを1つずつ名指しで戻す形です。名前パターンではなく許可リストなのは後述の理由によります。生成物であって、ここで書いたものではありません
+- **コピーは gitignore 済みで、ルートの lint からも除外されています。** どちらも `.claude/agents/` と `.claude/skills/` の全体を無視する形で、名前パターンは使いません（理由は後述）。名指しで戻すものは1つもありません。このリポジトリが自分で書く唯一の skill は `kit/skills/` にあり、フックがそのコピーを他と同じようにここへ配置するからです。生成物であって、ここで書いたものではありません
 
-**配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。** **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) の関所5）。
+配置されるのはこの4つで、もう1つは置かれた場所のまま読まれます。 **`@openreachtech/hora-ecosystem`** — 同じくこのリポジトリの devDependency で、関所5が「新しく書く前に」確認する社内パッケージのカタログです。どこにも配置されず、`node_modules/` の中でそのまま読まれます。レイアウトはパッケージ自身が自由に変えるものです（[`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md) の関所5）。
 
 ---
 
@@ -127,6 +141,7 @@ Hora Kit    「<かつての名前> に委譲せよ」
 | `hor-` | `backend` | バックエンドリポジトリ |
 | `hof-` | `frontend` | フロントエンドリポジトリ |
 | `hoc-` | `core` | どちらでも |
+| `hos-` | `support` | どちらの面でもない — コードの周りの仕事 |
 
 ドメインごとにパッケージが分かれています（`hora-skills-ort-core`・`hora-skills-ort-renchan`・`hora-skills-ort-furo`・`hora-skills-ort-support`）。したがって **ドメインの選択は、入れるパッケージの選択そのものです。** フロントエンドが無いプロジェクトは `-ort-furo` を devDependencies と `hora:init` から外すだけで、渡すオプションも package.json に書く指定もありません。各パッケージは自分のペイロードだけを配り、自分の記録が名指すものだけを削除するので、後から1つ外せばそのスキルだけが消え、他には触れません。
 
@@ -185,6 +200,14 @@ ls .claude/skills/
 | **テスト** | Jest の書き方と、**テストを弱めずに**スイートを緑にすること |
 | **git** | コミット規約 |
 | **ドキュメント** | README、ドキュメント、ライセンス、スキル自身の更新 |
+
+### `hos-` — サポート（コードの周り）
+
+| 領域 | 覆う範囲 |
+|---|---|
+| **説明** | AI が既に出した答えを、流れを追っていない読み手のために、図を交えた平易な言葉へ書き直す |
+| **利用者マニュアル** | 稼働環境を機能ごとに辿り、利用者が読む HTML マニュアルを製品バージョンに紐づけて書き出す |
+| **スキル化** | 決着した会話をスキルにし、その命名と配置はスキル作成の規約へ渡す |
 
 ---
 

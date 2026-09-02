@@ -1,5 +1,7 @@
 # hora-boilerplate
 
+*[日本語](https://github.com/openreachtech/hora-boilerplate/blob/main/README.ja.md)*
+
 A template repository for building an application from a spec, driven by the `/hora` Claude Code skill.
 
 ## Concept
@@ -14,7 +16,7 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 
 ## Getting started
 
-**Adopting this onto an existing renchan / furo project instead of starting fresh?** Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
+Adopting this onto an existing renchan / furo project instead of starting fresh? Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
 
 ### 0. What you need
 
@@ -73,7 +75,7 @@ npm install
 
 Do this before writing `specs/` — once the repository holds commits of its own, discarding `.git` would take those with it too.
 
-**Either way, run `npm install` in the new repository before `/hora`. Without it there is no `/hora` to run.** This repository authors one skill of its own — `/hora-setup`, under `kit/skills/` — and no agent: `/hora` and the four other skills it orders come from [`@openreachtech/hora`](https://github.com/openreachtech/hora-core), the procedures they delegate to from the four skills packages — [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) — and a `postinstall` hook places all of them, this repository's own last, into `.claude/`. A fresh clone has an empty `.claude/` until that has run.
+**Either way, run `npm install` in the new repository before `/hora`. Without it there is no `/hora` to run.** This repository authors one skill of its own — `/hora-setup`, under `kit/skills/` — and no agent. `/hora` and the four other skills it orders come from [`@openreachtech/hora`](https://github.com/openreachtech/hora-core), and the procedures they delegate to from the four skills packages: [`-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`-ort-support`](https://github.com/openreachtech/hora-skills-ort-support). A `postinstall` hook places all of them, this repository's own last, into `.claude/`. A fresh clone has an empty `.claude/` until that has run.
 
 The third package, `@openreachtech/hora-ecosystem`, is the catalog checkpoint 5 checks before anything is written new. It is never placed anywhere — it is read where npm put it.
 
@@ -83,7 +85,7 @@ The third package, `@openreachtech/hora-ecosystem`, is the catalog checkpoint 5 
 /hora-spec
 ```
 
-**`/hora-spec` writes it with you.** It reads whatever already exists at stage 0, copies the blank spec, and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
+`/hora-spec` writes it with you. It reads whatever already exists at stage 0, copies the blank spec, and works through seven stages in conversation — the use cases first, then what the release will and will not carry, the numbers, the data model and the API, the screens, security, and a review of the whole thing. **Each section is shown to you in full and written only once you approve it**, and anything it thought of itself is marked as a proposal.
 
 **On a project that already holds working code, you are not asked to dictate it.** Stage 0 reads the repositories and any document you point it at, drafts what they show, and puts it back for you to correct — **as a check, "I read it as this; is that right?", never as a requirement it decided.** What no reading can settle — who a feature is *for*, who *should* be allowed to call an operation, how much of it counts as finished — is asked outright, with the evidence laid out and nothing recommended. Answers come as choices wherever they can, so you correct far more than you compose.
 
@@ -144,7 +146,7 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
 | Skill | Does | Runs |
 |---|---|---|
 | [`/hora-spec`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/SKILL.md) | reads what already exists, then writes the version's spec with you through seven stages, one approved section at a time | once per version |
-| [`/hora-setup`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-setup/SKILL.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
+| [`/hora-setup`](./docs/hora-setup.md) | fetches the boilerplates the spec declares, fills in the project's values, reads the real tree | once per version |
 | [`/hora-plan`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-plan/SKILL.md) | fixes the version, verifies the spec with you in conversation, writes the feature list | once per version |
 | [`/hora-build`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/SKILL.md) | takes one feature through the eighteen checkpoints | once per feature |
 | [`/hora-accept`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-accept/SKILL.md) | runs acceptance over every feature implemented so far | at each feature's last checkpoint, and once as a whole-version sweep |
@@ -155,11 +157,13 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
                                           └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
+**One command is not in that line: `/hora-hotfix`.** It is the only skill `/hora` never starts — whether something is an emergency is yours to decide — and it works on `main` while the release lines stay open, which `/hora` then rebases onto what it produced. [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` has the whole route.
+
 Stage 0 and the seven spec stages are in [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/principles.md).
 
 ### Adding a feature after a version has shipped
 
-**Everything above describes one version. A second version is the same five skills over a spec that is a diff.**
+Everything above describes one version. A second version is the same five skills over a spec that is a diff.
 
 ```sh
 mkdir -p specs/1.1.0/request
@@ -188,7 +192,9 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 |---|---|
 | [`docs/architecture.md`](./docs/architecture.md) | **what a project built from this boilerplate holds:** the four layers and where each ships from, the directories a run fills, why `.claude/` is generated, and who may write what. How the orchestrator itself runs is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
+| [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` | **the emergency route.** What `/hora-hotfix` does on `main`, and how the release lines left open are brought back onto it |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
+| [`docs/hora-setup.md`](./docs/hora-setup.md) | **the one skill this repository authors.** Why it is here rather than in the kit, what it reads and writes, and the six places it stops to ask you |
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
 

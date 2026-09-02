@@ -2,9 +2,23 @@
 
 # The skills Hora Kit runs on
 
+*[日本語](./skills.ja.md)*
+
 Hora Kit holds the order and the gates. **Every procedure, and every pass/fail criterion, comes from somewhere else** — the four skill packages: [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core), [`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan), [`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) and [`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support), one per domain.
 
 This document is about that boundary: why it exists, how the skills reach the session, how they are referred to, and what happens when one is missing.
+
+---
+
+## Contents
+
+- [Why Hora Kit holds no procedure](#why-hora-kit-holds-no-procedure)
+- [How the skills reach the session](#how-the-skills-reach-the-session)
+- [No hora file names one of these skills](#no-hora-file-names-one-of-these-skills)
+- [What the packages cover](#what-the-packages-cover)
+- [The ones Hora Kit leans on hardest](#the-ones-hora-kit-leans-on-hardest)
+- [When nothing covers the work](#when-nothing-covers-the-work)
+- [Where to go next](#where-to-go-next)
 
 ---
 
@@ -48,7 +62,7 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 `npm install` runs the copy, through this repository's own `postinstall`:
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
 "postinstall": "npm run hora:init"
 ```
 
@@ -62,13 +76,13 @@ node_modules/@openreachtech/hora-skills-ort-support/dist/skills/<skill>/  ─>  
                           straight copy, no renaming, no rewriting
 ```
 
-- **Four packages, two payloads, one destination.** `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
+- Four packages, two payloads, one destination. `@openreachtech/hora` carries the hora skills and the agents — `/hora` itself is one of them — and the four `hora-skills-ort-*` packages carry the procedures they delegate to, one package per domain. They land side by side in one flat `.claude/skills/`, which is what the `hoc-`/`hor-`/`hof-`/`hos-` prefix is for
 - **`npm install` alone is enough**, and a plain `npm install` with no arguments re-runs the hook, so an updated package follows along. Naming a package on the command line does not, so `npm run hora:init` re-equips on demand
 - **Each command is repeatable.** It removes what its own previous run installed — recorded in `.hora/equip-core.json` for `hora-core`, and in `.hora/<package name>.json` for each of the four skill packages — along with anything named after an entry it distributes, before copying fresh. A skill a package renamed or dropped does not linger as a match candidate, and a skill your own repository authored is left alone
 - **It does not wait for any repository to be cloned.** All four packages are this repository's own devDependencies, so they are ready as soon as `npm install` has run here
-- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` and naming this repository's own entries back in, one by one — an allowlist, not a name pattern, for the reason below. They are regenerated, not authored here
+- **The copies are gitignored, and excluded from the root lint.** Both do it by ignoring the whole of `.claude/agents/` and `.claude/skills/` rather than by a name pattern, for the reason below, and neither names anything back in: the one skill this repository authors is kept at `kit/skills/`, and the hook places a copy of it here like any other. They are regenerated, not authored here
 
-**Those four are equipped. One more package is read where it lies:** **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
+Those four are equipped. One more package is read where it lies: **`@openreachtech/hora-ecosystem`** — also a devDependency here — the catalog of in-house packages that checkpoint 5 checks before anything is written new. It is never equipped anywhere: it is read in place under `node_modules/`, and its layout is its own to change ([`checkpoints.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-build/references/checkpoints.md), checkpoint 5).
 
 ---
 
@@ -127,6 +141,7 @@ The main session is handed the equipped skills' descriptions as part of its own 
 | `hor-` | `backend` | the backend repository |
 | `hof-` | `frontend` | a frontend repository |
 | `hoc-` | `core` | either |
+| `hos-` | `support` | neither surface — the work that surrounds the code |
 
 Each domain is a package of its own — `hora-skills-ort-core`, `hora-skills-ort-renchan`, `hora-skills-ort-furo`, `hora-skills-ort-support` — so **a repository selects domains by selecting packages.** A project with no frontend leaves `-ort-furo` out of its devDependencies and out of `hora:init`; there is no option to pass and nothing to declare in package.json. Each package installs only its own payload and removes only what its own record names, so leaving one out later takes its skills with it and touches none of the others.
 
@@ -185,6 +200,14 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | **Testing** | writing Jest tests, and driving a suite to green **without weakening it** |
 | **Git** | commit conventions |
 | **Documentation** | READMEs, docs, licenses, and updating skills themselves |
+
+### `hos-` — support (around the code)
+
+| Area | Covers |
+|---|---|
+| **Explanation** | rewriting an answer an AI already gave into plain language with diagrams, for a reader who did not follow the thread |
+| **User manuals** | walking a running environment feature by feature, and writing the HTML manual its users read, bound to the product version |
+| **Skills** | turning a settled conversation into a skill, and handing its naming and layout to the skill-writing convention |
 
 ---
 
