@@ -155,6 +155,8 @@ cp specs/skeleton/spec.md specs/1.0.0/spec.md
                                           └─> /hora-build 機能C ─> /hora-accept ─┴─> 全体掃引 ─> merge
 ```
 
+**この線の上に乗らないコマンドが1つあります：`/hora-hotfix`。** `/hora` が決して起動しない唯一の skill です。何を緊急とするかを決めるのは、あなただからです。開いているリリースラインはそのままに `main` の上で作業し、`/hora` がそのリリースラインを結果の上に rebase します。経路の全体は `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) にあります。
+
 ステージ0と7つの仕様ステージは [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md) に、ステージ0が何を読んでよいかは [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md) に、人への尋ね方は [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md) に、そこで適用される考え方 — ユースケースから始めること、1つの版に機能を詰め込みすぎないこと、ロールで切るかエンドポイントで切るか、同期処理か Worker か、認可を操作ごとに明記すること — は [`principles.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/principles.md) にあります。
 
 ### 版を出した後に機能を足す
@@ -188,6 +190,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 |---|---|
 | [`docs/architecture.ja.md`](./docs/architecture.ja.md) | **この boilerplate から作ったプロジェクトが持つもの。** 4つの層と各層の配布元、実行が埋めるディレクトリ、`.claude/` が生成物である理由、誰が何を書いてよいか。オーケストレーター自身の走り方は `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) |
 | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
+| `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) | **緊急経路。** `/hora-hotfix` が `main` の上で何をするか、開いたままのリリースラインをどう戻すか |
 | [`docs/skills.ja.md`](./docs/skills.ja.md) | **利用しているスキルの解説。** なぜ Hora Kit は手順を持たないのか、スキルはどう配られるのか、パッケージが覆う範囲 |
 | [`docs/stack/`](./docs/stack/README.ja.md) | **スタック・ハンドブック。** この boilerplate の技術スタックに固有のことすべて — origin カタログ、ミドルウェア、API 種別ごとの成果物 — を持ち、hora スキルが実行時に読む |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **このテンプレート自身の版の記録** — プロジェクトがどの hora-boilerplate から始まったか。製品の版ではありません。製品の版は git タグが持ちます |

@@ -155,6 +155,8 @@ Then note the decision in `specs/<version>/spec.md`, so that everyone — and ev
                                           └─> /hora-build #C ─> /hora-accept ─┴─> sweep ─> merge
 ```
 
+**One command is not in that line: `/hora-hotfix`.** It is the only skill `/hora` never starts — whether something is an emergency is yours to decide — and it works on `main` while the release lines stay open, which `/hora` then rebases onto what it produced. [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` has the whole route.
+
 Stage 0 and the seven spec stages are in [`stages.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/stages.md), what stage 0 may read in [`investigation.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/investigation.md), how anything is put to you in [`asking.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora/references/asking.md), and the thinking they apply — use cases first, a release that is not overloaded, roles or separate endpoints, synchronous work or a job, authorization stated per operation — in [`principles.md`](https://github.com/openreachtech/hora-core/blob/main/kit/skills/hora-spec/references/principles.md).
 
 ### Adding a feature after a version has shipped
@@ -188,6 +190,7 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 |---|---|
 | [`docs/architecture.md`](./docs/architecture.md) | **what a project built from this boilerplate holds:** the four layers and where each ships from, the directories a run fills, why `.claude/` is generated, and who may write what. How the orchestrator itself runs is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
+| [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` | **the emergency route.** What `/hora-hotfix` does on `main`, and how the release lines left open are brought back onto it |
 | [`docs/skills.md`](./docs/skills.md) | **the skills it runs on.** Why Hora Kit holds no procedure, how the skills are equipped, and what the package covers |
 | [`docs/stack/`](./docs/stack/README.md) | **the stack handbook.** Everything specific to this boilerplate's technology stack — the origin catalog, the middleware, what each API kind produces — read by the hora skills at run time |
 | [`about-boilerplate.md`](./about-boilerplate.md) | **the template's own version marker** — which hora-boilerplate this project started from. Not the product's version; that lives in git tags |
