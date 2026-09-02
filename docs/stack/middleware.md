@@ -2,6 +2,8 @@
 
 # Middleware, and the default API style
 
+*[日本語](./middleware.ja.md)*
+
 What runs beside the backend, which of it may never be dropped, and what a spec has chosen when it says nothing about its API style. The spec's own tables stay the declaration — this file is where their default values and their coupling rules come from.
 
 ## The default middleware

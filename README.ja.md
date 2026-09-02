@@ -1,5 +1,7 @@
 # hora-boilerplate
 
+*[English](https://github.com/openreachtech/hora-boilerplate/blob/main/README.md)*
+
 `/hora` という Claude Code skill が仕様書からアプリケーションを実装する、テンプレートリポジトリです。
 
 ## コンセプト

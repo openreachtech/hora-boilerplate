@@ -2,6 +2,8 @@
 
 # What a project built from this boilerplate holds
 
+*[日本語](./architecture.ja.md)*
+
 This repository is the kit that sits around a project: it carries the spec, the record of what ran, the stack handbook, and one skill of its own. Everything else arrives as an npm package and lands under `.claude/`.
 
 **How the orchestrator actually runs — the eighteen checkpoints, re-entrancy, the git model, the seven spec stages — is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core`.** This document is about what a project of yours contains, and where each part of it comes from.

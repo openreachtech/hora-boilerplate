@@ -2,6 +2,8 @@
 
 # Hora Kit が乗っているスキル群
 
+*[English](./skills.md)*
+
 Hora Kit が持っているのは順序と関所です。**手順と合否基準はすべて別の場所** — ドメインごとに分かれた4つのスキルパッケージ [`hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core)・[`hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan)・[`hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo)・[`hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) にあります。
 
 このドキュメントはその境界の話です。なぜ在るのか、スキルはどうやってセッションに届くのか、どう参照するのか、無かったときどうなるのか。

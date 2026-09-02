@@ -1,5 +1,7 @@
 # hora-boilerplate
 
+*[日本語](https://github.com/openreachtech/hora-boilerplate/blob/main/README.ja.md)*
+
 A template repository for building an application from a spec, driven by the `/hora` Claude Code skill.
 
 ## Concept
