@@ -127,6 +127,7 @@ The main session is handed the equipped skills' descriptions as part of its own 
 | `hor-` | `backend` | the backend repository |
 | `hof-` | `frontend` | a frontend repository |
 | `hoc-` | `core` | either |
+| `hos-` | `support` | neither surface — the work that surrounds the code |
 
 Each domain is a package of its own — `hora-skills-ort-core`, `hora-skills-ort-renchan`, `hora-skills-ort-furo`, `hora-skills-ort-support` — so **a repository selects domains by selecting packages.** A project with no frontend leaves `-ort-furo` out of its devDependencies and out of `hora:init`; there is no option to pass and nothing to declare in package.json. Each package installs only its own payload and removes only what its own record names, so leaving one out later takes its skills with it and touches none of the others.
 
@@ -185,6 +186,14 @@ And the authoritative statement of **what work** each checkpoint delegates is [`
 | **Testing** | writing Jest tests, and driving a suite to green **without weakening it** |
 | **Git** | commit conventions |
 | **Documentation** | READMEs, docs, licenses, and updating skills themselves |
+
+### `hos-` — support (around the code)
+
+| Area | Covers |
+|---|---|
+| **Explanation** | rewriting an answer an AI already gave into plain language with diagrams, for a reader who did not follow the thread |
+| **User manuals** | walking a running environment feature by feature, and writing the HTML manual its users read, bound to the product version |
+| **Skills** | turning a settled conversation into a skill, and handing its naming and layout to the skill-writing convention |
 
 ---
 
