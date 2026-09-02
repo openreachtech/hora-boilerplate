@@ -48,7 +48,7 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 `npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install",
+"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
 "postinstall": "npm run hora:init"
 ```
 
