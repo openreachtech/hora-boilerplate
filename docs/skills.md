@@ -8,6 +8,18 @@ This document is about that boundary: why it exists, how the skills reach the se
 
 ---
 
+## Contents
+
+- [Why Hora Kit holds no procedure](#why-hora-kit-holds-no-procedure)
+- [How the skills reach the session](#how-the-skills-reach-the-session)
+- [No hora file names one of these skills](#no-hora-file-names-one-of-these-skills)
+- [What the packages cover](#what-the-packages-cover)
+- [The ones Hora Kit leans on hardest](#the-ones-hora-kit-leans-on-hardest)
+- [When nothing covers the work](#when-nothing-covers-the-work)
+- [Where to go next](#where-to-go-next)
+
+---
+
 ## Why Hora Kit holds no procedure
 
 Two documents describing the same convention will disagree. **The question is only when, and whether anybody notices.**
