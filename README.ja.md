@@ -16,6 +16,8 @@
 
 ## 始め方
 
+**以下の3つの手順を1ページにまとめたクイックスタート**が `hora-core` の [`quick-start.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/quick-start.ja.md) です。やりたいことを `specs/1.0.0/request/` に、関連資料を `specs/1.0.0/annex/` に入れれば、`/hora` がそれを材料に仕様書をあなたと書きます。
+
 新規ではなく、既存の renchan / furo プロジェクトに適用する場合は `hora-core` の [`adopting.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.ja.md) へ。手順1から異なり、最初に決めるのは「実装と仕様のどちらが正か」です — **`as-built`** は今動いているものを版として固定し、質問は数個と検収掃引1回で済みます。**`to-spec`** は作りかけのコードを仕様まで届かせます。
 
 ### 0. 必要なもの
@@ -190,6 +192,7 @@ $EDITOR specs/1.1.0/request/csv-export.md   # 欲しいものを、自分の言�
 
 | | |
 |---|---|
+| `hora-core` の [`quick-start.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/quick-start.ja.md) | **クイックスタート — 仕様書を書き始めるまでの3手順。** 版の下にある3つの受け渡しディレクトリ、そこにファイルを置くことが何を言ったことになるのか、`/hora` がそれをどう扱うのか |
 | [`docs/architecture.ja.md`](./docs/architecture.ja.md) | **この boilerplate から作ったプロジェクトが持つもの。** 4つの層と各層の配布元、実行が埋めるディレクトリ、`.claude/` が生成物である理由、誰が何を書いてよいか。オーケストレーター自身の走り方は `hora-core` の [`architecture.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.ja.md) |
 | `hora-core` の [`commands.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.ja.md) | **各コマンドの解説。** 読むもの / 書くもの / 止まる条件 / 単独実行。加えて実際のセッションの見え方 |
 | `hora-core` の [`hotfix.ja.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.ja.md) | **緊急経路。** `/hora-hotfix` が `main` の上で何をするか、開いたままのリリースラインをどう戻すか |
