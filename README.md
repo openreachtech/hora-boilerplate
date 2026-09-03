@@ -16,6 +16,8 @@ This README only covers getting started. **The documentation is in [`docs/`](./d
 
 ## Getting started
 
+**The three steps below, on one page:** [`quick-start.md`](https://github.com/openreachtech/hora-core/blob/main/docs/quick-start.md) in `hora-core`. What you want goes into `specs/1.0.0/request/`, the material around it into `specs/1.0.0/annex/`, and `/hora` writes the spec with you out of it.
+
 Adopting this onto an existing renchan / furo project instead of starting fresh? Go to [`adopting.md`](https://github.com/openreachtech/hora-core/blob/main/docs/adopting.md) in `hora-core` — the steps differ from step 1 onward, and the first decision there is whether the implementation or the spec is the authority: **`as-built`** fixes what runs today as the version, with a handful of questions and one acceptance sweep; **`to-spec`** takes half-finished code the rest of the way toward the spec.
 
 ### 0. What you need
@@ -190,6 +192,7 @@ The eighteen checkpoints are in [`checkpoints.md`](https://github.com/openreacht
 
 | | |
 |---|---|
+| [`quick-start.md`](https://github.com/openreachtech/hora-core/blob/main/docs/quick-start.md) in `hora-core` | **the shortest route to a spec.** The three drop-off directories under a version, what putting a file in each one says, and what `/hora` does with them |
 | [`docs/architecture.md`](./docs/architecture.md) | **what a project built from this boilerplate holds:** the four layers and where each ships from, the directories a run fills, why `.claude/` is generated, and who may write what. How the orchestrator itself runs is [`architecture.md`](https://github.com/openreachtech/hora-core/blob/main/docs/architecture.md) in `hora-core` |
 | [`commands.md`](https://github.com/openreachtech/hora-core/blob/main/docs/commands.md) in `hora-core` | **what each command does.** Reads, writes, stops-when, and run-it-directly — plus what a session actually looks like |
 | [`hotfix.md`](https://github.com/openreachtech/hora-core/blob/main/docs/hotfix.md) in `hora-core` | **the emergency route.** What `/hora-hotfix` does on `main`, and how the release lines left open are brought back onto it |
