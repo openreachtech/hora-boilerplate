@@ -50,7 +50,7 @@ scripts/hora-init.sh              what npm install runs: equips every Hora Kit p
 
 ### `.claude/` is generated, and the ignore rules are an allowlist
 
-`npm install` runs `hora:init` (`scripts/hora-init.sh`), which equips `@openreachtech/hora`, then every skills package it finds under `node_modules/`, then places this repository's own skill last so nothing overwrites it. What lands there is build output of those packages rather than source of your project, so `.gitignore` ignores both payload directories whole and names back in whatever belongs to the repository.
+`npm install` runs `hora:init` (`scripts/hora-init.sh`), which equips `@openreachtech/hora`, then every skills package and add-on it finds under `node_modules/`, then places this repository's own skill last so nothing overwrites it. What lands there is build output of those packages rather than source of your project, so `.gitignore` ignores both payload directories whole and names back in whatever belongs to the repository.
 
 **The direction of that rule is deliberate.** What each package distributes changes with every release, so a denylist written against today's names goes stale without saying so — and a denylist that stops matching says nothing when it stops: every equipped entry would simply start being committed. An allowlist cannot fail that way.
 
