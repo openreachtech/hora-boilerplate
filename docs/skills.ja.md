@@ -62,9 +62,11 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 `npm install` が、このリポジトリ自身の `postinstall` を通してそのコピーを実行します。
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
+"hora:init": "sh scripts/hora-init.sh",
 "postinstall": "npm run hora:init"
 ```
+
+`scripts/hora-init.sh` は、まず `hora-core install` を走らせ、次に `node_modules/` の下で見つけたすべての `@openreachtech/hora-skills-*` について `<パッケージ名> install` を走らせ、最後に、このリポジトリ自身の skill を置きます。**パッケージは列挙せず、名前で見つけます。** なので、devDependencies にパッケージを足せば、次の `npm install` で装備され、ほかに書き換えるものはありません。コマンドの名前がパッケージ名と違うパッケージがあれば、装備しないまま素通りさせずに、そこで止まります。
 
 ```
 node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
