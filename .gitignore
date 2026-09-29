@@ -61,15 +61,14 @@ id_ed25519
 /.claude/agents/*
 /.claude/skills/*
 
-# The five equip manifests, written by the install commands — one per package,
-# each named after the package that writes it. These are the only entries under
-# .hora/ that are ignored: everything else there is the run's own record, and
-# `git log .hora/` is the history of what ran.
+# What the installers write under .hora/, regenerated on every install: each
+# package's record of what it placed, named after the package that writes it.
+# Matched by pattern, since scripts/hora-init.sh equips whatever hora-skills-*
+# packages are installed. These are the only entries under .hora/ that are
+# ignored: everything else there is the run's own record, and `git log .hora/`
+# is the history of what ran.
 /.hora/equip-core.json
-/.hora/hora-skills-ort-core.json
-/.hora/hora-skills-ort-furo.json
-/.hora/hora-skills-ort-renchan.json
-/.hora/hora-skills-ort-support.json
+/.hora/hora-skills-*.json
 
 #### for Windows
 Thumbs.db
