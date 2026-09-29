@@ -11,6 +11,8 @@ Read `../hora/references/structure.md` first — the repository layout, where a 
 
 **This skill holds no knowledge of any technology stack.** Which boilerplate fills a declared row, what gets filled in, and what to read once it is there all come from the project's **stack handbook** — read `references/handbook.md` for where it lives and what it answers. A missing handbook, like a missing declaration, is a stop-and-ask, never a guess.
 
+**Every stop-and-ask in this skill puts its question as `../hora/references/asking.md` says, and the run then ends as `../hora/references/structure.md`, "[wing] How to close a run", says.** Nothing here decides for itself whether the question reaches a person. An active add-on may take the decision instead (`../hora-addon/SKILL.md`), and this skill stops or goes on as the answer says.
+
 ## What this skill is for
 
 ```
