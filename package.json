@@ -6,7 +6,7 @@
   "description": "TODO: fulfill here",
   "type": "module",
   "scripts": {
-    "hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
+    "hora:init": "sh scripts/hora-init.sh",
     "l": "npm run lint",
     "lint": "eslint .",
     "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",

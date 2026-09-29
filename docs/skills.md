@@ -62,9 +62,11 @@ Claude Code discovers skills only in the session's own `.claude/skills/`. A pack
 `npm install` runs the copy, through this repository's own `postinstall`:
 
 ```json
-"hora:init": "hora-core install && hora-skills-ort-core install && hora-skills-ort-renchan install && hora-skills-ort-furo install && hora-skills-ort-support install && node kit/scripts/equip-own-skills.mjs",
+"hora:init": "sh scripts/hora-init.sh",
 "postinstall": "npm run hora:init"
 ```
+
+`scripts/hora-init.sh` runs `hora-core install` first, then `<package> install` for every `@openreachtech/hora-skills-*` it finds under `node_modules/`, then every `@openreachtech/hora-addon-*` in two passes — `install --only skills` for each, then `install --only wings` for each — and places this repository's own skill last. **An add-on's wings wait until every skill is in place**, because a wing may extend a skill another add-on installs. **The packages are found by name, not listed**, so a package added to devDependencies is equipped by the next `npm install` with nothing else to edit. A package whose command is not named after it stops the script, rather than being passed over unequipped.
 
 ```
 node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
