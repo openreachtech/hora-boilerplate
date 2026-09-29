@@ -10,9 +10,15 @@
 #
 #   @openreachtech/hora             always, and first. Its command is `hora-core`
 #   @openreachtech/hora-skills-*    every skills library installed
+#   @openreachtech/hora-addon-*     every add-on installed. None is required
 #
 # Every package but the first names its command after itself. One that does not stops the
 # run rather than being passed over, because a package left unequipped fails silently.
+#
+# Add-ons go in two passes: every package's skills first, then every add-on's wings (with its
+# definition). A wing may extend a skill another add-on installs, so it waits until every
+# skill is in place. Only an add-on's installer takes `--only`; the skills libraries install
+# skills alone.
 
 set -eu
 
@@ -32,6 +38,18 @@ for dir in "$scope"/hora-skills-*; do
   name=${dir##*/}
   require_command "$name"
   "$name" install
+done
+
+for dir in "$scope"/hora-addon-*; do
+  [ -d "$dir" ] || continue
+  name=${dir##*/}
+  require_command "$name"
+  "$name" install --only skills
+done
+
+for dir in "$scope"/hora-addon-*; do
+  [ -d "$dir" ] || continue
+  "${dir##*/}" install --only wings
 done
 
 node kit/scripts/equip-own-skills.mjs
