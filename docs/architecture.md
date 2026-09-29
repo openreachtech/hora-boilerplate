@@ -54,7 +54,7 @@ scripts/hora-init.sh              what npm install runs: equips every Hora Kit p
 
 **The direction of that rule is deliberate.** What each package distributes changes with every release, so a denylist written against today's names goes stale without saying so — and a denylist that stops matching says nothing when it stops: every equipped entry would simply start being committed. An allowlist cannot fail that way.
 
-Each installer records what it placed in `.hora/<package name>.json`, so the next run removes exactly that before copying fresh. Those records are ignored too: they are state of the installer, not of the project.
+Each installer records what it placed in `.hora/<package name>.json`, so the next run removes exactly that before copying fresh. Those records are ignored too: they are state of the installer, not of the project. So are each add-on's wings, in `.hora/wings/`, and its definition, in `.hora/addons/`: every install writes them afresh.
 
 ### Who may write what
 
