@@ -66,7 +66,7 @@ Claude Code がスキルを見つけるのは、セッション自身の `.claud
 "postinstall": "npm run hora:init"
 ```
 
-`scripts/hora-init.sh` は、まず `hora-core install` を走らせ、次に `node_modules/` の下で見つけたすべての `@openreachtech/hora-skills-*` について `<パッケージ名> install` を走らせ、最後に、このリポジトリ自身の skill を置きます。**パッケージは列挙せず、名前で見つけます。** なので、devDependencies にパッケージを足せば、次の `npm install` で装備され、ほかに書き換えるものはありません。コマンドの名前がパッケージ名と違うパッケージがあれば、装備しないまま素通りさせずに、そこで止まります。
+`scripts/hora-init.sh` は、まず `hora-core install` を走らせ、次に `node_modules/` の下で見つけたすべての `@openreachtech/hora-skills-*` について `<パッケージ名> install` を走らせます。そのあと、すべての `@openreachtech/hora-addon-*` を2段で装備します。各 add-on の `install --only skills` を先に、次に各 add-on の `install --only wings` です。最後に、このリポジトリ自身の skill を置きます。**add-on の wing は、すべての skill が揃うまで待ちます。** wing が、ほかの add-on の入れる skill を広げることがあるからです。**パッケージは列挙せず、名前で見つけます。** なので、devDependencies にパッケージを足せば、次の `npm install` で装備され、ほかに書き換えるものはありません。コマンドの名前がパッケージ名と違うパッケージがあれば、装備しないまま素通りさせずに、そこで止まります。
 
 ```
 node_modules/@openreachtech/hora/dist/agents/<agent>.md   ─>  .claude/agents/<agent>.md
