@@ -156,18 +156,6 @@ Run it in the repository once the values are filled in.
 
 **`@openreachtech/hora-ecosystem` does not go into this repository's `package.json`.** One entry in the parent's devDependencies is enough — the catalog is readable from the parent whichever side is being implemented. This repository is its own independent git repo, and a standalone checkout has no parent `node_modules`: **the catalog is reference material for development, not a product dependency.**
 
-## Skills to copy into the row
-
-| Skill | Why it is copied |
-|---|---|
-| `hor-bank-id` | allocates exclusive row-id prefixes inside this repository. It has to be invocable, and safely editable, from a session working in the backend directly — so it lands in the row's own `.claude/skills/` |
-
-```bash
-cp -r .claude/skills/hor-bank-id <myproject>-backend/.claude/skills/hor-bank-id
-```
-
-**Never overwrite an existing copy** — skip the copy entirely if the destination exists. A human may have customized it inside their own backend repository.
-
 ## What to read once it is there
 
 The tree itself is the authority — nothing in this handbook overrides it. If there is a `CLAUDE.md`, read it first. Then, at minimum, get hold of:

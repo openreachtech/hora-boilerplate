@@ -48,7 +48,7 @@ Settle the project name first, from `specs/<version>/spec.md`. **If it is not wr
 
 **Once it is settled, also fill in this repository's own `package.json`** (`name` / `description`) — it ships with the same placeholder a fetched boilerplate does. **Leave `version` and `private` as they are:** the tag carries the version, and `private` guards against an accidental publish.
 
-The essentials for each declared row, in order — **the content of steps 1–2 and 5–8 comes from the row's origin document** (`references/handbook.md`):
+The essentials for each declared row, in order — **the content of steps 1–2 and 5–7 comes from the row's origin document** (`references/handbook.md`):
 
 ```
 0. Settle this row's directory (below), and register it in the exclusion lists
@@ -62,8 +62,6 @@ The essentials for each declared row, in order — **the content of steps 1–2 
 6. Place every file the origin document lists, deciding anything spec-dependent
    from the spec's declared sections, as the document directs
 7. Install dependencies, as the origin document directs
-8. Copy the skills the origin document declares into <dir>/.claude/skills/,
-   each only if it is not already there
 ```
 
 ### Step 0 — which directory a row lives in, and excluding it
@@ -85,8 +83,6 @@ eslint.config.js    `ignores` already covers '*-backend*/' and '*-frontend*/'
 **A directory named anything else matches neither, and both failures are silent.** An unexcluded implementation repository gets committed wholesale into the hora repository, and the root's eslint walks into a repository whose config is not its own. Add one entry per unmatched directory, to both files, and **report that you added it.** Write the entry exactly as declared, with no wildcard around it — the built-in patterns cover a family of generated names; a declared directory is one literal name.
 
 **If `<that directory>` already exists, skip steps 1–4 for that row** — treat it as already fetched, however it got there. **A row with a `Directory` column always takes this path.** `../hora/references/commits.md`'s branch rule still applies to it (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker once created) — it is just not the fresh-`git init` case. This is not only for the idempotent re-run: a boilerplate may be private, so a non-interactive session's own fetch fails for lack of credentials until a human places the row beforehand — the origin document says whether that applies. **Still run steps 5 onward for that row** — each is its own idempotent check, not an all-or-nothing skip.
-
-**Step 8 never overwrites an existing copy.** A human may have customized a copied skill inside their own repository. This copy is also why such a skill can be invoked without `/hora`: it lands in the row's own `.claude/skills/`, reachable and safely editable from a session working there directly.
 
 `.git` is thrown away and re-initialized so that hundreds of commits from somebody else's repo never land on a product repository's `main`.
 
