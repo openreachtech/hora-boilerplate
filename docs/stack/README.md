@@ -32,7 +32,6 @@ One file per origin, under [`origins/`](./origins/). Each answers, in this order
 | **Where it comes from** | the repository URL, and how the version to fetch is chosen |
 | **What to fill in** | every placeholder the boilerplate ships — package values, environment values — and the value each takes |
 | **What to place** | files the boilerplate does not ship but the project needs, and where they go |
-| **Skills to copy into the row** | which equipped skills get copied into the created repository's own `.claude/skills/`, so they are reachable from a session working there directly |
 | **What to read once it is there** | the checklist `/hora-setup` reads the real tree against, and records into `.hora/tree/` |
 
 ## The rest of the handbook

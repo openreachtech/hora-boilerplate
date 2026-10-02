@@ -51,10 +51,6 @@ Run it in the repository once the values are filled in. As with the backend, **`
 
 Nothing. The frontend uses no middleware, and the boilerplate ships everything else it needs.
 
-## Skills to copy into the row
-
-None.
-
 ## What to read once it is there
 
 The tree itself is the authority — nothing in this handbook overrides it. If there is a `CLAUDE.md`, read it first. Then, at minimum, get hold of:
