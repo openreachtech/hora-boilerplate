@@ -17,7 +17,7 @@
     "@openreachtech/hora": "^0.10.1",
     "@openreachtech/hora-ecosystem": "^0.1.0",
     "@openreachtech/hora-skills-ort-core": "^0.5.0",
-    "@openreachtech/hora-skills-ort-furo": "^0.3.0",
+    "@openreachtech/hora-skills-ort-furo": "^0.4.0",
     "@openreachtech/hora-skills-ort-renchan": "^0.2.1",
     "@openreachtech/hora-skills-ort-support": "^0.4.0",
     "eslint": "^9.39.5"
