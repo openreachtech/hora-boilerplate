@@ -21,7 +21,22 @@ git ls-remote --tags --sort=-v:refname \
 
 boilerplate は `package.json` の `version` を `0.0.0` のままにし、本当のバージョンを git タグで管理しています。`release.yml` は導出したバージョンを、`package.json` に対してではなく、push 済みのタグに対して検査します。**バージョンを運ぶのはタグです。**
 
-**リポジトリは公開されている**ので、認証情報なしで取得できます。すでに存在するディレクトリは、どんな経緯であれ、取得済みとして扱われます。
+**取得するのはタグの木で、クローンは決してしない。** クローンは boilerplate の履歴を `.git` に入れて持ち込み、それを後で消さなければならなくなります。タグの archive は同じ木を運び、`.git` は持ちません:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/renchan-boilerplate/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
+archive は最上位に `<repository>-<tag>/` というディレクトリを 1 つ持ち、`--strip-components 1` がそれを外します。**中身は、そのタグをクローンしたときの木と同じです。** ただし、boilerplate が `.gitattributes` でファイルに `export-ignore` を付けていれば、そのファイルは archive から外れます。
+
+**リポジトリは公開されている**ので、認証情報なしで取得できます。private の boilerplate は、代わりにセッション自身の GitHub のログインで取得し、同じ木になります:
+
+```bash
+gh api repos/<owner>/<repository>/tarball/<tag> | tar -xz --strip-components 1 -C <dir>
+```
+
+すでに存在するディレクトリは、どんな経緯であれ、取得済みとして扱われます。
 
 ### スタックの概観
 

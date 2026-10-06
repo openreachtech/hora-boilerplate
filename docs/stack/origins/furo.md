@@ -14,9 +14,16 @@ https://github.com/openreachtech/furo-boilerplate-nuxt.git
 
 **Fetch the newest tag, never the HEAD of `main`** — the same rule, for the same reason, as [`renchan.md`](./renchan.md): the tag is what carries the version.
 
+**Fetch the tagged tree, never a clone** — again as [`renchan.md`](./renchan.md) does, and for the same reason:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/furo-boilerplate-nuxt/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
 **The repository is public**, so a session fetches it without credentials. A directory that already exists is treated as already fetched, however it got there.
 
-**Rows with origin `furo` are often more than one.** One repository holds one Nuxt app, so repositories split along groups of screens — clone one per declared row.
+**Rows with origin `furo` are often more than one.** One repository holds one Nuxt app, so repositories split along groups of screens — fetch one per declared row.
 
 ### The stack, roughly
 
