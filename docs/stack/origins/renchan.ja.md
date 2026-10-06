@@ -82,6 +82,17 @@ DATABASE_PORT=3306
 
 **実物の boilerplate が持ってくるキーに従うこと — 上記は目安です。** 同じ実行が compose ファイルと `.env.development` の両方を書くので、両者は構造的に一致が保証されます。
 
+### どの env ファイルをコミットするか
+
+**`.env.development` は、これらの値を入れたままコミットします。** env ファイルは 1 本の線の両側に分かれます — `/hor-security-audit` が持つのと同じ線を、同じ言葉で書きます:
+
+| 側 | ファイル | コミット |
+|---|---|---|
+| **本番関連** | `.env`、`.env.production`、`.env.prod`、`.env.staging` | しない。`.env.staging` は客先に共有することがあるので、本番に準じる |
+| **ローカル** | それ以外の環境ごとのファイル — `.env.development`、`.env.live`、`.env.live-local`、`.env.test` など | する。入れてよいのはローカルにしか届かない値だけ: `127.0.0.1` か `localhost` の接続先、仮の認証情報、CI やテスト用の DB の接続情報 |
+
+**外部のホスト、実在する staging や本番の接続先、鍵の形をした値（API キー、token）は、ローカルの env ファイルに決して入れません。** 下の compose が仮の認証情報を持つのも同じ理由です: 公開するポートはすべて `127.0.0.1` なので、届くのはこのマシンだけです。
+
 ## 何を置くか
 
 **boilerplate は起動スクリプト(`db:setup` / `db:seed:dev` / `db:refresh` / `dev`)を同梱していますが、docker / compose ファイルはありません — 足りないのはミドルウェアです。** 2 つのファイルを backend リポジトリ自身、その `.env.development` の隣に置きます。親には置きません: backend は独立したリポジトリで、誰かが単体でクローンし、親なしで作業するからです。
