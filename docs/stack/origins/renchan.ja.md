@@ -33,6 +33,10 @@ boilerplate は `package.json` の `version` を `0.0.0` のままにし、本�
 
 **ミドルウェアを使うのは backend だけです。** 横で動くものは [`../middleware.md`](../middleware.md) を見てください。
 
+## frontend が前提にしていること
+
+**backend は、すべての operation で `multipart/form-data` を受け付けます。** furo の frontend は、ファイルを添えるかどうかにかかわらず、どの request もこの形で送ります（[`furo.md`](./furo.ja.md) の「backend への届き方」）。そのため multipart の parser は、upload を受ける operation が 1 つもなくても使われています。backend だけを読む監査には呼び出し元が見えませんが、外すと frontend からの request はすべて `415` になります。
+
 ## 何を埋めるか
 
 ### `package.json` — `name` と `description`
