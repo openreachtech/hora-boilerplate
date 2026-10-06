@@ -28,6 +28,12 @@ A rough guide before the real tree is read — **not** a statement of convention
 
 **A frontend holds neither a DB client nor a Redis client.** It uses no middleware, so nothing from [`../middleware.md`](../middleware.md)'s table runs beside it, and no docker file is placed in it.
 
+## How it reaches the backend
+
+**A furo client sends every request as `multipart/form-data`** — GraphQL and RESTful API alike, whether a file is attached or not. `@openreachtech/furo` builds each body as a `FormData`, and a GraphQL operation goes into its `operations` field as JSON. So the backend it calls has to accept multipart on every operation, not only on uploads ([`renchan.md`](./renchan.md), "What a frontend relies on").
+
+**A check that calls the backend for this frontend sends the same way.** A request written as JSON reaches a backend a furo client cannot reach.
+
 ## What to fill in
 
 ### `package.json` — `name` and `description`

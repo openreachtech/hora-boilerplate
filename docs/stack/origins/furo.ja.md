@@ -28,6 +28,12 @@ https://github.com/openreachtech/furo-boilerplate-nuxt.git
 
 **frontend は DB クライアントも Redis クライアントも持ちません。** ミドルウェアを使わないので、[`../middleware.md`](../middleware.ja.md) の表のものは横で動かず、docker ファイルも置きません。
 
+## backend への届き方
+
+**furo の client は、どの request も `multipart/form-data` で送ります** — GraphQL も RESTful API も、ファイルを添えるかどうかにかかわらず同じです。`@openreachtech/furo` は本文を `FormData` で組み、GraphQL の operation は JSON にして `operations` の欄に入れます。なので、呼ばれる backend は、upload に限らず、すべての operation で multipart を受け付ける必要があります（[`renchan.md`](./renchan.ja.md) の「frontend が前提にしていること」）。
+
+**この frontend のために backend を呼んで確かめるときも、同じ送り方で送ります。** JSON で書いた request は、furo の client が届かない backend にも届いてしまいます。
+
 ## 何を埋めるか
 
 ### `package.json` — `name` と `description`
