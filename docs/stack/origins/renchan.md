@@ -33,6 +33,10 @@ A rough guide before the real tree is read — **not** a statement of convention
 
 **Only the backend uses middleware.** See [`../middleware.md`](../middleware.md) for what runs beside it.
 
+## What a frontend relies on
+
+**The backend accepts `multipart/form-data` on every operation.** A furo frontend sends every request that way, whether a file is attached or not ([`furo.md`](./furo.md), "How it reaches the backend"). So the multipart parser is in use even where no operation takes an upload: an audit that reads the backend alone finds nothing calling it, and removing it turns every request from the frontend into `415`.
+
 ## What to fill in
 
 ### `package.json` — `name` and `description`
