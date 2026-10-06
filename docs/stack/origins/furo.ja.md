@@ -14,9 +14,16 @@ https://github.com/openreachtech/furo-boilerplate-nuxt.git
 
 **最新タグを取得する。`main` の HEAD は決して取らない** — [`renchan.md`](./renchan.ja.md) と同じ規則、同じ理由です: バージョンを運ぶのはタグです。
 
+**取得するのはタグの木で、クローンは決してしない** — これも [`renchan.md`](./renchan.ja.md) と同じで、理由も同じです:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/furo-boilerplate-nuxt/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
 **リポジトリは公開されている**ので、認証情報なしで取得できます。すでに存在するディレクトリは、どんな経緯であれ、取得済みとして扱われます。
 
-**origin が `furo` の行はしばしば複数あります。** 1 リポジトリが持てる Nuxt アプリは 1 つなので、リポジトリは画面のグループごとに分かれます — 宣言された行ごとに 1 つクローンします。
+**origin が `furo` の行はしばしば複数あります。** 1 リポジトリが持てる Nuxt アプリは 1 つなので、リポジトリは画面のグループごとに分かれます — 宣言された行ごとに 1 つ取得します。
 
 ### スタックの概観
 
