@@ -81,6 +81,16 @@ npm scripts               the names of the dev / test / lint commands
 
 **"How things get registered" deserves the same care as on the backend** — automatic registration removes the aggregation-file problem entirely; required appending means several checkpoints touch the same single place.
 
+## What the environment needs
+
+| Need | Check — changes nothing | Provided by |
+|---|---|---|
+| a browser build Playwright launches | `node -e "process.exit(require('fs').existsSync(require('playwright').chromium.executablePath()) ? 0 : 1)"` | `npm run e2e:browser` |
+
+**The sweep's live pass drives this frontend with headless Playwright**, and without a browser build it cannot run at all — a missing build stops acceptance as `lacked-environment`, the same as an environment that will not come up.
+
+**`npm run e2e:browser` writes outside the project.** It fetches Chromium into a cache the whole machine shares, once per machine, so a guard that keeps writes inside the project may refuse it. That is the reason to run it early, while somebody is there to allow it.
+
 ## What upstream is still missing
 
 Report what is noticed; never rewrite upstream.

@@ -132,7 +132,14 @@ Write it to `.hora/tree/<repository>.md`, with the fetched boilerplate and versi
 
 ## Directory layout
 ...
+
+## Environment
+| Need | Check | Provided by |
+|---|---|---|
+| ... | ... | ... |
 ```
+
+**`## Environment` copies the origin document's "What the environment needs", row for row, as written.** Where the document has no such section, it reads `none`. **Nothing in it is run here**: a run that relies on the environment — `/hora-accept`, or whatever checks a run before it starts — runs each check first, and the command that provides it once where the check fails.
 
 **Re-read and rewrite it whenever the recorded version no longer matches the row's own.** Otherwise, trust what is recorded.
 

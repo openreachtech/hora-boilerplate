@@ -46,6 +46,7 @@ One file per origin, in a fixed order of sections. `/hora-setup` walks them top 
 | **What to fill in** | every placeholder the fetched tree ships, and the value each takes | filled after the fetch, each an idempotent check of its own |
 | **What to place** | files the boilerplate does not ship but the project needs | placed without overwriting; anything spec-dependent is decided from the spec's declared sections, as the document directs |
 | **What to read once it is there** | the checklist the real tree is read against | read in place and recorded into `.hora/tree/` |
+| **What the environment needs** | what the row needs from the machine, each as a check that changes nothing and the command that provides it | recorded into `.hora/tree/` as written, and run by neither |
 
 ---
 
