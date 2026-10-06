@@ -56,6 +56,10 @@ boilerplate は backend と同じプレースホルダーの状態で届きま�
 
 **`"version": "0.0.0"` と `"private": true` はそのまま残します。**
 
+### どの env ファイルをコミットするか
+
+**frontend は、開発用の値をコミットしません — backend とは違います。** `furo-boilerplate-nuxt` は `.furo-env` と `.furo-env.development` を除外し、追跡するのはテンプレートの `.furo-env.example` と、テスト用の `.furo-env.test` だけです。boilerplate が持ってくる分け方のままにします。frontend の開発用の値はマシンの上に留まり、backend のローカルの値はコミットされます（[`renchan.md`](./renchan.ja.md) の「どの env ファイルをコミットするか」）。
+
 ### `npm install`
 
 値を埋め終わったリポジトリで実行します。backend と同様、**`@openreachtech/hora-ecosystem` はこのリポジトリの `package.json` には入れません** — カタログは親の devDependency で、プロダクトの依存ではなく参照資料です。

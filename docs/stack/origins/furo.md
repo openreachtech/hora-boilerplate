@@ -56,6 +56,10 @@ The boilerplate arrives with the same placeholder as the backend's.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.**
 
+### Which env files are committed
+
+**The frontend commits no development values — unlike the backend.** `furo-boilerplate-nuxt` ignores `.furo-env` and `.furo-env.development`, and tracks only `.furo-env.example`, a template, and `.furo-env.test`, for the test suite. Leave the split as the boilerplate ships it: a frontend's development values stay on the machine, where the backend's local ones are committed ([`renchan.md`](./renchan.md), "Which env files are committed").
+
 ### `npm install`
 
 Run it in the repository once the values are filled in. As with the backend, **`@openreachtech/hora-ecosystem` does not go into this repository's `package.json`** — the catalog is the parent's devDependency, reference material rather than a product dependency.
