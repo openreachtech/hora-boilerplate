@@ -33,6 +33,7 @@ One file per origin, under [`origins/`](./origins/). Each answers, in this order
 | **What to fill in** | every placeholder the boilerplate ships — package values, environment values — and the value each takes |
 | **What to place** | files the boilerplate does not ship but the project needs, and where they go |
 | **What to read once it is there** | the checklist `/hora-setup` reads the real tree against, and records into `.hora/tree/` |
+| **What the environment needs** | what the row needs from the machine, each as a check that changes nothing and the command that provides it. Left out where the row needs nothing |
 
 ## The rest of the handbook
 
