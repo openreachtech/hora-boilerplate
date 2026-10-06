@@ -82,6 +82,17 @@ DATABASE_PORT=3306
 
 **Follow the keys the real boilerplate ships — the above is a guide.** Since the same run writes both the compose file and `.env.development`, the two are structurally guaranteed to agree.
 
+### Which env files are committed
+
+**`.env.development` is committed, with these values in it.** Env files fall on two sides of one line — the line `/hor-security-audit` holds, in the same words:
+
+| Side | Files | Committed |
+|---|---|---|
+| **production-facing** | `.env`, `.env.production`, `.env.prod`, `.env.staging` | never. `.env.staging` is shared with a client at times, so it is held as production |
+| **local** | every other per-environment file — `.env.development`, `.env.live`, `.env.live-local`, `.env.test` and their like | yes, holding only values that reach the local machine: an endpoint on `127.0.0.1` or `localhost`, a placeholder credential, the connection of a CI or test database |
+
+**An external host, a real staging or production endpoint, or a key-shaped value — an API key, a token — never goes into a local env file.** The compose below holds placeholder credentials on the same ground: every port it publishes is on `127.0.0.1`, so only this machine reaches them.
+
 ## What to place
 
 **The boilerplate ships startup scripts (`db:setup` / `db:seed:dev` / `db:refresh` / `dev`) but no docker or compose file — what is missing is the middleware.** Two files go into the backend repository itself, next to its `.env.development`. Not into the parent: the backend is an independent repository, and someone will clone it alone and work without the parent.
