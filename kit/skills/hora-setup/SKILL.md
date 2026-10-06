@@ -103,7 +103,9 @@ git -C <dir> ls-files --others --exclude-standard --directory
 git -C <dir> add -- <every entry it listed>
 ```
 
-**After the commit, `git -C <dir> status --short` comes back empty.** Staging that names nothing — `git add .`, `git add -A`, `git commit -a` — is never used here: the command would not say what was committed, so nobody could check it afterwards (`/hoc-git-commit`).
+**The values commit names the paths steps 5 to 7 wrote** — each value filled in, each file placed, the lock file the install wrote — and nothing else.
+
+**After each commit, `git -C <dir> status --short` comes back empty.** Staging that names nothing — `git add .`, `git add -A`, `git commit -a` — is never used here: the command would not say what was committed, so nobody could check it afterwards (`/hoc-git-commit`).
 
 ---
 
