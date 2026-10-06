@@ -81,6 +81,16 @@ npm scripts               dev / test / lint コマンドの名前
 
 **「登録のされ方」は backend と同じだけ注意に値します** — 自動登録なら集約ファイル問題は丸ごと消え、追記が必要なら複数のチェックポイントが同じ 1 箇所を触ります。
 
+## 環境に何が要るか
+
+| 要るもの | 確認 — 何も変えない | 満たすコマンド |
+|---|---|---|
+| Playwright が起動する browser build | `node -e "process.exit(require('fs').existsSync(require('playwright').chromium.executablePath()) ? 0 : 1)"` | `npm run e2e:browser` |
+
+**sweep の live pass は、headless の Playwright でこの frontend を操作します。** browser build がなければまったく走れず、受け入れは `lacked-environment` で止まります。環境が立ち上がらないときと同じです。
+
+**`npm run e2e:browser` は、プロジェクトの外に書き込みます。** Chromium を、マシン全体で共有する cache に、マシンにつき 1 回取得するので、書き込みをプロジェクトの中に限るガードに拒まれることがあります。だから、許可できる人がいるうちに、早めに流します。
+
 ## 上流にまだ無いもの
 
 気づいたことは報告する。上流を書き換えることは決してしない。
