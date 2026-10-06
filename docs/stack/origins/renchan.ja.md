@@ -21,7 +21,22 @@ git ls-remote --tags --sort=-v:refname \
 
 boilerplate は `package.json` の `version` を `0.0.0` のままにし、本当のバージョンを git タグで管理しています。`release.yml` は導出したバージョンを、`package.json` に対してではなく、push 済みのタグに対して検査します。**バージョンを運ぶのはタグです。**
 
-**リポジトリは公開されている**ので、認証情報なしで取得できます。すでに存在するディレクトリは、どんな経緯であれ、取得済みとして扱われます。
+**取得するのはタグの木で、クローンは決してしない。** クローンは boilerplate の履歴を `.git` に入れて持ち込み、それを後で消さなければならなくなります。タグの archive は同じ木を運び、`.git` は持ちません:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/renchan-boilerplate/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
+archive は最上位に `<repository>-<tag>/` というディレクトリを 1 つ持ち、`--strip-components 1` がそれを外します。**中身は、そのタグをクローンしたときの木と同じです。** ただし、boilerplate が `.gitattributes` でファイルに `export-ignore` を付けていれば、そのファイルは archive から外れます。
+
+**リポジトリは公開されている**ので、認証情報なしで取得できます。private の boilerplate は、代わりにセッション自身の GitHub のログインで取得し、同じ木になります:
+
+```bash
+gh api repos/<owner>/<repository>/tarball/<tag> | tar -xz --strip-components 1 -C <dir>
+```
+
+すでに存在するディレクトリは、どんな経緯であれ、取得済みとして扱われます。
 
 ### スタックの概観
 
@@ -32,6 +47,10 @@ boilerplate は `package.json` の `version` を `0.0.0` のままにし、本�
 | backend | express / graphql-http / graphql-ws / @graphql-tools/* / sequelize / mariadb / ioredis / pm2 |
 
 **ミドルウェアを使うのは backend だけです。** 横で動くものは [`../middleware.md`](../middleware.md) を見てください。
+
+## frontend が前提にしていること
+
+**backend は、すべての operation で `multipart/form-data` を受け付けます。** furo の frontend は、ファイルを添えるかどうかにかかわらず、どの request もこの形で送ります（[`furo.md`](./furo.ja.md) の「backend への届き方」）。そのため multipart の parser は、upload を受ける operation が 1 つもなくても使われています。backend だけを読む監査には呼び出し元が見えませんが、外すと frontend からの request はすべて `415` になります。
 
 ## 何を埋めるか
 
@@ -62,6 +81,17 @@ DATABASE_PORT=3306
 ```
 
 **実物の boilerplate が持ってくるキーに従うこと — 上記は目安です。** 同じ実行が compose ファイルと `.env.development` の両方を書くので、両者は構造的に一致が保証されます。
+
+### どの env ファイルをコミットするか
+
+**`.env.development` は、これらの値を入れたままコミットします。** env ファイルは 1 本の線の両側に分かれます — `/hor-security-audit` が持つのと同じ線を、同じ言葉で書きます:
+
+| 側 | ファイル | コミット |
+|---|---|---|
+| **本番関連** | `.env`、`.env.production`、`.env.prod`、`.env.staging` | しない。`.env.staging` は客先に共有することがあるので、本番に準じる |
+| **ローカル** | それ以外の環境ごとのファイル — `.env.development`、`.env.live`、`.env.live-local`、`.env.test` など | する。入れてよいのはローカルにしか届かない値だけ: `127.0.0.1` か `localhost` の接続先、仮の認証情報、CI やテスト用の DB の接続情報 |
+
+**外部のホスト、実在する staging や本番の接続先、鍵の形をした値（API キー、token）は、ローカルの env ファイルに決して入れません。** 下の compose が仮の認証情報を持つのも同じ理由です: 公開するポートはすべて `127.0.0.1` なので、届くのはこのマシンだけです。
 
 ## 何を置くか
 

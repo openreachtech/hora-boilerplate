@@ -54,10 +54,12 @@ The essentials for each declared row, in order — **the content of steps 1–2 
 0. Settle this row's directory (below), and register it in the exclusion lists
 1. Find the version to fetch, as the origin document directs — a released state,
    never an unreleased head (../hora/references/structure.md, invariant 3)
-2. Fetch it into that directory, from the source the origin document names
-3. rm -rf <dir>/.git && git -C <dir> init && git -C <dir> checkout -b release/<version>
+2. Fetch its tagged tree into that directory, from the source the origin
+   document names — an archive, which carries no .git. Never a clone
+3. git -C <dir> init && git -C <dir> checkout -b release/<version>
 4. git -C <dir> commit --allow-empty -m "Release <version>" (the branch's opening
-   marker — see ../hora/references/commits.md)
+   marker — see ../hora/references/commits.md), then the initial commit of the
+   fetched tree, before anything is filled in (below)
 5. Fill in every value the origin document lists, with this project's values
 6. Place every file the origin document lists, deciding anything spec-dependent
    from the spec's declared sections, as the document directs
@@ -84,16 +86,27 @@ eslint.config.js    `ignores` already covers '*-backend*/' and '*-frontend*/'
 
 **If `<that directory>` already exists, skip steps 1–4 for that row** — treat it as already fetched, however it got there. **A row with a `Directory` column always takes this path.** `../hora/references/commits.md`'s branch rule still applies to it (fetch and branch from `origin/main` if `release/<version>` is missing, with the same empty marker once created) — it is just not the fresh-`git init` case. This is not only for the idempotent re-run: a boilerplate may be private, so a non-interactive session's own fetch fails for lack of credentials until a human places the row beforehand — the origin document says whether that applies. **Still run steps 5 onward for that row** — each is its own idempotent check, not an all-or-nothing skip.
 
-`.git` is thrown away and re-initialized so that hundreds of commits from somebody else's repo never land on a product repository's `main`.
+**A row is fetched as its tagged tree, never cloned**, so that hundreds of commits from somebody else's repo never land on a product repository's `main`. There is no `.git` to throw away: the repository starts from `git init`, and nothing that removes a `.git` — an operation Claude Code may refuse — is ever run.
 
 **This never happens to a repository that already existed.** A row skipped past step 3 keeps its own history untouched — Hora Kit is adopted onto a repository, never over it.
 
-When this step finishes, make an initial commit in each repository it created, on the `release/<version>` branch checked out in step 3, after the empty marker from step 4. Keep the boilerplate's own files separate from the values this run filled in:
+**Each repository this step created takes two commits on the `release/<version>` branch checked out in step 3, after the empty marker from step 4**, keeping the boilerplate's own files apart from the values this run filled in:
 
 ```
-Initial commit from <boilerplate> <fetched version>
-Fulfill project values for <myproject>
+Initial commit from <boilerplate> <fetched version>    in step 4, before step 5 writes anything
+Fulfill project values for <myproject>                 once step 7 has finished
 ```
+
+**The initial commit names the fetched tree by its top-level entries.** Right after `git init` the whole tree is untracked, hundreds of files, and listing the top level keeps the list short — a directory comes back as its name alone, and nothing `.gitignore` excludes comes back at all:
+
+```
+git -C <dir> ls-files --others --exclude-standard --directory
+git -C <dir> add -- <every entry it listed>
+```
+
+**The values commit names the paths steps 5 to 7 wrote** — each value filled in, each file placed, the lock file the install wrote — and nothing else.
+
+**After each commit, `git -C <dir> status --short` comes back empty.** Staging that names nothing — `git add .`, `git add -A`, `git commit -a` — is never used here: the command would not say what was committed, so nobody could check it afterwards (`/hoc-git-commit`).
 
 ---
 
@@ -119,7 +132,14 @@ Write it to `.hora/tree/<repository>.md`, with the fetched boilerplate and versi
 
 ## Directory layout
 ...
+
+## Environment
+| Need | Check | Provided by |
+|---|---|---|
+| ... | ... | ... |
 ```
+
+**`## Environment` copies the origin document's "What the environment needs", row for row, as written.** Where the document has no such section, it reads `none`. **Nothing in it is run here**: a run that relies on the environment — `/hora-accept`, or whatever checks a run before it starts — runs each check first, and the command that provides it once where the check fails.
 
 **Re-read and rewrite it whenever the recorded version no longer matches the row's own.** Otherwise, trust what is recorded.
 
@@ -134,7 +154,7 @@ Write it to `.hora/tree/<repository>.md`, with the fetched boilerplate and versi
 | Not done | Why |
 |---|---|
 | Baking the boilerplate into the template (vendoring) | upstream is updated piecemeal over time. It would also contradict the parent's `.gitignore` |
-| Keeping `.git` and holding an upstream remote | mixes somebody else's commits into the product repo's history |
+| Cloning the boilerplate, or holding an upstream remote | mixes somebody else's commits into the product repo's history |
 | Turning it into a submodule | the consistency gained is not worth the added complexity |
 | Restating the handbook's contents in this file | the boilerplate owns them, and a copy here goes stale the first time it moves |
 | Authoring a test cache's own declaration | its shape belongs to whichever equipped skill covers caching, and a copy here goes stale the first time that moves |

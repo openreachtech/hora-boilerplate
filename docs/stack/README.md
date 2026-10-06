@@ -33,6 +33,7 @@ One file per origin, under [`origins/`](./origins/). Each answers, in this order
 | **What to fill in** | every placeholder the boilerplate ships — package values, environment values — and the value each takes |
 | **What to place** | files the boilerplate does not ship but the project needs, and where they go |
 | **What to read once it is there** | the checklist `/hora-setup` reads the real tree against, and records into `.hora/tree/` |
+| **What the environment needs** | what the row needs from the machine, each as a check that changes nothing and the command that provides it. Left out where the row needs nothing |
 
 ## The rest of the handbook
 
@@ -46,5 +47,5 @@ One file per origin, under [`origins/`](./origins/). Each answers, in this order
 ## What this handbook is not
 
 - **It is not a copy of the boilerplates' conventions.** How a resolver is written, how a table is shaped, what a review fails on — all of that is the `@openreachtech/hora-skills-ort-*` packages' and the boilerplates' own trees'. This handbook holds only what follows from *choosing* these boilerplates: what exists, where it comes from, and what has to be filled in
-- **It is not read instead of the real tree.** `/hora-setup` still reads what was actually cloned, and the real tree beats anything written here
+- **It is not read instead of the real tree.** `/hora-setup` still reads what was actually fetched, and the real tree beats anything written here
 - **It is not the kit's.** The hora skills never restate its contents. When this boilerplate's stack changes, this directory changes with it, and no skill needs an edit
