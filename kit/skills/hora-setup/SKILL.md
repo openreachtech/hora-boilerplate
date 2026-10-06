@@ -57,7 +57,8 @@ The essentials for each declared row, in order — **the content of steps 1–2 
 2. Fetch it into that directory, from the source the origin document names
 3. rm -rf <dir>/.git && git -C <dir> init && git -C <dir> checkout -b release/<version>
 4. git -C <dir> commit --allow-empty -m "Release <version>" (the branch's opening
-   marker — see ../hora/references/commits.md)
+   marker — see ../hora/references/commits.md), then the initial commit of the
+   fetched tree, before anything is filled in (below)
 5. Fill in every value the origin document lists, with this project's values
 6. Place every file the origin document lists, deciding anything spec-dependent
    from the spec's declared sections, as the document directs
@@ -88,12 +89,23 @@ eslint.config.js    `ignores` already covers '*-backend*/' and '*-frontend*/'
 
 **This never happens to a repository that already existed.** A row skipped past step 3 keeps its own history untouched — Hora Kit is adopted onto a repository, never over it.
 
-When this step finishes, make an initial commit in each repository it created, on the `release/<version>` branch checked out in step 3, after the empty marker from step 4. Keep the boilerplate's own files separate from the values this run filled in:
+**Each repository this step created takes two commits on the `release/<version>` branch checked out in step 3, after the empty marker from step 4**, keeping the boilerplate's own files apart from the values this run filled in:
 
 ```
-Initial commit from <boilerplate> <fetched version>
-Fulfill project values for <myproject>
+Initial commit from <boilerplate> <fetched version>    in step 4, before step 5 writes anything
+Fulfill project values for <myproject>                 once step 7 has finished
 ```
+
+**The initial commit names the fetched tree by its top-level entries.** Right after `git init` the whole tree is untracked, hundreds of files, and listing the top level keeps the list short — a directory comes back as its name alone, and nothing `.gitignore` excludes comes back at all:
+
+```
+git -C <dir> ls-files --others --exclude-standard --directory
+git -C <dir> add -- <every entry it listed>
+```
+
+**The values commit names the paths steps 5 to 7 wrote** — each value filled in, each file placed, the lock file the install wrote — and nothing else.
+
+**After each commit, `git -C <dir> status --short` comes back empty.** Staging that names nothing — `git add .`, `git add -A`, `git commit -a` — is never used here: the command would not say what was committed, so nobody could check it afterwards (`/hoc-git-commit`).
 
 ---
 
