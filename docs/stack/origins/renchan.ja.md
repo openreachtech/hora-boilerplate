@@ -67,6 +67,12 @@ boilerplate は `"name": "TODO: fulfill here ❌️"` の状態で届きます�
 
 **`"version": "0.0.0"` と `"private": true` はそのまま残します。** バージョンはタグが運び、`private` は誤 publish を防ぎます。
 
+### `CLAUDE.md` の公開リポジトリ向けの節
+
+boilerplate の `CLAUDE.md` は `## Names that must not appear` で始まります。この節は、リポジトリのどこにも会社・顧客・個人・製品の名前を書くことを禁じています。boilerplate 自身のリポジトリが公開されているからです。そこから作られるプロジェクトはたいてい非公開で、そこでこの節に従うエージェントは、spec が使う名前を中立的な言い回しに置き換えてしまいます。
+
+**プロジェクトが公開でない限り、この節を取り除きます。** 節は見出しと、リポジトリが公開されているという記述で見分けます。ファイル内の位置では見分けません。`# CLAUDE.md` の見出しのほかにこの節しか無ければファイルごと消し、そうでなければ節だけを取り除きます。プロジェクトが公開かどうかは `/hora-setup` が確かめ、何をしたかも `/hora-setup` が記録します。
+
 ### `.env.development`
 
 boilerplate の `.env.development` は**キーのみ・値は空**で届きます。値は `docker-compose.development.yml`(下記)と CI(`test-with-mariadb.yml`)に一致させます:
@@ -210,7 +216,6 @@ npm scripts               test / lint / db コマンドの名前
 
 | 無いもの | 代替 |
 |---|---|
-| `CLAUDE.md` | 代わりに木をその場で読む |
 | `docker.sh` / `docker-compose.development.yml` | 上記のとおり、セットアップの実行が置く |
 
-`CLAUDE.md` の正しい置き場所は boilerplate 自身のリポジトリです。**`CLAUDE.md` ができた後も、実物の木を読むことは残ります** — 実物はどんな仮定よりも優先されます。
+boilerplate は今では、正しい置き場所である自身のリポジトリに `CLAUDE.md` を持っています。**それでも実物の木を読むことは残ります。** 実物はどんな仮定よりも優先されるからです。
