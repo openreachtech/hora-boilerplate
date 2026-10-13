@@ -56,6 +56,31 @@ boilerplate は backend と同じプレースホルダーの状態で届きま�
 
 **`"version": "0.0.0"` と `"private": true` はそのまま残します。**
 
+### `.furo-env.development` のエンドポイント
+
+boilerplate は、エンドポイントのキーを 3 つ持つ `.furo-env.example` を同梱しています:
+
+```
+ENDPOINT_URL = http://localhost:3900/graphql-customer
+WEBSOCKET_URL = ws://localhost:3900/graphql-customer
+
+RENCHAN_RESTFUL_API_BASE_URL = http://localhost:8001
+```
+
+**`.furo-env.example` を `.furo-env.development` にコピーし、各キーをこの row が呼ぶ backend のサーバーに向けます。** frontend は env ファイルを `NODE_ENV` で選び、その既定は development なので、ローカルの実行が読むのは `.furo-env.development` です。`.furo-env` は本番用のファイルで、ローカルの値の置き場ではありません。手を付けずに残します。`.furo-env.development` がすでにあれば、そのままにします。
+
+| キー | 値 |
+|---|---|
+| `ENDPOINT_URL` | spec のサーバー表で `consumer` がこの row を指す GraphQL サーバーの `http://localhost:<port><path>` |
+| `WEBSOCKET_URL` | `ENDPOINT_URL` と同じホスト・ポート・パスで、スキームを `ws` にしたもの |
+| `RENCHAN_RESTFUL_API_BASE_URL` | `consumer` がこの row を指す RESTful API サーバーの `http://localhost:<port>`。そのようなサーバーが無ければ、同梱の値のままにします |
+
+**ポートとパスは、backend の row の木そのものから読みます。このハンドブックからは読みません。** どのサーバーがどのポートで待ち受けるかは backend のサーバーのエントリポイントに、各 GraphQL サーバーのパスはそのエンジンに書かれています（[`renchan.md`](./renchan.ja.md) の「届いたら何を読むか」の「サーバーの分かれ方」）。同梱の値は backend の boilerplate のサーバーの 1 つに合わせてあるので、ほかのサーバーを呼ぶ row には別の値が要ります。
+
+**このファイルは、backend の row がディスクに届いてから埋めます。** レイアウトがこの row を backend の row より先に挙げているなら、同じ実行の中で、backend の row を取ってきた後にこの row へ戻ります。`consumer` がこの row を指す GraphQL サーバーが 1 つも無いか 2 つ以上あるときは、**止めて尋ねます。**ファイルが持つ `ENDPOINT_URL` は 1 つなので、1 つの row が呼ぶ GraphQL サーバーは 1 つです。
+
+**値のコミットにはこのファイルを含めません。** boilerplate は `.furo-env.development` を除外している（下記）ので、`git add` はこのパスを受け付けず、値はマシンの上に留まります。
+
 ### どの env ファイルをコミットするか
 
 **frontend は、開発用の値をコミットしません — backend とは違います。** `furo-boilerplate-nuxt` は `.furo-env` と `.furo-env.development` を除外し、追跡するのはテンプレートの `.furo-env.example` と、テスト用の `.furo-env.test` だけです。boilerplate が持ってくる分け方のままにします。frontend の開発用の値はマシンの上に留まり、backend のローカルの値はコミットされます（[`renchan.md`](./renchan.ja.md) の「どの env ファイルをコミットするか」）。
