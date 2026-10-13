@@ -59,6 +59,8 @@ These are decisions rather than facts it can look up, so it stops instead of gue
 
 **A missing stack handbook stops it too.** Like a missing declaration, it is never a guess.
 
+**It also asks whether the project is public**, when a fetched boilerplate's `CLAUDE.md` carries a rule meant only for a public repository. The spec has no field for the project's visibility. Without an answer the rule stays, and the run goes on.
+
 ---
 
 ## The directory of each row, and the two exclusion lists
