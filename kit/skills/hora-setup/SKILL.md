@@ -108,6 +108,16 @@ git -C <dir> add -- <every entry it listed>
 
 **After each commit, `git -C <dir> status --short` comes back empty.** Staging that names nothing — `git add .`, `git add -A`, `git commit -a` — is never used here: the command would not say what was committed, so nobody could check it afterwards (`/hoc-git-commit`).
 
+### A rule the boilerplate holds only because it is public
+
+**A boilerplate's `CLAUDE.md` is written for the boilerplate's own repository, and step 2 reads it as the authority.** A section there that holds only because that repository is public binds a private project just as hard. Where the origin document names such a section, step 5 drops it from the row unless the project is public.
+
+**The spec format has no field for the project's visibility, so ask.** Ask once per run, and only when a row this run fills in still carries the section. If nobody answers, keep the section, because a private name that reaches a public repository cannot be taken back, while a private project that keeps the rule only writes more neutral wording than it needs.
+
+**A row with a `Directory` column keeps its `CLAUDE.md` as it stands.** That repository existed before this run, and its `CLAUDE.md` is its own team's, so its record reads `kept, adopted`.
+
+**Record the outcome in the row's `.hora/tree/<repository>.md`** (step 2), one line per row, written either way. A later run passes over a row recorded as `dropped` or `kept, public`, and asks again for a row recorded as `kept, unanswered`. A rewrite of the record carries the line over.
+
 ---
 
 ## 2. Read what was fetched, in place
@@ -129,6 +139,7 @@ Write it to `.hora/tree/<repository>.md`, with the fetched boilerplate and versi
 # myproject-backend
 <!-- boilerplate: <name> <fetched version> -->
 <!-- test cache: wired by <the names you matched> | not equipped, skipped -->
+<!-- public-repository section: dropped | kept, public | kept, unanswered | kept, adopted | none shipped -->
 
 ## Directory layout
 ...
