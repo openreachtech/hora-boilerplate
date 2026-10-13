@@ -56,6 +56,31 @@ The boilerplate arrives with the same placeholder as the backend's.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.**
 
+### The endpoints in `.furo-env.development`
+
+The boilerplate ships `.furo-env.example` with three endpoint keys:
+
+```
+ENDPOINT_URL = http://localhost:3900/graphql-customer
+WEBSOCKET_URL = ws://localhost:3900/graphql-customer
+
+RENCHAN_RESTFUL_API_BASE_URL = http://localhost:8001
+```
+
+**Copy `.furo-env.example` to `.furo-env.development`, then point each key at the backend server this row calls.** The frontend picks its env file by `NODE_ENV`, which defaults to development, so a local run reads `.furo-env.development`. `.furo-env` is the production file, and no local value belongs in it, so leave it untouched. If `.furo-env.development` already exists, leave it as it stands.
+
+| Key | Value |
+|---|---|
+| `ENDPOINT_URL` | `http://localhost:<port><path>` of the GraphQL server whose `consumer`, in the spec's server table, names this row |
+| `WEBSOCKET_URL` | the same host, port and path as `ENDPOINT_URL`, with the `ws` scheme |
+| `RENCHAN_RESTFUL_API_BASE_URL` | `http://localhost:<port>` of the RESTful API server whose `consumer` names this row. Where no such server names it, keep the shipped value |
+
+**Read each port and path from the backend row's own tree, never from this handbook.** The backend's server entry point says which port each server listens on, and each GraphQL server's engine says its path ([`renchan.md`](./renchan.md), "What to read once it is there", under "How servers are split"). The shipped values match one server of the backend boilerplate, so a row that calls any other server needs other values.
+
+**Fill the file once the backend row is on disk.** Where the layout lists this row before the backend's, come back to it after the backend row is fetched, in the same run. **Stop and ask** when no GraphQL server, or more than one, names this row as its consumer. The file holds one `ENDPOINT_URL`, so a row calls one GraphQL server.
+
+**The values commit leaves the file out.** The boilerplate ignores `.furo-env.development` (below), so `git add` refuses the path, and the values stay on the machine.
+
 ### Which env files are committed
 
 **The frontend commits no development values — unlike the backend.** `furo-boilerplate-nuxt` ignores `.furo-env` and `.furo-env.development`, and tracks only `.furo-env.example`, a template, and `.furo-env.test`, for the test suite. Leave the split as the boilerplate ships it: a frontend's development values stay on the machine, where the backend's local ones are committed ([`renchan.md`](./renchan.md), "Which env files are committed").
