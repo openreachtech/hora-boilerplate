@@ -67,6 +67,12 @@ The boilerplate arrives with `"name": "TODO: fulfill here ❌️"`.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.** The tag carries the version, and `private` guards against an accidental publish.
 
+### The public-repository section of `CLAUDE.md`
+
+The boilerplate's `CLAUDE.md` opens with `## Names that must not appear`. The section forbids naming any company, client, person or product anywhere in the repository, because the boilerplate's own repository is public. A project created from it is usually private, and an agent that obeys the section there replaces the names the spec uses with neutral wording.
+
+**Drop the section unless the project is public.** Recognize it by its heading and by its statement that the repository is public, never by its position in the file. Where the section is all the file holds besides its `# CLAUDE.md` title, purge the file; otherwise remove the section alone. `/hora-setup` settles whether the project is public, and records what it did.
+
 ### `.env.development`
 
 The boilerplate's `.env.development` ships with **keys only, values empty**. Make the values match `docker-compose.development.yml` (below) and CI (`test-with-mariadb.yml`):
@@ -210,7 +216,6 @@ Report what is noticed; never rewrite upstream.
 
 | What is missing | The stopgap |
 |---|---|
-| `CLAUDE.md` | read the tree in place instead |
 | `docker.sh` / `docker-compose.development.yml` | placed by the setup run, as above |
 
-The right place for `CLAUDE.md` is the boilerplate's own repository. **Reading the real tree stays even after a `CLAUDE.md` exists** — the real thing outranks any assumption.
+The boilerplate now ships `CLAUDE.md` in its own repository, the right place for it. **Reading the real tree stays even so**, because the real thing outranks any assumption.
