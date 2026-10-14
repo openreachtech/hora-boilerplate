@@ -222,6 +222,8 @@ npm install
 npm run lint
 ```
 
+**`npm install` in a directory named `hora-boilerplate` equips nothing.** `postinstall` still runs, and `scripts/hora-init.sh` says it skipped and exits, so the install refreshes the lockfile and leaves `.claude/` as it was. A clone under any other name equips the kit as in a repository made from this one.
+
 **Raising the `@openreachtech/*` versions needs the release-age window turned off for that one command.** `.npmrc` sets `min-release-age = 7` and exempts nothing, so resolving a range raised to a version published inside that window fails with `ETARGET` rather than quietly settling for an older one. Raise the ranges in `package.json`, then refresh the lockfile with the exemption passed on the command itself.
 
 ```sh

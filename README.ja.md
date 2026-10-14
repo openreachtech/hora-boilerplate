@@ -220,6 +220,8 @@ npm install
 npm run lint
 ```
 
+**`hora-boilerplate` という名前のディレクトリでの `npm install` は、何も配置しません。** `postinstall` は走りますが、`scripts/hora-init.sh` が skip したと表示して終了するので、lockfile は更新され、`.claude/` はそのままです。別の名前で clone した場合は、このリポジトリから作ったリポジトリと同じく、キットが配置されます。
+
 **`@openreachtech/*` の版を上げるときは、そのコマンドに限ってリリース経過日数の窓を外します。** `.npmrc` は `min-release-age = 7` を設定し、何も免除していません。そのため窓の内側で公開された版へ range を上げて解決すると、古い版で妥協するのではなく `ETARGET` で失敗します。`package.json` の range を上げたら、免除をコマンド自身に渡して lockfile を作り直してください。
 
 ```sh
