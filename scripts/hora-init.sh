@@ -19,8 +19,22 @@
 # definition). A wing may extend a skill another add-on installs, so it waits until every
 # skill is in place. Only an add-on's installer takes `--only`; the skills libraries install
 # skills alone.
+#
+# Run in the boilerplate itself, it equips nothing. That is told by the name of the directory,
+# which is the one thing a repository made from the boilerplate never has: it is named for its
+# project. The directory to judge is the first argument and defaults to the working directory;
+# everything else here still works from the working directory.
+#
+#   sh scripts/hora-init.sh [<directory>]
 
 set -eu
+
+directory=${1:-$PWD}
+
+if [ "$(basename "$directory")" = hora-boilerplate ]; then
+  echo "hora-init: skipped, $directory is the boilerplate itself" >&2
+  exit 0
+fi
 
 scope=node_modules/@openreachtech
 
