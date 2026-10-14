@@ -21,7 +21,22 @@ git ls-remote --tags --sort=-v:refname \
 
 The boilerplate leaves `package.json`'s `version` at `0.0.0` and manages the real version through git tags; its `release.yml` checks a derived version against the tags already pushed, never against `package.json`. **The tag is what carries the version.**
 
-**The repository is public**, so a session fetches it without credentials. A directory that already exists is treated as already fetched, however it got there.
+**Fetch the tagged tree, never a clone.** A clone brings the boilerplate's history in a `.git` that would then have to be removed; an archive of the tag carries the same tree and none:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/renchan-boilerplate/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
+The archive holds one top-level directory, `<repository>-<tag>/`, which `--strip-components 1` drops. **It is the tree a clone of the tag checks out**, unless the boilerplate marks a file `export-ignore` in a `.gitattributes`: a file so marked is left out of the archive.
+
+**The repository is public**, so a session fetches it without credentials. A private boilerplate is fetched through the session's own GitHub login instead, and comes out the same tree:
+
+```bash
+gh api repos/<owner>/<repository>/tarball/<tag> | tar -xz --strip-components 1 -C <dir>
+```
+
+A directory that already exists is treated as already fetched, however it got there.
 
 ### The stack, roughly
 
@@ -32,6 +47,10 @@ A rough guide before the real tree is read — **not** a statement of convention
 | backend | express / graphql-http / graphql-ws / @graphql-tools/* / sequelize / mariadb / ioredis / pm2 |
 
 **Only the backend uses middleware.** See [`../middleware.md`](../middleware.md) for what runs beside it.
+
+## What a frontend relies on
+
+**The backend accepts `multipart/form-data` on every operation.** A furo frontend sends every request that way, whether a file is attached or not ([`furo.md`](./furo.md), "How it reaches the backend"). So the multipart parser is in use even where no operation takes an upload: an audit that reads the backend alone finds nothing calling it, and removing it turns every request from the frontend into `415`.
 
 ## What to fill in
 
@@ -48,6 +67,12 @@ The boilerplate arrives with `"name": "TODO: fulfill here ❌️"`.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.** The tag carries the version, and `private` guards against an accidental publish.
 
+### The public-repository section of `CLAUDE.md`
+
+The boilerplate's `CLAUDE.md` opens with `## Names that must not appear`. The section forbids naming any company, client, person or product anywhere in the repository, because the boilerplate's own repository is public. A project created from it is usually private, and an agent that obeys the section there replaces the names the spec uses with neutral wording.
+
+**Drop the section unless the project is public.** Recognize it by its heading and by its statement that the repository is public, never by its position in the file. Where the section is all the file holds besides its `# CLAUDE.md` title, purge the file; otherwise remove the section alone. `/hora-setup` settles whether the project is public, and records what it did.
+
 ### `.env.development`
 
 The boilerplate's `.env.development` ships with **keys only, values empty**. Make the values match `docker-compose.development.yml` (below) and CI (`test-with-mariadb.yml`):
@@ -62,6 +87,17 @@ DATABASE_PORT=3306
 ```
 
 **Follow the keys the real boilerplate ships — the above is a guide.** Since the same run writes both the compose file and `.env.development`, the two are structurally guaranteed to agree.
+
+### Which env files are committed
+
+**`.env.development` is committed, with these values in it.** Env files fall on two sides of one line — the line `/hor-security-audit` holds, in the same words:
+
+| Side | Files | Committed |
+|---|---|---|
+| **production-facing** | `.env`, `.env.production`, `.env.prod`, `.env.staging` | never. `.env.staging` is shared with a client at times, so it is held as production |
+| **local** | every other per-environment file — `.env.development`, `.env.live`, `.env.live-local`, `.env.test` and their like | yes, holding only values that reach the local machine: an endpoint on `127.0.0.1` or `localhost`, a placeholder credential, the connection of a CI or test database |
+
+**An external host, a real staging or production endpoint, or a key-shaped value — an API key, a token — never goes into a local env file.** The compose below holds placeholder credentials on the same ground: every port it publishes is on `127.0.0.1`, so only this machine reaches them.
 
 ## What to place
 
@@ -156,18 +192,6 @@ Run it in the repository once the values are filled in.
 
 **`@openreachtech/hora-ecosystem` does not go into this repository's `package.json`.** One entry in the parent's devDependencies is enough — the catalog is readable from the parent whichever side is being implemented. This repository is its own independent git repo, and a standalone checkout has no parent `node_modules`: **the catalog is reference material for development, not a product dependency.**
 
-## Skills to copy into the row
-
-| Skill | Why it is copied |
-|---|---|
-| `hor-bank-id` | allocates exclusive row-id prefixes inside this repository. It has to be invocable, and safely editable, from a session working in the backend directly — so it lands in the row's own `.claude/skills/` |
-
-```bash
-cp -r .claude/skills/hor-bank-id <myproject>-backend/.claude/skills/hor-bank-id
-```
-
-**Never overwrite an existing copy** — skip the copy entirely if the destination exists. A human may have customized it inside their own backend repository.
-
 ## What to read once it is there
 
 The tree itself is the authority — nothing in this handbook overrides it. If there is a `CLAUDE.md`, read it first. Then, at minimum, get hold of:
@@ -192,7 +216,6 @@ Report what is noticed; never rewrite upstream.
 
 | What is missing | The stopgap |
 |---|---|
-| `CLAUDE.md` | read the tree in place instead |
 | `docker.sh` / `docker-compose.development.yml` | placed by the setup run, as above |
 
-The right place for `CLAUDE.md` is the boilerplate's own repository. **Reading the real tree stays even after a `CLAUDE.md` exists** — the real thing outranks any assumption.
+The boilerplate now ships `CLAUDE.md` in its own repository, the right place for it. **Reading the real tree stays even so**, because the real thing outranks any assumption.

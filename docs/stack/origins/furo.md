@@ -14,9 +14,16 @@ https://github.com/openreachtech/furo-boilerplate-nuxt.git
 
 **Fetch the newest tag, never the HEAD of `main`** — the same rule, for the same reason, as [`renchan.md`](./renchan.md): the tag is what carries the version.
 
+**Fetch the tagged tree, never a clone** — again as [`renchan.md`](./renchan.md) does, and for the same reason:
+
+```bash
+curl -fsSL https://codeload.github.com/openreachtech/furo-boilerplate-nuxt/tar.gz/refs/tags/<tag> \
+  | tar -xz --strip-components 1 -C <dir>
+```
+
 **The repository is public**, so a session fetches it without credentials. A directory that already exists is treated as already fetched, however it got there.
 
-**Rows with origin `furo` are often more than one.** One repository holds one Nuxt app, so repositories split along groups of screens — clone one per declared row.
+**Rows with origin `furo` are often more than one.** One repository holds one Nuxt app, so repositories split along groups of screens — fetch one per declared row.
 
 ### The stack, roughly
 
@@ -27,6 +34,12 @@ A rough guide before the real tree is read — **not** a statement of convention
 | frontend | nuxt / vue / @openreachtech/furo-nuxt / core-js |
 
 **A frontend holds neither a DB client nor a Redis client.** It uses no middleware, so nothing from [`../middleware.md`](../middleware.md)'s table runs beside it, and no docker file is placed in it.
+
+## How it reaches the backend
+
+**A furo client sends every request as `multipart/form-data`** — GraphQL and RESTful API alike, whether a file is attached or not. `@openreachtech/furo` builds each body as a `FormData`, and a GraphQL operation goes into its `operations` field as JSON. So the backend it calls has to accept multipart on every operation, not only on uploads ([`renchan.md`](./renchan.md), "What a frontend relies on").
+
+**A check that calls the backend for this frontend sends the same way.** A request written as JSON reaches a backend a furo client cannot reach.
 
 ## What to fill in
 
@@ -43,6 +56,35 @@ The boilerplate arrives with the same placeholder as the backend's.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.**
 
+### The endpoints in `.furo-env.development`
+
+The boilerplate ships `.furo-env.example` with three endpoint keys:
+
+```
+ENDPOINT_URL = http://localhost:3900/graphql-customer
+WEBSOCKET_URL = ws://localhost:3900/graphql-customer
+
+RENCHAN_RESTFUL_API_BASE_URL = http://localhost:8001
+```
+
+**Copy `.furo-env.example` to `.furo-env.development`, then point each key at the backend server this row calls.** The frontend picks its env file by `NODE_ENV`, which defaults to development, so a local run reads `.furo-env.development`. `.furo-env` is the production file, and no local value belongs in it, so leave it untouched. If `.furo-env.development` already exists, leave it as it stands.
+
+| Key | Value |
+|---|---|
+| `ENDPOINT_URL` | `http://localhost:<port><path>` of the GraphQL server whose `consumer`, in the spec's server table, names this row |
+| `WEBSOCKET_URL` | the same host, port and path as `ENDPOINT_URL`, with the `ws` scheme |
+| `RENCHAN_RESTFUL_API_BASE_URL` | `http://localhost:<port>` of the RESTful API server whose `consumer` names this row. Where no such server names it, keep the shipped value |
+
+**Read each port and path from the backend row's own tree, never from this handbook.** The backend's server entry point says which port each server listens on, and each GraphQL server's engine says its path ([`renchan.md`](./renchan.md), "What to read once it is there", under "How servers are split"). The shipped values match one server of the backend boilerplate, so a row that calls any other server needs other values.
+
+**Fill the file once the backend row is on disk.** Where the layout lists this row before the backend's, come back to it after the backend row is fetched, in the same run. **Stop and ask** when no GraphQL server, or more than one, names this row as its consumer. The file holds one `ENDPOINT_URL`, so a row calls one GraphQL server.
+
+**The values commit leaves the file out.** The boilerplate ignores `.furo-env.development` (below), so `git add` refuses the path, and the values stay on the machine.
+
+### Which env files are committed
+
+**The frontend commits no development values — unlike the backend.** `furo-boilerplate-nuxt` ignores `.furo-env` and `.furo-env.development`, and tracks only `.furo-env.example`, a template, and `.furo-env.test`, for the test suite. Leave the split as the boilerplate ships it: a frontend's development values stay on the machine, where the backend's local ones are committed ([`renchan.md`](./renchan.md), "Which env files are committed").
+
 ### `npm install`
 
 Run it in the repository once the values are filled in. As with the backend, **`@openreachtech/hora-ecosystem` does not go into this repository's `package.json`** — the catalog is the parent's devDependency, reference material rather than a product dependency.
@@ -50,10 +92,6 @@ Run it in the repository once the values are filled in. As with the backend, **`
 ## What to place
 
 Nothing. The frontend uses no middleware, and the boilerplate ships everything else it needs.
-
-## Skills to copy into the row
-
-None.
 
 ## What to read once it is there
 
@@ -71,6 +109,16 @@ npm scripts               the names of the dev / test / lint commands
 ```
 
 **"How things get registered" deserves the same care as on the backend** — automatic registration removes the aggregation-file problem entirely; required appending means several checkpoints touch the same single place.
+
+## What the environment needs
+
+| Need | Check — changes nothing | Provided by |
+|---|---|---|
+| a browser build Playwright launches | `node -e "process.exit(require('fs').existsSync(require('playwright').chromium.executablePath()) ? 0 : 1)"` | `npm run e2e:browser` |
+
+**The sweep's live pass drives this frontend with headless Playwright**, and without a browser build it cannot run at all — a missing build stops acceptance as `lacked-environment`, the same as an environment that will not come up.
+
+**`npm run e2e:browser` writes outside the project.** It fetches Chromium into a cache the whole machine shares, once per machine, so a guard that keeps writes inside the project may refuse it. That is the reason to run it early, while somebody is there to allow it.
 
 ## What upstream is still missing
 

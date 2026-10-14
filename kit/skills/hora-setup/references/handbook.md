@@ -45,8 +45,8 @@ One file per origin, in a fixed order of sections. `/hora-setup` walks them top 
 | **Where it comes from** | the source repository, and how the version to fetch is chosen | step 1 of creating a row — always a released state, never an unreleased head |
 | **What to fill in** | every placeholder the fetched tree ships, and the value each takes | filled after the fetch, each an idempotent check of its own |
 | **What to place** | files the boilerplate does not ship but the project needs | placed without overwriting; anything spec-dependent is decided from the spec's declared sections, as the document directs |
-| **Skills to copy into the row** | which equipped skills get copied into the created repository's own `.claude/skills/` | copied only where the destination is missing |
 | **What to read once it is there** | the checklist the real tree is read against | read in place and recorded into `.hora/tree/` |
+| **What the environment needs** | what the row needs from the machine, each as a check that changes nothing and the command that provides it | recorded into `.hora/tree/` as written, and run by neither |
 
 ---
 
