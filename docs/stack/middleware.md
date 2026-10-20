@@ -28,6 +28,7 @@ What a spec's manual-verification table starts from. The spec declares what the 
 - **Redis cannot be dropped in a project with any background job.** The Job convention runs on BullMQ, and BullMQ requires Redis. A spec with any row in its background-jobs section must also declare Redis in its manual-verification table
 - **A profile is turned on by the spec, not by hand.** Which optional services run locally follows the spec's manual-verification section, through `COMPOSE_PROFILES` ([`origins/renchan.md`](./origins/renchan.md))
 - **The MariaDB version matches CI** (`test-with-mariadb.yml`), so what passes locally passes there
+- **A spec that declares another database switches in `/hora-setup`**, step 7 of [`SKILL.md`](../../kit/skills/hora-setup/SKILL.md). What the switch changes is in [`origins/renchan.md`](./origins/renchan.md)
 
 ## The default API style
 
