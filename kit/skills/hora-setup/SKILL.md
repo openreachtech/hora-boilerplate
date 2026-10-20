@@ -63,7 +63,9 @@ The essentials for each declared row, in order — **the content of steps 1–2 
 5. Fill in every value the origin document lists, with this project's values
 6. Place every file the origin document lists, deciding anything spec-dependent
    from the spec's declared sections, as the document directs
-7. Install dependencies, as the origin document directs
+7. Install dependencies, as the origin document directs, and switch the
+   database where the spec's manual-verification table names one other than
+   the origin document's default, as that document directs
 ```
 
 ### Step 0 — which directory a row lives in, and excluding it
