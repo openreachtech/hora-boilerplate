@@ -110,7 +110,7 @@ DATABASE_PORT=3306
 4. `docker-compose.development.yml` と上の `.env.development` の値を同じ行に書き直す。イメージのバージョン、ポート、認証情報は CI のものと揃えます。
 5. `config.cjs` のどのエントリも旧ドライバーの dialect を指さなくなった場合に限り、旧ドライバーを `npm uninstall` する。
 
-**`development` は SQLite のまま。** boilerplate はこのエントリを意図的にファイルにしており、`db:refresh` もそれに依存するので、切り替えの対象は `live`、`staging`、`production`、CI です。development でサーバー型データベースを使いたいプロジェクトは、`development` エントリを `staging` と同じ形にし、`DATABASE_*` を `.env.development` から読ませます。`npm run db:teardown` はそれを `sequelize-cli db:drop` で破棄します。このコマンドが対応するのは `mysql`、`postgres`、`mssql` で `mariadb` は拒否されるため、MariaDB サーバーに対してもそのエントリは `mysql` を名乗ります。
+**`development` は SQLite のまま。** boilerplate はこのエントリを意図的にファイルにしており、`db:refresh` もそれに依存するので、切り替えの対象は `live`、`staging`、`production`、CI です。development でサーバー型データベースを使いたいプロジェクトは、`development` エントリを `staging` と同じ形にし、`DATABASE_*` を `.env.development` から読ませます。`npm run db:teardown` は、そのエントリが既に使うドライバーで、上の表のどのサーバー型 dialect も Sequelize 経由で破棄します。
 
 ### どの env ファイルをコミットするか
 

@@ -110,7 +110,7 @@ DATABASE_PORT=3306
 4. Rewrite `docker-compose.development.yml` and the `.env.development` values above to the same row, with the image version, port and credentials CI uses.
 5. `npm uninstall` the old driver, only when no entry of `config.cjs` names its dialect any more.
 
-**`development` stays on SQLite.** The boilerplate keeps that entry a file on purpose, and `db:refresh` relies on it, so the switch covers `live`, `staging`, `production` and CI. A project that wants a server database in development changes the `development` entry to the shape of `staging`, reading `DATABASE_*` from `.env.development`. `npm run db:teardown` then drops it through `sequelize-cli db:drop`, which supports `mysql`, `postgres` and `mssql` and rejects `mariadb`, so that entry names `mysql` even against a MariaDB server.
+**`development` stays on SQLite.** The boilerplate keeps that entry a file on purpose, and `db:refresh` relies on it, so the switch covers `live`, `staging`, `production` and CI. A project that wants a server database in development changes the `development` entry to the shape of `staging`, reading `DATABASE_*` from `.env.development`. `npm run db:teardown` then drops it through Sequelize with the driver the entry already uses, for any server dialect in the table above.
 
 ### Which env files are committed
 
