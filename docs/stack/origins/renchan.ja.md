@@ -86,7 +86,31 @@ DATABASE_HOST=127.0.0.1
 DATABASE_PORT=3306
 ```
 
+**これらの値は MariaDB のものです。** 別のデータベースを挙げる spec は、[データベースの切り替え](#spec-が別のデータベースを指すとき)の手順に従ってこれらを変えます。
+
 **実物の boilerplate が持ってくるキーに従うこと — 上記は目安です。** 同じ実行が compose ファイルと `.env.development` の両方を書くので、両者は構造的に一致が保証されます。
+
+### spec が別のデータベースを指すとき
+
+**spec の手動確認表が、MariaDB 以外を主データストアとして挙げるときに適用する。** 表が MariaDB を挙げる、または何も挙げない場合、上の値はそのまま残ります。後の実行は、`sequelize/config.cjs` の `live` が指す `dialect` と表のデータベースを比べ、既に一致している行は素通りします。
+
+| データベース | `dialect` | ドライバーのパッケージ | CI のサービスイメージ | 既定ポート | ヘルスチェック |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| MariaDB | `mariadb` | `mariadb` | `mariadb:<version>` | 3306 | `mysqladmin ping` |
+| MySQL | `mysql` | `mysql2` | `mysql:<version>` | 3306 | `mysqladmin ping` |
+| PostgreSQL | `postgres` | `pg`, `pg-hstore` | `postgres:<version>` | 5432 | `pg_isready` |
+
+`<version>` は表に書かれたサーバーのバージョンです。**この表に無いデータベースは stop-and-ask** で、dialect を推測しません。
+
+**切り替えは 5 つの部分から成り**、すべて step 7 のほかの作業と同じ values コミットに書き込みます:
+
+1. 新しい行のドライバーのパッケージを `npm install` する。
+2. `config.cjs` を新しい dialect に向ける。`live` は認証情報をファイルに持つので、その `dialect` と `port` をファイルで変えます。`staging` と `production` は `DATABASE_DIALECT` と `DATABASE_PORT` を読むので、ファイルはそのままに、`.env.development` とプロセス環境を与えるものの側で値を変えます。
+3. `test-with-mariadb.yml` のデータベースサービスを置き換える。`image:`、そのイメージがユーザー・パスワード・データベースに読む変数(`POSTGRES_*` または `MYSQL_*`)、公開ポート、`--health-cmd`、データベースを待って作成するステップです。required status check は job の `name:` で照合されるので `name:` は残し、ファイル名はデータベースに合わせて `test-with-postgres.yml` のように変えます。
+4. `docker-compose.development.yml` と上の `.env.development` の値を同じ行に書き直す。イメージのバージョン、ポート、認証情報は CI のものと揃えます。
+5. `config.cjs` のどのエントリも旧ドライバーの dialect を指さなくなった場合に限り、旧ドライバーを `npm uninstall` する。
+
+**`development` は SQLite のまま。** boilerplate はこのエントリを意図的にファイルにしており、`db:refresh` もそれに依存するので、切り替えの対象は `live`、`staging`、`production`、CI です。development でサーバー型データベースを使いたいプロジェクトは、`development` エントリを `staging` と同じ形にし、`DATABASE_*` を `.env.development` から読ませます。`npm run db:teardown` はそれを `sequelize-cli db:drop` で破棄します。このコマンドが対応するのは `mysql`、`postgres`、`mssql` で `mariadb` は拒否されるため、MariaDB サーバーに対してもそのエントリは `mysql` を名乗ります。
 
 ### どの env ファイルをコミットするか
 

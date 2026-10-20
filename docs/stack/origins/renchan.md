@@ -86,7 +86,31 @@ DATABASE_HOST=127.0.0.1
 DATABASE_PORT=3306
 ```
 
+**These values are MariaDB's.** A spec that names another database changes them, as [the database switch](#the-database-when-the-spec-names-another-one) says.
+
 **Follow the keys the real boilerplate ships — the above is a guide.** Since the same run writes both the compose file and `.env.development`, the two are structurally guaranteed to agree.
+
+### The database, when the spec names another one
+
+**Applies when the spec's manual-verification table names a primary data store other than MariaDB.** A table naming MariaDB, or none, leaves every value above as it is. A later run compares the `dialect` that `live` names in `sequelize/config.cjs` with the table's database, and passes over a row where they already agree.
+
+| Database | `dialect` | Driver packages | CI service image | Default port | Health check |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| MariaDB | `mariadb` | `mariadb` | `mariadb:<version>` | 3306 | `mysqladmin ping` |
+| MySQL | `mysql` | `mysql2` | `mysql:<version>` | 3306 | `mysqladmin ping` |
+| PostgreSQL | `postgres` | `pg`, `pg-hstore` | `postgres:<version>` | 5432 | `pg_isready` |
+
+`<version>` is the server version the table writes. **A database this table does not list is a stop-and-ask**, never a guess at its dialect.
+
+**The switch has five parts**, all written into the same values commit as the rest of step 7:
+
+1. `npm install` the new row's driver packages.
+2. Point `config.cjs` at the new dialect. `live` holds its credentials in the file, so its `dialect` and `port` change there. `staging` and `production` read `DATABASE_DIALECT` and `DATABASE_PORT`, so the file stays and the values change in `.env.development` and in whatever supplies the process environment.
+3. Replace the database service in `test-with-mariadb.yml`: the `image:`, the variables the image reads for a user, a password and a database (`POSTGRES_*` or `MYSQL_*`), the published port, the `--health-cmd`, and the step that waits for the database and creates it. Keep the job's `name:`, because required status checks match on it, and rename the file after the database, as `test-with-postgres.yml`.
+4. Rewrite `docker-compose.development.yml` and the `.env.development` values above to the same row, with the image version, port and credentials CI uses.
+5. `npm uninstall` the old driver, only when no entry of `config.cjs` names its dialect any more.
+
+**`development` stays on SQLite.** The boilerplate keeps that entry a file on purpose, and `db:refresh` relies on it, so the switch covers `live`, `staging`, `production` and CI. A project that wants a server database in development changes the `development` entry to the shape of `staging`, reading `DATABASE_*` from `.env.development`. `npm run db:teardown` then drops it through `sequelize-cli db:drop`, which supports `mysql`, `postgres` and `mssql` and rejects `mariadb`, so that entry names `mysql` even against a MariaDB server.
 
 ### Which env files are committed
 
