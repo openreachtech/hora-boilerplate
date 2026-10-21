@@ -28,6 +28,7 @@ spec の手動確認表の出発点。プロジェクトが実際に何を使う
 - **バックグラウンドジョブのあるプロジェクトで Redis は落とせない。** Job 規約は BullMQ に乗り、BullMQ は Redis を必要とします。background-jobs セクションに行が 1 つでもある spec は、手動確認表にも Redis を宣言しなければなりません
 - **プロファイルは spec が有効化する。手作業ではない。** どのオプションサービスをローカルで動かすかは、spec の手動確認セクションに従い、`COMPOSE_PROFILES` を通して決まります([`origins/renchan.md`](./origins/renchan.ja.md))
 - **MariaDB のバージョンは CI(`test-with-mariadb.yml`)と一致させる。** ローカルで通るものが CI でも通るように
+- **別のデータベースを宣言する spec は `/hora-setup` で切り替える**。[`SKILL.md`](../../kit/skills/hora-setup/SKILL.md) の step 7 です。切り替えが何を変えるかは [`origins/renchan.md`](./origins/renchan.ja.md) にあります
 
 ## API スタイルの既定
 
