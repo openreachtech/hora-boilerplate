@@ -26,21 +26,25 @@ jobs:
   boilerplate-version:
     name: Boilerplate Version Guard
 
+    # A clone of this boilerplate is not one itself, and the record it carries is
+    # frozen at the version it was taken from. Deciding that here rather than in a
+    # step leaves the job skipped without a runner ever being allocated.
+    if: contains(github.event.repository.name, '-boilerplate')
+
     # private repository: self-hosted
     # public repository: github-hosted
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted", "light"]' || '["ubuntu-latest"]') }}
 
     timeout-minutes: 5
 
-    # Every step reads the same few values, so they are declared once here rather
-    # than repeated per step.
+    # What the steps read off the event, kept together so that a step's own env
+    # carries only what an earlier step produced.
     env:
       ABOUT_FILE: about-boilerplate.md
       # Publishing targets npmjs, so only a bare x.x.x is accepted. npm strips
       # build metadata and leading zeros, and any other form would name a version
       # that never exists once published.
       VERSION_PATTERN: '(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)'
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
       PR_TITLE: ${{ github.event.pull_request.title }}
       HEAD_REF: ${{ github.head_ref }}
 
@@ -57,19 +61,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          # Only a boilerplate owns the version in this record. Everywhere else
-          # the file is a clone record frozen at the version it was taken from,
-          # and moving it would erase what the repository came from.
-          case "$REPOSITORY_NAME" in
-            *-boilerplate*)
-              ;;
-            *)
-              echo "::notice::'$REPOSITORY_NAME' is not a boilerplate repository; nothing to verify."
-
-              exit 0
-              ;;
-          esac
 
           # The prefix alone decides this, since a release branch carrying a
           # malformed version is a release to be rejected rather than one to be
