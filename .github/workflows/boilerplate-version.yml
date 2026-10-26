@@ -1,9 +1,9 @@
 name: Boilerplate Version Guard
 
-# When a release/x.x.x branch is merged into main, require the branch name, the
-# pull request title, and `## Version` in about-boilerplate.md to state one and
-# the same version. Releasing is the only moment that record moves, and it lives
-# in prose no test reads, so nothing else would notice it left behind.
+# Every merge into main is a release, so require the branch name, the pull
+# request title, and `## Version` in about-boilerplate.md to state one and the
+# same version. That record moves on a release alone, and it lives in prose no
+# test reads, so nothing else would notice it left behind.
 #
 # NOTE: This workflow must work on both GitHub-hosted and self-hosted runners.
 # A self-hosted runner cannot be assumed to have gh or Python installed, so keep
@@ -54,26 +54,12 @@ jobs:
 
       # The title is what release.yml reads first when it tags the merge, so the
       # version it carries is the one the release is named after, and every step
-      # after this one is held against it. A pull request that is not a release
-      # leaves those steps skipped and the job green.
+      # after this one is held against it.
       - name: ✂️ Extract the version from the PR title
         id: release
         shell: bash
         run: |
           set -euo pipefail
-
-          # The prefix alone decides this, since a release branch carrying a
-          # malformed version is a release to be rejected rather than one to be
-          # waved through as something else.
-          case "$HEAD_REF" in
-            release/*)
-              ;;
-            *)
-              echo "::notice::'$HEAD_REF' is not a release branch; nothing to verify."
-
-              exit 0
-              ;;
-          esac
 
           version=$(printf '%s' "$PR_TITLE" | grep -oE "\`$VERSION_PATTERN\`" | head -n 1 | tr -d '`' || true)
 
@@ -87,7 +73,6 @@ jobs:
           echo "The pull request title states \`$version\`."
 
       - name: ✅ Verify version in branch
-        if: steps.release.outputs.version != ''
         shell: bash
         env:
           RELEASING_VERSION: ${{ steps.release.outputs.version }}
@@ -106,7 +91,6 @@ jobs:
           echo "The branch names \`$RELEASING_VERSION\`."
 
       - name: ✅ Verify version in about-boilerplate.md
-        if: steps.release.outputs.version != ''
         shell: bash
         env:
           RELEASING_VERSION: ${{ steps.release.outputs.version }}
