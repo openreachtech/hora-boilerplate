@@ -1,7 +1,8 @@
 name: Create Semantic Version Tag and Release
 
 # When a pull request into main is merged, tag its merge commit with the version
-# in the title ("Release > Main as `x.x.x`") and publish a GitHub Release.
+# taken from the title ("Release `x.x.x` > Main") or the `release/x.x.x` head
+# branch, and create a GitHub Release. Nothing is published to npm here.
 #
 # NOTE: This workflow must work on both GitHub-hosted and self-hosted runners.
 # A self-hosted runner cannot be assumed to have gh or Python installed, so use
