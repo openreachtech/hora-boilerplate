@@ -27,7 +27,21 @@ jobs:
         shell: bash
         env:
           HEAD_REF: ${{ github.head_ref }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
+          # A boilerplate repository only receives release branches.
+          case "$REPOSITORY_NAME" in
+            *boilerplate*)
+              if [[ "$HEAD_REF" =~ ^release/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "Source branch '$HEAD_REF' is allowed."
+                exit 0
+              fi
+
+              echo "::error::Only 'release/x.x.x' branches may be merged into 'main' of a boilerplate repository. (❌ '$HEAD_REF' is not allowed)"
+              exit 1
+              ;;
+          esac
+
           case "$HEAD_REF" in
             release/*|hotfix/*|dev|env)
               echo "Source branch '$HEAD_REF' is allowed."
