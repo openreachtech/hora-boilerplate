@@ -68,6 +68,12 @@ jobs:
       # real code path. The advisory has to answer before anything is fetched. Auditing
       # first is possible because npm audit resolves the tree from package-lock.json
       # alone and needs no node_modules; skipping a doomed install is a side benefit.
+      #
+      # ⚠️ When this step fails, check whether npm is answering before reading it as a
+      # finding. A 503 from the advisory service exits 1 exactly as an advisory does, and
+      # npm does not retry the bulk POST — `--fetch-retries=4` still sends one request.
+      # Telling the two apart takes a script that reads `npm audit --json`, and that is
+      # worth carrying only while the service is degraded, which is a passing condition.
       - name: 🛡️ npm audit
         run: npm audit
 
