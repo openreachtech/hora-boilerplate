@@ -63,9 +63,11 @@ jobs:
           echo "node  : $(node -v)"
           echo "npm   : $(npm -v)"
 
-      # ⚠️ This gate runs before npm ci because npm audit resolves the tree from
-      # package-lock.json alone and needs no node_modules. Putting the cheapest check
-      # first keeps a vulnerable dependency tree from paying for an install and a lint run.
+      # ⚠️ This gate runs before npm ci, and the order is the point: npm ci puts the
+      # vulnerable files on the runner, and the test run then executes them through the
+      # real code path. The advisory has to answer before anything is fetched. Auditing
+      # first is possible because npm audit resolves the tree from package-lock.json
+      # alone and needs no node_modules; skipping a doomed install is a side benefit.
       - name: 🛡️ npm audit
         run: npm audit
 
