@@ -6,6 +6,8 @@
   "description": "TODO: fulfill here",
   "type": "module",
   "scripts": {
+    "audit:actions": "node node_modules/@openreachtech/mentsu-github-actions-inspector/scripts/audit-action-version.js",
+    "audit:npm": "node node_modules/@openreachtech/mentsu-npm-audit-gate/scripts/npm-audit-gate.js scripts/stopgap-audit/IGNORED_ADVISORIES.js",
     "hora:init": "sh scripts/hora-init.sh",
     "l": "npm run lint",
     "lint": "eslint .",
