@@ -26,8 +26,11 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      # ⚠️ Actions are named by their major tag, and actions.lock pins the commit each one runs.
+      # Regenerate the lockfile with `gh actions-lock --no-narrow`: without the flag the tool
+      # rewrites a major tag to a full one, and the lockfile stops following the major.
       - name: 🛎️ Checkout repository code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
         with:
           # The ja/en pair check diffs against the PR's base branch, and a
           # shallow checkout cannot resolve a merge base for that.
@@ -41,7 +44,7 @@ jobs:
           persist-credentials: false
 
       - name: 🏗️ Use Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: actions/setup-node@v7
         with:
           # ⚠️ The npm cache only pays off where ~/.npm is discarded between jobs.
           # On a persistent [self-hosted] runner it re-ships what is already on disk,
