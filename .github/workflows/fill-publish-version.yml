@@ -29,8 +29,11 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      # ⚠️ Actions are named by their major tag, and actions.lock pins the commit each one runs.
+      # Regenerate the lockfile with `gh actions-lock --no-narrow`:
+      # without the flag the tool rewrites a major tag to a full one, and the lockfile stops following the major.
       - name: 🤖 Replace vvvvvv with the version in the title
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        uses: actions/github-script@v9
         with:
           script: |
             /*

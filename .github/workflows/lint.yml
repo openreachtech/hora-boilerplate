@@ -26,8 +26,11 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      # ⚠️ Actions are named by their major tag, and actions.lock pins the commit each one runs.
+      # Regenerate the lockfile with `gh actions-lock --no-narrow`: without the flag the tool
+      # rewrites a major tag to a full one, and the lockfile stops following the major.
       - name: 🛎️ Checkout repository code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
         with:
           # The ja/en pair check diffs against the PR's base branch, and a
           # shallow checkout cannot resolve a merge base for that.
@@ -41,7 +44,7 @@ jobs:
           persist-credentials: false
 
       - name: 🏗️ Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@v7
         with:
           # ⚠️ The npm cache only pays off where ~/.npm is discarded between jobs.
           # On a persistent [self-hosted] runner it re-ships what is already on disk,
@@ -63,14 +66,29 @@ jobs:
           echo "node  : $(node -v)"
           echo "npm   : $(npm -v)"
 
-      # ⚠️ This gate runs before npm ci because npm audit resolves the tree from
-      # package-lock.json alone and needs no node_modules. Putting the cheapest check
-      # first keeps a vulnerable dependency tree from paying for an install and a lint run.
-      - name: 🛡️ npm audit
-        run: npm audit
-
       - name: 📦 Install packages
         run: npm ci
+
+      # ⚠️ This gate runs after npm ci and before ESLint.
+      # The script imports its own dependency from node_modules, so it cannot run before the install.
+      # What still matters is that an advisory answers before the installed files are executed,
+      # and ESLint is the step that executes them.
+      # strict-allow-scripts in .npmrc stops npm ci from running a dependency's install script.
+      # The postinstall of this repository still runs, and it equips the kit from the installed
+      # @openreachtech packages, so those are the files that run before the gate answers.
+      #
+      # ⚠️ The script runs npm audit itself and fails on every advisory except the ones
+      # the file it is given lists, a stopgap until a release fixes them.
+      # An entry whose advisory is no longer reported fails too, so the list cannot outlive its reason.
+      #
+      # ⚠️ A 503 from the advisory service leaves npm with no report, and the script says
+      # so rather than listing advisories. npm does not retry the bulk POST —
+      # `--fetch-retries=4` still sends one request — so rerun the job.
+      - name: 🛡️ npm audit
+        run: npm run audit:npm
+
+      - name: 🛡️ Audit action versions
+        run: npm run audit:actions
 
       - name: 🧵 ESLint
         run: npm run lint
