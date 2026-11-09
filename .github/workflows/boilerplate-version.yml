@@ -49,8 +49,11 @@ jobs:
       HEAD_REF: ${{ github.head_ref }}
 
     steps:
+      # ⚠️ Actions are named by their major tag, and actions.lock pins the commit each one runs.
+      # Regenerate the lockfile with `gh actions-lock --no-narrow`:
+      # without the flag the tool rewrites a major tag to a full one, and the lockfile stops following the major.
       - name: 🛎️ Checkout repository code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
 
       # The title is what release.yml reads first when it tags the merge, so the
       # version it carries is the one the release is named after, and every step
