@@ -12,6 +12,10 @@
     "lint:docs-pairs": "node scripts/check-docs-pairs.mjs",
     "postinstall": "npm run hora:init"
   },
+  "engines": {
+    "node": ">=24.19.0",
+    "npm": ">=11.17.0"
+  },
   "devDependencies": {
     "@openreachtech/eslint-config": "^4.5.0",
     "@openreachtech/hora": "^0.16.0",
