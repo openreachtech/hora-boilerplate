@@ -90,6 +90,8 @@ Vendoring the boilerplate, keeping an upstream remote, making it a submodule, `n
 
 Repositories arrive later: a project starts as an API for a phone app and gains an admin screen. **Passing this once is not the end of it.** Anything already there is passed over, so running it again is safe.
 
+**A check added to a later boilerplate reaches existing rows only through another run.** `/hora-setup` and the stack handbook are this repository's own files, so a project takes the newer ones by copying `kit/skills/hora-setup/` and `docs/stack/` from that boilerplate version. Then run `/hora-setup`, and each check a row does not pass yet applies to it: a row created before `0.9.0` is asked about the public-repository section of its `CLAUDE.md`, and one created before `0.10.1` gets its `package.json` links. A row with a `Directory` column keeps its `CLAUDE.md` as it stands, so where the project is private, remove the section there by hand.
+
 **On any disagreement between the record and the tree, the tree wins**, and `.hora/tree/<repository>.md` is rewritten from it.
 
 ---
