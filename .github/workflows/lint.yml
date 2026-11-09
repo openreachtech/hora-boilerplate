@@ -87,6 +87,9 @@ jobs:
       - name: 🛡️ npm audit
         run: npm run audit:npm
 
+      - name: 🛡️ Audit action versions
+        run: npm run audit:actions
+
       - name: 🧵 ESLint
         run: npm run lint
 
