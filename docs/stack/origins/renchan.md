@@ -67,6 +67,27 @@ The boilerplate arrives with `"name": "TODO: fulfill here ❌️"`.
 
 **`"version": "0.0.0"` and `"private": true` are left as they are.** The tag carries the version, and `private` guards against an accidental publish.
 
+### `repository`, `homepage` and `bugs` in `package.json`
+
+The boilerplate arrives with all three pointing at `renchan-boilerplate` itself. Left alone, they send whoever follows them to the boilerplate's repository and its issues.
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<owner>/<repository>.git"
+  },
+  "homepage": "https://github.com/<owner>/<repository>#readme",
+  "bugs": {
+    "url": "https://github.com/<owner>/<repository>/issues"
+  }
+}
+```
+
+**`<owner>` is the one the hora repository's `origin` remote names, and `<repository>` is the row's name in the repository layout.** A row fresh from `git init` has no remote of its own to read. Where the hora repository has no `origin` on GitHub, remove the fields instead, because a link to the boilerplate is wrong either way.
+
+**Only a field that still names `renchan-boilerplate` is replaced.** A field that names anything else was filled in already and stays, so a later run passes over the three once none of them names the boilerplate.
+
 ### The public-repository section of `CLAUDE.md`
 
 The boilerplate's `CLAUDE.md` opens with `## Names that must not appear`. The section forbids naming any company, client, person or product anywhere in the repository, because the boilerplate's own repository is public. A project created from it is usually private, and an agent that obeys the section there replaces the names the spec uses with neutral wording.

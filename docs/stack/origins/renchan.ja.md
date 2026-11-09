@@ -67,6 +67,27 @@ boilerplate は `"name": "TODO: fulfill here ❌️"` の状態で届きます�
 
 **`"version": "0.0.0"` と `"private": true` はそのまま残します。** バージョンはタグが運び、`private` は誤 publish を防ぎます。
 
+### `package.json` の `repository`・`homepage`・`bugs`
+
+boilerplate は、この 3 つが `renchan-boilerplate` 自身を指した状態で届きます。そのままにすると、たどった人は boilerplate のリポジトリとその issue に行き着きます。
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<owner>/<repository>.git"
+  },
+  "homepage": "https://github.com/<owner>/<repository>#readme",
+  "bugs": {
+    "url": "https://github.com/<owner>/<repository>/issues"
+  }
+}
+```
+
+**`<owner>` は hora リポジトリの `origin` リモートが示すもの、`<repository>` はリポジトリ構成に書かれた行の名前です。** `git init` したばかりの行には、読むべき自分のリモートがありません。hora リポジトリに GitHub 上の `origin` が無いときは、代わりにフィールドを取り除きます。boilerplate を指すリンクは、どちらにしても誤りだからです。
+
+**置き換えるのは、まだ `renchan-boilerplate` を指しているフィールドだけです。** ほかを指すフィールドは既に埋められたものなので残します。そのため後の実行は、3 つのどれも boilerplate を指さなくなった時点で、ここを通過します。
+
 ### `CLAUDE.md` の公開リポジトリ向けの節
 
 boilerplate の `CLAUDE.md` は `## Names that must not appear` で始まります。この節は、リポジトリのどこにも会社・顧客・個人・製品の名前を書くことを禁じています。boilerplate 自身のリポジトリが公開されているからです。そこから作られるプロジェクトはたいてい非公開で、そこでこの節に従うエージェントは、spec が使う名前を中立的な言い回しに置き換えてしまいます。
