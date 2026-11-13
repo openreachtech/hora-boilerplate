@@ -28,7 +28,12 @@ node_modules/
 *.key
 *.p12
 *.pfx
+*.jks
+*.keystore
+*.gpg
 id_rsa
+id_dsa
+id_ecdsa
 id_ed25519
 
 #### implementation repositories, fetched or adopted by /hora-setup
