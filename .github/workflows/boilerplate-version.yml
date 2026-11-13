@@ -54,6 +54,10 @@ jobs:
       # without the flag the tool rewrites a major tag to a full one, and the lockfile stops following the major.
       - name: 🛎️ Checkout repository code
         uses: actions/checkout@v7
+        with:
+          # ⚠️ Checkout otherwise leaves the token in .git/config for the rest
+          # of the job, and no step here reaches a remote.
+          persist-credentials: false
 
       # The title is what release.yml reads first when it tags the merge, so the
       # version it carries is the one the release is named after, and every step
