@@ -38,7 +38,7 @@ If there is no declaration, **stop here and ask.** Adding a repository is an arc
 | Detection | Action |
 |---|---|
 | No repository layout section | **stop and ask** |
-| An `Origin` value the handbook's catalog does not list | **stop and ask.** It is not an origin |
+| An `Origin` value the origin catalog does not list (`../hora/references/structure.md`, "How to find the origin catalog") | **stop and ask.** It is not an origin |
 | A row count outside an origin's stated bounds (the catalog's "how many") | **stop and ask.** The bounds are the stack's architectural constraints |
 | No table of servers | **stop and ask.** Contracts cannot be derived |
 
@@ -48,7 +48,7 @@ Settle the project name first, from `specs/<version>/spec.md`. **If it is not wr
 
 **Once it is settled, also fill in this repository's own `package.json`** (`name` / `description`) — it ships with the same placeholder a fetched boilerplate does. **Leave `version` and `private` as they are:** the tag carries the version, and `private` guards against an accidental publish.
 
-The essentials for each declared row, in order — **the content of steps 1–2 and 5–7 comes from the row's origin document** (`references/handbook.md`):
+The essentials for each declared row, in order — **the content of steps 1–2 and 5–7 comes from the row's origin document**, found as `../hora/references/structure.md`, "How to find the origin catalog", says (`references/handbook.md`):
 
 ```
 0. Settle this row's directory (below), and register it in the exclusion lists

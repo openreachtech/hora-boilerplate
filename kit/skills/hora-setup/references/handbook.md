@@ -8,6 +8,8 @@ This is the same division of labor `structure.md` states for the equipped skills
 
 ## Where it lives
 
+**Find the catalog, and each origin's document, as `../../hora/references/structure.md`, "How to find the origin catalog", says.** For the handbook the boilerplate ships, that is:
+
 ```
 docs/stack/README.md        the entry point, at the project root
 docs/stack/origins/<origin>.md   one document per origin the catalog lists
