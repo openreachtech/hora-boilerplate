@@ -7,6 +7,7 @@
  *
  * @type {Array<NpmAuditType.IgnoredAdvisory>}
  */
-const IGNORED_ADVISORIES = []
+const IGNORED_ADVISORIES = [
+]
 
 export default IGNORED_ADVISORIES
