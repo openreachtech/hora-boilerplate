@@ -86,6 +86,8 @@ jobs:
       # `--fetch-retries=4` still sends one request — so rerun the job.
       - name: 🛡️ npm audit
         run: npm run audit:npm
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: 🛡️ Audit action versions
         run: npm run audit:actions
