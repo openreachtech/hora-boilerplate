@@ -26,7 +26,7 @@
     "@openreachtech/hora-skills-ort-furo": "^0.9.0",
     "@openreachtech/hora-skills-ort-renchan": "^0.6.0",
     "@openreachtech/hora-skills-ort-support": "^0.10.0",
-    "@openreachtech/mentsu-github-actions-inspector": "^0.1.0",
+    "@openreachtech/mentsu-github-actions-inspector": "^0.2.0",
     "@openreachtech/mentsu-npm-audit-gate": "^0.2.0",
     "eslint": "^9.39.5"
   },
